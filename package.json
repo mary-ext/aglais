@@ -1,0 +1,47 @@
+{
+	"packageManager": "pnpm@9.1.0",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"fmt": "prettier --cache --write ."
+	},
+	"dependencies": {
+		"@floating-ui/dom": "^1.6.5",
+		"@floating-ui/utils": "^0.2.2",
+		"@mary/bluesky-client": "npm:@jsr/mary__bluesky-client@^0.5.23",
+		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
+		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
+		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.4",
+		"cborg": "4.0.7",
+		"nanoid": "^5.0.7",
+		"solid-floating-ui": "~0.2.1",
+		"solid-js": "^1.8.17",
+		"solid-textarea-autosize": "^0.0.5"
+	},
+	"devDependencies": {
+		"@types/dom-close-watcher": "^1.0.0",
+		"autoprefixer": "^10.4.19",
+		"prettier": "^3.3.2",
+		"prettier-plugin-tailwindcss": "^0.6.3",
+		"tailwindcss": "^3.4.4",
+		"terser": "^5.31.1",
+		"typescript": "^5.4.5",
+		"vite": "^5.2.11",
+		"vite-plugin-pwa": "0.17.4",
+		"vite-plugin-solid": "^2.10.2"
+	},
+	"pnpm": {
+		"patchedDependencies": {
+			"@tanstack/query-core@5.17.19": "patches/@tanstack__query-core@5.17.19.patch",
+			"cborg@4.0.7": "patches/cborg@4.0.7.patch",
+			"solid-textarea-autosize@0.0.5": "patches/solid-textarea-autosize@0.0.5.patch",
+			"vite-plugin-pwa@0.17.4": "patches/vite-plugin-pwa@0.17.4.patch",
+			"solid-js@1.8.17": "patches/solid-js@1.8.17.patch",
+			"workbox-precaching@7.1.0": "patches/workbox-precaching@7.1.0.patch",
+			"vite@5.2.11": "patches/vite@5.2.11.patch"
+		}
+	}
+}

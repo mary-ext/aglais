@@ -1,0 +1,324 @@
+/* @refresh reload */
+
+import {
+	For,
+	createContext,
+	createMemo,
+	createRenderEffect,
+	createRoot,
+	createSignal,
+	getOwner,
+	onCleanup,
+	useContext,
+	type Component,
+	type JSX,
+	type Owner,
+} from 'solid-js';
+
+import { Freeze } from '@mary/solid-freeze';
+
+import type { History, Location } from './history';
+import type { HistoryLogger } from './logger';
+
+// This is the only application-specific code we have here, might need to
+// move it elsewhere, maybe as a separate package?
+export interface RouteMeta {
+	name?: string;
+	main?: boolean;
+	public?: boolean;
+}
+
+export interface RouteDefinition {
+	path: string;
+	component: Component;
+	single?: boolean;
+	meta?: RouteMeta;
+	validate?: (params: Record<string, string>) => boolean;
+}
+
+interface InternalRouteDefinition extends RouteDefinition {
+	_regex?: RegExp;
+}
+
+export interface RouterOptions {
+	history: History;
+	logger: HistoryLogger;
+	routes: RouteDefinition[];
+}
+
+interface MatchedRoute {
+	readonly id: string | undefined;
+	readonly def: RouteDefinition;
+	readonly params: Record<string, string>;
+}
+
+export interface MatchedRouteState extends MatchedRoute {
+	readonly id: string;
+}
+
+interface RouterState {
+	active: string;
+	views: Record<string, MatchedRouteState>;
+	singles: Record<string, MatchedRouteState>;
+}
+
+interface ViewContextObject {
+	active(): boolean;
+	owner: Owner | null;
+	route: MatchedRouteState;
+}
+
+let _entry: Location;
+
+let _routes: InternalRouteDefinition[] | undefined;
+let _cleanup: (() => void) | undefined;
+
+const [state, setState] = createSignal<RouterState>({
+	active: '',
+	views: {},
+	singles: {},
+});
+
+export const configureRouter = ({ history, logger: log, routes }: RouterOptions) => {
+	_cleanup?.();
+
+	_routes = routes;
+
+	{
+		_entry = log.current;
+
+		const pathname = _entry.pathname;
+		const matched = matchRoute(pathname);
+
+		if (matched) {
+			const nextKey = matched.id || _entry.key;
+
+			const isSingle = !!matched.id;
+			const matchedState: MatchedRouteState = { ...matched, id: nextKey };
+
+			const next: Record<string, MatchedRouteState> = { [nextKey]: matchedState };
+
+			setState({
+				active: nextKey,
+				views: isSingle ? {} : next,
+				singles: isSingle ? next : {},
+			});
+		}
+	}
+
+	_cleanup = history.listen(({ action, location: nextEntry }) => {
+		const currentEntry = _entry;
+		_entry = nextEntry;
+
+		if (action !== 'update') {
+			const pathname = nextEntry.pathname;
+			const matched = matchRoute(pathname);
+
+			if (!matched) {
+				return;
+			}
+
+			const current = state();
+
+			let views = current.views;
+			let singles = current.singles;
+
+			const nextId = matched.id || nextEntry.key;
+			const matchedState: MatchedRouteState = { ...matched, id: nextId };
+
+			if (!matched.id) {
+				let nextViews: typeof views | undefined;
+
+				// Recreate the views object to remove no longer reachable views if:
+				// - We're pushing a new page, or replacing the current page
+				// - We're traversing and the intended index is lower than current
+				if (action !== 'traverse' || nextEntry.index < currentEntry.index) {
+					const entries = log.entries;
+
+					nextViews = {};
+
+					for (let idx = 0, len = entries.length; idx < len; idx++) {
+						const entry = entries[idx];
+						const key = entry?.key;
+
+						if (key !== undefined && key in views) {
+							nextViews[key] = views[key];
+						}
+					}
+				}
+
+				// Add this view, if it's already present, set `shouldCall` to true
+				if (!(nextId in views)) {
+					if (nextViews) {
+						nextViews[nextId] = matchedState;
+					} else {
+						nextViews = { ...views, [nextId]: matchedState };
+					}
+				}
+
+				if (nextViews) {
+					views = nextViews;
+				}
+			} else {
+				// Add this view, if it's already present, set `shouldCall` to true
+				if (!(nextId in singles)) {
+					singles = { ...singles, [nextId]: matchedState };
+				}
+			}
+
+			setState({ active: nextId, views: views, singles: singles });
+
+			// Scroll to top if we're pushing or replacing, it's a new page.
+			if (!matched.id && (action === 'push' || action === 'replace')) {
+				window.scrollTo({ top: 0, behavior: 'instant' });
+			}
+		}
+	});
+};
+
+const ViewContext = createContext<ViewContextObject>();
+
+const getMatchedRoute = () => {
+	const current = state();
+	const active = current.active;
+
+	const match = current.singles[active] || current.views[active];
+
+	if (match) {
+		return match;
+	}
+};
+
+export const useMatchedRoute = () => {
+	return createMemo(getMatchedRoute);
+};
+
+export const UNSAFE_useViewContext = () => {
+	return useContext(ViewContext)!;
+};
+
+export const useParams = <T extends Record<string, string>>() => {
+	return UNSAFE_useViewContext().route.params as T;
+};
+
+export const createFocusRoot = (fn: () => void) => {
+	const { active } = UNSAFE_useViewContext();
+
+	let destroy: (() => void) | undefined;
+
+	const cleanup = () => {
+		if (destroy) {
+			destroy();
+			destroy = undefined;
+		}
+	};
+
+	createRenderEffect(() => {
+		if (active()) {
+			onCleanup(cleanup);
+			createRoot((_destroy) => {
+				destroy = _destroy;
+				fn();
+			});
+		}
+	});
+};
+
+export interface RouterViewProps {
+	render: (matched: MatchedRouteState) => JSX.Element;
+}
+
+export const RouterView = (props: RouterViewProps) => {
+	const render = props.render;
+
+	const renderView = (matched: MatchedRouteState) => {
+		const def = matched.def;
+		const id = matched.id;
+
+		const active = createMemo((): boolean => state().active === id);
+
+		const context: ViewContextObject = {
+			owner: getOwner(),
+			active: active,
+			route: matched,
+		};
+
+		if (def.single) {
+			let storedHeight: number | undefined;
+
+			createRenderEffect((inited: boolean) => {
+				const next = active();
+
+				if (inited) {
+					if (!next) {
+						storedHeight = document.documentElement.scrollTop;
+					} else {
+						setTimeout(() => window.scrollTo({ top: storedHeight, behavior: 'instant' }), 0);
+					}
+				}
+
+				return true;
+			}, false);
+		}
+
+		return (
+			<Freeze freeze={!active()}>
+				<ViewContext.Provider value={context}>{render(matched)}</ViewContext.Provider>
+			</Freeze>
+		);
+	};
+
+	return (
+		<>
+			<For each={Object.values(state().views)}>{renderView}</For>
+			<For each={Object.values(state().singles)}>{renderView}</For>
+		</>
+	);
+};
+
+const matchRoute = (path: string): MatchedRoute | null => {
+	for (let idx = 0, len = _routes!.length; idx < len; idx++) {
+		const route = _routes![idx];
+
+		const validate = route.validate;
+		const pattern = (route._regex ||= buildPathRegex(route.path));
+
+		const match = pattern.exec(path);
+
+		if (!match || (validate && !validate(match.groups!))) {
+			continue;
+		}
+
+		const params = match.groups!;
+
+		let id: string | undefined;
+		if (route.single) {
+			id = '@' + idx;
+			for (const param in params) {
+				id += '/' + params[param];
+			}
+		}
+
+		return { id: id, def: route, params: params };
+	}
+
+	return null;
+};
+
+const buildPathRegex = (path: string) => {
+	let source =
+		'^' +
+		path
+			.replace(/\/*\*?$/, '')
+			.replace(/^\/*/, '/')
+			.replace(/[\\.*+^${}|()[\]]/g, '\\$&')
+			.replace(/\/:([\w-]+)(\?)?/g, '/$2(?<$1>[^\\/]+)$2');
+
+	source += path.endsWith('*')
+		? path === '*' || path === '/*'
+			? '(?<$>.*)$'
+			: '(?:\\/(?<$>.+)|\\/*)$'
+		: '\\/*$';
+
+	return new RegExp(source, 'i');
+};

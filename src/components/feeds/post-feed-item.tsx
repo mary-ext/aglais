@@ -1,0 +1,111 @@
+import { createMemo } from 'solid-js';
+
+import type { AppBskyFeedPost, At } from '@mary/bluesky-client/lexicons';
+
+import { usePostShadow } from '~/api/cache/post-shadow';
+import { useProfileShadow } from '~/api/cache/profile-shadow';
+import type { UiTimelineItem } from '~/api/models/timeline';
+import { moderatePost } from '~/api/moderation/entities/post';
+import { parseAtUri } from '~/api/utils/strings';
+
+import { useModerationOptions } from '~/lib/states/moderation';
+
+import Avatar from '../avatar';
+import { handleLinkNavigation } from '../button';
+import RepeatOutlinedIcon from '../icons-central/repeat-outline';
+import RichText from '../rich-text';
+
+import PostActions from './post-actions';
+import PostMeta from './post-meta';
+import PostReplyContext from './post-reply-context';
+import Embed from '../embeds/embed';
+
+export interface PostFeedItemProps {
+	/** Expected to be static */
+	item: UiTimelineItem;
+	timelineDid?: At.DID;
+}
+
+const PostFeedItem = ({ item, timelineDid }: PostFeedItemProps) => {
+	const moderationOptions = useModerationOptions();
+
+	const { post, reason, next, prev } = item;
+
+	const author = post.author;
+	const record = post.record as AppBskyFeedPost.Record;
+	const embed = post.embed;
+
+	const shadow = usePostShadow(post);
+	const authorShadow = useProfileShadow(author);
+
+	const uri = parseAtUri(post.uri);
+	const authorHref = `/${author.did}`;
+	const href = `/${author.did}/${uri.rkey}`;
+
+	const moderation = createMemo(() => moderatePost(post, authorShadow(), moderationOptions()));
+
+	return (
+		<div hidden={shadow().deleted} class={`relative border-c-contrast-200 px-4` + (!next ? ` border-b` : ``)}>
+			<div class="relative flex flex-col pb-1 pt-2">
+				{prev && (
+					<div class="flex w-9 flex-col items-center">
+						<div class="absolute bottom-1 top-0 grow border-l-2 border-c-contrast-200" />
+					</div>
+				)}
+
+				{/* @once */ renderReason(reason)}
+			</div>
+
+			<div class="flex gap-3">
+				<div class="flex shrink-0 flex-col items-center">
+					<Avatar
+						type={/* @once */ author.associated?.labeler ? 'labeler' : 'user'}
+						src={/* @once */ author.avatar}
+						href={authorHref}
+						moderation={moderation()}
+					/>
+
+					{next && <div class="mt-1 grow border-l-2 border-c-contrast-200" />}
+				</div>
+
+				<div class="min-w-0 grow pb-3">
+					<PostMeta post={post} href={href} authorHref={authorHref} gutterBottom />
+					<PostReplyContext item={item} />
+
+					<RichText text={/* @once */ record.text} facets={/* @once */ record.facets} clipped />
+					{embed && <Embed embed={embed} moderation={moderation()} gutterTop />}
+
+					<PostActions post={post} shadow={shadow()} />
+				</div>
+			</div>
+		</div>
+	);
+};
+
+export default PostFeedItem;
+
+const renderReason = (reason: UiTimelineItem['reason']) => {
+	if (reason) {
+		const type = reason.$type;
+
+		if (type === 'app.bsky.feed.defs#reasonRepost') {
+			const by = reason.by;
+			const did = by.did;
+			const name = by.displayName || by.handle;
+
+			return (
+				<div class="flex items-center gap-3 text-de text-c-contrast-600">
+					<div class="flex w-9 shrink-0 justify-end">
+						<RepeatOutlinedIcon class="text-sm" />
+					</div>
+					<a href={`/${did}`} onClick={handleLinkNavigation} class="flex min-w-0 font-medium hover:underline">
+						<span dir="auto" class="overflow-hidden text-ellipsis whitespace-nowrap">
+							{name}
+						</span>
+						<span class="shrink-0 whitespace-pre"> Reposted</span>
+					</a>
+				</div>
+			);
+		}
+	}
+};

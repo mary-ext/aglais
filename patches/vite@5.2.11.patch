@@ -1,0 +1,13 @@
+diff --git a/dist/node/chunks/dep-cNe07EU9.js b/dist/node/chunks/dep-cNe07EU9.js
+index 477583eaa3b1ececd28abc98d5171fd85254f10d..b3109c1c648f2c108c1a13b044a5e4a239ac97b6 100644
+--- a/dist/node/chunks/dep-cNe07EU9.js
++++ b/dist/node/chunks/dep-cNe07EU9.js
+@@ -67286,7 +67286,7 @@ async function resolveBuildPlugins(config) {
+             ...(config.isWorker ? [webWorkerPostPlugin()] : []),
+         ],
+         post: [
+-            buildImportAnalysisPlugin(config),
++            ...(config.build.modulePreload !== false ? [buildImportAnalysisPlugin(config)] : []),
+             ...(config.esbuild !== false ? [buildEsbuildPlugin(config)] : []),
+             ...(options.minify ? [terserPlugin(config)] : []),
+             ...(!config.isWorker
