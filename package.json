@@ -31,7 +31,8 @@
 		"typescript": "^5.4.5",
 		"vite": "^5.2.11",
 		"vite-plugin-pwa": "0.17.4",
-		"vite-plugin-solid": "^2.10.2"
+		"vite-plugin-solid": "^2.10.2",
+		"wrangler": "^3.60.3"
 	},
 	"pnpm": {
 		"patchedDependencies": {
