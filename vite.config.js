@@ -7,6 +7,7 @@ export default defineConfig({
 	plugins: [solid()],
 	build: {
 		minify: 'terser',
+		modulePreload: false,
 	},
 	resolve: {
 		alias: {
