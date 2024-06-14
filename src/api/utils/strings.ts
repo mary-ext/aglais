@@ -7,7 +7,7 @@ export const isDid = (value: string): value is At.DID => {
 };
 
 export const ATURI_RE =
-	/^at:\/\/(did:[a-z0-9:%-]+)\/([a-zA-Z0-9-.]+)\/([a-zA-Z0-9._~:@!$&%')(*+,;=-]+)(?:#(\/[a-zA-Z0-9._~:@!$&%')(*+,;=\-[\]/\\]*))?$/;
+	/^at:\/\/(did:[a-z0-9:%-.]+)\/([a-zA-Z0-9-.]+)\/([a-zA-Z0-9._~:@!$&%')(*+,;=-]+)(?:#(\/[a-zA-Z0-9._~:@!$&%')(*+,;=\-[\]/\\]*))?$/;
 
 export const DID_RE = /^did:([a-z]+):([a-zA-Z0-9._:%-]*[a-zA-Z0-9._-])$/;
 
@@ -20,7 +20,7 @@ export interface AtUri {
 
 export const parseAtUri = (str: string): AtUri => {
 	const match = ATURI_RE.exec(str);
-	assert(match !== null);
+	assert(match !== null, `Failed to parse AT URI for ${str}`);
 
 	return {
 		repo: match[1] as At.DID,
