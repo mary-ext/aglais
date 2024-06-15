@@ -4,7 +4,7 @@ import { QueryClient, createQuery, type QueryPersister } from '@mary/solid-query
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
-export const useProfileQuery = (did: () => At.DID | undefined, persister?: QueryPersister) => {
+export const useProfileQuery = (did: () => At.DID, persister?: QueryPersister) => {
 	const { rpc } = useAgent();
 	const { currentAccount } = useSession();
 
@@ -13,7 +13,7 @@ export const useProfileQuery = (did: () => At.DID | undefined, persister?: Query
 
 		return {
 			queryKey: ['profile', $did],
-			enabled: $did !== undefined,
+			// enabled: $did !== undefined,
 			persister: persister as any,
 			async queryFn(ctx) {
 				const { data } = await rpc.get('app.bsky.actor.getProfile', {
@@ -23,7 +23,7 @@ export const useProfileQuery = (did: () => At.DID | undefined, persister?: Query
 					},
 				});
 
-				if (currentAccount !== undefined && currentAccount.did === $did) {
+				if (currentAccount !== undefined && currentAccount.did === data.did) {
 					// Unset `knownFollowers` as we don't need that on our own profile.
 					data.viewer!.knownFollowers = undefined;
 				}
