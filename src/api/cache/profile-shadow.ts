@@ -35,7 +35,7 @@ export const useProfileShadow = (profile: AllProfileView) => {
 	return view;
 };
 
-const getProfileShadow = (profile: AllProfileView): ProfileShadowView => {
+export const getProfileShadow = (profile: AllProfileView): ProfileShadowView => {
 	const shadow = shadows.get(profile) ?? {};
 
 	return {

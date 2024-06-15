@@ -33,7 +33,7 @@ export const usePostShadow = (post: AppBskyFeedDefs.PostView) => {
 	return view;
 };
 
-const getPostShadow = (post: AppBskyFeedDefs.PostView): PostShadowView => {
+export const getPostShadow = (post: AppBskyFeedDefs.PostView): PostShadowView => {
 	const shadow = shadows.get(post) ?? {};
 
 	let likeCount = post.likeCount ?? 0;
