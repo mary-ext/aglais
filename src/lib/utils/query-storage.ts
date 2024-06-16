@@ -11,7 +11,7 @@ export interface QueryPersistOptions {
 export const createQueryPersister = ({
 	name,
 	key = '',
-	maxAge = 1000 * 60 * 60 * 24, // 24 hours
+	maxAge = 1000 * 60 * 60 * 24 * 7, // 7 days
 }: QueryPersistOptions) => {
 	let storage: QueryPersistenceSchema = {};
 
