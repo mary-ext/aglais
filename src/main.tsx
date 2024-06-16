@@ -8,7 +8,7 @@ import { render } from 'solid-js/web';
 import * as navigation from './globals/navigation';
 import * as preferences from './globals/preferences';
 
-import { memoizedOn } from './lib/misc';
+import { on } from './lib/misc';
 import { configureRouter } from './lib/navigation/router';
 
 import type { AccountData } from './lib/preferences/sessions';
@@ -52,7 +52,7 @@ const InnerApp = () => {
 		}
 	});
 
-	return memoizedOn(ready, ($ready) => {
+	return on(ready, ($ready) => {
 		if (!$ready) {
 			return;
 		}

@@ -4,7 +4,7 @@ import { BskyXRPC, type BskyAuth } from '@mary/bluesky-client';
 import { QueryClient, QueryClientProvider } from '@mary/solid-query';
 
 import { assert } from '../invariant';
-import { memoizedOn } from '../misc';
+import { on } from '../misc';
 import { createQueryPersister } from '../utils/query-storage';
 
 import { useSession } from './session';
@@ -38,7 +38,7 @@ export const AgentProvider = (props: ParentProps) => {
 		};
 	});
 
-	return memoizedOn(agent, ($agent) => {
+	return on(agent, ($agent) => {
 		// Always use a new QueryClient when the agent changes,
 		// this way we don't need to manually reset on switching accounts.
 		const queryClient = new QueryClient({

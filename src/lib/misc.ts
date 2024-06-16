@@ -16,13 +16,13 @@ export const mapDefined = <T, R>(array: T[], mapper: (value: T) => R | undefined
 	return mapped;
 };
 
-export const on = <T, R>(accessor: () => T, callback: (value: T) => R): (() => R) => {
+const _on = <T, R>(accessor: () => T, callback: (value: T) => R): (() => R) => {
 	return () => {
 		const value = accessor();
 		return untrack(() => callback(value));
 	};
 };
 
-export const memoizedOn = <T, R>(accessor: () => T, callback: (value: T) => R): (() => R) => {
-	return createMemo(on(accessor, callback));
+export const on = <T, R>(accessor: () => T, callback: (value: T) => R): (() => R) => {
+	return createMemo(_on(accessor, callback));
 };
