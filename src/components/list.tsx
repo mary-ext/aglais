@@ -92,7 +92,9 @@ const List = <T,>(props: ListProps<T>) => {
 					<div
 						ref={(node) => {
 							if (onEndReached) {
-								ifIntersect(node, () => !props.isFetchingNextPage && props.hasNextPage, onEndReached);
+								ifIntersect(node, () => !props.isFetchingNextPage && props.hasNextPage, onEndReached, {
+									rootMargin: `150% 0%`,
+								});
 							}
 						}}
 						class="grid h-13 shrink-0 place-items-center"

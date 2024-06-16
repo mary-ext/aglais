@@ -1,4 +1,4 @@
-const intersectionCallback: IntersectionObserverCallback = (entries, observer) => {
+export const intersectionCallback: IntersectionObserverCallback = (entries, observer) => {
 	for (let idx = 0, len = entries.length; idx < len; idx++) {
 		const entry = entries[idx];
 
@@ -13,7 +13,7 @@ const intersectionCallback: IntersectionObserverCallback = (entries, observer) =
 	}
 };
 
-const resizeCallback: ResizeObserverCallback = (entries, observer) => {
+export const resizeCallback: ResizeObserverCallback = (entries, observer) => {
 	for (let idx = 0, len = entries.length; idx < len; idx++) {
 		const entry = entries[idx];
 
@@ -27,9 +27,6 @@ const resizeCallback: ResizeObserverCallback = (entries, observer) => {
 		}
 	}
 };
-
-export const intersectionObserver = new IntersectionObserver(intersectionCallback);
-export const resizeObserver = new ResizeObserver(resizeCallback);
 
 declare module 'solid-js' {
 	namespace JSX {

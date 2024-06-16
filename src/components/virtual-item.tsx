@@ -1,7 +1,10 @@
 import { createEffect, createRenderEffect, createSignal, onCleanup, runWithOwner, type JSX } from 'solid-js';
 
 import { UNSAFE_useViewContext } from '~/lib/navigation/router';
-import { intersectionObserver, resizeObserver } from '~/lib/observer';
+import { intersectionCallback, resizeCallback } from '~/lib/observer';
+
+const intersectionObserver = new IntersectionObserver(intersectionCallback, { rootMargin: `106.25% 0%` });
+const resizeObserver = new ResizeObserver(resizeCallback);
 
 const createVirtualStore = (ctx: ReturnType<typeof UNSAFE_useViewContext>) => {
 	return runWithOwner(ctx.owner, () => {
