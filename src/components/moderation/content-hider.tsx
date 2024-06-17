@@ -21,8 +21,9 @@ import ProblemOutlinedIcon from '../icons-central/problem-outline';
 export interface ContentHiderProps extends ParentProps {
 	ui: ModerationUI | undefined;
 	ignoreMute?: boolean;
-	class?: string;
-	childContainerClass?: string;
+	containerClass?: string;
+	innerClass?: string;
+	outerClass?: string;
 }
 
 const ContentHider = (props: ContentHiderProps) => {
@@ -31,7 +32,7 @@ const ContentHider = (props: ContentHiderProps) => {
 		const blur = ui?.b[0];
 
 		if (!blur || (props.ignoreMute && isOnlyMuted(ui.b))) {
-			return <div class={`flex flex-col ` + (props.class || '')}>{props.children}</div>;
+			return <div class={`flex flex-col ` + (props.outerClass || '')}>{props.children}</div>;
 		}
 
 		const [override, setOverride] = createSignal(false);
@@ -61,7 +62,7 @@ const ContentHider = (props: ContentHiderProps) => {
 		}
 
 		return (
-			<div class={`flex flex-col ` + (props.class || '')}>
+			<div class={`flex flex-col ` + (props.containerClass || '')}>
 				<button
 					disabled={forced}
 					onClick={() => setOverride((next) => !next)}
@@ -87,7 +88,7 @@ const ContentHider = (props: ContentHiderProps) => {
 
 				{(() => {
 					if (override()) {
-						return <div class={props.childContainerClass}>{props.children}</div>;
+						return <div class={props.innerClass}>{props.children}</div>;
 					}
 				})()}
 			</div>

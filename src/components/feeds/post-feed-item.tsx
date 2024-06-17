@@ -15,10 +15,12 @@ import { handleLinkNavigation } from '../button';
 import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 import RichText from '../rich-text';
 
+import { ContextContentList, getModerationUI } from '~/api/moderation';
+import Embed from '../embeds/embed';
+import ContentHider from '../moderation/content-hider';
 import PostActions from './post-actions';
 import PostMeta from './post-meta';
 import PostReplyContext from './post-reply-context';
-import Embed from '../embeds/embed';
 
 export interface PostFeedItemProps {
 	/** Expected to be static */
@@ -72,8 +74,15 @@ const PostFeedItem = ({ item, timelineDid }: PostFeedItemProps) => {
 					<PostMeta post={post} href={href} authorHref={authorHref} gutterBottom />
 					<PostReplyContext item={item} />
 
-					<RichText text={/* @once */ record.text} facets={/* @once */ record.facets} clipped />
-					{embed && <Embed embed={embed} moderation={moderation()} gutterTop />}
+					<ContentHider
+						ui={getModerationUI(moderation(), ContextContentList)}
+						ignoreMute={/* @once */ timelineDid === author.did}
+						containerClass="mt-2"
+						innerClass="mt-2"
+					>
+						<RichText text={/* @once */ record.text} facets={/* @once */ record.facets} clipped />
+						{embed && <Embed embed={embed} moderation={moderation()} gutterTop />}
+					</ContentHider>
 
 					<PostActions post={post} shadow={shadow()} />
 				</div>

@@ -59,7 +59,7 @@ const MediaEmbed = (props: MediaEmbedProps) => {
 	return (
 		<ContentHider
 			ui={getModerationUI(props.moderation, ContextContentMedia)}
-			childContainerClass="flex flex-col mt-1.5"
+			innerClass="flex flex-col mt-1.5"
 			children={(() => {
 				const embed = props.embed;
 				const type = embed.$type;
