@@ -31,7 +31,7 @@ const ContentHider = (props: ContentHiderProps) => {
 		const blur = ui?.b[0];
 
 		if (!blur || (props.ignoreMute && isOnlyMuted(ui.b))) {
-			return <div class={`flex flex-col ` + props.class}>{props.children}</div>;
+			return <div class={`flex flex-col ` + (props.class || '')}>{props.children}</div>;
 		}
 
 		const [override, setOverride] = createSignal(false);
@@ -61,7 +61,7 @@ const ContentHider = (props: ContentHiderProps) => {
 		}
 
 		return (
-			<div class={`flex flex-col ` + props.class}>
+			<div class={`flex flex-col ` + (props.class || '')}>
 				<button
 					disabled={forced}
 					onClick={() => setOverride((next) => !next)}
