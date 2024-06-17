@@ -1,6 +1,18 @@
 import { lazy } from 'solid-js';
 import type { RouteDefinition } from './lib/navigation/router';
 
+const DID_OR_HANDLE_RE =
+	/^(?:did:[a-z]+:[a-zA-Z0-9._:%-]*[a-zA-Z0-9._-]|[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,}))$/;
+
+const TID_RE = /^[234567abcdefghij][234567abcdefghijklmnopqrstuvwxyz]{12}$/;
+
+const isValidDidOrHandle = (str: string | undefined): boolean => {
+	return str !== undefined && DID_OR_HANDLE_RE.test(str);
+};
+const isValidTid = (str: string | undefined): boolean => {
+	return str !== undefined && str.length === 13 && TID_RE.test(str);
+};
+
 const routes: RouteDefinition[] = [
 	{
 		path: '/',
@@ -42,6 +54,14 @@ const routes: RouteDefinition[] = [
 		meta: {
 			name: 'Feeds',
 			main: true,
+		},
+	},
+
+	{
+		path: '/:didOrHandle/:rkey',
+		component: lazy(() => import('./views/post-thread')),
+		validate(params) {
+			return isValidDidOrHandle(params.didOrHandle) && isValidTid(params.rkey);
 		},
 	},
 

@@ -248,6 +248,11 @@ const createAccountPreferences = (did: At.DID) => {
 					labels: {},
 					tempMutes: {},
 				},
+				threadView: {
+					followsFirst: true,
+					sort: 'most-likes',
+					treeView: true,
+				},
 			};
 
 			return obj;

@@ -9,10 +9,11 @@ export interface PostMetaProps {
 	post: AppBskyFeedDefs.PostView;
 	authorHref: string;
 	href: string;
+	compact?: boolean;
 	gutterBottom?: boolean;
 }
 
-const PostMeta = ({ post, authorHref, href, gutterBottom }: PostMetaProps) => {
+const PostMeta = ({ post, authorHref, href, compact, gutterBottom }: PostMetaProps) => {
 	const author = post.author;
 
 	const displayName = author.displayName;
@@ -35,7 +36,9 @@ const PostMeta = ({ post, authorHref, href, gutterBottom }: PostMetaProps) => {
 						</bdi>
 					)}
 
-					<span class="block overflow-hidden text-ellipsis whitespace-nowrap">@{handle}</span>
+					{(!compact || !displayName) && (
+						<span class="block overflow-hidden text-ellipsis whitespace-nowrap">@{handle}</span>
+					)}
 				</a>
 
 				<span class="px-1">·</span>

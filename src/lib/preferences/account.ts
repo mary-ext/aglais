@@ -7,6 +7,16 @@ export interface PerAccountPreferenceSchema {
 	feeds: SavedFeed[];
 	language: LanguagePreferences;
 	moderation: ModerationPreferences;
+	threadView: ThreadViewPreferences;
+}
+
+export interface ThreadViewPreferences {
+	/** Show replies from followed users first */
+	followsFirst: boolean;
+	/** How it should order the replies */
+	sort: 'oldest' | 'newest' | 'most-likes';
+	/** Experimental tree view */
+	treeView: boolean;
 }
 
 export interface ModerationLabelerPreferences {

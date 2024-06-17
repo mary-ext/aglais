@@ -3,12 +3,14 @@ import type { ParentProps } from 'solid-js';
 import { useProfileQuery } from '~/api/queries/profile';
 
 import { openModal } from '~/globals/modals';
+import { history, logger } from '~/globals/navigation';
 
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
 import Avatar from './avatar';
 import IconButton from './icon-button';
+import ArrowLeftOutlinedIcon from './icons-central/arrow-left-outline';
 import MenuOutlinedIcon from './icons-central/menu-outline';
 import MainSidebarLazy from './main/main-sidebar';
 
@@ -76,3 +78,28 @@ const PageMainMenu = ({}: PageMainMenuProps) => {
 };
 
 export { PageMainMenu as MainMenu };
+
+export interface PageBackProps {
+	to?: string;
+}
+
+const PageBack = (props: PageBackProps) => {
+	return (
+		<IconButton
+			title="Go back to previous page"
+			icon={ArrowLeftOutlinedIcon}
+			onClick={() => {
+				if (logger.canGoBack) {
+					history.back();
+				} else {
+					const to = props.to;
+					if (to !== undefined) {
+						history.navigate(to, { replace: true });
+					}
+				}
+			}}
+		/>
+	);
+};
+
+export { PageBack as Back };
