@@ -185,8 +185,15 @@ export function* findAllProfilesInQueryData(
 				const post = item.post;
 				const reply = item.reply;
 
-				if (post.author.did === did) {
-					yield post.author;
+				{
+					if (post.author.did === did) {
+						yield post.author;
+					}
+
+					const embeddedPost = getEmbeddedPost(post.embed);
+					if (embeddedPost && embeddedPost.author.did === did) {
+						yield embeddedPost.author;
+					}
 				}
 
 				if (reply !== undefined) {
