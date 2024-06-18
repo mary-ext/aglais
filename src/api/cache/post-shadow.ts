@@ -4,6 +4,7 @@ import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
 import { EventEmitter } from '@mary/events';
 import type { QueryClient } from '@mary/solid-query';
 
+import { findAllPostsInQueryData as findAllPostsInPostThreadQueryData } from '../queries/post-thread';
 import { findAllPostsInQueryData as findAllPostsInTimelineQueryData } from '../queries/timeline';
 import { EQUALS_DEQUAL } from '../utils/dequal';
 
@@ -89,4 +90,5 @@ export function* findPostsInCache(
 	includeQuote = false,
 ): Generator<AppBskyFeedDefs.PostView> {
 	yield* findAllPostsInTimelineQueryData(queryClient, uri, includeQuote);
+	yield* findAllPostsInPostThreadQueryData(queryClient, uri, includeQuote);
 }
