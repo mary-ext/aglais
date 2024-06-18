@@ -93,7 +93,19 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 					const type = item.type;
 
 					if (type === 'post') {
-						return <PostThreadItem item={item} treeView={false} />;
+						// Set estimateHeight for all except the last item.
+						// As this is a one-time render only thing, we're not using the
+						// second parameter in the <For> render function to get the index.
+						const ancestors = thread().ancestors;
+
+						const index = ancestors.indexOf(item);
+						const end = index === ancestors.length - 1;
+
+						return (
+							<VirtualItem estimateHeight={!end ? 98 : undefined}>
+								<PostThreadItem item={item} treeView={false} />
+							</VirtualItem>
+						);
 					}
 
 					return null;
