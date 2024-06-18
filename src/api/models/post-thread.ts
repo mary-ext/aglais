@@ -29,7 +29,6 @@ export const enum LineType {
 }
 
 interface BaseAncestor {
-	depth?: undefined;
 	lines?: undefined;
 }
 
@@ -59,7 +58,6 @@ export type AncestorItem =
 	| PostAncestorItem;
 
 interface BaseDescendant {
-	depth: number;
 	lines: LineType[];
 }
 
@@ -190,7 +188,6 @@ export const createThreadData = ({
 						{
 							type: 'overflow',
 							uri: parent.uri,
-							depth: depth,
 							lines: treeView ? lines.concat(LineType.UP_RIGHT) : lines,
 						},
 					];
@@ -308,7 +305,6 @@ export const createThreadData = ({
 						post: post,
 						prev: depth !== 0,
 						next: children.length !== 0,
-						depth: depth,
 						lines: nlines,
 					});
 
@@ -317,7 +313,6 @@ export const createThreadData = ({
 					array.push({
 						type: 'blocked',
 						uri: reply.uri,
-						depth: depth,
 						lines: nlines,
 					});
 				}
