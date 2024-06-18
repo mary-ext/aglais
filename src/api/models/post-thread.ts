@@ -170,6 +170,8 @@ export const createThreadData = ({
 				}
 			}
 		}
+
+		ancestors.reverse();
 	}
 
 	{
