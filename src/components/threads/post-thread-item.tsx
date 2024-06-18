@@ -19,7 +19,7 @@ export interface PostThreadItemProps {
 }
 
 const PostThreadItem = ({ item, treeView }: PostThreadItemProps) => {
-	const { post, lines, depth = 0, end = false } = item;
+	const { post, lines, prev, next } = item;
 
 	const shadow = usePostShadow(post);
 
@@ -33,20 +33,18 @@ const PostThreadItem = ({ item, treeView }: PostThreadItemProps) => {
 	return (
 		<div
 			class={
-				`flex border-c-contrast-200 px-3 hover:bg-c-contrast-25 ` + (!treeView && end ? ` border-b` : ``)
+				`flex border-c-contrast-200 px-3 hover:bg-c-contrast-25 ` + (!treeView && !next ? ` border-b` : ``)
 			}
 		>
 			<ThreadLines lines={lines} />
 
 			<div class={`flex min-w-0 grow` + (!treeView ? ` gap-3` : ` gap-2`)}>
 				<div class={`relative flex shrink-0 flex-col items-center` + (!treeView ? ` pt-3` : ` pt-2`)}>
-					{!treeView && depth !== 0 && (
-						<div class="absolute top-0 h-2 border-l-2 border-c-contrast-100"></div>
-					)}
+					{!treeView && prev && <div class="absolute top-0 h-2 border-l-2 border-c-contrast-100"></div>}
 
 					<Avatar type="user" src={/* @once */ author.avatar} size={!treeView ? 'md' : 'xs'} />
 
-					{!end && (
+					{next && (
 						<div class={`grow border-l-2 border-c-contrast-100` + (!treeView ? ` mt-1` : ` mt-0.5`)}></div>
 					)}
 				</div>

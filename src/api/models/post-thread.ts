@@ -48,7 +48,8 @@ export interface OverflowAncestorItem extends BaseAncestor {
 export interface PostAncestorItem extends BaseAncestor {
 	type: 'post';
 	post: AppBskyFeedDefs.PostView;
-	end?: undefined;
+	prev: boolean;
+	next: boolean;
 }
 
 export type AncestorItem =
@@ -73,7 +74,8 @@ export interface OverflowDescendantItem extends BaseDescendant {
 export interface PostDescendantItem extends BaseDescendant {
 	type: 'post';
 	post: AppBskyFeedDefs.PostView;
-	end: boolean;
+	prev: boolean;
+	next: boolean;
 }
 
 export type DescendantItem = BlockedDescendantItem | OverflowDescendantItem | PostDescendantItem;
@@ -132,7 +134,6 @@ export const createThreadData = ({
 
 	{
 		let parent = thread.parent;
-		let height = 0;
 
 		ancestors = [];
 
@@ -150,7 +151,7 @@ export const createThreadData = ({
 			} else if (type === 'app.bsky.feed.defs#notFoundPost') {
 				ancestors.push({ type: 'nonexistent', uri: parent.uri });
 			} else if (type === 'app.bsky.feed.defs#threadViewPost') {
-				ancestors.push({ type: 'post', post: parent.post });
+				ancestors.push({ type: 'post', post: parent.post, prev: true, next: true });
 				parent = parent.parent;
 
 				continue;
@@ -160,13 +161,15 @@ export const createThreadData = ({
 		}
 
 		{
-			const last = ancestors[height - 1];
+			const last = ancestors[ancestors.length - 1];
 
 			if (last && last.type === 'post') {
 				const reply = (last.post.record as AppBskyFeedPost.Record).reply;
 
 				if (reply) {
 					ancestors.push({ type: 'overflow', uri: last.post.uri });
+				} else {
+					last.prev = false;
 				}
 			}
 		}
@@ -303,7 +306,8 @@ export const createThreadData = ({
 					array.push({
 						type: 'post',
 						post: post,
-						end: children.length === 0,
+						prev: depth !== 0,
+						next: children.length !== 0,
 						depth: depth,
 						lines: nlines,
 					});
