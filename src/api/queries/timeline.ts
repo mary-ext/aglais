@@ -125,6 +125,13 @@ export function* findAllPostsInQueryData(
 					yield post;
 				}
 
+				if (includeQuote) {
+					const embeddedPost = getEmbeddedPost(post.embed);
+					if (embeddedPost && embeddedPost.uri === uri) {
+						yield embedViewRecordToPostView(embeddedPost);
+					}
+				}
+
 				if (reply !== undefined) {
 					const parent = reply.parent;
 					const root = reply.root;
