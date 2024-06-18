@@ -1,4 +1,4 @@
-import { For, Match, Switch, createMemo } from 'solid-js';
+import { For, Match, Switch, createMemo, onMount } from 'solid-js';
 
 import type { AppBskyFeedDefs, Brand } from '@mary/bluesky-client/lexicons';
 
@@ -100,7 +100,14 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 				}}
 			</For>
 
-			<div style={{ 'min-height': `calc(100vh - 3.25rem - 0.75rem)` }}>
+			<div
+				ref={(node) => {
+					onMount(() => {
+						node.scrollIntoView({ behavior: 'instant' });
+					});
+				}}
+				style={{ 'min-height': `calc(100vh - 3.25rem - 0.75rem)` }}
+			>
 				<div>asd</div>
 
 				<Divider gutterBottom="sm" />
