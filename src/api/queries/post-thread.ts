@@ -1,4 +1,9 @@
-import type { AppBskyFeedDefs, AppBskyFeedGetPostThread } from '@mary/bluesky-client/lexicons';
+import type {
+	AppBskyActorDefs,
+	AppBskyFeedDefs,
+	AppBskyFeedGetPostThread,
+	At,
+} from '@mary/bluesky-client/lexicons';
 import { QueryClient, createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
@@ -79,6 +84,36 @@ export function* findAllPostsInQueryData(
 				const embeddedPost = getEmbeddedPost(post.embed);
 				if (embeddedPost && embeddedPost.uri === uri) {
 					yield embedViewRecordToPostView(embeddedPost);
+				}
+			}
+		}
+	}
+}
+
+export function* findAllProfilesInQueryData(
+	queryClient: QueryClient,
+	did: At.DID,
+): Generator<AppBskyActorDefs.ProfileViewBasic> {
+	const entries = queryClient.getQueriesData<AppBskyFeedGetPostThread.Output['thread']>({
+		queryKey: ['post-thread'],
+	});
+
+	for (const [_key, data] of entries) {
+		if (data === undefined) {
+			continue;
+		}
+
+		for (const thread of traverseThread(data)) {
+			const post = thread.post;
+
+			{
+				if (post.author.did === did) {
+					yield post.author;
+				}
+
+				const embeddedPost = getEmbeddedPost(post.embed);
+				if (embeddedPost && embeddedPost.author.did === did) {
+					yield embeddedPost.author;
 				}
 			}
 		}
