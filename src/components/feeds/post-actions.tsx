@@ -17,7 +17,6 @@ import WriteOutlinedIcon from '../icons-central/write-outline';
 import * as Menu from '../menu';
 
 export interface PostActionsProps {
-	/** Expected to be static */
 	post: AppBskyFeedDefs.PostView;
 	shadow: PostShadowView;
 	/** Expected to be static */
@@ -27,20 +26,19 @@ export interface PostActionsProps {
 const PostActions = (props: PostActionsProps) => {
 	const queryClient = useQueryClient();
 
-	const post = props.post;
+	const post = () => props.post;
 	const compact = props.compact;
 
-	const replyDisabled = post.viewer?.replyDisabled;
-	const replyCount = formatCompact(post.replyCount ?? 0);
+	const replyDisabled = () => post().viewer?.replyDisabled;
 	const isLiked = () => !!props.shadow.likeUri;
 	const isReposted = () => !!props.shadow.repostUri;
 
 	const toggleLike = () => {
-		updatePostShadow(queryClient, post.uri, { likeUri: isLiked() ? undefined : `pending` });
+		updatePostShadow(queryClient, post().uri, { likeUri: isLiked() ? undefined : `pending` });
 	};
 
 	const toggleRepost = () => {
-		updatePostShadow(queryClient, post.uri, { repostUri: isReposted() ? undefined : `pending` });
+		updatePostShadow(queryClient, post().uri, { repostUri: isReposted() ? undefined : `pending` });
 	};
 
 	return (
@@ -48,7 +46,7 @@ const PostActions = (props: PostActionsProps) => {
 			<div class={`min-w-0` + (!compact ? ` grow basis-0` : ``)}>
 				<button
 					onClick={() => {
-						if (replyDisabled) {
+						if (replyDisabled()) {
 							return;
 						}
 
@@ -61,7 +59,7 @@ const PostActions = (props: PostActionsProps) => {
 					</div>
 
 					<span class="overflow-hidden text-ellipsis whitespace-nowrap pr-2 text-de">
-						{!compact ? replyCount : `Reply`}
+						{!compact ? formatCompact(post().replyCount ?? 0) : `Reply`}
 					</span>
 				</button>
 			</div>

@@ -1,14 +1,22 @@
-import { LineType } from '~/api/models/post-thread';
+import { createMemo, type JSX } from 'solid-js';
 
-import { mapDefined } from '~/lib/misc';
+import { LineType } from '~/api/models/post-thread';
+import { EQUALS_DEQUAL } from '~/api/utils/dequal';
+
+import { mapDefined, on } from '~/lib/misc';
 
 export interface ThreadLinesProps {
-	/** Expected to be static */
 	lines: LineType[] | undefined;
 }
 
-const ThreadLines = ({ lines }: ThreadLinesProps) => {
-	if (lines?.length) {
+const ThreadLines = (props: ThreadLinesProps) => {
+	const get = createMemo(() => props.lines, EQUALS_DEQUAL);
+
+	return on(get, (lines) => {
+		if (!lines?.length) {
+			return undefined;
+		}
+
 		return mapDefined(lines, (line) => {
 			const drawVertical = line === LineType.VERTICAL || line === LineType.VERTICAL_RIGHT;
 			const drawRight = line === LineType.UP_RIGHT || line === LineType.VERTICAL_RIGHT;
@@ -24,7 +32,7 @@ const ThreadLines = ({ lines }: ThreadLinesProps) => {
 				</div>
 			);
 		});
-	}
+	}) as unknown as JSX.Element;
 };
 
 export default ThreadLines;

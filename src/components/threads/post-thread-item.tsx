@@ -25,23 +25,28 @@ export interface PostThreadItemProps {
 	treeView: boolean;
 }
 
-const PostThreadItem = ({ item, treeView }: PostThreadItemProps) => {
+const PostThreadItem = (props: PostThreadItemProps) => {
+	const treeView = props.treeView;
+	const item = () => props.item;
+
 	const moderationOptions = useModerationOptions();
 
-	const { post, lines, prev, next } = item;
+	const post = () => item().post;
+	const prev = item().prev;
+	const next = item().next;
 
-	const author = post.author;
-	const record = post.record as AppBskyFeedPost.Record;
-	const embed = post.embed;
+	const author = () => post().author;
+	const record = post().record as AppBskyFeedPost.Record;
+	const embed = post().embed;
 
 	const shadow = usePostShadow(post);
 	const authorShadow = useProfileShadow(author);
 
-	const uri = parseAtUri(post.uri);
-	const authorHref = `/${author.did}`;
-	const href = `/${author.did}/${uri.rkey}`;
+	const uri = parseAtUri(post().uri);
+	const authorHref = `/${author().did}`;
+	const href = `/${author().did}/${uri.rkey}`;
 
-	const moderation = createMemo(() => moderatePost(post, authorShadow(), moderationOptions()));
+	const moderation = createMemo(() => moderatePost(post(), authorShadow(), moderationOptions()));
 
 	return (
 		<div
@@ -51,13 +56,13 @@ const PostThreadItem = ({ item, treeView }: PostThreadItemProps) => {
 				(!treeView ? ` px-4` + (!next ? ` border-b` : ``) : ` px-3`)
 			}
 		>
-			<ThreadLines lines={lines} />
+			<ThreadLines lines={item().lines} />
 
 			<div class={`flex min-w-0 grow` + (!treeView ? ` gap-3` : ` gap-2`)}>
 				<div class="relative flex shrink-0 flex-col items-center pt-3">
 					{!treeView && prev && <div class="absolute top-0 h-2 border-l-2 border-c-contrast-100"></div>}
 
-					<Avatar type="user" src={/* @once */ author.avatar} size={!treeView ? 'md' : 'xs'} />
+					<Avatar type="user" src={author().avatar} size={!treeView ? 'md' : 'xs'} />
 
 					{next && (
 						<div class={`grow border-l-2 border-c-contrast-100` + (!treeView ? ` mt-1` : ` mt-0.5`)}></div>
@@ -65,12 +70,12 @@ const PostThreadItem = ({ item, treeView }: PostThreadItemProps) => {
 				</div>
 
 				<div class="min-w-0 grow py-3">
-					<PostMeta post={post} href={href} authorHref={authorHref} compact={treeView} gutterBottom />
+					<PostMeta post={post()} href={href} authorHref={authorHref} compact={treeView} gutterBottom />
 
 					<RichText text={/* @once */ record.text} facets={/* @once */ record.facets} clipped />
 					{embed && <Embed embed={embed} moderation={moderation()} gutterTop />}
 
-					<PostActions post={post} shadow={shadow()} compact />
+					<PostActions post={post()} shadow={shadow()} compact />
 				</div>
 			</div>
 		</div>
