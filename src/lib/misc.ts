@@ -58,5 +58,5 @@ export const reconcile = <T extends { id: string | number }>(prev: T[] | undefin
 		}
 	}
 
-	return equalItems === prev.length ? prev : equalItems === 0 ? next : array;
+	return next.length === prev.length && equalItems === prev.length ? prev : equalItems === 0 ? next : array;
 };
