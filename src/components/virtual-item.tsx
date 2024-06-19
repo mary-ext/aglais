@@ -52,16 +52,15 @@ export interface VirtualItemProps {
 
 const VirtualItem = (props: VirtualItemProps) => {
 	let _entry: IntersectionObserverEntry | undefined;
-	let _height: number | undefined;
+	let _height: number | undefined = props.estimateHeight;
 	let _intersecting = false;
 
 	const store = getVirtualStore(UNSAFE_useViewContext());
-	const estimateHeight = props.estimateHeight;
 
 	const [intersecting, setIntersecting] = createSignal(_intersecting);
-	const [storedHeight, setStoredHeight] = createSignal(estimateHeight);
+	const [storedHeight, setStoredHeight] = createSignal(_height);
 
-	const shouldHide = () => !intersecting() && (estimateHeight ?? storedHeight()) !== undefined;
+	const shouldHide = () => !intersecting() && (_height ?? storedHeight()) !== undefined;
 
 	const handleIntersect = (nextEntry: IntersectionObserverEntry) => {
 		_entry = undefined;
@@ -97,7 +96,7 @@ const VirtualItem = (props: VirtualItemProps) => {
 	};
 
 	const handleResize = (nextEntry: ResizeObserverEntry) => {
-		if (!_intersecting || store.disabled) {
+		if ((!_intersecting && _height !== undefined) || store.disabled) {
 			return;
 		}
 
