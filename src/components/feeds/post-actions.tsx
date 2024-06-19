@@ -5,13 +5,14 @@ import { updatePostShadow, type PostShadowView } from '~/api/cache/post-shadow';
 
 import { openModal } from '~/globals/modals';
 
-import * as Menu from '../menu';
+import ComposerDialogLazy from '../composer/composer-dialog-lazy';
 import HeartOutlinedIcon from '../icons-central/heart-outline';
 import HeartSolidIcon from '../icons-central/heart-solid';
 import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 import ReplyOutlinedIcon from '../icons-central/reply-outline';
 import ShareOutlinedIcon from '../icons-central/share-outline';
 import WriteOutlinedIcon from '../icons-central/write-outline';
+import * as Menu from '../menu';
 
 export interface PostActionsProps {
 	/** Expected to be static */
@@ -27,6 +28,7 @@ const PostActions = (props: PostActionsProps) => {
 	const post = props.post;
 	const compact = props.compact;
 
+	const replyDisabled = post.viewer?.replyDisabled;
 	const replyCount = post.replyCount ?? 0;
 	const isLiked = () => !!props.shadow.likeUri;
 	const isReposted = () => !!props.shadow.repostUri;
@@ -42,7 +44,16 @@ const PostActions = (props: PostActionsProps) => {
 	return (
 		<div class={`mt-3 flex items-center text-c-contrast-600` + (!compact ? `` : ` gap-3`)}>
 			<div class={`min-w-0` + (!compact ? ` grow basis-0` : ``)}>
-				<button class={`group flex max-w-full grow basis-0 items-end gap-0.5`}>
+				<button
+					onClick={() => {
+						if (replyDisabled) {
+							return;
+						}
+
+						openModal(() => <ComposerDialogLazy />);
+					}}
+					class={`group flex max-w-full grow basis-0 items-end gap-0.5`}
+				>
 					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-c-contrast-50">
 						<ReplyOutlinedIcon />
 					</div>
