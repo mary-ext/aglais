@@ -36,13 +36,16 @@ export const reconcile = <T extends { id: string | number }>(prev: T[] | undefin
 	let equalItems = 0;
 
 	const map = new Map<string | number, T>();
-	for (let idx = 0, len = prev.length; idx < len; idx++) {
+	const prevLen = prev.length;
+	const nextLen = next.length;
+
+	for (let idx = 0; idx < prevLen; idx++) {
 		const item = prev[idx];
 		map.set(item.id, item);
 	}
 
 	const array: T[] = Array.from({ length: next.length });
-	for (let idx = 0, len = next.length; idx < len; idx++) {
+	for (let idx = 0; idx < nextLen; idx++) {
 		const nextItem = next[idx];
 		const prevItem = map.get(nextItem.id);
 
@@ -58,5 +61,5 @@ export const reconcile = <T extends { id: string | number }>(prev: T[] | undefin
 		}
 	}
 
-	return next.length === prev.length && equalItems === prev.length ? prev : equalItems === 0 ? next : array;
+	return nextLen === prevLen && equalItems === prevLen ? prev : equalItems === 0 ? next : array;
 };
