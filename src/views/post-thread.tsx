@@ -121,13 +121,9 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 				}}
 				style={{ 'min-height': `calc(100vh - 3.25rem - 0.75rem)`, 'scroll-margin-top': '3.25rem' }}
 			>
-				<Keyed value={thread().post}>
-					{(post) => (
-						<VirtualItem>
-							<HighlightedPost post={post} prev={/* @once */ thread().ancestors.length !== 0} />
-						</VirtualItem>
-					)}
-				</Keyed>
+				<VirtualItem>
+					<HighlightedPost post={thread().post} prev={thread().ancestors.length !== 0} />
+				</VirtualItem>
 
 				<Keyed value={thread().preferences.treeView}>
 					{(treeView) => (
