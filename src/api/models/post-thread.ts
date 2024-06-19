@@ -29,6 +29,7 @@ export const enum LineType {
 }
 
 interface BaseAncestor {
+	id: string;
 	lines?: undefined;
 }
 
@@ -58,6 +59,7 @@ export type AncestorItem =
 	| PostAncestorItem;
 
 interface BaseDescendant {
+	id: string;
 	lines: LineType[];
 }
 
@@ -142,14 +144,18 @@ export const createThreadData = ({
 				const uri = parent.uri;
 
 				if (blocking) {
-					ancestors.push({ type: 'blocked', uri: uri });
+					ancestors.push({ id: uri, type: 'blocked', uri: uri });
 				} else {
-					ancestors.push({ type: 'nonexistent', uri: uri });
+					ancestors.push({ id: uri, type: 'nonexistent', uri: uri });
 				}
 			} else if (type === 'app.bsky.feed.defs#notFoundPost') {
-				ancestors.push({ type: 'nonexistent', uri: parent.uri });
+				const uri = parent.uri;
+
+				ancestors.push({ id: uri, type: 'nonexistent', uri: uri });
 			} else if (type === 'app.bsky.feed.defs#threadViewPost') {
-				ancestors.push({ type: 'post', post: parent.post, prev: true, next: true });
+				const post = parent.post;
+
+				ancestors.push({ id: post.uri, type: 'post', post: post, prev: true, next: true });
 				parent = parent.parent;
 
 				continue;
@@ -162,10 +168,13 @@ export const createThreadData = ({
 			const last = ancestors[ancestors.length - 1];
 
 			if (last && last.type === 'post') {
-				const reply = (last.post.record as AppBskyFeedPost.Record).reply;
+				const post = last.post;
+				const reply = (post.record as AppBskyFeedPost.Record).reply;
 
 				if (reply) {
-					ancestors.push({ type: 'overflow', uri: last.post.uri });
+					const uri = reply.parent.uri;
+
+					ancestors.push({ id: uri, type: 'overflow', uri: uri });
 				} else {
 					last.prev = false;
 				}
@@ -186,6 +195,7 @@ export const createThreadData = ({
 				if (depth !== 0 && parent.replyCount) {
 					return [
 						{
+							id: 'overflow-' + parent.uri,
 							type: 'overflow',
 							uri: parent.uri,
 							lines: treeView ? lines.concat(LineType.UP_RIGHT) : lines,
@@ -301,6 +311,7 @@ export const createThreadData = ({
 					);
 
 					array.push({
+						id: post.uri,
 						type: 'post',
 						post: post,
 						prev: depth !== 0,
@@ -311,6 +322,7 @@ export const createThreadData = ({
 					push(array, children);
 				} else if (type === 'app.bsky.feed.defs#blockedPost') {
 					array.push({
+						id: reply.uri,
 						type: 'blocked',
 						uri: reply.uri,
 						lines: nlines,
