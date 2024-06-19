@@ -46,7 +46,9 @@ const PostThreadItem = ({ item, treeView }: PostThreadItemProps) => {
 	return (
 		<div
 			class={
-				`flex border-c-contrast-200 px-3 hover:bg-c-contrast-25 ` + (!treeView && !next ? ` border-b` : ``)
+				`flex border-c-contrast-200 hover:bg-c-contrast-25` +
+				// prettier-ignore
+				(!treeView ? ` px-4` + (!next ? ` border-b` : ``) : ` px-3`)
 			}
 		>
 			<ThreadLines lines={lines} />
