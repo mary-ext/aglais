@@ -19,7 +19,7 @@ import PostMeta from '../feeds/post-meta';
 import ThreadLines from './thread-lines';
 
 export interface PostThreadItemProps {
-	/** Expected to be static */
+	/** Not static, but expects the URI (post identifier) to be static */
 	item: PostAncestorItem | PostDescendantItem;
 	/** Expected to be static */
 	treeView: boolean;
