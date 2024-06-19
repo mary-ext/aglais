@@ -1,7 +1,7 @@
 lockfileVersion: '9.0'
 
 settings:
-  autoInstallPeers: false
+  autoInstallPeers: true
   excludeLinksFromLockfile: false
 
 patchedDependencies:
@@ -49,6 +49,9 @@ importers:
       '@mary/solid-query':
         specifier: npm:@externdefs/solid-query@^0.1.4
         version: '@externdefs/solid-query@0.1.4(solid-js@1.8.17(patch_hash=wunpcbjxb5h4ujg4psj63uuluq))'
+      '@solid-primitives/keyed':
+        specifier: ^1.2.2
+        version: 1.2.2(solid-js@1.8.17(patch_hash=wunpcbjxb5h4ujg4psj63uuluq))
       cborg:
         specifier: 4.0.7
         version: 4.0.7(patch_hash=dz6b6r6dc4jadjfng7vtgi53hy)
@@ -91,7 +94,7 @@ importers:
         version: 5.2.11(patch_hash=rtipi3fkkgeet3kqyzne4ksswy)(@types/node@20.14.2)(terser@5.31.1)
       vite-plugin-pwa:
         specifier: 0.17.4
-        version: 0.17.4(patch_hash=ve5hypcrajivuvoyst6zln6qyq)(@types/babel__core@7.20.5)(vite@5.2.11(patch_hash=rtipi3fkkgeet3kqyzne4ksswy)(@types/node@20.14.2)(terser@5.31.1))
+        version: 0.17.4(patch_hash=ve5hypcrajivuvoyst6zln6qyq)(vite@5.2.11(patch_hash=rtipi3fkkgeet3kqyzne4ksswy)(@types/node@20.14.2)(terser@5.31.1))(workbox-build@7.1.0(@types/babel__core@7.20.5))(workbox-window@7.1.0)
       vite-plugin-solid:
         specifier: ^2.10.2
         version: 2.10.2(solid-js@1.8.17(patch_hash=wunpcbjxb5h4ujg4psj63uuluq))(vite@5.2.11(patch_hash=rtipi3fkkgeet3kqyzne4ksswy)(@types/node@20.14.2)(terser@5.31.1))
@@ -1220,6 +1223,11 @@ packages:
     resolution: {integrity: sha512-UOo5FdvOL0+eIVTgS4tIdbW+TtnBLWg1YBCcU2KWM7nuNwRz9bksDX1bekJJCpu25N1DVWaCwnT39dVQxzqS8g==}
     cpu: [x64]
     os: [win32]
+
+  '@solid-primitives/keyed@1.2.2':
+    resolution: {integrity: sha512-oBziY40JK4XmJ57XGkFl8j0GtEarSu0hhjdkUQgqL/U0QQE3TZrRo9uhgH7I6VGJKBKG7SAraTPE6S5lVLM1ow==}
+    peerDependencies:
+      solid-js: ^1.6.12
 
   '@surma/rollup-plugin-off-main-thread@2.2.3':
     resolution: {integrity: sha512-lR8q/9W7hZpMWweNiAKU7NQerBnzQQLvi8qnTDU/fxItPhtZVMbPV3lbCwjhIlNBe9Bbr5V+KHshvWmVSG9cxQ==}
@@ -2553,6 +2561,8 @@ packages:
     engines: {node: '>=16.0.0'}
     peerDependencies:
       vite: ^3.1.0 || ^4.0.0 || ^5.0.0
+      workbox-build: ^7.0.0
+      workbox-window: ^7.0.0
 
   vite-plugin-solid@2.10.2:
     resolution: {integrity: sha512-AOEtwMe2baBSXMXdo+BUwECC8IFHcKS6WQV/1NEd+Q7vHPap5fmIhLcAzr+DUJ04/KHx/1UBU0l1/GWP+rMAPQ==}
@@ -3794,6 +3804,10 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.18.0':
     optional: true
+
+  '@solid-primitives/keyed@1.2.2(solid-js@1.8.17(patch_hash=wunpcbjxb5h4ujg4psj63uuluq))':
+    dependencies:
+      solid-js: 1.8.17(patch_hash=wunpcbjxb5h4ujg4psj63uuluq)
 
   '@surma/rollup-plugin-off-main-thread@2.2.3':
     dependencies:
@@ -5191,7 +5205,7 @@ snapshots:
 
   validate-html-nesting@1.2.2: {}
 
-  vite-plugin-pwa@0.17.4(patch_hash=ve5hypcrajivuvoyst6zln6qyq)(@types/babel__core@7.20.5)(vite@5.2.11(patch_hash=rtipi3fkkgeet3kqyzne4ksswy)(@types/node@20.14.2)(terser@5.31.1)):
+  vite-plugin-pwa@0.17.4(patch_hash=ve5hypcrajivuvoyst6zln6qyq)(vite@5.2.11(patch_hash=rtipi3fkkgeet3kqyzne4ksswy)(@types/node@20.14.2)(terser@5.31.1))(workbox-build@7.1.0(@types/babel__core@7.20.5))(workbox-window@7.1.0):
     dependencies:
       debug: 4.3.4
       fast-glob: 3.3.2
@@ -5200,7 +5214,6 @@ snapshots:
       workbox-build: 7.1.0(@types/babel__core@7.20.5)
       workbox-window: 7.1.0
     transitivePeerDependencies:
-      - '@types/babel__core'
       - supports-color
 
   vite-plugin-solid@2.10.2(solid-js@1.8.17(patch_hash=wunpcbjxb5h4ujg4psj63uuluq))(vite@5.2.11(patch_hash=rtipi3fkkgeet3kqyzne4ksswy)(@types/node@20.14.2)(terser@5.31.1)):

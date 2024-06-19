@@ -1,8 +1,9 @@
+import { Key } from '@solid-primitives/keyed';
 import { For, Match, Switch, createMemo, onMount } from 'solid-js';
 
 import type { AppBskyFeedDefs, Brand } from '@mary/bluesky-client/lexicons';
 
-import { createThreadData } from '~/api/models/post-thread';
+import { createThreadData, type PostDescendantItem } from '~/api/models/post-thread';
 import { usePostThreadQuery } from '~/api/queries/post-thread';
 
 import { useParams } from '~/lib/navigation/router';
@@ -129,26 +130,26 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 					{(treeView) => (
 						<>
 							<Divider gutterBottom={treeView && `sm`} />
-							<For each={thread().descendants}>
+							<Key each={thread().descendants} by={(item) => item.id}>
 								{(item) => {
-									const type = item.type;
+									const type = item().type;
 
 									if (type === 'post') {
 										return (
 											<VirtualItem estimateHeight={98}>
-												<PostThreadItem item={item} treeView={treeView} />
+												<PostThreadItem item={item() as PostDescendantItem} treeView={treeView} />
 											</VirtualItem>
 										);
 									}
 
 									return (
 										<div class="flex px-3 hover:bg-c-contrast-25">
-											<ThreadLines lines={/* @once */ item.lines} />
+											<ThreadLines lines={item().lines} />
 											<div class="ml-2 py-3 text-sm">{type}</div>
 										</div>
 									);
 								}}
-							</For>
+							</Key>
 						</>
 					)}
 				</Keyed>
