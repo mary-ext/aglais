@@ -12,10 +12,11 @@ import { useSession } from '~/lib/states/session';
 import Divider from '~/components/divider';
 import Keyed from '~/components/keyed';
 import * as Page from '~/components/page';
+import VirtualItem from '~/components/virtual-item';
 
+import HighlightedPost from '~/components/threads/highlighted-post';
 import PostThreadItem from '~/components/threads/post-thread-item';
 import ThreadLines from '~/components/threads/thread-lines';
-import VirtualItem from '~/components/virtual-item';
 
 const PostThreadPage = () => {
 	const { didOrHandle, rkey } = useParams();
@@ -120,32 +121,39 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 				}}
 				style={{ 'min-height': `calc(100vh - 3.25rem - 0.75rem)`, 'scroll-margin-top': '3.25rem' }}
 			>
-				<div>asd</div>
-
-				<Divider gutterBottom="sm" />
+				<Keyed value={thread().post}>
+					{(post) => (
+						<VirtualItem>
+							<HighlightedPost post={post} prev={/* @once */ thread().ancestors.length !== 0} />
+						</VirtualItem>
+					)}
+				</Keyed>
 
 				<Keyed value={thread().preferences.treeView}>
 					{(treeView) => (
-						<For each={thread().descendants}>
-							{(item) => {
-								const type = item.type;
+						<>
+							<Divider gutterBottom={treeView && `sm`} />
+							<For each={thread().descendants}>
+								{(item) => {
+									const type = item.type;
 
-								if (type === 'post') {
+									if (type === 'post') {
+										return (
+											<VirtualItem estimateHeight={98}>
+												<PostThreadItem item={item} treeView={treeView} />
+											</VirtualItem>
+										);
+									}
+
 									return (
-										<VirtualItem estimateHeight={98}>
-											<PostThreadItem item={item} treeView={treeView} />
-										</VirtualItem>
+										<div class="flex px-3 hover:bg-c-contrast-25">
+											<ThreadLines lines={/* @once */ item.lines} />
+											<div class="ml-2 py-3 text-sm">{type}</div>
+										</div>
 									);
-								}
-
-								return (
-									<div class="flex px-3 hover:bg-c-contrast-25">
-										<ThreadLines lines={/* @once */ item.lines} />
-										<div class="ml-2 py-3 text-sm">{type}</div>
-									</div>
-								);
-							}}
-						</For>
+								}}
+							</For>
+						</>
 					)}
 				</Keyed>
 			</div>
