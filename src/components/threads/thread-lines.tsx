@@ -16,7 +16,7 @@ const ThreadLines = ({ lines }: ThreadLinesProps) => {
 			return (
 				<div class="relative w-5 shrink-0">
 					{drawRight && (
-						<div class="absolute right-[2px] top-0 h-[16px] w-[9px] rounded-bl-[9px] border-b-2 border-l-2 border-c-contrast-100"></div>
+						<div class="absolute right-[2px] top-0 h-[20px] w-[9px] rounded-bl-[9px] border-b-2 border-l-2 border-c-contrast-100"></div>
 					)}
 					{drawVertical && (
 						<div class="absolute bottom-0 left-[9px] top-0 border-l-2 border-c-contrast-100"></div>

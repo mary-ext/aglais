@@ -141,7 +141,7 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 								return (
 									<div class="flex px-3 hover:bg-c-contrast-25">
 										<ThreadLines lines={/* @once */ item.lines} />
-										<div class="ml-2 py-2 text-sm">{type}</div>
+										<div class="ml-2 py-3 text-sm">{type}</div>
 									</div>
 								);
 							}}

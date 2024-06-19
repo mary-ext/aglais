@@ -47,7 +47,9 @@ const PostActions = (props: PostActionsProps) => {
 						<ReplyOutlinedIcon />
 					</div>
 
-					<span class="overflow-hidden text-ellipsis whitespace-nowrap pr-2 text-de">{replyCount}</span>
+					<span class="overflow-hidden text-ellipsis whitespace-nowrap pr-2 text-de">
+						{!compact ? replyCount : `Reply`}
+					</span>
 				</button>
 			</div>
 
