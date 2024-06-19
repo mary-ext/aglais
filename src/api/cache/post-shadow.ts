@@ -1,4 +1,4 @@
-import { batch, createSignal, onCleanup } from 'solid-js';
+import { batch, createRenderEffect, createSignal, onCleanup, type Accessor } from 'solid-js';
 
 import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
 import { EventEmitter } from '@mary/events';
@@ -7,6 +7,7 @@ import type { QueryClient } from '@mary/solid-query';
 import { findAllPostsInQueryData as findAllPostsInPostThreadQueryData } from '../queries/post-thread';
 import { findAllPostsInQueryData as findAllPostsInTimelineQueryData } from '../queries/timeline';
 import { EQUALS_DEQUAL } from '../utils/dequal';
+import type { AccessorMaybe } from '../utils/types';
 
 export interface PostShadow {
 	deleted?: boolean;
@@ -27,11 +28,24 @@ export interface PostShadowView {
 const emitter = new EventEmitter<{ [uri: string]: () => void }>();
 const shadows = new WeakMap<AppBskyFeedDefs.PostView, PostShadow>();
 
-export const usePostShadow = (post: AppBskyFeedDefs.PostView) => {
-	const [view, setView] = createSignal(getPostShadow(post), EQUALS_DEQUAL);
+export const usePostShadow = (post: AccessorMaybe<AppBskyFeedDefs.PostView>): Accessor<PostShadowView> => {
+	if (typeof post === 'function') {
+		const [view, setView] = createSignal<PostShadowView>(undefined as any, EQUALS_DEQUAL);
 
-	onCleanup(emitter.on(post.uri, () => setView(getPostShadow(post))));
-	return view;
+		createRenderEffect(() => {
+			const $post = post();
+
+			setView(getPostShadow($post));
+			onCleanup(emitter.on($post.uri, () => setView(getPostShadow($post))));
+		});
+
+		return view;
+	} else {
+		const [view, setView] = createSignal(getPostShadow(post), EQUALS_DEQUAL);
+
+		onCleanup(emitter.on(post.uri, () => setView(getPostShadow(post))));
+		return view;
+	}
 };
 
 export const getPostShadow = (post: AppBskyFeedDefs.PostView): PostShadowView => {

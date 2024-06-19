@@ -1,4 +1,4 @@
-import { batch, createSignal, onCleanup } from 'solid-js';
+import { batch, createRenderEffect, createSignal, onCleanup, type Accessor } from 'solid-js';
 
 import type { AppBskyActorDefs, At } from '@mary/bluesky-client/lexicons';
 import { EventEmitter } from '@mary/events';
@@ -8,6 +8,7 @@ import { findAllProfilesInQueryData as findAllProfilesInPostThreadQueryData } fr
 import { findAllProfilesInQueryData as findAllProfilesInProfileQueryData } from '../queries/profile';
 import { findAllProfilesInQueryData as findAllProfilesInTimelineQueryData } from '../queries/timeline';
 import { EQUALS_DEQUAL } from '../utils/dequal';
+import type { AccessorMaybe } from '../utils/types';
 
 export interface ProfileShadow {
 	blockUri?: string;
@@ -29,11 +30,24 @@ type AllProfileView =
 const emitter = new EventEmitter<{ [uri: At.DID]: () => void }>();
 const shadows = new WeakMap<AllProfileView, ProfileShadow>();
 
-export const useProfileShadow = (profile: AllProfileView) => {
-	const [view, setView] = createSignal(getProfileShadow(profile), EQUALS_DEQUAL);
+export const useProfileShadow = (profile: AccessorMaybe<AllProfileView>): Accessor<ProfileShadowView> => {
+	if (typeof profile === 'function') {
+		const [view, setView] = createSignal<ProfileShadowView>(undefined as any, EQUALS_DEQUAL);
 
-	onCleanup(emitter.on(profile.did, () => setView(getProfileShadow(profile))));
-	return view;
+		createRenderEffect(() => {
+			const $profile = profile();
+
+			setView(getProfileShadow($profile));
+			onCleanup(emitter.on($profile.did, () => setView(getProfileShadow($profile))));
+		});
+
+		return view;
+	} else {
+		const [view, setView] = createSignal(getProfileShadow(profile), EQUALS_DEQUAL);
+
+		onCleanup(emitter.on(profile.did, () => setView(getProfileShadow(profile))));
+		return view;
+	}
 };
 
 export const getProfileShadow = (profile: AllProfileView): ProfileShadowView => {
