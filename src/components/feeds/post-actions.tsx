@@ -5,6 +5,8 @@ import { updatePostShadow, type PostShadowView } from '~/api/cache/post-shadow';
 
 import { openModal } from '~/globals/modals';
 
+import { formatCompact } from '~/lib/intl/number';
+
 import ComposerDialogLazy from '../composer/composer-dialog-lazy';
 import HeartOutlinedIcon from '../icons-central/heart-outline';
 import HeartSolidIcon from '../icons-central/heart-solid';
@@ -29,7 +31,7 @@ const PostActions = (props: PostActionsProps) => {
 	const compact = props.compact;
 
 	const replyDisabled = post.viewer?.replyDisabled;
-	const replyCount = post.replyCount ?? 0;
+	const replyCount = formatCompact(post.replyCount ?? 0);
 	const isLiked = () => !!props.shadow.likeUri;
 	const isReposted = () => !!props.shadow.repostUri;
 
@@ -100,7 +102,7 @@ const PostActions = (props: PostActionsProps) => {
 					</div>
 
 					<span class="overflow-hidden text-ellipsis whitespace-nowrap pr-2 text-de">
-						{props.shadow.repostCount}
+						{formatCompact(props.shadow.repostCount)}
 					</span>
 				</button>
 			</div>
@@ -120,7 +122,7 @@ const PostActions = (props: PostActionsProps) => {
 					</div>
 
 					<span class="overflow-hidden text-ellipsis whitespace-nowrap pr-2 text-de">
-						{props.shadow.likeCount}
+						{formatCompact(props.shadow.likeCount)}
 					</span>
 				</button>
 			</div>

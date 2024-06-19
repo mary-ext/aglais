@@ -4,6 +4,7 @@ import { useProfileQuery } from '~/api/queries/profile';
 
 import { openModal, useModalContext } from '~/globals/modals';
 
+import { formatCompact } from '~/lib/intl/number';
 import { useSession } from '~/lib/states/session';
 
 import Avatar from '../avatar';
@@ -147,12 +148,12 @@ const AuthenticatedHeader = () => {
 
 							<div class="mt-3 flex min-w-0 flex-wrap gap-5 text-sm">
 								<a onClick={close}>
-									<span class="font-bold">{profile().followsCount ?? 0}</span>
+									<span class="font-bold">{formatCompact(profile().followsCount ?? 0)}</span>
 									<span class="text-c-contrast-600"> Following</span>
 								</a>
 
 								<a onClick={close}>
-									<span class="font-bold">{profile().followersCount ?? 0}</span>
+									<span class="font-bold">{formatCompact(profile().followersCount ?? 0)}</span>
 									<span class="text-c-contrast-600"> Followers</span>
 								</a>
 							</div>
