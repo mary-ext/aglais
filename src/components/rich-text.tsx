@@ -4,11 +4,12 @@ import type { AppBskyRichtextFacet } from '@mary/bluesky-client/lexicons';
 
 import { segmentRichText } from '~/api/richtext/segment';
 
-import { handleLinkNavigation } from './button';
 import { isLinkValid, safeUrlParse } from '~/api/utils/strings';
+import { handleLinkNavigation } from './button';
 
 export interface RichTextProps {
 	text: string;
+	large?: boolean;
 	facets?: AppBskyRichtextFacet.Main[];
 	clipped?: boolean;
 }
@@ -19,9 +20,10 @@ const RichText = (props: RichTextProps) => {
 	return (() => {
 		const text = props.text;
 		const facets = props.facets;
+		const large = props.large;
 
 		let nodes: JSX.Element;
-		let large = false;
+		let emojiOnly = false;
 
 		if (facets !== undefined && facets.length !== 0) {
 			const segments = segmentRichText(text, facets);
@@ -82,16 +84,17 @@ const RichText = (props: RichTextProps) => {
 			}
 		} else {
 			nodes = text;
-			large = EMOJI_RE.test(text);
+			emojiOnly = EMOJI_RE.test(text);
 		}
+
+		const multiplier = !emojiOnly ? 1 : 1.3;
+		const fontSize = (!large ? 0.875 : 1) * multiplier;
+		const lineHeight = (!large ? 1.25 : 1.5) * multiplier;
 
 		return (
 			<p
-				class={
-					`whitespace-pre-wrap break-words` +
-					(!large ? ` text-sm` : ` text-lg`) +
-					(props.clipped ? ` line-clamp-[12]` : ``)
-				}
+				class={`whitespace-pre-wrap break-words` + (props.clipped ? ` line-clamp-[12]` : ``)}
+				style={{ 'font-size': `${fontSize}rem`, 'line-height': `${lineHeight}rem` }}
 			>
 				{nodes}
 			</p>
