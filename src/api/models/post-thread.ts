@@ -140,10 +140,10 @@ export const createThreadData = ({
 		while (parent) {
 			const type = parent.$type;
 			if (type === 'app.bsky.feed.defs#blockedPost') {
-				const blocking = parent.author.viewer?.blocking;
 				const uri = parent.uri;
+				const viewer = parent.author.viewer;
 
-				if (blocking) {
+				if (!viewer?.blockedBy) {
 					ancestors.push({ id: uri, type: 'blocked', uri: uri });
 				} else {
 					ancestors.push({ id: uri, type: 'nonexistent', uri: uri });
@@ -211,7 +211,7 @@ export const createThreadData = ({
 				(x): x is Brand.Union<AppBskyFeedDefs.ThreadViewPost | AppBskyFeedDefs.BlockedPost> => {
 					return (
 						x.$type === 'app.bsky.feed.defs#threadViewPost' ||
-						(x.$type === 'app.bsky.feed.defs#blockedPost' && !!x.author.viewer!.blocking)
+						(x.$type === 'app.bsky.feed.defs#blockedPost' && !x.author.viewer?.blockedBy)
 					);
 				},
 			);
