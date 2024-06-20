@@ -4,8 +4,8 @@ import PostFeedItem from '~/components/feeds/post-feed-item';
 import IconButton from '~/components/icon-button';
 import ChevronRightOutlinedIcon from '~/components/icons-central/chevron-right-outline';
 import GearOutlinedIcon from '~/components/icons-central/gear-outline';
-import List from '~/components/list';
 import * as Page from '~/components/page';
+import PagedList from '~/components/paged-list';
 import VirtualItem from '~/components/virtual-item';
 
 const HomePage = () => {
@@ -39,8 +39,8 @@ const HomePage = () => {
 				</Page.HeaderAccessory>
 			</Page.Header>
 
-			<List
-				data={timeline.data?.pages.flatMap((page) => page.items)}
+			<PagedList
+				data={timeline.data?.pages.map((page) => page.items)}
 				error={timeline.error}
 				render={(item) => {
 					return (
