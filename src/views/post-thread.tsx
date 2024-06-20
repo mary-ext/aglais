@@ -92,15 +92,19 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 		<>
 			<For each={thread().ancestors}>
 				{(item) => {
-					// We can't set `estimateHeight` when virtualizing ancestors here as
-					// we're dependant on them having the correct height on mount for us
-					// to be able to scroll to the highlighted post.
-
 					const type = item.type;
 
 					if (type === 'post') {
+						// Set estimateHeight for all except the last item.
+						// As this is a one-time render only thing, we're not using the
+						// second parameter in the <For> render function to get the index.
+						const ancestors = thread().ancestors;
+
+						const index = ancestors.indexOf(item);
+						const end = index === ancestors.length - 1;
+
 						return (
-							<VirtualItem>
+							<VirtualItem estimateHeight={!end ? 98 : undefined}>
 								<PostThreadItem item={item} treeView={false} />
 							</VirtualItem>
 						);
@@ -112,7 +116,7 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 
 			<div
 				ref={(node) => {
-					onMount(() => {
+					requestAnimationFrame(() => {
 						node.scrollIntoView({ behavior: 'instant' });
 					});
 				}}
