@@ -1,10 +1,9 @@
 import { createEffect, createRenderEffect, createSignal, onCleanup, runWithOwner, type JSX } from 'solid-js';
 
 import { UNSAFE_useViewContext } from '~/lib/navigation/router';
-import { intersectionCallback, resizeCallback } from '~/lib/observer';
+import { intersectionCallback } from '~/lib/observer';
 
 const intersectionObserver = new IntersectionObserver(intersectionCallback, { rootMargin: `106.25% 0%` });
-const resizeObserver = new ResizeObserver(resizeCallback);
 
 const createVirtualStore = (ctx: ReturnType<typeof UNSAFE_useViewContext>) => {
 	return runWithOwner(ctx.owner, () => {
@@ -53,14 +52,13 @@ export interface VirtualItemProps {
 const VirtualItem = (props: VirtualItemProps) => {
 	let _entry: IntersectionObserverEntry | undefined;
 	let _height: number | undefined = props.estimateHeight;
-	let _intersecting = false;
+	let _intersecting: boolean = false;
 
 	const store = getVirtualStore(UNSAFE_useViewContext());
 
 	const [intersecting, setIntersecting] = createSignal(_intersecting);
-	const [storedHeight, setStoredHeight] = createSignal(_height);
 
-	const shouldHide = () => !intersecting() && (_height ?? storedHeight()) !== undefined;
+	const shouldHide = () => !intersecting() && _height !== undefined;
 
 	const handleIntersect = (nextEntry: IntersectionObserverEntry) => {
 		_entry = undefined;
@@ -89,22 +87,12 @@ const VirtualItem = (props: VirtualItemProps) => {
 					return;
 				}
 
+				// reduce the precision
+				_height = ((_entry.boundingClientRect.height * 1000) | 0) / 1000;
 				_entry = undefined;
+
 				setIntersecting((_intersecting = next));
 			});
-		}
-	};
-
-	const handleResize = (nextEntry: ResizeObserverEntry) => {
-		if ((!_intersecting && _height !== undefined) || store.disabled) {
-			return;
-		}
-
-		const contentRect = nextEntry.contentRect;
-		const nextHeight = ((contentRect.height * 1000) | 0) / 1000;
-
-		if (nextHeight !== _height) {
-			setStoredHeight((_height = nextHeight));
 		}
 	};
 
@@ -114,10 +102,9 @@ const VirtualItem = (props: VirtualItemProps) => {
 			class="shrink-0"
 			style={{
 				contain: 'content',
-				height: shouldHide() ? `${_height ?? storedHeight()}px` : undefined,
+				height: shouldHide() ? `${_height ?? 0}px` : undefined,
 			}}
 			prop:$onintersect={handleIntersect}
-			prop:$onresize={handleResize}
 		>
 			{(() => {
 				if (!shouldHide()) {
@@ -132,10 +119,8 @@ export default VirtualItem;
 
 const startMeasure = (node: HTMLElement) => {
 	intersectionObserver.observe(node);
-	resizeObserver.observe(node);
 
 	onCleanup(() => {
 		intersectionObserver.unobserve(node);
-		resizeObserver.unobserve(node);
 	});
 };
