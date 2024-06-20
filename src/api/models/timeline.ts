@@ -19,10 +19,7 @@ export const ensureReplyRef = (reply: ReplyRef | undefined): EnsuredReplyRef | u
 
 		// Thread started, or this is replying to a blocked user, skip this.
 		// Thread started by a blocked user, skip this.
-		if (
-			root.$type === 'app.bsky.feed.defs#blockedPost' ||
-			parent.$type === 'app.bsky.feed.defs#blockedPost'
-		) {
+		if (isBlocking(root) || isBlocking(parent)) {
 			return;
 		}
 
@@ -32,6 +29,15 @@ export const ensureReplyRef = (reply: ReplyRef | undefined): EnsuredReplyRef | u
 			grandparentAuthor: grandparentAuthor,
 		};
 	}
+};
+
+const isBlocking = (post: ReplyRef['parent']): boolean => {
+	if (post.$type === 'app.bsky.feed.defs#blockedPost') {
+		const viewer = post.author.viewer;
+		return !!(viewer?.blocking || viewer?.blockedBy);
+	}
+
+	return false;
 };
 
 export interface EnsuredTimelineItem {
