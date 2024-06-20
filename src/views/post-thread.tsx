@@ -82,7 +82,7 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 			moderationOptions: moderationOptions(),
 			preferences: currentAccount?.preferences.threadView ?? {
 				followsFirst: false,
-				sort: 'most-likes',
+				sort: 'clout',
 				treeView: false,
 			},
 		});

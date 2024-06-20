@@ -14,7 +14,7 @@ export interface ThreadViewPreferences {
 	/** Show replies from followed users first */
 	followsFirst: boolean;
 	/** How it should order the replies */
-	sort: 'oldest' | 'newest' | 'most-likes';
+	sort: 'oldest' | 'newest' | 'most-likes' | 'clout';
 	/** Experimental tree view */
 	treeView: boolean;
 }

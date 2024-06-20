@@ -275,6 +275,10 @@ export const createThreadData = ({
 
 				// Sort based on preferred option
 				switch (sort) {
+					case 'clout': {
+						// Prioritize newest first if the same count
+						return getPostClout(bPost) - getPostClout(aPost) || bIndexed - aIndexed;
+					}
 					case 'most-likes': {
 						const aLikes = aPost.likeCount ?? 0;
 						const bLikes = bPost.likeCount ?? 0;
@@ -359,4 +363,8 @@ const push = <T>(target: T[], source: T[]) => {
 		const item = source[idx];
 		target.push(item);
 	}
+};
+
+const getPostClout = (post: AppBskyFeedDefs.PostView) => {
+	return (post.likeCount ?? 0) * 1.25 + (post.repostCount ?? 0) * 1.125 + (post.replyCount ?? 0) * 1;
 };

@@ -250,7 +250,7 @@ const createAccountPreferences = (did: At.DID) => {
 				},
 				threadView: {
 					followsFirst: true,
-					sort: 'most-likes',
+					sort: 'clout',
 					treeView: true,
 				},
 			};
