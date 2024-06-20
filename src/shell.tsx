@@ -27,7 +27,7 @@ const Shell = () => {
 	return (
 		<div
 			inert={hasModals()}
-			class="relative z-0 mx-auto flex min-h-screen max-w-md flex-col-reverse border-c-contrast-200 sm:border-x"
+			class="relative z-0 mx-auto flex min-h-[100dvh] max-w-md flex-col-reverse border-c-contrast-200 sm:border-x"
 		>
 			{!!(currentAccount && route().def.meta?.main) && <NavBar route={route} />}
 
