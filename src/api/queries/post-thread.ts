@@ -21,6 +21,7 @@ export const usePostThreadQuery = (uri: () => string) => {
 
 		return {
 			queryKey: ['post-thread', $uri],
+			structuralSharing: false,
 			async queryFn(ctx): Promise<AppBskyFeedGetPostThread.Output['thread']> {
 				const { data } = await rpc.get('app.bsky.feed.getPostThread', {
 					signal: ctx.signal,
