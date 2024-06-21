@@ -11,6 +11,7 @@ import { parseAtUri } from '~/api/utils/strings';
 
 import ContentHider from '../moderation/content-hider';
 
+import ExternalEmbed from './external-embed';
 import ImageEmbed from './image-embed';
 import QuoteEmbed from './quote-embed';
 
@@ -66,6 +67,10 @@ const MediaEmbed = (props: MediaEmbedProps) => {
 
 				if (type === 'app.bsky.embed.images#view') {
 					return <ImageEmbed embed={embed} interactive />;
+				}
+
+				if (type === 'app.bsky.embed.external#view') {
+					return <ExternalEmbed embed={embed} interactive />;
 				}
 
 				return renderEmpty(`Unsupported media`);
