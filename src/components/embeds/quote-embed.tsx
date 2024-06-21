@@ -48,8 +48,8 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 		<a
 			href={interactive ? href : undefined}
 			class={
-				`overflow-hidden rounded-md border border-c-contrast-200` +
-				(interactive ? ` hover:bg-c-contrast-25` : ``)
+				`overflow-hidden rounded-md border border-c-contrast-200 bg-c-contrast-0` +
+				(interactive ? ` hover:border-c-contrast-300` : ``)
 			}
 		>
 			<div class="mx-3 mt-3 flex min-w-0 text-sm text-c-contrast-600">
