@@ -50,7 +50,7 @@ export const useModalClose = (container: HTMLElement, callback: () => void, enab
 			const watcher = new CloseWatcher();
 			watcher.oncancel = (ev) => {
 				ev.preventDefault();
-				close();
+				callback();
 			};
 
 			onCleanup(() => watcher.close());
