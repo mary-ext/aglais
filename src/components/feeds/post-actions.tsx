@@ -1,7 +1,8 @@
 import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
-import { updatePostShadow, type PostShadowView } from '~/api/cache/post-shadow';
+import { type PostShadowView } from '~/api/cache/post-shadow';
+import { createPostLikeMutation, createPostRepostMutation } from '~/api/mutations/post';
 
 import { openModal } from '~/globals/modals';
 
@@ -17,6 +18,7 @@ import WriteOutlinedIcon from '../icons-central/write-outline';
 import * as Menu from '../menu';
 
 export interface PostActionsProps {
+	/** Not static, but expects the URI (post identifier) to be static */
 	post: AppBskyFeedDefs.PostView;
 	shadow: PostShadowView;
 	/** Expected to be static */
@@ -27,18 +29,22 @@ const PostActions = (props: PostActionsProps) => {
 	const queryClient = useQueryClient();
 
 	const post = () => props.post;
+	const shadow = () => props.shadow;
 	const compact = props.compact;
 
+	const mutateLike = createPostLikeMutation(post, shadow);
+	const mutateRepost = createPostRepostMutation(post, shadow);
+
 	const replyDisabled = () => post().viewer?.replyDisabled;
-	const isLiked = () => !!props.shadow.likeUri;
-	const isReposted = () => !!props.shadow.repostUri;
+	const isLiked = () => !!shadow().likeUri;
+	const isReposted = () => !!shadow().repostUri;
 
 	const toggleLike = () => {
-		updatePostShadow(queryClient, post().uri, { likeUri: isLiked() ? undefined : `pending` });
+		mutateLike(!isLiked());
 	};
 
 	const toggleRepost = () => {
-		updatePostShadow(queryClient, post().uri, { repostUri: isReposted() ? undefined : `pending` });
+		mutateRepost(!isReposted());
 	};
 
 	return (
