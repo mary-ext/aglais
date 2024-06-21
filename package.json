@@ -14,7 +14,7 @@
 		"@mary/bluesky-client": "npm:@jsr/mary__bluesky-client@^0.5.23",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
-		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.4",
+		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.5",
 		"@solid-primitives/keyed": "^1.2.2",
 		"cborg": "4.0.7",
 		"nanoid": "^5.0.7",
@@ -26,14 +26,14 @@
 		"@types/dom-close-watcher": "^1.0.0",
 		"autoprefixer": "^10.4.19",
 		"prettier": "^3.3.2",
-		"prettier-plugin-tailwindcss": "^0.6.3",
+		"prettier-plugin-tailwindcss": "^0.6.5",
 		"tailwindcss": "^3.4.4",
 		"terser": "^5.31.1",
-		"typescript": "^5.4.5",
-		"vite": "^5.2.11",
+		"typescript": "^5.5.2",
+		"vite": "^5.3.1",
 		"vite-plugin-pwa": "0.17.4",
 		"vite-plugin-solid": "^2.10.2",
-		"wrangler": "^3.60.3"
+		"wrangler": "^3.61.0"
 	},
 	"pnpm": {
 		"patchedDependencies": {
@@ -43,7 +43,7 @@
 			"vite-plugin-pwa@0.17.4": "patches/vite-plugin-pwa@0.17.4.patch",
 			"solid-js@1.8.17": "patches/solid-js@1.8.17.patch",
 			"workbox-precaching@7.1.0": "patches/workbox-precaching@7.1.0.patch",
-			"vite@5.2.11": "patches/vite@5.2.11.patch"
+			"vite@5.3.1": "patches/vite@5.3.1.patch"
 		}
 	}
 }
