@@ -16,7 +16,7 @@
 	}
 
 	.a-dialog-desktop {
-		max-height: min(100vh - 88px, 652px);
+		max-height: min(100dvh - 88px, 652px);
 	}
 }
 

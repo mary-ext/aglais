@@ -120,7 +120,7 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 						node.scrollIntoView({ behavior: 'instant' });
 					});
 				}}
-				style={{ 'min-height': `calc(100vh - 3.25rem - 0.75rem)`, 'scroll-margin-top': '3.25rem' }}
+				style={{ 'min-height': `calc(100dvh - 3.25rem - 0.75rem)`, 'scroll-margin-top': '3.25rem' }}
 			>
 				<VirtualItem>
 					<HighlightedPost post={thread().post} prev={thread().ancestors.length !== 0} />
