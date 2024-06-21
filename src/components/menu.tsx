@@ -114,16 +114,13 @@ export { MenuContainer as Container };
 export interface MenuItemProps {
 	icon: Component;
 	label: string;
+	disabled?: boolean;
 	onClick?: () => void;
 }
 
 const MenuItem = (props: MenuItemProps) => {
 	return (
-		<button
-			role="menuitem"
-			onClick={props.onClick}
-			class="flex gap-3 px-4 py-3 text-c-contrast-900 hover:bg-c-contrast-25"
-		>
+		<button role="menuitem" disabled={props.disabled} onClick={props.onClick} class={menuItemClasses(props)}>
 			<div class="mt-0.5 text-lg">
 				{(() => {
 					const Icon = props.icon;
@@ -134,6 +131,17 @@ const MenuItem = (props: MenuItemProps) => {
 			<span class="text-sm font-bold">{props.label}</span>
 		</button>
 	);
+};
+const menuItemClasses = ({ disabled }: MenuItemProps) => {
+	let cn = `flex gap-3 px-4 py-3`;
+
+	if (!disabled) {
+		cn += ` text-c-contrast-900 hover:bg-c-contrast-25`;
+	} else {
+		cn += ` text-c-contrast-400`;
+	}
+
+	return cn;
 };
 
 export { MenuItem as Item };
