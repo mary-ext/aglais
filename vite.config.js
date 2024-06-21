@@ -8,6 +8,7 @@ export default defineConfig({
 	build: {
 		minify: 'terser',
 		modulePreload: false,
+		sourcemap: true,
 	},
 	resolve: {
 		alias: {
