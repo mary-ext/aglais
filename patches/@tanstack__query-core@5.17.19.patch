@@ -1,3 +1,108 @@
+diff --git a/build/modern/notifyManager.js b/build/modern/notifyManager.js
+index bb5d0317ae0f1aacc7d5229457ce22adfef71655..870effe07f8dff2beac4b2a69d35e2df4223e95b 100644
+--- a/build/modern/notifyManager.js
++++ b/build/modern/notifyManager.js
+@@ -1,77 +1,28 @@
+ // src/notifyManager.ts
+-function createNotifyManager() {
+-  let queue = [];
+-  let transactions = 0;
+-  let notifyFn = (callback) => {
+-    callback();
+-  };
+-  let batchNotifyFn = (callback) => {
++var batchNotifyFn = (callback) => {
++  callback();
++};
++
++var notifyManager = {
++  batch(callback) {
++    return batchNotifyFn(callback);
++  },
++  batchCalls(callback) {
++    return (...args) => batchNotifyFn(() => callback(...args));
++  },
++  schedule(callback) {
+     callback();
+-  };
+-  let scheduleFn = (cb) => setTimeout(cb, 0);
+-  const setScheduler = (fn) => {
+-    scheduleFn = fn;
+-  };
+-  const batch = (callback) => {
+-    let result;
+-    transactions++;
+-    try {
+-      result = callback();
+-    } finally {
+-      transactions--;
+-      if (!transactions) {
+-        flush();
+-      }
+-    }
+-    return result;
+-  };
+-  const schedule = (callback) => {
+-    if (transactions) {
+-      queue.push(callback);
+-    } else {
+-      scheduleFn(() => {
+-        notifyFn(callback);
+-      });
+-    }
+-  };
+-  const batchCalls = (callback) => {
+-    return (...args) => {
+-      schedule(() => {
+-        callback(...args);
+-      });
+-    };
+-  };
+-  const flush = () => {
+-    const originalQueue = queue;
+-    queue = [];
+-    if (originalQueue.length) {
+-      scheduleFn(() => {
+-        batchNotifyFn(() => {
+-          originalQueue.forEach((callback) => {
+-            notifyFn(callback);
+-          });
+-        });
+-      });
+-    }
+-  };
+-  const setNotifyFunction = (fn) => {
+-    notifyFn = fn;
+-  };
+-  const setBatchNotifyFunction = (fn) => {
++  },
++  setNotifyFunction() {},
++  setBatchNotifyFunction(fn) {
+     batchNotifyFn = fn;
+-  };
+-  return {
+-    batch,
+-    batchCalls,
+-    schedule,
+-    setNotifyFunction,
+-    setBatchNotifyFunction,
+-    setScheduler
+-  };
+-}
+-var notifyManager = createNotifyManager();
+-export {
+-  createNotifyManager,
+-  notifyManager
++  },
++  setScheduler() {},
+ };
++
++function createNotifyManager() {
++  return notifyManager;
++}
++
++export { createNotifyManager, notifyManager };
+ //# sourceMappingURL=notifyManager.js.map
 diff --git a/build/modern/utils.js b/build/modern/utils.js
 index 0e93a35b45cfc2d53fc17120c741a91ec8a8c533..82b51475e4e12860552f4a0f5f3af23f416740fa 100644
 --- a/build/modern/utils.js
