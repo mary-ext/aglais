@@ -75,7 +75,7 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 					<RichText text={/* @once */ record.text} facets={/* @once */ record.facets} clipped />
 					{embed && <Embed embed={embed} moderation={moderation()} gutterTop />}
 
-					<PostActions post={post()} shadow={shadow()} compact />
+					<PostActions post={post()} shadow={shadow()} compact={treeView} />
 				</div>
 			</div>
 		</div>
