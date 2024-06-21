@@ -20,7 +20,7 @@ const ExternalEmbed = ({ embed, interactive }: ExternalEmbedProps) => {
 			target="_blank"
 			class={
 				`flex overflow-hidden rounded-md border border-c-contrast-200` +
-				(interactive ? ` hover:bg-c-contrast-50` : ``)
+				(interactive ? ` hover:bg-c-contrast-25` : ``)
 			}
 		>
 			{thumb && (
