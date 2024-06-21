@@ -57,8 +57,8 @@ export const createPostLikeMutation = (
 	});
 
 	const mutate = (next: boolean) => {
-		updatePostShadow(queryClient, postUri, { likeUri: next ? 'pending' : undefined });
 		toggle(next);
+		updatePostShadow(queryClient, postUri, { likeUri: next ? 'pending' : undefined });
 	};
 
 	return mutate;
@@ -111,8 +111,8 @@ export const createPostRepostMutation = (
 	});
 
 	const mutate = (next: boolean) => {
-		updatePostShadow(queryClient, postUri, { repostUri: next ? 'pending' : undefined });
 		toggle(next);
+		updatePostShadow(queryClient, postUri, { repostUri: next ? 'pending' : undefined });
 	};
 
 	return mutate;

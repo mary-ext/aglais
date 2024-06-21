@@ -1,5 +1,4 @@
 import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
-import { useQueryClient } from '@mary/solid-query';
 
 import { type PostShadowView } from '~/api/cache/post-shadow';
 import { createPostLikeMutation, createPostRepostMutation } from '~/api/mutations/post';
@@ -26,8 +25,6 @@ export interface PostActionsProps {
 }
 
 const PostActions = (props: PostActionsProps) => {
-	const queryClient = useQueryClient();
-
 	const post = () => props.post;
 	const shadow = () => props.shadow;
 	const compact = props.compact;
