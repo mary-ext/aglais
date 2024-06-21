@@ -1,7 +1,5 @@
 import type { JSX } from 'solid-js';
 
-import { history } from '~/globals/navigation';
-
 import { useFieldset } from './fieldset';
 
 export interface ButtonProps {
@@ -27,7 +25,7 @@ const Button = (props: ButtonProps) => {
 			<a
 				href={!isDisabled() ? props.href : undefined}
 				title={props.title}
-				onClick={handleLinkClick(() => props.onClick)}
+				onClick={props.onClick}
 				class={buttonClassNames(isDisabled, props)}
 			>
 				{props.children}
@@ -91,36 +89,4 @@ const buttonClassNames = (
 	}
 
 	return cn;
-};
-
-export const handleLinkClick = (fn: () => ButtonProps['onClick']) => {
-	return (event: MouseEvent): void => {
-		fn()?.(event);
-		handleLinkNavigation(event);
-	};
-};
-
-export const handleLinkNavigation = (event: MouseEvent) => {
-	if (!event.defaultPrevented) {
-		const anchor = event.currentTarget as HTMLAnchorElement;
-		const href = anchor.href;
-		const target = anchor.target;
-
-		if (href !== '' && (target === '' || target === '_self') && isLinkEvent(event)) {
-			const { origin, pathname, search, hash } = new URL(href);
-
-			if (location.origin === origin) {
-				event.preventDefault();
-				history.navigate({ pathname, search, hash });
-			}
-		}
-	}
-};
-
-const isLinkEvent = (event: MouseEvent) => {
-	return event.button === 0 && !isModifiedEvent(event);
-};
-
-const isModifiedEvent = (event: MouseEvent) => {
-	return event.metaKey || event.altKey || event.ctrlKey || event.shiftKey;
 };

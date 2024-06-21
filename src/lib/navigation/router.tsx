@@ -14,9 +14,11 @@ import {
 	type JSX,
 	type Owner,
 } from 'solid-js';
+import { delegateEvents } from 'solid-js/web';
 
 import { Freeze } from '@mary/solid-freeze';
 
+import { createEventListener } from '../hooks/event-listener';
 import type { History, Location } from './history';
 import type { HistoryLogger } from './logger';
 
@@ -106,73 +108,117 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 		}
 	}
 
-	_cleanup = history.listen(({ action, location: nextEntry }) => {
-		const currentEntry = _entry;
-		_entry = nextEntry;
+	_cleanup = createRoot((cleanup) => {
+		createEventListener;
 
-		if (action !== 'update') {
-			const pathname = nextEntry.pathname;
-			const matched = matchRoute(pathname);
+		onCleanup(
+			history.listen(({ action, location: nextEntry }) => {
+				const currentEntry = _entry;
+				_entry = nextEntry;
 
-			if (!matched) {
+				if (action !== 'update') {
+					const pathname = nextEntry.pathname;
+					const matched = matchRoute(pathname);
+
+					if (!matched) {
+						return;
+					}
+
+					const current = state();
+
+					let views = current.views;
+					let singles = current.singles;
+
+					const nextId = matched.id || nextEntry.key;
+					const matchedState: MatchedRouteState = { ...matched, id: nextId };
+
+					if (!matched.id) {
+						let nextViews: typeof views | undefined;
+
+						// Recreate the views object to remove no longer reachable views if:
+						// - We're pushing a new page, or replacing the current page
+						// - We're traversing and the intended index is lower than current
+						if (action !== 'traverse' || nextEntry.index < currentEntry.index) {
+							const entries = log.entries;
+
+							nextViews = {};
+
+							for (let idx = 0, len = entries.length; idx < len; idx++) {
+								const entry = entries[idx];
+								const key = entry?.key;
+
+								if (key !== undefined && key in views) {
+									nextViews[key] = views[key];
+								}
+							}
+						}
+
+						// Add this view, if it's already present, set `shouldCall` to true
+						if (!(nextId in views)) {
+							if (nextViews) {
+								nextViews[nextId] = matchedState;
+							} else {
+								nextViews = { ...views, [nextId]: matchedState };
+							}
+						}
+
+						if (nextViews) {
+							views = nextViews;
+						}
+					} else {
+						// Add this view, if it's already present, set `shouldCall` to true
+						if (!(nextId in singles)) {
+							singles = { ...singles, [nextId]: matchedState };
+						}
+					}
+
+					setState({ active: nextId, views: views, singles: singles });
+
+					// Scroll to top if we're pushing or replacing, it's a new page.
+					if (!matched.id && (action === 'push' || action === 'replace')) {
+						window.scrollTo({ top: 0, behavior: 'instant' });
+					}
+				}
+			}),
+		);
+
+		delegateEvents(['click']);
+		createEventListener(document, 'click', (evt) => {
+			if (
+				evt.defaultPrevented ||
+				evt.button !== 0 ||
+				evt.metaKey ||
+				evt.altKey ||
+				evt.ctrlKey ||
+				evt.shiftKey
+			) {
 				return;
 			}
 
-			const current = state();
+			const a = evt.composedPath().find((el): el is HTMLAnchorElement => el instanceof HTMLAnchorElement);
 
-			let views = current.views;
-			let singles = current.singles;
-
-			const nextId = matched.id || nextEntry.key;
-			const matchedState: MatchedRouteState = { ...matched, id: nextId };
-
-			if (!matched.id) {
-				let nextViews: typeof views | undefined;
-
-				// Recreate the views object to remove no longer reachable views if:
-				// - We're pushing a new page, or replacing the current page
-				// - We're traversing and the intended index is lower than current
-				if (action !== 'traverse' || nextEntry.index < currentEntry.index) {
-					const entries = log.entries;
-
-					nextViews = {};
-
-					for (let idx = 0, len = entries.length; idx < len; idx++) {
-						const entry = entries[idx];
-						const key = entry?.key;
-
-						if (key !== undefined && key in views) {
-							nextViews[key] = views[key];
-						}
-					}
-				}
-
-				// Add this view, if it's already present, set `shouldCall` to true
-				if (!(nextId in views)) {
-					if (nextViews) {
-						nextViews[nextId] = matchedState;
-					} else {
-						nextViews = { ...views, [nextId]: matchedState };
-					}
-				}
-
-				if (nextViews) {
-					views = nextViews;
-				}
-			} else {
-				// Add this view, if it's already present, set `shouldCall` to true
-				if (!(nextId in singles)) {
-					singles = { ...singles, [nextId]: matchedState };
-				}
+			if (!a) {
+				return;
 			}
 
-			setState({ active: nextId, views: views, singles: singles });
+			const href = a.href;
+			const target = a.target;
 
-			// Scroll to top if we're pushing or replacing, it's a new page.
-			if (!matched.id && (action === 'push' || action === 'replace')) {
-				window.scrollTo({ top: 0, behavior: 'instant' });
+			if (target !== '' && target !== '_self') {
+				return;
 			}
-		}
+
+			const { origin, pathname, search, hash } = new URL(href);
+
+			if (location.origin !== origin) {
+				return;
+			}
+
+			evt.preventDefault();
+			history.navigate({ pathname, search, hash });
+		});
+
+		return cleanup;
 	});
 };
 

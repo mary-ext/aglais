@@ -1,6 +1,5 @@
 import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
 
-import { handleLinkNavigation } from '../button';
 import MoreHorizOutlinedIcon from '../icons-central/more-horiz-outline';
 import TimeAgo from '../time-ago';
 
@@ -27,7 +26,6 @@ const PostMeta = ({ post, authorHref, href, compact, gutterBottom }: PostMetaPro
 			<div class="flex items-center overflow-hidden text-sm">
 				<a
 					href={authorHref}
-					onClick={handleLinkNavigation}
 					class="flex max-w-full gap-1 overflow-hidden text-ellipsis whitespace-nowrap text-left"
 				>
 					{displayName && (
@@ -45,12 +43,7 @@ const PostMeta = ({ post, authorHref, href, compact, gutterBottom }: PostMetaPro
 
 				<TimeAgo value={indexedAt}>
 					{(relative, absolute) => (
-						<a
-							title={absolute()}
-							href={href}
-							onClick={handleLinkNavigation}
-							class="whitespace-nowrap hover:underline"
-						>
+						<a title={absolute()} href={href} class="whitespace-nowrap hover:underline">
 							{relative()}
 						</a>
 					)}

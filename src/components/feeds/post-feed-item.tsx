@@ -11,7 +11,6 @@ import { parseAtUri } from '~/api/utils/strings';
 import { useModerationOptions } from '~/lib/states/moderation';
 
 import Avatar from '../avatar';
-import { handleLinkNavigation } from '../button';
 import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 import RichText from '../rich-text';
 
@@ -107,7 +106,7 @@ const renderReason = (reason: UiTimelineItem['reason']) => {
 					<div class="flex w-9 shrink-0 justify-end">
 						<RepeatOutlinedIcon class="text-sm" />
 					</div>
-					<a href={`/${did}`} onClick={handleLinkNavigation} class="flex min-w-0 font-medium hover:underline">
+					<a href={`/${did}`} class="flex min-w-0 font-medium hover:underline">
 						<span dir="auto" class="overflow-hidden text-ellipsis whitespace-nowrap">
 							{name}
 						</span>

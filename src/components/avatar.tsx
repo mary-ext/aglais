@@ -7,8 +7,6 @@ import DefaultLabelerAvatar from '~/assets/default-labeler-avatar.svg?url';
 import DefaultListAvatar from '~/assets/default-list-avatar.svg?url';
 import DefaultUserAvatar from '~/assets/default-user-avatar.svg?url';
 
-import { handleLinkClick } from './button';
-
 const AVATARS = {
 	feed: DefaultFeedAvatar,
 	labeler: DefaultLabelerAvatar,
@@ -41,9 +39,10 @@ const Avatar = (props: AvatarProps) => {
 			<Match when={!props.disabled && props.href}>
 				{(href) => (
 					<a
+						
 						href={href()}
 						title={props.title}
-						onClick={handleLinkClick(() => props.onClick)}
+						onClick={props.onClick}
 						class={avatarClassNames(props, true)}
 					>
 						{renderAvatar(props.type, props.src, shouldBlurAvatar)}

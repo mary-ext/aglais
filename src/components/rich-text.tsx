@@ -5,7 +5,6 @@ import type { AppBskyRichtextFacet } from '@mary/bluesky-client/lexicons';
 import { segmentRichText } from '~/api/richtext/segment';
 
 import { isLinkValid, safeUrlParse } from '~/api/utils/strings';
-import { handleLinkNavigation } from './button';
 
 export interface RichTextProps {
 	text: string;
@@ -61,7 +60,7 @@ const RichText = (props: RichTextProps) => {
 				if (to !== undefined) {
 					if (!external) {
 						nodes.push(
-							<a href={to} onClick={handleLinkNavigation} class="text-c-primary-400 hover:underline">
+							<a href={to} class="text-c-primary-400 hover:underline">
 								{subtext}
 							</a>,
 						);

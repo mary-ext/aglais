@@ -8,14 +8,13 @@ import type {
 } from '@mary/bluesky-client/lexicons';
 
 import { useProfileShadow } from '~/api/cache/profile-shadow';
+import { ContextContentMedia, getModerationUI } from '~/api/moderation';
 import { moderateQuote } from '~/api/moderation/entities/quote';
 import { parseAtUri } from '~/api/utils/strings';
 
 import { useModerationOptions } from '~/lib/states/moderation';
 
-import { ContextContentMedia, getModerationUI } from '~/api/moderation';
 import Avatar from '../avatar';
-import { handleLinkNavigation } from '../button';
 import TimeAgo from '../time-ago';
 import ImageEmbed from './image-embed';
 
@@ -48,7 +47,6 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 	return (
 		<a
 			href={interactive ? href : undefined}
-			onClick={interactive ? handleLinkNavigation : undefined}
 			class={
 				`overflow-hidden rounded-md border border-c-contrast-200` +
 				(interactive ? ` hover:bg-c-contrast-25` : ``)
