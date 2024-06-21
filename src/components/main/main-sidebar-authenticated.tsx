@@ -22,40 +22,19 @@ import ManageAccountDialogLazy from './manage-account-dialog-lazy';
 
 const MainSidebarAuthenticated = () => {
 	const { close } = useModalContext();
+	const { currentAccount } = useSession();
 
 	return (
 		<>
 			<Sidebar.Backdrop />
 			<Sidebar.Container>
 				<AuthenticatedHeader />
-				<Sidebar.Item
-					icon={PersonOutlinedIcon}
-					label="Profile"
-					onClick={() => {
-						close();
-					}}
-				/>
-				<Sidebar.Item
-					icon={BulletListOutlinedIcon}
-					label="Lists"
-					onClick={() => {
-						close();
-					}}
-				/>
-				<Sidebar.Item
-					icon={ShieldOutlinedIcon}
-					label="Moderation"
-					onClick={() => {
-						close();
-					}}
-				/>
-				<Sidebar.Item
-					icon={GearOutlinedIcon}
-					label="Settings"
-					onClick={() => {
-						close();
-					}}
-				/>
+
+				<Sidebar.NavItem icon={PersonOutlinedIcon} label="Profile" href={`/${currentAccount!.did}`} />
+				<Sidebar.NavItem icon={BulletListOutlinedIcon} label="Lists" href="/lists" />
+				<Sidebar.NavItem icon={ShieldOutlinedIcon} label="Moderation" href="/moderation" />
+				<Sidebar.NavItem icon={GearOutlinedIcon} label="Settings" href="/settings" />
+
 				<Sidebar.Item
 					icon={LeaveOutlinedIcon}
 					label="Sign out"

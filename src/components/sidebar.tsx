@@ -54,3 +54,33 @@ const SidebarItem = (props: SidebarItemProps) => {
 };
 
 export { SidebarItem as Item };
+
+export interface SidebarNavItemProps {
+	icon: Component;
+	label: string;
+	href: string;
+}
+
+const SidebarNavItem = (props: SidebarNavItemProps) => {
+	const { close } = useModalContext();
+
+	return (
+		<a
+			role="menuitem"
+			href={props.href}
+			onClick={close}
+			class="flex gap-4 px-4 py-3 text-c-contrast-900 hover:bg-c-contrast-25"
+		>
+			<div class="mt-0.5 text-xl">
+				{(() => {
+					const Icon = props.icon;
+					return <Icon />;
+				})()}
+			</div>
+
+			<span class="text-base font-bold">{props.label}</span>
+		</a>
+	);
+};
+
+export { SidebarNavItem as NavItem };
