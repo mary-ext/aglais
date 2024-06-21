@@ -31,31 +31,32 @@ export const parseAtUri = (str: string): AtUri => {
 	};
 };
 
+// @ts-expect-error
+const _parse = URL.parse as (url: string | URL, base?: string) => URL | null;
+
 // Check for the existence of URL.parse and use that if available, removes the
 // performance hit from try..catch blocks.
-export const safeUrlParse =
-	'parse' in URL
-		? (text: string): URL | null => {
-				// @ts-expect-error
-				const url = URL.parse(text) as URL | null;
+export const safeUrlParse = _parse
+	? (text: string): URL | null => {
+			const url = _parse(text);
 
-				if (url !== null && (url.protocol === 'https:' || url.protocol === 'http:')) {
+			if (url !== null && (url.protocol === 'https:' || url.protocol === 'http:')) {
+				return url;
+			}
+
+			return null;
+		}
+	: (text: string): URL | null => {
+			try {
+				const url = new URL(text);
+
+				if (url.protocol === 'https:' || url.protocol === 'http:') {
 					return url;
 				}
+			} catch {}
 
-				return null;
-			}
-		: (text: string): URL | null => {
-				try {
-					const url = new URL(text);
-
-					if (url.protocol === 'https:' || url.protocol === 'http:') {
-						return url;
-					}
-				} catch {}
-
-				return null;
-			};
+			return null;
+		};
 
 const TRIM_HOST_RE = /^www\./;
 const TRIM_URLTEXT_RE = /^\s*(https?:\/\/)?(?:www\.)?/;
