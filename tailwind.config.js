@@ -103,6 +103,9 @@ export default {
 	corePlugins: {
 		outlineStyle: false,
 	},
+	future: {
+		hoverOnlyWhenSupported: true,
+	},
 	plugins: [
 		plugin(({ addVariant, addUtilities }) => {
 			addVariant('modal', '&:modal');
