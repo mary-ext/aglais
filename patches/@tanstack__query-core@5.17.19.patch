@@ -1,29 +1,40 @@
+diff --git a/build/modern/_notifyManager.js b/build/modern/_notifyManager.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..a8dec3a4b959a30571de9f690a1ffeda8815a191
+--- /dev/null
++++ b/build/modern/_notifyManager.js
+@@ -0,0 +1,15 @@
++export var batch = (callback) => callback();
++
++export var batchCalls = (callback) => {
++  return (...args) => batch(() => callback(...args));
++};
++
++export var schedule = (callback) => callback();
++
++export var setNotifyFunction = () => {};
++
++export var setBatchNotifyFunction = (fn) => {
++  batch = fn;
++};
++
++export var setScheduler = () => {};
 diff --git a/build/modern/notifyManager.js b/build/modern/notifyManager.js
-index bb5d0317ae0f1aacc7d5229457ce22adfef71655..6eb12487a1f20b36ec716b0e11299b483c64c0ee 100644
+index bb5d0317ae0f1aacc7d5229457ce22adfef71655..9c113b5826ba5fe927acd3e8dafe19900794a8ef 100644
 --- a/build/modern/notifyManager.js
 +++ b/build/modern/notifyManager.js
-@@ -1,77 +1,28 @@
+@@ -1,77 +1,9 @@
  // src/notifyManager.ts
--function createNotifyManager() {
++import * as notifyManager from "./_notifyManager.js";
++
+ function createNotifyManager() {
 -  let queue = [];
 -  let transactions = 0;
 -  let notifyFn = (callback) => {
 -    callback();
 -  };
 -  let batchNotifyFn = (callback) => {
-+var batchNotifyFn = (callback) => {
-+  callback();
-+};
-+
-+var notifyManager = {
-+  get batch() {
-+    return batchNotifyFn;
-+  },
-+  batchCalls(callback) {
-+    return (...args) => batchNotifyFn(() => callback(...args));
-+  },
-+  schedule(callback) {
-     callback();
+-    callback();
 -  };
 -  let scheduleFn = (cb) => setTimeout(cb, 0);
 -  const setScheduler = (fn) => {
@@ -75,10 +86,7 @@ index bb5d0317ae0f1aacc7d5229457ce22adfef71655..6eb12487a1f20b36ec716b0e11299b48
 -    notifyFn = fn;
 -  };
 -  const setBatchNotifyFunction = (fn) => {
-+  },
-+  setNotifyFunction() {},
-+  setBatchNotifyFunction(fn) {
-     batchNotifyFn = fn;
+-    batchNotifyFn = fn;
 -  };
 -  return {
 -    batch,
@@ -88,18 +96,13 @@ index bb5d0317ae0f1aacc7d5229457ce22adfef71655..6eb12487a1f20b36ec716b0e11299b48
 -    setBatchNotifyFunction,
 -    setScheduler
 -  };
--}
++  return notifyManager;
+ }
 -var notifyManager = createNotifyManager();
 -export {
 -  createNotifyManager,
 -  notifyManager
-+  },
-+  setScheduler() {},
- };
-+
-+function createNotifyManager() {
-+  return notifyManager;
-+}
+-};
 +
 +export { createNotifyManager, notifyManager };
  //# sourceMappingURL=notifyManager.js.map
