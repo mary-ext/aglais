@@ -19,7 +19,8 @@ const ExternalEmbed = ({ embed, interactive }: ExternalEmbedProps) => {
 			href={interactive ? uri : undefined}
 			target="_blank"
 			class={
-				`flex overflow-hidden rounded-md border border-outline` + (interactive ? ` hover:bg-contrast/sm` : ``)
+				`flex overflow-hidden rounded-md border border-outline` +
+				(interactive ? ` hover:bg-contrast/sm active:bg-contrast/lg` : ``)
 			}
 		>
 			{thumb && (
