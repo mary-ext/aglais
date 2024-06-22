@@ -40,16 +40,20 @@ const iconButtonClasses = (
 	var cn = `grid place-items-center rounded-full`;
 
 	if (variant === 'ghost') {
+		cn += ` text-contrast`;
+
 		if (!isDisabled()) {
-			cn += ` text-c-contrast-900 hover:bg-c-contrast-50`;
+			cn += ` hover:bg-contrast/md active:bg-contrast/lg`;
 		} else {
-			cn += ` text-c-contrast-400`;
+			cn += ` opacity-50`;
 		}
 	} else if (variant === 'outline') {
+		cn += ` border border-outline-lg text-contrast`;
+
 		if (!isDisabled()) {
-			cn += ` border border-c-contrast-300 text-c-contrast-900 hover:bg-c-contrast-25`;
+			cn += ` hover:bg-contrast/md active:bg-contrast/lg`;
 		} else {
-			cn += ` border border-c-contrast-100 text-c-contrast-400`;
+			cn += ` opacity-50`;
 		}
 	}
 

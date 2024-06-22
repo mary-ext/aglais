@@ -11,7 +11,7 @@ const Divider = (props: DividerProps) => {
 };
 
 const dividerClassNames = ({ gutter = false, gutterBottom = gutter, gutterTop = gutter }: DividerProps) => {
-	let cn = `border-c-contrast-200`;
+	let cn = `border-outline`;
 
 	if (gutterBottom === 'sm') {
 		cn += ` mb-1`;

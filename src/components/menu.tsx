@@ -9,7 +9,6 @@ import { useModalContext } from '~/globals/modals';
 import { useMediaQuery } from '~/lib/hooks/media-query';
 import { useModalClose } from '~/lib/hooks/modal-close';
 import { on } from '~/lib/misc';
-import { useTheme } from '~/lib/states/theme';
 
 import Button from './button';
 
@@ -78,23 +77,16 @@ const MenuContainer = (props: MenuContainerProps) => {
 					ref={ref}
 					role="menu"
 					style={{ top: `${position.y ?? 0}px`, left: `${position.x ?? 0}px` }}
-					class="absolute flex max-w-sm flex-col overflow-hidden overflow-y-auto rounded-md border border-c-contrast-200 bg-c-contrast-0"
+					class="absolute flex max-w-sm flex-col overflow-hidden overflow-y-auto rounded-md border border-outline bg-background"
 				>
 					{props.children}
 				</div>
 			);
 		} else {
-			const theme = useTheme();
-
 			return (
-				<div
-					class={
-						`flex grow flex-col self-stretch overflow-y-auto` +
-						(theme.currentTheme === 'light' ? ` bg-t-black/40` : ` bg-t-blue-low/40`)
-					}
-				>
+				<div class="flex grow flex-col self-stretch overflow-y-auto bg-contrast-overlay/40">
 					<div class="h-[50vh] shrink-0"></div>
-					<div ref={containerRef} role="menu" class="mt-auto flex flex-col bg-c-black">
+					<div ref={containerRef} role="menu" class="bg-c-black mt-auto flex flex-col">
 						<div class="flex flex-col pt-1">{props.children}</div>
 
 						<div class="flex flex-col px-4 pb-4 pt-3">
@@ -133,12 +125,12 @@ const MenuItem = (props: MenuItemProps) => {
 	);
 };
 const menuItemClasses = ({ disabled }: MenuItemProps) => {
-	let cn = `flex gap-3 px-4 py-3`;
+	let cn = `flex gap-3 px-4 py-3 text-contrast`;
 
 	if (!disabled) {
-		cn += ` text-c-contrast-900 hover:bg-c-contrast-25`;
+		cn += ` hover:bg-contrast/md active:bg-contrast/lg`;
 	} else {
-		cn += ` text-c-contrast-400`;
+		cn += ` opacity-50`;
 	}
 
 	return cn;

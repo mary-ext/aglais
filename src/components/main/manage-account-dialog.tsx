@@ -48,12 +48,12 @@ const ManageAccountDialog = () => {
 							onClick={() => {
 								openModal(() => <SignInDialogLazy />);
 							}}
-							class="px-4 py-3 text-left text-sm text-c-primary-400 hover:bg-c-primary-975"
+							class="px-4 py-3 text-left text-sm text-accent hover:bg-accent/md active:bg-accent/lg"
 						>
 							Add new account
 						</button>
 
-						<button class="px-4 py-3 text-left text-sm text-c-negative-400 hover:bg-c-negative-975">
+						<button class="px-4 py-3 text-left text-sm text-error hover:bg-error/md active:bg-error/lg">
 							Sign out of all accounts
 						</button>
 					</div>
@@ -77,12 +77,12 @@ const CurrentAccountItem = () => {
 				<p class="overflow-hidden text-ellipsis whitespace-nowrap font-bold empty:hidden">
 					{profile.data?.displayName}
 				</p>
-				<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-c-contrast-600">
+				<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">
 					{'@' + (profile.data?.handle ?? currentAccount!.data.session.handle)}
 				</p>
 			</div>
 
-			<div class="mt-2.5 shrink-0 text-lg text-c-positive-600">
+			<div class="mt-2.5 shrink-0 text-lg text-repost">
 				<CircleCheckSolidIcon />
 			</div>
 		</div>
@@ -93,14 +93,17 @@ const AccountItem = ({ account, onClick }: { account: AccountData; onClick?: () 
 	const profile = useProfileQuery(() => account.did);
 
 	return (
-		<button onClick={onClick} class="flex gap-4 px-4 py-3 text-left hover:bg-c-contrast-25">
+		<button
+			onClick={onClick}
+			class="flex gap-4 px-4 py-3 text-left hover:bg-contrast/md active:bg-contrast/lg"
+		>
 			<Avatar type="user" src={profile.data?.avatar} class="mt-0.5" />
 
 			<div class="min-w-0 grow self-center text-sm">
 				<p class="overflow-hidden text-ellipsis whitespace-nowrap font-bold empty:hidden">
 					{profile.data?.displayName}
 				</p>
-				<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-c-contrast-600">
+				<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">
 					{'@' + (profile.data?.handle ?? account.session.handle)}
 				</p>
 			</div>

@@ -19,7 +19,7 @@ const SidebarContainer = (props: SidebarContainerProps) => {
 		<div
 			ref={containerRef}
 			role="menu"
-			class="z-1 flex w-72 grow flex-col self-start overflow-auto bg-c-contrast-0"
+			class="z-1 flex w-72 grow flex-col self-start overflow-auto bg-background"
 		>
 			{props.children}
 		</div>
@@ -39,7 +39,7 @@ const SidebarItem = (props: SidebarItemProps) => {
 		<button
 			role="menuitem"
 			onClick={props.onClick}
-			class="flex gap-4 px-4 py-3 text-c-contrast-900 hover:bg-c-contrast-25"
+			class="flex gap-4 px-4 py-3 text-contrast hover:bg-contrast/md active:bg-contrast/lg"
 		>
 			<div class="mt-0.5 text-xl">
 				{(() => {
@@ -69,7 +69,7 @@ const SidebarNavItem = (props: SidebarNavItemProps) => {
 			role="menuitem"
 			href={props.href}
 			onClick={close}
-			class="flex gap-4 px-4 py-3 text-c-contrast-900 hover:bg-c-contrast-25"
+			class="flex gap-4 px-4 py-3 text-contrast hover:bg-contrast/md active:bg-contrast/lg"
 		>
 			<div class="mt-0.5 text-xl">
 				{(() => {

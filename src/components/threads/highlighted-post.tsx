@@ -51,10 +51,10 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 
 	return (
 		<div class="px-4 pt-3">
-			<div class="relative mb-3 flex items-center justify-between gap-3 text-sm text-c-contrast-600">
+			<div class="relative mb-3 flex items-center justify-between gap-3 text-sm text-contrast-muted">
 				{props.prev && (
 					<div class="absolute bottom-full mb-1 flex h-3 w-9 flex-col items-center">
-						<div class="grow border-l-2 border-c-contrast-100" />
+						<div class="grow border-l-2 border-outline-md" />
 					</div>
 				)}
 
@@ -67,14 +67,14 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 
 					<div class="max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
 						<bdi class="overflow-hidden text-ellipsis">
-							<span class="font-bold text-c-contrast-900">{author().displayName}</span>
+							<span class="font-bold text-contrast">{author().displayName}</span>
 						</bdi>
 						<p class="overflow-hidden text-ellipsis whitespace-nowrap">{'@' + author().handle}</p>
 					</div>
 				</a>
 
 				<div class="flex shrink-0 items-center gap-4">
-					<button class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-c-contrast-50">
+					<button class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/lg">
 						<MoreHorizOutlinedIcon />
 					</button>
 				</div>
@@ -85,19 +85,19 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 				{embed() && <Embed embed={embed()!} moderation={moderation()} gutterTop large />}
 			</div>
 
-			<p class="mt-3 text-sm text-c-contrast-600">{formatAbsDateTime(post().indexedAt)}</p>
+			<p class="mt-3 text-sm text-contrast-muted">{formatAbsDateTime(post().indexedAt)}</p>
 
 			<Divider gutterTop="md" />
 
 			<div class="flex flex-wrap gap-4 py-4 text-sm">
 				<a class="hover:underline">
 					<span class="font-bold">{formatCompact(shadow().repostCount)}</span>
-					<span class="text-c-contrast-600"> Reposts</span>
+					<span class="text-contrast-muted"> Reposts</span>
 				</a>
 
 				<a class="hover:underline">
 					<span class="font-bold">{formatCompact(shadow().likeCount)}</span>
-					<span class="text-c-contrast-600"> Likes</span>
+					<span class="text-contrast-muted"> Likes</span>
 				</a>
 			</div>
 		</div>

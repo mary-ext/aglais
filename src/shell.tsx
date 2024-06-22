@@ -27,7 +27,7 @@ const Shell = () => {
 	return (
 		<div
 			inert={hasModals()}
-			class="relative z-0 mx-auto flex min-h-[100dvh] max-w-md flex-col-reverse border-c-contrast-200 sm:border-x"
+			class="relative z-0 mx-auto flex min-h-[100dvh] max-w-md flex-col-reverse border-outline sm:border-x"
 		>
 			{!!(currentAccount && route().def.meta?.main) && <NavBar route={route} />}
 
@@ -103,7 +103,7 @@ const NavBar = ({ route }: { route: Accessor<MatchedRouteState> }) => {
 
 	return (
 		<>
-			<div class="sticky bottom-0 z-1 flex h-13 w-full max-w-md shrink-0 items-stretch border-t border-c-contrast-200 bg-c-contrast-0">
+			<div class="sticky bottom-0 z-1 flex h-13 w-full max-w-md shrink-0 items-stretch border-t border-outline bg-background">
 				<NavItem
 					label="Home"
 					active={active() === MainTabs.HOME}
@@ -162,7 +162,7 @@ const NavItem = (props: NavItemProps) => {
 				const active = props.active;
 
 				const Icon = active && ActiveIcon ? ActiveIcon : InactiveIcon;
-				return <Icon class={`text-2xl` + (active && !ActiveIcon ? ` stroke-3 stroke-c-contrast-900` : ``)} />;
+				return <Icon class={`text-2xl` + (active && !ActiveIcon ? ` stroke-3 stroke-contrast` : ``)} />;
 			})()}
 		</button>
 	);

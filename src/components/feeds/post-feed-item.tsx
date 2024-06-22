@@ -46,11 +46,14 @@ const PostFeedItem = ({ item, timelineDid }: PostFeedItemProps) => {
 	const moderation = createMemo(() => moderatePost(post, authorShadow(), moderationOptions()));
 
 	return (
-		<div hidden={shadow().deleted} class={`relative border-c-contrast-200 px-4` + (!next ? ` border-b` : ``)}>
+		<div
+			hidden={shadow().deleted}
+			class={`relative border-outline px-4 hover:bg-contrast/sm` + (!next ? ` border-b` : ``)}
+		>
 			<div class="relative flex flex-col pb-1 pt-2">
 				{prev && (
 					<div class="flex w-9 flex-col items-center">
-						<div class="absolute bottom-1 top-0 grow border-l-2 border-c-contrast-200" />
+						<div class="absolute bottom-1 top-0 grow border-l-2 border-outline-md" />
 					</div>
 				)}
 
@@ -66,7 +69,7 @@ const PostFeedItem = ({ item, timelineDid }: PostFeedItemProps) => {
 						moderation={moderation()}
 					/>
 
-					{next && <div class="mt-1 grow border-l-2 border-c-contrast-200" />}
+					{next && <div class="mt-1 grow border-l-2 border-outline-md" />}
 				</div>
 
 				<div class="min-w-0 grow pb-3">
@@ -102,7 +105,7 @@ const renderReason = (reason: UiTimelineItem['reason']) => {
 			const name = by.displayName || by.handle;
 
 			return (
-				<div class="flex items-center gap-3 text-de text-c-contrast-600">
+				<div class="flex items-center gap-3 text-de text-contrast-muted">
 					<div class="flex w-9 shrink-0 justify-end">
 						<RepeatOutlinedIcon class="text-sm" />
 					</div>

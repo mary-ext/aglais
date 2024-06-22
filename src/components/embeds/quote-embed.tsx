@@ -48,18 +48,15 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 		<a
 			href={interactive ? href : undefined}
 			class={
-				`overflow-hidden rounded-md border border-c-contrast-200 bg-c-contrast-0` +
-				(interactive ? ` hover:border-c-contrast-300` : ``)
+				`overflow-hidden rounded-md border border-outline` + (interactive ? ` hover:bg-contrast/sm` : ``)
 			}
 		>
-			<div class="mx-3 mt-3 flex min-w-0 text-sm text-c-contrast-600">
+			<div class="mx-3 mt-3 flex min-w-0 text-sm text-contrast-muted">
 				<Avatar type="user" src={/* @once */ author.avatar} size="xs" class="mr-2" />
 
 				<span class="flex max-w-full gap-1 overflow-hidden text-ellipsis whitespace-nowrap text-left">
 					<bdi class="overflow-hidden text-ellipsis">
-						<span class="font-bold text-c-contrast-900">
-							{/* @once */ author.displayName || author.handle}
-						</span>
+						<span class="font-bold text-contrast">{/* @once */ author.displayName || author.handle}</span>
 					</bdi>
 					<span class="block overflow-hidden text-ellipsis whitespace-nowrap">
 						@{/* @once */ author.handle}

@@ -120,7 +120,7 @@ const AuthenticatedHeader = () => {
 								<p class="overflow-hidden break-words text-lg font-bold empty:hidden">
 									{profile().displayName}
 								</p>
-								<p class="overflow-hidden break-words text-sm text-c-contrast-600">
+								<p class="overflow-hidden break-words text-sm text-contrast-muted">
 									{'@' + profile().handle}
 								</p>
 							</div>
@@ -128,12 +128,12 @@ const AuthenticatedHeader = () => {
 							<div class="mt-3 flex min-w-0 flex-wrap gap-5 text-sm">
 								<a onClick={close}>
 									<span class="font-bold">{formatCompact(profile().followsCount ?? 0)}</span>
-									<span class="text-c-contrast-600"> Following</span>
+									<span class="text-contrast-muted"> Following</span>
 								</a>
 
 								<a onClick={close}>
 									<span class="font-bold">{formatCompact(profile().followersCount ?? 0)}</span>
-									<span class="text-c-contrast-600"> Followers</span>
+									<span class="text-contrast-muted"> Followers</span>
 								</a>
 							</div>
 						</div>

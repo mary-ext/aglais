@@ -4,20 +4,13 @@ import { useModalContext } from '~/globals/modals';
 import { useMediaQuery } from '~/lib/hooks/media-query';
 
 import { useModalClose } from '~/lib/hooks/modal-close';
-import { useTheme } from '~/lib/states/theme';
 
 import { Fieldset } from './fieldset';
 import IconButton from './icon-button';
 import CrossLargeOutlinedIcon from './icons-central/cross-large-outline';
 
 const DialogBackdrop = () => {
-	const theme = useTheme();
-
-	return (
-		<div
-			class={`fixed inset-0 z-0` + (theme.currentTheme === 'light' ? ` bg-t-black/40` : ` bg-t-blue-low/40`)}
-		></div>
-	);
+	return <div class="fixed inset-0 z-0 bg-contrast-overlay/40"></div>;
 };
 
 export { DialogBackdrop as Backdrop };
@@ -64,7 +57,7 @@ const getMaxDialogWidth = ({ maxWidth = 'md' }: DialogContainerProps) => {
 };
 
 const containerClasses = (isDesktop: () => boolean, props: DialogContainerProps): string => {
-	var cn = `z-1 bg-c-contrast-0`;
+	var cn = `z-1 bg-background`;
 
 	if (isDesktop()) {
 		cn += ` a-dialog-desktop w-full max-w-[var(--dialog-width)] rounded-xl`;

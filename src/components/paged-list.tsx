@@ -31,7 +31,7 @@ const PagedList = <T,>(props: PagedListProps<T>) => {
 		<div class="flex flex-col">
 			<Switch>
 				<Match when={props.isRefreshing}>
-					<div class="grid h-13 shrink-0 place-items-center border-b border-c-contrast-200">
+					<div class="grid h-13 shrink-0 place-items-center border-b border-outline">
 						<CircularProgress />
 					</div>
 				</Match>
@@ -39,7 +39,7 @@ const PagedList = <T,>(props: PagedListProps<T>) => {
 				<Match when={props.hasNewData}>
 					<button
 						onClick={onRefresh}
-						class="grid h-13 shrink-0 place-items-center border-b border-c-contrast-200 text-sm text-c-primary-400 hover:bg-c-contrast-25"
+						class="hover:bg-border-outline-25 grid h-13 shrink-0 place-items-center border-b border-outline text-sm text-accent"
 					>
 						Show new items
 					</button>
@@ -82,7 +82,7 @@ const PagedList = <T,>(props: PagedListProps<T>) => {
 				<Match when={props.manualScroll && !props.isFetchingNextPage && props.hasNextPage}>
 					<button
 						onClick={onEndReached}
-						class="grid h-13 shrink-0 place-items-center text-sm text-c-primary-400 hover:bg-c-contrast-25"
+						class="grid h-13 shrink-0 place-items-center text-sm text-accent hover:bg-contrast/sm"
 					>
 						Show more
 					</button>
@@ -105,7 +105,7 @@ const PagedList = <T,>(props: PagedListProps<T>) => {
 
 				<Match when={props.data}>
 					<div class="grid h-13 shrink-0 place-items-center">
-						<p class="text-sm text-c-contrast-400">End of list</p>
+						<p class="text-sm text-contrast-muted">End of list</p>
 					</div>
 				</Match>
 			</Switch>

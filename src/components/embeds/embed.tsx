@@ -122,8 +122,8 @@ const RecordEmbed = (props: RecordEmbedProps) => {
 
 const renderEmpty = (msg: string) => {
 	return (
-		<div class="rounded-md border border-c-contrast-200 p-3">
-			<p class="text-sm text-c-contrast-600">{msg}</p>
+		<div class="rounded-md border border-outline p-3">
+			<p class="text-sm text-contrast-muted">{msg}</p>
 		</div>
 	);
 };

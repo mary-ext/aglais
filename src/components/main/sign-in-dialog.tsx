@@ -203,7 +203,7 @@ const SignInDialog = () => {
 								<Match when={view().type === 'handle_initial'}>
 									<div class="flex flex-col gap-1">
 										<h2 class="text-2xl font-bold">Sign in</h2>
-										<h3 class="text-base text-c-contrast-800">To begin, enter your Bluesky handle or DID</h3>
+										<h3 class="text-base text-contrast-muted">To begin, enter your Bluesky handle or DID</h3>
 									</div>
 
 									<div class="flex flex-col gap-4">
@@ -372,7 +372,7 @@ const SignInDialog = () => {
 										<>
 											<div class="flex flex-col gap-1">
 												<h2 class="text-2xl font-bold">Enter verification code</h2>
-												<h3 class="max-w-84 text-base text-c-contrast-800">
+												<h3 class="max-w-84 text-base text-contrast-muted">
 													Check your inbox for an email containing the code and enter it here
 												</h3>
 											</div>

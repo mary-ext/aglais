@@ -24,12 +24,10 @@ const InlineLink = (props: InlineLinkProps) => {
 };
 
 const inlineLinkClassNames = (isDisabled: () => boolean): string => {
-	var cn = `text-left text-de hover:underline`;
+	var cn = `text-accent text-left text-de hover:underline`;
 
-	if (!isDisabled()) {
-		cn += ` text-c-primary-400`;
-	} else {
-		cn += ` text-c-primary-700`;
+	if (isDisabled()) {
+		cn += ` opacity-50`;
 	}
 
 	return cn;

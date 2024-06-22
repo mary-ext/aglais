@@ -26,11 +26,11 @@ const HomePage = () => {
 				</Page.HeaderAccessory>
 
 				<div class="flex min-w-0 grow">
-					<button class="-mx-2 flex items-center gap-1 overflow-hidden rounded px-2 py-1 hover:bg-c-contrast-50">
+					<button class="-mx-2 flex items-center gap-1 overflow-hidden rounded px-2 py-1 hover:bg-contrast/md active:bg-contrast/lg">
 						<span class="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold">
 							{'Following'}
 						</span>
-						<ChevronRightOutlinedIcon class="-mr-1 shrink-0 rotate-90 text-lg text-c-contrast-600" />
+						<ChevronRightOutlinedIcon class="-mr-1 shrink-0 rotate-90 text-lg text-contrast-muted" />
 					</button>
 				</div>
 

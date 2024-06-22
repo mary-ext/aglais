@@ -38,13 +38,7 @@ const Avatar = (props: AvatarProps) => {
 		<Switch>
 			<Match when={!props.disabled && props.href}>
 				{(href) => (
-					<a
-						
-						href={href()}
-						title={props.title}
-						onClick={props.onClick}
-						class={avatarClassNames(props, true)}
-					>
+					<a href={href()} title={props.title} onClick={props.onClick} class={avatarClassNames(props, true)}>
 						{renderAvatar(props.type, props.src, shouldBlurAvatar)}
 					</a>
 				)}
@@ -79,7 +73,7 @@ const renderAvatar = (type: keyof typeof AVATARS, src: string | undefined, shoul
 };
 
 const avatarClassNames = ({ size = 'md', class: className }: AvatarProps, interactive: boolean): string => {
-	let cn = `shrink-0 overflow-hidden rounded-full bg-c-contrast-200`;
+	let cn = `shrink-0 overflow-hidden rounded-full bg-outline-md`;
 
 	if (interactive) {
 		cn += ` hover:opacity-80`;

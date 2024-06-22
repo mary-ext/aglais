@@ -45,7 +45,7 @@ const PostActions = (props: PostActionsProps) => {
 	};
 
 	return (
-		<div class={`mt-3 flex items-center text-c-contrast-600` + (!compact ? `` : ` gap-3`)}>
+		<div class={`mt-3 flex items-center text-contrast-muted` + (!compact ? `` : ` gap-3`)}>
 			<div class={`min-w-0` + (!compact ? ` grow basis-0` : ``)}>
 				<button
 					onClick={() => {
@@ -55,9 +55,9 @@ const PostActions = (props: PostActionsProps) => {
 
 						openModal(() => <ComposerDialogLazy />);
 					}}
-					class={`group flex max-w-full grow basis-0 items-end gap-0.5`}
+					class={`group flex max-w-full grow basis-0 items-end gap-0.5 hover:text-accent`}
 				>
-					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-c-contrast-50">
+					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-accent/md group-active:bg-accent/lg">
 						<ReplyOutlinedIcon />
 					</div>
 
@@ -95,10 +95,10 @@ const PostActions = (props: PostActionsProps) => {
 					}}
 					class={
 						`group flex max-w-full grow basis-0 items-end gap-0.5` +
-						(isReposted() ? ` text-c-positive-600` : ``)
+						(isReposted() ? ` text-repost` : ` hover:text-repost`)
 					}
 				>
-					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-c-contrast-50">
+					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-repost/md group-active:bg-repost/lg">
 						<RepeatOutlinedIcon />
 					</div>
 
@@ -112,10 +112,11 @@ const PostActions = (props: PostActionsProps) => {
 				<button
 					onClick={toggleLike}
 					class={
-						`group flex max-w-full grow basis-0 items-end gap-0.5` + (isLiked() ? ` text-c-negative-400` : ``)
+						`group flex max-w-full grow basis-0 items-end gap-0.5` +
+						(isLiked() ? ` text-like` : ` hover:text-like`)
 					}
 				>
-					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-c-contrast-50">
+					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-like/md group-active:bg-like/lg">
 						{(() => {
 							const Icon = !isLiked() ? HeartOutlinedIcon : HeartSolidIcon;
 							return <Icon />;
@@ -129,7 +130,7 @@ const PostActions = (props: PostActionsProps) => {
 			</div>
 
 			<div class="shrink-0">
-				<button class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-c-contrast-50">
+				<button class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/lg">
 					<ShareOutlinedIcon />
 				</button>
 			</div>

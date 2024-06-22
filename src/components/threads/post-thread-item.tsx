@@ -51,7 +51,7 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 	return (
 		<div
 			class={
-				`flex border-c-contrast-200 hover:bg-c-contrast-25` +
+				`flex border-outline hover:bg-contrast/sm` +
 				// prettier-ignore
 				(!treeView ? ` px-4` + (!next ? ` border-b` : ``) : ` px-3`)
 			}
@@ -60,12 +60,12 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 
 			<div class={`flex min-w-0 grow` + (!treeView ? ` gap-3` : ` gap-2`)}>
 				<div class="relative flex shrink-0 flex-col items-center pt-3">
-					{!treeView && prev && <div class="absolute top-0 h-2 border-l-2 border-c-contrast-100"></div>}
+					{!treeView && prev && <div class="absolute top-0 h-2 border-l-2 border-outline-md"></div>}
 
 					<Avatar type="user" src={author().avatar} size={!treeView ? 'md' : 'xs'} />
 
 					{next && (
-						<div class={`grow border-l-2 border-c-contrast-100` + (!treeView ? ` mt-1` : ` mt-0.5`)}></div>
+						<div class={`grow border-l-2 border-outline-md` + (!treeView ? ` mt-1` : ` mt-0.5`)}></div>
 					)}
 				</div>
 

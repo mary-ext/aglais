@@ -17,12 +17,12 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 			const handle = author.handle;
 
 			return (
-				<div class="mb-0.5 flex text-sm text-c-contrast-500">
+				<div class="mb-0.5 flex text-sm text-contrast-muted">
 					<span class="shrink-0 whitespace-pre">Replying to </span>
 					<a
 						dir="auto"
 						href={`/${did}`}
-						class="overflow-hidden text-ellipsis whitespace-nowrap text-c-primary-400 hover:underline"
+						class="overflow-hidden text-ellipsis whitespace-nowrap text-accent hover:underline"
 					>
 						@{handle}
 					</a>
@@ -32,7 +32,7 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 
 		const record = post.record as AppBskyFeedPost.Record;
 		if (record.reply) {
-			return <div class="mb-0.5 text-sm text-c-contrast-500">Replying to unknown</div>;
+			return <div class="mb-0.5 text-sm text-contrast-muted">Replying to unknown</div>;
 		}
 	}
 };

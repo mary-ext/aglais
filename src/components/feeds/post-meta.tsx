@@ -21,7 +21,7 @@ const PostMeta = ({ post, authorHref, href, compact, gutterBottom }: PostMetaPro
 
 	return (
 		<div
-			class={`flex items-center justify-between gap-4 text-c-contrast-600` + (gutterBottom ? ` mb-0.5` : ``)}
+			class={`flex items-center justify-between gap-4 text-contrast-muted` + (gutterBottom ? ` mb-0.5` : ``)}
 		>
 			<div class="flex items-center overflow-hidden text-sm">
 				<a
@@ -29,7 +29,7 @@ const PostMeta = ({ post, authorHref, href, compact, gutterBottom }: PostMetaPro
 					class="flex max-w-full gap-1 overflow-hidden text-ellipsis whitespace-nowrap text-left"
 				>
 					{displayName && (
-						<bdi class="overflow-hidden text-ellipsis font-bold text-c-contrast-900 hover:underline">
+						<bdi class="overflow-hidden text-ellipsis font-bold text-contrast hover:underline">
 							{displayName}
 						</bdi>
 					)}
@@ -51,7 +51,7 @@ const PostMeta = ({ post, authorHref, href, compact, gutterBottom }: PostMetaPro
 			</div>
 
 			<div class="shrink-0">
-				<button class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-c-contrast-50">
+				<button class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/lg">
 					<MoreHorizOutlinedIcon />
 				</button>
 			</div>

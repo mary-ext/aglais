@@ -65,22 +65,28 @@ const buttonClassNames = (
 	}
 
 	if (variant === 'primary') {
+		cn += ` bg-accent text-accent-fg`;
+
 		if (!isDisabled()) {
-			cn += ` bg-c-primary-500 text-c-white hover:bg-c-primary-600`;
+			cn += ` hover:bg-accent-hover active:bg-accent-active`;
 		} else {
-			cn += ` bg-c-primary-700 text-c-white/50`;
+			cn += ` opacity-50`;
 		}
 	} else if (variant === 'outline') {
+		cn += ` border border-outline-lg text-contrast`;
+
 		if (!isDisabled()) {
-			cn += ` border border-c-contrast-300 text-c-contrast-900 hover:bg-c-contrast-25`;
+			cn += ` hover:bg-contrast/md active:bg-contrast/lg`;
 		} else {
-			cn += ` border border-c-contrast-100 text-c-contrast-400`;
+			cn += ` opacity-50`;
 		}
 	} else if (variant === 'ghost') {
+		cn += ` text-contrast`;
+
 		if (!isDisabled()) {
-			cn += ` text-c-contrast-900 hover:bg-c-contrast-50`;
+			cn += ` hover:bg-contrast/md active:bg-contrast/lg`;
 		} else {
-			cn += ` text-c-contrast-400`;
+			cn += ` opacity-50`;
 		}
 	}
 

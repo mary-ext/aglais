@@ -56,7 +56,7 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 		}
 
 		return (
-			<div class={`relative ` + cn} style={{ 'aspect-ratio': ratio }}>
+			<div class={`relative bg-background ` + cn} style={{ 'aspect-ratio': ratio }}>
 				<img
 					src={thumb}
 					title={alt}
@@ -72,7 +72,7 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 
 				{interactive && alt && (
 					<button
-						class="text-white absolute bottom-0 left-0 m-2 h-5 rounded bg-t-black/70 px-1 text-xs font-medium"
+						class="absolute bottom-0 left-0 m-2 h-5 rounded bg-black/70 px-1 text-xs font-medium text-white"
 						title="Show image description"
 					>
 						ALT
@@ -85,8 +85,8 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 	return (
 		<div
 			class={
-				`bg-c-contrast-0 ` +
-				(!borderless ? ` overflow-hidden rounded-md border border-c-contrast-200` : ``) +
+				`` +
+				(!borderless ? ` overflow-hidden rounded-md border border-outline` : ``) +
 				(hasStandaloneImage ? ` max-w-full self-start` : ``)
 			}
 		>
