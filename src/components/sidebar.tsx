@@ -39,7 +39,7 @@ const SidebarItem = (props: SidebarItemProps) => {
 		<button
 			role="menuitem"
 			onClick={props.onClick}
-			class="flex gap-4 px-4 py-3 text-contrast hover:bg-contrast/md active:bg-contrast/md-pressed"
+			class="flex gap-4 px-4 py-3 text-contrast hover:bg-contrast/md active:bg-contrast/sm-pressed"
 		>
 			<div class="mt-0.5 text-xl">
 				{(() => {
@@ -69,7 +69,7 @@ const SidebarNavItem = (props: SidebarNavItemProps) => {
 			role="menuitem"
 			href={props.href}
 			onClick={close}
-			class="flex gap-4 px-4 py-3 text-contrast hover:bg-contrast/md active:bg-contrast/md-pressed"
+			class="flex gap-4 px-4 py-3 text-contrast hover:bg-contrast/md active:bg-contrast/sm-pressed"
 		>
 			<div class="mt-0.5 text-xl">
 				{(() => {

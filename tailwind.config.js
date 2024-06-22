@@ -82,6 +82,7 @@ export default {
 			background: `rgb(var(--p-background))`,
 			contrast: {
 				DEFAULT: `rgb(var(--p-contrast))`,
+				hinted: `rgb(var(--p-contrast-hinted))`,
 				muted: `rgb(var(--p-contrast-muted))`,
 				overlay: `rgb(var(--p-contrast-overlay))`,
 			},

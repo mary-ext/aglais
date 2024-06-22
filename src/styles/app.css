@@ -41,6 +41,7 @@
 	.theme-light {
 		--p-background: 255 255 255;
 		--p-contrast: 20 20 20;
+		--p-contrast-hinted: 25 25 25;
 		--p-contrast-muted: 100 100 100;
 		--p-contrast-overlay: 0 0 0;
 		--p-outline: 243 243 243;
@@ -51,10 +52,11 @@
 	.theme-dark {
 		--p-background: 0 0 0;
 		--p-contrast: 255 255 255;
-		--p-contrast-muted: 118 118 118;
+		--p-contrast-hinted: 244 244 244;
+		--p-contrast-muted: 123 123 123;
 		--p-contrast-overlay: 98 110 127;
-		--p-outline: 51 51 51;
-		--p-outline-md: 54 54 54;
-		--p-outline-lg: 100 100 100;
+		--p-outline: 54 54 54;
+		--p-outline-md: 57 57 57;
+		--p-outline-lg: 113 113 113;
 	}
 }
