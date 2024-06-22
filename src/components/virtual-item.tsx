@@ -1,5 +1,6 @@
 import { createEffect, createRenderEffect, createSignal, onCleanup, runWithOwner, type JSX } from 'solid-js';
 
+import { requestIdle } from '~/lib/misc';
 import { UNSAFE_useViewContext } from '~/lib/navigation/router';
 import { intersectionCallback } from '~/lib/observer';
 
@@ -81,7 +82,7 @@ const VirtualItem = (props: VirtualItemProps) => {
 
 			_entry = nextEntry;
 
-			requestIdleCallback(() => {
+			requestIdle(() => {
 				// bail out if it's no longer us.
 				if (_entry !== nextEntry) {
 					return;

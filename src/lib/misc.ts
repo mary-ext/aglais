@@ -63,3 +63,5 @@ export const reconcile = <T extends { id: string | number }>(prev: T[] | undefin
 
 	return nextLen === prevLen && equalItems === prevLen ? prev : equalItems === 0 ? next : array;
 };
+
+export const requestIdle = typeof requestIdleCallback === 'function' ? requestIdleCallback : setTimeout;
