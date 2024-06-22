@@ -60,7 +60,7 @@ const RichText = (props: RichTextProps) => {
 				if (to !== undefined) {
 					if (!external) {
 						nodes.push(
-							<a href={to} class="text-c-primary-400 hover:underline">
+							<a href={to} class="text-accent hover:underline">
 								{subtext}
 							</a>,
 						);
@@ -71,7 +71,7 @@ const RichText = (props: RichTextProps) => {
 								href={to}
 								onClick={handleUnsafeLinkNavigation}
 								onAuxClick={handleUnsafeLinkNavigation}
-								class="text-c-primary-400 hover:underline"
+								class="text-accent hover:underline"
 							>
 								{subtext}
 							</a>,
