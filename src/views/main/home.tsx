@@ -26,7 +26,7 @@ const HomePage = () => {
 				</Page.HeaderAccessory>
 
 				<div class="flex min-w-0 grow">
-					<button class="-mx-2 flex items-center gap-1 overflow-hidden rounded px-2 py-1 hover:bg-contrast/md active:bg-contrast/lg">
+					<button class="-mx-2 flex items-center gap-1 overflow-hidden rounded px-2 py-1 hover:bg-contrast/md active:bg-contrast/md-pressed">
 						<span class="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold">
 							{'Following'}
 						</span>

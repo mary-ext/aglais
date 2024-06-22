@@ -51,7 +51,7 @@ const PostMeta = ({ post, authorHref, href, compact, gutterBottom }: PostMetaPro
 			</div>
 
 			<div class="shrink-0">
-				<button class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/lg">
+				<button class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed">
 					<MoreHorizOutlinedIcon />
 				</button>
 			</div>

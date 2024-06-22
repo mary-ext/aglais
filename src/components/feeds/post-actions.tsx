@@ -57,7 +57,7 @@ const PostActions = (props: PostActionsProps) => {
 					}}
 					class={`group flex max-w-full grow basis-0 items-end gap-0.5 hover:text-accent`}
 				>
-					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-accent/md group-active:bg-accent/lg">
+					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-accent/md group-active:bg-accent/md-pressed">
 						<ReplyOutlinedIcon />
 					</div>
 
@@ -98,7 +98,7 @@ const PostActions = (props: PostActionsProps) => {
 						(isReposted() ? ` text-repost` : ` hover:text-repost`)
 					}
 				>
-					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-repost/md group-active:bg-repost/lg">
+					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-repost/md group-active:bg-repost/md-pressed">
 						<RepeatOutlinedIcon />
 					</div>
 
@@ -116,7 +116,7 @@ const PostActions = (props: PostActionsProps) => {
 						(isLiked() ? ` text-like` : ` hover:text-like`)
 					}
 				>
-					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-like/md group-active:bg-like/lg">
+					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-like/md group-active:bg-like/md-pressed">
 						{(() => {
 							const Icon = !isLiked() ? HeartOutlinedIcon : HeartSolidIcon;
 							return <Icon />;
@@ -130,7 +130,7 @@ const PostActions = (props: PostActionsProps) => {
 			</div>
 
 			<div class="shrink-0">
-				<button class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/lg">
+				<button class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed">
 					<ShareOutlinedIcon />
 				</button>
 			</div>

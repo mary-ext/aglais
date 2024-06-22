@@ -48,12 +48,12 @@ const ManageAccountDialog = () => {
 							onClick={() => {
 								openModal(() => <SignInDialogLazy />);
 							}}
-							class="px-4 py-3 text-left text-sm text-accent hover:bg-accent/md active:bg-accent/lg"
+							class="px-4 py-3 text-left text-sm text-accent hover:bg-accent/md active:bg-accent/md-pressed"
 						>
 							Add new account
 						</button>
 
-						<button class="px-4 py-3 text-left text-sm text-error hover:bg-error/md active:bg-error/lg">
+						<button class="px-4 py-3 text-left text-sm text-error hover:bg-error/md active:bg-error/md-pressed">
 							Sign out of all accounts
 						</button>
 					</div>
@@ -95,7 +95,7 @@ const AccountItem = ({ account, onClick }: { account: AccountData; onClick?: () 
 	return (
 		<button
 			onClick={onClick}
-			class="flex gap-4 px-4 py-3 text-left hover:bg-contrast/md active:bg-contrast/lg"
+			class="flex gap-4 px-4 py-3 text-left hover:bg-contrast/md active:bg-contrast/md-pressed"
 		>
 			<Avatar type="user" src={profile.data?.avatar} class="mt-0.5" />
 

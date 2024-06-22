@@ -43,7 +43,7 @@ const iconButtonClasses = (
 		cn += ` text-contrast`;
 
 		if (!isDisabled()) {
-			cn += ` hover:bg-contrast/md active:bg-contrast/lg`;
+			cn += ` hover:bg-contrast/md active:bg-contrast/md-pressed`;
 		} else {
 			cn += ` opacity-50`;
 		}
@@ -51,7 +51,7 @@ const iconButtonClasses = (
 		cn += ` border border-outline-lg text-contrast`;
 
 		if (!isDisabled()) {
-			cn += ` hover:bg-contrast/md active:bg-contrast/lg`;
+			cn += ` hover:bg-contrast/md active:bg-contrast/md-pressed`;
 		} else {
 			cn += ` opacity-50`;
 		}

@@ -74,7 +74,7 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 				</a>
 
 				<div class="flex shrink-0 items-center gap-4">
-					<button class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/lg">
+					<button class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed">
 						<MoreHorizOutlinedIcon />
 					</button>
 				</div>

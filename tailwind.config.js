@@ -64,9 +64,14 @@ export default {
 				DEFAULT: ['0 1px 2px rgb(0 0 0 / .3)', '0 1px 1px rgb(0 0 0 / .1)'],
 			},
 			opacity: {
-				sm: '0.03',
-				md: '0.1',
-				lg: '0.2',
+				sm: {
+					DEFAULT: 0.03,
+					pressed: 0.07,
+				},
+				md: {
+					DEFAULT: 0.1,
+					pressed: 0.2,
+				},
 			},
 		},
 		fontFamily: {
