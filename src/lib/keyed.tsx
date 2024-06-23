@@ -1,12 +1,12 @@
 import {
 	$TRACK,
-	JSX,
 	createMemo,
 	createRoot,
 	createSignal,
 	onCleanup,
 	untrack,
 	type Accessor,
+	type JSX,
 	type Setter,
 	type SignalOptions,
 } from 'solid-js';
