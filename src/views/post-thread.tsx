@@ -1,11 +1,16 @@
-import { Key } from '@solid-primitives/keyed';
-import { For, Match, Switch, createMemo, onMount } from 'solid-js';
+import { For, Match, Switch, createMemo } from 'solid-js';
 
 import type { AppBskyFeedDefs, Brand } from '@mary/bluesky-client/lexicons';
 
-import { createThreadData, type PostDescendantItem } from '~/api/models/post-thread';
+import {
+	createThreadData,
+	type OverflowDescendantItem,
+	type PostDescendantItem,
+} from '~/api/models/post-thread';
 import { usePostThreadQuery } from '~/api/queries/post-thread';
+import { dequal } from '~/api/utils/dequal';
 
+import { Key } from '~/lib/keyed';
 import { useParams } from '~/lib/navigation/router';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
@@ -16,6 +21,7 @@ import * as Page from '~/components/page';
 import VirtualItem from '~/components/virtual-item';
 
 import HighlightedPost from '~/components/threads/highlighted-post';
+import OverflowThreadItem from '~/components/threads/overflow-thread-item';
 import PostThreadItem from '~/components/threads/post-thread-item';
 import ThreadLines from '~/components/threads/thread-lines';
 
@@ -110,6 +116,14 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 						);
 					}
 
+					if (type === 'overflow') {
+						return (
+							<VirtualItem estimateHeight={44}>
+								<OverflowThreadItem item={item} treeView={false} descendant={false} />
+							</VirtualItem>
+						);
+					}
+
 					return null;
 				}}
 			</For>
@@ -130,7 +144,7 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 					{(treeView) => (
 						<>
 							<Divider gutterBottom={treeView && `sm`} />
-							<Key each={thread().descendants} by={(item) => item.id}>
+							<Key each={thread().descendants} by={(item) => item.id} equals={dequal}>
 								{(item) => {
 									const type = item().type;
 
@@ -138,6 +152,18 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 										return (
 											<VirtualItem estimateHeight={98}>
 												<PostThreadItem item={item() as PostDescendantItem} treeView={treeView} />
+											</VirtualItem>
+										);
+									}
+
+									if (type === 'overflow') {
+										return (
+											<VirtualItem estimateHeight={44}>
+												<OverflowThreadItem
+													item={item() as OverflowDescendantItem}
+													treeView={treeView}
+													descendant
+												/>
 											</VirtualItem>
 										);
 									}

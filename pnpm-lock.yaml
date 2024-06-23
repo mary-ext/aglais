@@ -49,9 +49,6 @@ importers:
       '@mary/solid-query':
         specifier: npm:@externdefs/solid-query@^0.1.5
         version: '@externdefs/solid-query@0.1.5(solid-js@1.8.17(patch_hash=wunpcbjxb5h4ujg4psj63uuluq))'
-      '@solid-primitives/keyed':
-        specifier: ^1.2.2
-        version: 1.2.2(solid-js@1.8.17(patch_hash=wunpcbjxb5h4ujg4psj63uuluq))
       cborg:
         specifier: 4.0.7
         version: 4.0.7(patch_hash=dz6b6r6dc4jadjfng7vtgi53hy)
@@ -1223,11 +1220,6 @@ packages:
     resolution: {integrity: sha512-UOo5FdvOL0+eIVTgS4tIdbW+TtnBLWg1YBCcU2KWM7nuNwRz9bksDX1bekJJCpu25N1DVWaCwnT39dVQxzqS8g==}
     cpu: [x64]
     os: [win32]
-
-  '@solid-primitives/keyed@1.2.2':
-    resolution: {integrity: sha512-oBziY40JK4XmJ57XGkFl8j0GtEarSu0hhjdkUQgqL/U0QQE3TZrRo9uhgH7I6VGJKBKG7SAraTPE6S5lVLM1ow==}
-    peerDependencies:
-      solid-js: ^1.6.12
 
   '@surma/rollup-plugin-off-main-thread@2.2.3':
     resolution: {integrity: sha512-lR8q/9W7hZpMWweNiAKU7NQerBnzQQLvi8qnTDU/fxItPhtZVMbPV3lbCwjhIlNBe9Bbr5V+KHshvWmVSG9cxQ==}
@@ -3872,10 +3864,6 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.18.0':
     optional: true
-
-  '@solid-primitives/keyed@1.2.2(solid-js@1.8.17(patch_hash=wunpcbjxb5h4ujg4psj63uuluq))':
-    dependencies:
-      solid-js: 1.8.17(patch_hash=wunpcbjxb5h4ujg4psj63uuluq)
 
   '@surma/rollup-plugin-off-main-thread@2.2.3':
     dependencies:

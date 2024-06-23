@@ -15,7 +15,6 @@
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
 		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.5",
-		"@solid-primitives/keyed": "^1.2.2",
 		"cborg": "4.0.7",
 		"nanoid": "^5.0.7",
 		"solid-floating-ui": "~0.2.1",
