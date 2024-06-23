@@ -8,6 +8,9 @@ import type { PostAncestorItem, PostDescendantItem } from '~/api/models/post-thr
 import { moderatePost } from '~/api/moderation/entities/post';
 import { parseAtUri } from '~/api/utils/strings';
 
+import { history } from '~/globals/navigation';
+
+import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
 import { useModerationOptions } from '~/lib/states/moderation';
 
 import Avatar from '../avatar';
@@ -16,6 +19,7 @@ import RichText from '../rich-text';
 import Embed from '../embeds/embed';
 import PostActions from '../feeds/post-actions';
 import PostMeta from '../feeds/post-meta';
+
 import ThreadLines from './thread-lines';
 
 export interface PostThreadItemProps {
@@ -50,11 +54,25 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 
 	return (
 		<div
+			tabindex={0}
 			class={
 				`flex border-outline hover:bg-contrast/sm` +
 				// prettier-ignore
 				(!treeView ? ` px-4` + (!next ? ` border-b` : ``) : ` px-3`)
 			}
+			onClick={(ev) => {
+				if (!isElementClicked(ev)) {
+					return;
+				}
+
+				ev.preventDefault();
+
+				if (isElementAltClicked(ev)) {
+					window.open(href, '_blank');
+				} else {
+					history.navigate(href);
+				}
+			}}
 		>
 			<ThreadLines lines={item().lines} />
 

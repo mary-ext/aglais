@@ -5,16 +5,19 @@ import type { AppBskyFeedPost, At } from '@mary/bluesky-client/lexicons';
 import { usePostShadow } from '~/api/cache/post-shadow';
 import { useProfileShadow } from '~/api/cache/profile-shadow';
 import type { UiTimelineItem } from '~/api/models/timeline';
+import { ContextContentList, getModerationUI } from '~/api/moderation';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { parseAtUri } from '~/api/utils/strings';
 
+import { history } from '~/globals/navigation';
+
+import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
 import { useModerationOptions } from '~/lib/states/moderation';
 
 import Avatar from '../avatar';
 import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 import RichText from '../rich-text';
 
-import { ContextContentList, getModerationUI } from '~/api/moderation';
 import Embed from '../embeds/embed';
 import ContentHider from '../moderation/content-hider';
 import PostActions from './post-actions';
@@ -47,8 +50,22 @@ const PostFeedItem = ({ item, timelineDid }: PostFeedItemProps) => {
 
 	return (
 		<div
+			tabindex={0}
 			hidden={shadow().deleted}
 			class={`relative border-outline px-4 hover:bg-contrast/sm` + (!next ? ` border-b` : ``)}
+			onClick={(ev) => {
+				if (!isElementClicked(ev)) {
+					return;
+				}
+
+				ev.preventDefault();
+
+				if (isElementAltClicked(ev)) {
+					window.open(href, '_blank');
+				} else {
+					history.navigate(href);
+				}
+			}}
 		>
 			<div class="relative flex flex-col pb-1 pt-2">
 				{prev && (
