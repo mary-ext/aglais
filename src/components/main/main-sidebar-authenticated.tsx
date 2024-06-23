@@ -61,6 +61,8 @@ const AuthenticatedHeader = () => {
 			.slice(0, 2);
 	});
 
+	const href = `/${currentAccount!.did}`;
+
 	return (
 		<Switch>
 			<Match when={query.data}>
@@ -126,12 +128,12 @@ const AuthenticatedHeader = () => {
 							</div>
 
 							<div class="mt-3 flex min-w-0 flex-wrap gap-5 text-sm">
-								<a onClick={close}>
+								<a href={`${href}/following`} onClick={close}>
 									<span class="font-bold">{formatCompact(profile().followsCount ?? 0)}</span>
 									<span class="text-contrast-muted"> Following</span>
 								</a>
 
-								<a onClick={close}>
+								<a href={`${href}/followers`} onClick={close}>
 									<span class="font-bold">{formatCompact(profile().followersCount ?? 0)}</span>
 									<span class="text-contrast-muted"> Followers</span>
 								</a>
