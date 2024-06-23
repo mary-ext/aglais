@@ -204,7 +204,7 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 			const href = a.href;
 			const target = a.target;
 
-			if (target !== '' && target !== '_self') {
+			if (!href || (target !== '' && target !== '_self')) {
 				return;
 			}
 
