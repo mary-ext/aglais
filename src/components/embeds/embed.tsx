@@ -96,12 +96,16 @@ const RecordEmbed = (props: RecordEmbedProps) => {
 	if (type === 'app.bsky.embed.record#viewNotFound' || type === 'app.bsky.embed.record#viewBlocked') {
 		const { collection } = parseAtUri(record.uri);
 
-		if (
-			collection === 'app.bsky.feed.post' &&
-			type === 'app.bsky.embed.record#viewBlocked' &&
-			record.author.viewer?.blocking
-		) {
-			return renderEmpty(`Blocking`);
+		if (collection === 'app.bsky.feed.post' && type === 'app.bsky.embed.record#viewBlocked') {
+			const viewer = record.author.viewer;
+
+			if (viewer?.blocking) {
+				return renderEmpty(`You blocked this user`);
+			}
+
+			if (!viewer?.blockedBy) {
+				return renderEmpty(`Blocked`);
+			}
 		}
 
 		return renderEmpty(`This post is unavailable`);
