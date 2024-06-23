@@ -155,7 +155,7 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 				</Keyed>
 
 				<div class="grid h-13 place-items-center">
-					<div class="h-1 w-1 rounded-full text-contrast-muted"></div>
+					<div class="h-1 w-1 rounded-full bg-contrast-muted"></div>
 				</div>
 			</div>
 		</>
