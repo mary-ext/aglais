@@ -112,9 +112,15 @@ const DialogHeaderAccessory = (props: DialogHeaderAccessoryProps) => {
 
 export { DialogHeaderAccessory as HeaderAccessory };
 
-const DialogClose = () => {
+export interface DialogCloseProps {
+	onClose?: () => void;
+}
+
+const DialogClose = (props: DialogCloseProps) => {
 	const { close } = useModalContext();
-	return <IconButton title="Close dialog" icon={CrossLargeOutlinedIcon} onClick={close} />;
+	const onClose = props.onClose ?? close;
+
+	return <IconButton title="Close dialog" icon={CrossLargeOutlinedIcon} onClick={onClose} />;
 };
 
 export { DialogClose as Close };
