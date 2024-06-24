@@ -72,6 +72,12 @@ const PostThreadPage = () => {
 						</Switch>
 					)}
 				</Match>
+
+				<Match when>
+					<div class="grid h-13 shrink-0 place-items-center">
+						<CircularProgress />
+					</div>
+				</Match>
 			</Switch>
 		</>
 	);
