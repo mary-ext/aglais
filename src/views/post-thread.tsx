@@ -10,6 +10,7 @@ import {
 import { usePostThreadQuery } from '~/api/queries/post-thread';
 import { dequal } from '~/api/utils/dequal';
 
+import { createEventListener } from '~/lib/hooks/event-listener';
 import { Key } from '~/lib/keyed';
 import { useParams } from '~/lib/navigation/router';
 import { useModerationOptions } from '~/lib/states/moderation';
@@ -160,13 +161,27 @@ const ThreadView = (props: {
 			<div
 				ref={(node) => {
 					if (isLoadingAncestor()) {
+						// Mounted with placeholder that might contain ancestors, we only
+						// want to scroll into view if user hasn't scrolled down.
+						let scrollY = window.scrollY;
+
 						createEffect((destroyed: boolean | undefined) => {
-							if (!destroyed && !isLoadingAncestor()) {
-								node.scrollIntoView({ behavior: 'instant' });
-								return true;
+							if (!destroyed) {
+								if (props.isPlaceholderData) {
+									createEventListener(window, 'scroll', () => {
+										scrollY = window.scrollY;
+									});
+								} else {
+									if (scrollY === 0) {
+										node.scrollIntoView({ behavior: 'instant' });
+									}
+
+									return true;
+								}
 							}
 						});
 					} else if (thread().ancestors.length !== 0) {
+						// Mounted with ancestors loaded in.
 						requestAnimationFrame(() => {
 							node.scrollIntoView({ behavior: 'instant' });
 						});
