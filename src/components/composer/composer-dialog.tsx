@@ -2,6 +2,8 @@ import { For, batch, createEffect, createMemo } from 'solid-js';
 
 import { useProfileQuery } from '~/api/queries/profile';
 
+import { useModalContext } from '~/globals/modals';
+
 import { createGuard } from '~/lib/hooks/guard';
 import { useSession } from '~/lib/states/session';
 
@@ -33,6 +35,7 @@ export interface ComposerDialogProps {
 }
 
 const ComposerDialog = (props: ComposerDialogProps) => {
+	const { close } = useModalContext();
 	const { currentAccount } = useSession();
 	const profile = useProfileQuery(() => currentAccount!.did);
 
@@ -41,7 +44,10 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 
 	const handleClose = () => {
 		if (isCloseGuarded()) {
+			return;
 		}
+
+		close();
 	};
 
 	const state = createComposerState(props.params);
@@ -69,7 +75,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 			<Dialog.Container onClose={handleClose}>
 				<Dialog.Header>
 					<Dialog.HeaderAccessory>
-						<Dialog.Close />
+						<Dialog.Close onClose={handleClose} />
 					</Dialog.HeaderAccessory>
 
 					<Dialog.HeaderAccessory>
