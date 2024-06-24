@@ -5,6 +5,7 @@ import type { AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
 import { usePostShadow } from '~/api/cache/post-shadow';
 import { useProfileShadow } from '~/api/cache/profile-shadow';
 import type { PostAncestorItem, PostDescendantItem } from '~/api/models/post-thread';
+import { ContextContentList, getModerationUI } from '~/api/moderation';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { parseAtUri } from '~/api/utils/strings';
 
@@ -19,6 +20,7 @@ import RichText from '../rich-text';
 import Embed from '../embeds/embed';
 import PostActions from '../feeds/post-actions';
 import PostMeta from '../feeds/post-meta';
+import ContentHider from '../moderation/content-hider';
 
 import ThreadLines from './thread-lines';
 
@@ -90,8 +92,14 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 				<div class="min-w-0 grow py-3">
 					<PostMeta post={post()} href={href} authorHref={authorHref} compact={treeView} gutterBottom />
 
-					<RichText text={/* @once */ record.text} facets={/* @once */ record.facets} clipped />
-					{embed && <Embed embed={embed} moderation={moderation()} gutterTop />}
+					<ContentHider
+						ui={getModerationUI(moderation(), ContextContentList)}
+						containerClass="mt-2"
+						innerClass="mt-2"
+					>
+						<RichText text={/* @once */ record.text} facets={/* @once */ record.facets} clipped />
+						{embed && <Embed embed={embed} moderation={moderation()} gutterTop />}
+					</ContentHider>
 
 					<PostActions post={post()} shadow={shadow()} compact={treeView} />
 				</div>

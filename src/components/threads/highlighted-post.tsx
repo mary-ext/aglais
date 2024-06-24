@@ -4,6 +4,7 @@ import type { AppBskyFeedDefs, AppBskyFeedPost } from '@mary/bluesky-client/lexi
 
 import { usePostShadow } from '~/api/cache/post-shadow';
 import { useProfileShadow } from '~/api/cache/profile-shadow';
+import { ContextContentView, getModerationUI } from '~/api/moderation';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { createPostLikeMutation, createPostRepostMutation } from '~/api/mutations/post';
 import { EQUALS_DEQUAL } from '~/api/utils/dequal';
@@ -27,6 +28,7 @@ import RichText from '../rich-text';
 
 import Embed from '../embeds/embed';
 import RepostMenu from '../feeds/repost-menu';
+import ContentHider from '../moderation/content-hider';
 
 export interface HighlightedPostProps {
 	post: AppBskyFeedDefs.PostView;
@@ -104,10 +106,15 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 				</div>
 			</div>
 
-			<div class="mt-3">
+			<ContentHider
+				ui={getModerationUI(moderation(), ContextContentView)}
+				ignoreMute
+				containerClass="mt-3"
+				innerClass="mt-2"
+			>
 				<RichText text={record().text} facets={record().facets} large />
-				{embed() && <Embed embed={embed()!} moderation={moderation()} gutterTop large />}
-			</div>
+				{embed() && <Embed embed={embed()!} moderation={moderation()} gutterTop />}
+			</ContentHider>
 
 			<p class="mt-3 text-sm text-contrast-muted">{formatAbsDateTime(post().indexedAt)}</p>
 
