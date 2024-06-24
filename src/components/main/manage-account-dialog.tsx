@@ -95,7 +95,7 @@ const AccountItem = ({ account, onClick }: { account: AccountData; onClick?: () 
 	return (
 		<button
 			onClick={onClick}
-			class="flex gap-4 px-4 py-3 text-left hover:bg-contrast/md active:bg-contrast/md-pressed"
+			class="flex gap-4 px-4 py-3 text-left hover:bg-contrast/md active:bg-contrast/sm-pressed"
 		>
 			<Avatar type="user" src={profile.data?.avatar} class="mt-0.5" />
 
