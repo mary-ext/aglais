@@ -5,8 +5,11 @@ import type { AppBskyFeedDefs, AppBskyFeedPost } from '@mary/bluesky-client/lexi
 import { usePostShadow } from '~/api/cache/post-shadow';
 import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { moderatePost } from '~/api/moderation/entities/post';
+import { createPostLikeMutation, createPostRepostMutation } from '~/api/mutations/post';
 import { EQUALS_DEQUAL } from '~/api/utils/dequal';
 import { parseAtUri } from '~/api/utils/strings';
+
+import { openModal } from '~/globals/modals';
 
 import { formatCompact } from '~/lib/intl/number';
 import { formatAbsDateTime } from '~/lib/intl/time';
@@ -14,10 +17,16 @@ import { useModerationOptions } from '~/lib/states/moderation';
 
 import Avatar from '../avatar';
 import Divider from '../divider';
+import HeartOutlinedIcon from '../icons-central/heart-outline';
+import HeartSolidIcon from '../icons-central/heart-solid';
 import MoreHorizOutlinedIcon from '../icons-central/more-horiz-outline';
+import RepeatOutlinedIcon from '../icons-central/repeat-outline';
+import ReplyOutlinedIcon from '../icons-central/reply-outline';
+import ShareOutlinedIcon from '../icons-central/share-outline';
 import RichText from '../rich-text';
 
 import Embed from '../embeds/embed';
+import RepostMenu from '../feeds/repost-menu';
 
 export interface HighlightedPostProps {
 	post: AppBskyFeedDefs.PostView;
@@ -48,6 +57,21 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 	}, EQUALS_DEQUAL);
 
 	const moderation = createMemo(() => moderatePost(post(), authorShadow(), moderationOptions()));
+
+	const mutateLike = createPostLikeMutation(post, shadow);
+	const mutateRepost = createPostRepostMutation(post, shadow);
+
+	const replyDisabled = () => post().viewer?.replyDisabled;
+	const isLiked = () => !!shadow().likeUri;
+	const isReposted = () => !!shadow().repostUri;
+
+	const toggleLike = () => {
+		mutateLike(!isLiked());
+	};
+
+	const toggleRepost = () => {
+		mutateRepost(!isReposted());
+	};
 
 	return (
 		<div class="px-4 pt-3">
@@ -99,6 +123,56 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 					<span class="font-bold">{formatCompact(shadow().likeCount)}</span>
 					<span class="text-contrast-muted"> Likes</span>
 				</a>
+			</div>
+
+			<Divider />
+
+			<div class="flex h-13 items-center justify-around text-contrast-muted">
+				<button
+					class={`flex h-9 w-9 items-center justify-center rounded-full text-xl hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed`}
+				>
+					<ReplyOutlinedIcon />
+				</button>
+
+				<button
+					onClick={(ev) => {
+						const anchor = ev.currentTarget;
+
+						openModal(() => (
+							<RepostMenu
+								anchor={anchor}
+								isReposted={isReposted()}
+								onQuote={() => {}}
+								onRepost={toggleRepost}
+							/>
+						));
+					}}
+					class={
+						`flex h-9 w-9 items-center justify-center rounded-full text-xl hover:bg-repost/md active:bg-repost/md-pressed` +
+						(isReposted() ? ` text-repost` : ` hover:text-repost`)
+					}
+				>
+					<RepeatOutlinedIcon />
+				</button>
+
+				<button
+					onClick={toggleLike}
+					class={
+						`flex h-9 w-9 items-center justify-center rounded-full text-xl hover:bg-like/md active:bg-like/md-pressed` +
+						(isLiked() ? ` text-like` : ` hover:text-like`)
+					}
+				>
+					{(() => {
+						const Icon = !isLiked() ? HeartOutlinedIcon : HeartSolidIcon;
+						return <Icon />;
+					})()}
+				</button>
+
+				<button
+					class={`flex h-9 w-9 items-center justify-center rounded-full text-xl hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed`}
+				>
+					<ShareOutlinedIcon />
+				</button>
 			</div>
 		</div>
 	);

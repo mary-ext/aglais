@@ -13,8 +13,8 @@ import HeartSolidIcon from '../icons-central/heart-solid';
 import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 import ReplyOutlinedIcon from '../icons-central/reply-outline';
 import ShareOutlinedIcon from '../icons-central/share-outline';
-import WriteOutlinedIcon from '../icons-central/write-outline';
-import * as Menu from '../menu';
+
+import RepostMenu from './repost-menu';
 
 export interface PostActionsProps {
 	/** Not static, but expects the URI (post identifier) to be static */
@@ -72,25 +72,13 @@ const PostActions = (props: PostActionsProps) => {
 					onClick={(ev) => {
 						const anchor = ev.currentTarget;
 
-						openModal(({ close }) => (
-							<Menu.Container anchor={anchor} placement="bottom">
-								<Menu.Item
-									icon={RepeatOutlinedIcon}
-									label={!isReposted() ? `Repost` : `Undo repost`}
-									onClick={() => {
-										close();
-										toggleRepost();
-									}}
-								/>
-
-								<Menu.Item
-									icon={WriteOutlinedIcon}
-									label="Quote"
-									onClick={() => {
-										close();
-									}}
-								/>
-							</Menu.Container>
+						openModal(() => (
+							<RepostMenu
+								anchor={anchor}
+								isReposted={isReposted()}
+								onQuote={() => {}}
+								onRepost={toggleRepost}
+							/>
 						));
 					}}
 					class={
