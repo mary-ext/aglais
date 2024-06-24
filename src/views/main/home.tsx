@@ -1,9 +1,11 @@
 import { useTimelineQuery } from '~/api/queries/timeline';
+import FAB from '~/components/fab';
 import PostFeedItem from '~/components/feeds/post-feed-item';
 
 import IconButton from '~/components/icon-button';
 import ChevronRightOutlinedIcon from '~/components/icons-central/chevron-right-outline';
 import GearOutlinedIcon from '~/components/icons-central/gear-outline';
+import WriteOutlinedIcon from '~/components/icons-central/write-outline';
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
 import VirtualItem from '~/components/virtual-item';
@@ -38,6 +40,8 @@ const HomePage = () => {
 					<IconButton title="Home settings" icon={GearOutlinedIcon} />
 				</Page.HeaderAccessory>
 			</Page.Header>
+
+			<FAB icon={WriteOutlinedIcon} label="New post" />
 
 			<PagedList
 				data={timeline.data?.pages.map((page) => page.items)}

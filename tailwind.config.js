@@ -17,7 +17,8 @@ export default {
 				7.5: '1.875rem',
 				9.5: '2.375rem',
 				13: '3.25rem',
-				17: '4.24rem',
+				17: '4.25rem',
+				18: '4.5rem',
 				22: '5.5rem',
 				30: '7.5rem',
 				84: '21rem',
@@ -58,10 +59,10 @@ export default {
 				indeterminate: 'indeterminate 1s linear infinite',
 			},
 			boxShadow: {
-				menu: 'rgba(var(--primary) / 0.2) 0px 0px 15px, rgba(var(--primary) / 0.15) 0px 0px 3px 1px',
+				// menu: 'rgba(var(--primary) / 0.2) 0px 0px 15px, rgba(var(--primary) / 0.15) 0px 0px 3px 1px',
 			},
 			dropShadow: {
-				DEFAULT: ['0 1px 2px rgb(0 0 0 / .3)', '0 1px 1px rgb(0 0 0 / .1)'],
+				// DEFAULT: ['0 1px 2px rgb(0 0 0 / .3)', '0 1px 1px rgb(0 0 0 / .1)'],
 			},
 			opacity: {
 				sm: 0.03,
