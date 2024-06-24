@@ -66,16 +66,16 @@ const ContentHider = (props: ContentHiderProps) => {
 				<button
 					disabled={forced}
 					onClick={() => setOverride((next) => !next)}
-					class="flex h-11 w-full items-center gap-3 self-stretch rounded-md bg-c-contrast-25 px-3 text-c-contrast-900 hover:bg-c-contrast-25"
+					class="flex h-11 w-full items-center gap-3 self-stretch rounded-md border border-outline px-3 text-contrast hover:bg-contrast/sm active:bg-contrast/sm-pressed"
 				>
-					<div class="shrink-0 text-lg text-c-contrast-600">
+					<div class="shrink-0 text-lg text-contrast-muted">
 						<Icon />
 					</div>
 					<span class="grow overflow-hidden text-ellipsis whitespace-nowrap text-left text-sm font-medium">
 						{title}
 					</span>
 
-					<span hidden={forced} class="text-de font-medium text-c-contrast-600">
+					<span hidden={forced} class="text-de font-medium text-accent">
 						{!override() ? `Show` : `Hide`}
 					</span>
 				</button>
