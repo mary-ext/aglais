@@ -9,6 +9,7 @@ import { QueryClient, createQuery } from '@mary/solid-query';
 import { useAgent } from '~/lib/states/agent';
 
 import { embedViewRecordToPostView, getEmbeddedPost } from '../utils/post';
+import { findPostsInCache } from '../cache/post-shadow';
 
 const MAX_HEIGHT = 10;
 const MAX_DEPTH = 4;
@@ -16,7 +17,7 @@ const MAX_DEPTH = 4;
 export const usePostThreadQuery = (uri: () => string) => {
 	const { rpc } = useAgent();
 
-	return createQuery(() => {
+	return createQuery((queryClient) => {
 		const $uri = uri();
 
 		return {
@@ -33,6 +34,18 @@ export const usePostThreadQuery = (uri: () => string) => {
 				});
 
 				return data.thread;
+			},
+			placeholderData(): AppBskyFeedGetPostThread.Output['thread'] | undefined {
+				for (const post of findPostsInCache(queryClient, $uri, true)) {
+					return {
+						$type: 'app.bsky.feed.defs#threadViewPost',
+						post: post,
+						parent: undefined,
+						replies: undefined,
+					};
+				}
+
+				return undefined;
 			},
 		};
 	});

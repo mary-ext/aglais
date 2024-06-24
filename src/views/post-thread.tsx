@@ -1,6 +1,6 @@
 import { For, Match, Switch, createMemo } from 'solid-js';
 
-import type { AppBskyFeedDefs, Brand } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedPost, Brand } from '@mary/bluesky-client/lexicons';
 
 import {
 	createThreadData,
@@ -15,6 +15,7 @@ import { useParams } from '~/lib/navigation/router';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
 
+import CircularProgress from '~/components/circular-progress';
 import Divider from '~/components/divider';
 import Keyed from '~/components/keyed';
 import * as Page from '~/components/page';
@@ -64,7 +65,7 @@ const PostThreadPage = () => {
 									}
 								})()}
 							>
-								{(result) => <ThreadView data={result()} />}
+								{(result) => <ThreadView isPlaceholderData={query.isPlaceholderData} data={result()} />}
 							</Match>
 
 							<Match when>{null}</Match>
@@ -78,7 +79,10 @@ const PostThreadPage = () => {
 
 export default PostThreadPage;
 
-const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }) => {
+const ThreadView = (props: {
+	isPlaceholderData: boolean;
+	data: Brand.Union<AppBskyFeedDefs.ThreadViewPost>;
+}) => {
 	const { currentAccount } = useSession();
 	const moderationOptions = useModerationOptions();
 
@@ -94,8 +98,33 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 		});
 	});
 
+	const isLoadingAncestor = () => {
+		if (!props.isPlaceholderData) {
+			return false;
+		}
+
+		const { ancestors, post: root } = thread();
+
+		let post: AppBskyFeedDefs.PostView = root;
+		if (ancestors.length !== 0) {
+			const top = ancestors[0];
+
+			if (top.type === 'post') {
+				post = top.post;
+			}
+		}
+
+		return (post.record as AppBskyFeedPost.Record).reply !== undefined;
+	};
+
 	return (
 		<>
+			{isLoadingAncestor() && (
+				<div class="grid h-13 shrink-0 place-items-center">
+					<CircularProgress />
+				</div>
+			)}
+
 			<For each={thread().ancestors}>
 				{(item) => {
 					const type = item.type;
@@ -137,7 +166,10 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 				style={{ 'min-height': `calc(100dvh - 3.25rem - 0.75rem)`, 'scroll-margin-top': '3.25rem' }}
 			>
 				<VirtualItem>
-					<HighlightedPost post={thread().post} prev={thread().ancestors.length !== 0} />
+					<HighlightedPost
+						post={thread().post}
+						prev={thread().ancestors.length !== 0 || isLoadingAncestor()}
+					/>
 				</VirtualItem>
 
 				<Keyed value={thread().preferences.treeView}>
@@ -181,7 +213,11 @@ const ThreadView = (props: { data: Brand.Union<AppBskyFeedDefs.ThreadViewPost> }
 				</Keyed>
 
 				<div class="grid h-13 place-items-center">
-					<div class="h-1 w-1 rounded-full bg-contrast-muted"></div>
+					{!props.isPlaceholderData ? (
+						<div class="h-1 w-1 rounded-full bg-contrast-muted"></div>
+					) : (
+						<CircularProgress />
+					)}
 				</div>
 			</div>
 		</>
