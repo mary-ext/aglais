@@ -4,13 +4,19 @@ export interface DividerProps {
 	gutter?: Gutter;
 	gutterTop?: Gutter;
 	gutterBottom?: Gutter;
+	class?: string;
 }
 
 const Divider = (props: DividerProps) => {
 	return <hr class={dividerClassNames(props)} />;
 };
 
-const dividerClassNames = ({ gutter = false, gutterBottom = gutter, gutterTop = gutter }: DividerProps) => {
+const dividerClassNames = ({
+	gutter = false,
+	gutterBottom = gutter,
+	gutterTop = gutter,
+	class: className,
+}: DividerProps) => {
 	let cn = `border-outline`;
 
 	if (gutterBottom === 'sm') {
@@ -23,6 +29,10 @@ const dividerClassNames = ({ gutter = false, gutterBottom = gutter, gutterTop = 
 		cn += ` mt-1`;
 	} else if (gutterTop === 'md') {
 		cn += ` mt-3`;
+	}
+
+	if (className) {
+		return `${cn} ${className}`;
 	}
 
 	return cn;

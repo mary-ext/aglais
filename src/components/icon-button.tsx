@@ -8,7 +8,7 @@ export interface IconButtonProps {
 	disabled?: boolean;
 	onClick?: (ev: MouseEvent) => void;
 
-	variant?: 'ghost' | 'outline';
+	variant?: 'ghost' | 'outline' | 'accent';
 	size?: 'md' | 'sm';
 	class?: string;
 }
@@ -52,6 +52,14 @@ const iconButtonClasses = (
 
 		if (!isDisabled()) {
 			cn += ` hover:bg-contrast-hinted/md active:bg-contrast-hinted/md-pressed`;
+		} else {
+			cn += ` opacity-50`;
+		}
+	} else if (variant === 'accent') {
+		cn += ` text-accent`;
+
+		if (!isDisabled()) {
+			cn += ` hover:bg-accent/md active:bg-accent/md-pressed`;
 		} else {
 			cn += ` opacity-50`;
 		}
