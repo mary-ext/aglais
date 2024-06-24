@@ -1,5 +1,7 @@
 import * as Page from '~/components/page';
 
+import ComposeFAB from '~/components/composer/compose-fab';
+
 const NotificationsPage = () => {
 	return (
 		<>
@@ -10,6 +12,8 @@ const NotificationsPage = () => {
 
 				<Page.Heading title="Notifications" />
 			</Page.Header>
+
+			<ComposeFAB />
 		</>
 	);
 };
