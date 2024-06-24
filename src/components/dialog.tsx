@@ -20,6 +20,7 @@ export interface DialogContainerProps extends ParentProps {
 	centered?: boolean;
 	maxWidth?: 'sm' | 'md';
 	disabled?: boolean;
+	onClose?: () => void;
 }
 
 const DialogContainer = (props: DialogContainerProps) => {
@@ -29,7 +30,7 @@ const DialogContainer = (props: DialogContainerProps) => {
 	const isDisabled = () => !!props.disabled;
 
 	const containerRef = (node: HTMLElement): void => {
-		useModalClose(node, close, () => isActive() && !isDisabled());
+		useModalClose(node, props.onClose ?? close, () => isActive() && !isDisabled());
 	};
 
 	return (
