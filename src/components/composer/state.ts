@@ -1,7 +1,10 @@
-import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
-import { parseRt, type PreliminaryRichText } from '~/api/richtext/parser/parse';
-import { assert } from '~/lib/invariant';
+import { unwrap } from 'solid-js/store';
 
+import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
+
+import { parseRt, type PreliminaryRichText } from '~/api/richtext/parser/parse';
+
+import { assert } from '~/lib/invariant';
 import { signal, type Signal } from '~/lib/signals';
 
 const MAXIMUM_IMAGE_COUNT = 4;
@@ -193,9 +196,29 @@ export function isAltTextMissing(embed: PostEmbed | undefined): boolean {
 
 // Post state
 export interface PostState {
-	richtext: Signal<PreliminaryRichText>;
-	languages: Signal<string[]>;
-	embed: Signal<PostEmbed | undefined>;
+	text: string;
+	languages: string[];
+	embed: PostEmbed | undefined;
+
+	_parsed: ParsedPost | null;
+}
+
+export const getPostRt = (post: PostState) => {
+	const unwrapped = unwrap(post);
+
+	const text = post.text;
+	const existing = unwrapped._parsed;
+
+	if (existing === null || existing.t !== text) {
+		return (unwrapped._parsed = { t: text, r: parseRt(text) }).r;
+	}
+
+	return existing.r;
+};
+
+interface ParsedPost {
+	t: string;
+	r: PreliminaryRichText;
 }
 
 export interface CreatePostStateOptions {
@@ -210,9 +233,11 @@ export function createPostState({
 	languages = [],
 }: CreatePostStateOptions = {}): PostState {
 	return {
-		richtext: signal(parseRt({ source: text })),
-		embed: signal(embed),
-		languages: signal(languages),
+		text: text,
+		embed: embed,
+		languages: languages,
+
+		_parsed: null,
 	};
 }
 
@@ -224,19 +249,19 @@ export interface CreateComposerStateOptions {
 }
 
 export interface ComposerState {
-	error: Signal<string | undefined>;
-	active: Signal<number>;
-	reply: Signal<AppBskyFeedDefs.PostView | undefined>;
-	posts: Signal<PostState[]>;
-	threadgate: Signal<unknown>;
+	error: string | undefined;
+	active: number;
+	reply: AppBskyFeedDefs.PostView | undefined;
+	posts: PostState[];
+	threadgate: unknown;
 }
 
 export function createComposerState({ reply, text, quote }: CreateComposerStateOptions = {}): ComposerState {
 	return {
-		error: signal(),
-		active: signal(0),
-		reply: signal(reply),
-		posts: signal([
+		error: undefined,
+		active: 0,
+		reply: reply,
+		posts: [
 			createPostState({
 				text,
 				embed: quote
@@ -247,7 +272,7 @@ export function createComposerState({ reply, text, quote }: CreateComposerStateO
 						}
 					: undefined,
 			}),
-		]),
-		threadgate: signal(),
+		],
+		threadgate: undefined,
 	};
 }

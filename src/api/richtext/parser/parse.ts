@@ -99,12 +99,7 @@ const ESCAPE_SEGMENT: EscapePreliminarySegment = { type: 'escape', raw: '\\', te
 
 const charCodeAt = String.prototype.charCodeAt;
 
-export interface ParseRichTextOptions {
-	source: string;
-	transforms?: unknown[];
-}
-
-export const parseRt = ({ source }: ParseRichTextOptions): PreliminaryRichText => {
+export const parseRt = (source: string): PreliminaryRichText => {
 	const segments: PreliminarySegment[] = [];
 	const links: string[] = [];
 

@@ -1,11 +1,12 @@
 import TextareaAutosize from 'solid-textarea-autosize';
-import { parseRt, type PreliminaryRichText } from '~/api/richtext/parser/parse';
+import { type PreliminaryRichText } from '~/api/richtext/parser/parse';
 
 export interface ComposerInputProps {
 	ref?: (el: HTMLTextAreaElement) => void;
 
+	value: string;
 	rt: PreliminaryRichText;
-	onChange: (next: PreliminaryRichText) => void;
+	onChange: (next: string) => void;
 
 	minRows?: number;
 	placeholder?: string;
@@ -26,7 +27,7 @@ const ComposerInput = (props: ComposerInputProps) => {
 				ref={(node) => {
 					props.ref?.(node);
 				}}
-				value={props.rt.source}
+				value={props.value}
 				placeholder={props.placeholder}
 				minRows={props.minRows}
 				class={
@@ -34,10 +35,7 @@ const ComposerInput = (props: ComposerInputProps) => {
 					` pb-2 pr-4 pt-1`
 				}
 				onInput={(ev) => {
-					const source = ev.target.value;
-					const rt = parseRt({ source });
-
-					onChange(rt);
+					onChange(ev.target.value);
 				}}
 			/>
 		</div>

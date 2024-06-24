@@ -1,4 +1,5 @@
 import { For, batch, createEffect, createMemo } from 'solid-js';
+import { createMutable } from 'solid-js/store';
 
 import { useProfileQuery } from '~/api/queries/profile';
 
@@ -25,6 +26,7 @@ import ComposerInput from './composer-input';
 import {
 	createComposerState,
 	createPostState,
+	getPostRt,
 	type CreateComposerStateOptions,
 	type PostState,
 } from './state';
@@ -33,6 +35,9 @@ export interface ComposerDialogProps {
 	/** This is static, meant for initializing the composer state */
 	params?: CreateComposerStateOptions;
 }
+
+const MAX_POSTS = 3;
+const MAX_TEXT_LENGTH = 300;
 
 const ComposerDialog = (props: ComposerDialogProps) => {
 	const { close } = useModalContext();
@@ -50,22 +55,20 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 		close();
 	};
 
-	const state = createComposerState(props.params);
+	const state = createMutable(createComposerState(props.params));
 
 	const addPost = () => {
-		const currentPosts = state.posts.value;
+		const currentPosts = state.posts;
 
-		const anchor = currentPosts[state.active.value];
-		const filtered = currentPosts.filter(
-			(p) => p === anchor || p.richtext.value.length !== 0 || !!p.embed.value,
-		);
+		const anchor = currentPosts[state.active];
+		const filtered = currentPosts.filter((p) => p === anchor || getPostRt(p).length !== 0 || !!p.embed);
 
 		const anchorIndex = filtered.indexOf(anchor);
-		const newPost = createPostState({ languages: anchor.languages.value });
+		const newPost = createPostState({ languages: anchor.languages.slice() });
 
 		batch(() => {
-			state.active.value = anchorIndex + 1;
-			state.posts.value = filtered.toSpliced(anchorIndex + 1, 0, newPost);
+			state.active = anchorIndex + 1;
+			state.posts = filtered.toSpliced(anchorIndex + 1, 0, newPost);
 		});
 	};
 
@@ -86,16 +89,16 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 				</Dialog.Header>
 
 				<Dialog.Body unpadded>
-					<For each={state.posts.value}>
+					<For each={state.posts}>
 						{(post, idx) => {
 							let textarea: HTMLTextAreaElement;
 
 							const hasPrevious = createMemo(() => idx() !== 0);
-							const hasNext = createMemo(() => idx() !== state.posts.value.length - 1);
+							const hasNext = createMemo(() => idx() !== state.posts.length - 1);
 
-							const isActive = createMemo(() => idx() === state.active.value);
+							const isActive = createMemo(() => idx() === state.active);
 							const isFilled = () => {
-								return !(post.richtext.value.length === 0 && !post.embed.value);
+								return !(getPostRt(post).length === 0 && !post.embed);
 							};
 
 							const canRemove = createMemo(() => {
@@ -104,11 +107,12 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 
 							addCloseGuard(isFilled);
 							addSubmitGuard(() => {
-								const embed = post.embed.value;
-								const richtext = post.richtext.value;
+								const embed = post.embed;
+								const richtext = getPostRt(post);
+
 								const rtLength = richtext.length;
 
-								return (embed || rtLength > 0) && rtLength < 300;
+								return (embed || rtLength > 0) && rtLength < MAX_TEXT_LENGTH;
 							});
 
 							createEffect(() => {
@@ -120,7 +124,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 							return (
 								<div class="relative flex gap-3 px-4">
 									<div class="flex shrink-0 flex-col items-center pt-3">
-										{(hasPrevious() || state.reply.value) && (
+										{(hasPrevious() || state.reply) && (
 											<div class="absolute top-0 h-2 border-l-2 border-outline-md"></div>
 										)}
 
@@ -137,13 +141,14 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 											ref={(node) => {
 												textarea = node;
 											}}
-											rt={post.richtext.value}
+											value={post.text}
+											rt={getPostRt(post)}
 											onChange={(next) => {
-												post.richtext.value = next;
+												post.text = next;
 											}}
 											placeholder={
 												!hasPrevious()
-													? state.reply.value
+													? state.reply
 														? `Write your reply`
 														: `What's up?`
 													: `Write another post`
@@ -157,15 +162,15 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 													icon={CrossLargeOutlinedIcon}
 													title="Remove this post"
 													onClick={() => {
-														const posts = state.posts.value;
+														const posts = state.posts;
 
 														const index = idx();
 														const nextIndex = posts[index + 1] ? index : posts[index - 1] ? index - 1 : null;
 
 														if (nextIndex !== null) {
 															batch(() => {
-																state.active.value = nextIndex;
-																state.posts.value = posts.toSpliced(index, 1);
+																state.active = nextIndex;
+																state.posts = posts.toSpliced(index, 1);
 															});
 														}
 													}}
@@ -177,7 +182,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 									{!isActive() && (
 										<button
 											title={`Post #${idx()}`}
-											onClick={() => (state.active.value = idx())}
+											onClick={() => (state.active = idx())}
 											class="absolute inset-0 z-1"
 										></button>
 									)}
@@ -187,8 +192,14 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 					</For>
 				</Dialog.Body>
 
-				{!state.reply.value && <ThreadgateAction />}
-				<PostAction disabled={false} post={state.posts.value[state.active.value]} onAddPost={addPost} />
+				{!state.reply && <ThreadgateAction />}
+
+				<PostAction
+					disabled={false}
+					post={state.posts[state.active]}
+					canAddPost={state.posts.length < MAX_POSTS}
+					onAddPost={addPost}
+				/>
 			</Dialog.Container>
 		</>
 	);
@@ -209,15 +220,24 @@ const ThreadgateAction = () => {
 	);
 };
 
-const PostAction = (props: { disabled: boolean; post: PostState; onAddPost: () => void }) => {
+const PostAction = (props: {
+	disabled: boolean;
+	post: PostState;
+	canAddPost: boolean;
+	onAddPost: () => void;
+}) => {
 	const canAddPost = () => {
+		if (!props.canAddPost) {
+			return false;
+		}
+
 		const post = props.post;
 
-		const embed = post.embed.value;
-		const richtext = post.richtext.value;
+		const embed = post.embed;
+		const richtext = getPostRt(post);
 		const rtLength = richtext.length;
 
-		return (embed || rtLength > 0) && rtLength < 300;
+		return (embed || rtLength > 0) && rtLength < MAX_TEXT_LENGTH;
 	};
 
 	return (
@@ -232,7 +252,9 @@ const PostAction = (props: { disabled: boolean; post: PostState; onAddPost: () =
 				</div>
 
 				<div class="flex items-center gap-2">
-					<span class="text-xs font-medium text-contrast-muted">300</span>
+					<span class="text-xs font-medium text-contrast-muted">
+						{MAX_TEXT_LENGTH - getPostRt(props.post).length}
+					</span>
 
 					<IconButton
 						icon={() => <span class="select-none text-xs font-bold">EN</span>}
