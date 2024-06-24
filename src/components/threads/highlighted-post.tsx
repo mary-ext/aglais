@@ -84,7 +84,7 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 					</div>
 				)}
 
-				<a class="inline-flex min-w-0 max-w-full items-center gap-3">
+				<a href={links().authorHref} class="inline-flex min-w-0 max-w-full items-center gap-3">
 					<Avatar
 						type={author().associated?.labeler ? 'labeler' : 'user'}
 						src={author().avatar}
@@ -93,7 +93,7 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 
 					<div class="max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
 						<bdi class="overflow-hidden text-ellipsis">
-							<span class="font-bold text-contrast">{author().displayName}</span>
+							<span class="font-bold text-contrast hover:underline">{author().displayName}</span>
 						</bdi>
 						<p class="overflow-hidden text-ellipsis whitespace-nowrap">{'@' + author().handle}</p>
 					</div>
