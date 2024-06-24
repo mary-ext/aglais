@@ -1,4 +1,4 @@
-import { For, Match, Switch, createMemo } from 'solid-js';
+import { For, Match, Switch, createEffect, createMemo } from 'solid-js';
 
 import type { AppBskyFeedDefs, AppBskyFeedPost, Brand } from '@mary/bluesky-client/lexicons';
 
@@ -125,12 +125,6 @@ const ThreadView = (props: {
 
 	return (
 		<>
-			{isLoadingAncestor() && (
-				<div class="grid h-13 shrink-0 place-items-center">
-					<CircularProgress />
-				</div>
-			)}
-
 			<For each={thread().ancestors}>
 				{(item) => {
 					const type = item.type;
@@ -165,11 +159,20 @@ const ThreadView = (props: {
 
 			<div
 				ref={(node) => {
-					requestAnimationFrame(() => {
-						node.scrollIntoView({ behavior: 'instant' });
-					});
+					if (isLoadingAncestor()) {
+						createEffect((destroyed: boolean | undefined) => {
+							if (!destroyed && !isLoadingAncestor()) {
+								node.scrollIntoView({ behavior: 'instant' });
+								return true;
+							}
+						});
+					} else if (thread().ancestors.length !== 0) {
+						requestAnimationFrame(() => {
+							node.scrollIntoView({ behavior: 'instant' });
+						});
+					}
 				}}
-				style={{ 'min-height': `calc(100dvh - 3.25rem - 0.75rem)`, 'scroll-margin-top': '3.25rem' }}
+				style={{ 'min-height': `calc(100dvh - 3.25rem)`, 'scroll-margin-top': '3.25rem' }}
 			>
 				<VirtualItem>
 					<HighlightedPost
