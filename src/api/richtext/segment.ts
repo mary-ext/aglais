@@ -1,9 +1,7 @@
 import type { AppBskyRichtextFacet } from '@mary/bluesky-client/lexicons';
 
 import type { UnwrapArray } from '../utils/types';
-
-const encoder = new TextEncoder();
-const decoder = new TextDecoder();
+import { textDecoder, textEncoder } from './intl';
 
 interface UtfString {
 	u16: string;
@@ -11,7 +9,7 @@ interface UtfString {
 }
 
 const createUtfString = (utf16: string): UtfString => {
-	return { u16: utf16, u8: encoder.encode(utf16) };
+	return { u16: utf16, u8: textEncoder.encode(utf16) };
 };
 
 const getUtf8Length = (utf: UtfString) => {
@@ -19,7 +17,7 @@ const getUtf8Length = (utf: UtfString) => {
 };
 
 const sliceUtf8 = (utf: UtfString, start?: number, end?: number) => {
-	return decoder.decode(utf.u8.slice(start, end));
+	return textDecoder.decode(utf.u8.slice(start, end));
 };
 
 type Facet = AppBskyRichtextFacet.Main;

@@ -53,7 +53,8 @@ const PostActions = (props: PostActionsProps) => {
 							return;
 						}
 
-						openModal(() => <ComposerDialogLazy />);
+						const $post = post();
+						openModal(() => <ComposerDialogLazy params={{ reply: $post }} />);
 					}}
 					class={`group flex max-w-full grow basis-0 items-end gap-0.5 hover:text-accent`}
 				>
@@ -76,7 +77,10 @@ const PostActions = (props: PostActionsProps) => {
 							<RepostMenu
 								anchor={anchor}
 								isReposted={isReposted()}
-								onQuote={() => {}}
+								onQuote={() => {
+									const $post = post();
+									openModal(() => <ComposerDialogLazy params={{ quote: $post }} />);
+								}}
 								onRepost={toggleRepost}
 							/>
 						));
