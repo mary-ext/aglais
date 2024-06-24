@@ -128,7 +128,7 @@ const menuItemClasses = ({ disabled }: MenuItemProps) => {
 	let cn = `flex gap-3 px-4 py-3 text-contrast`;
 
 	if (!disabled) {
-		cn += ` hover:bg-contrast/md active:bg-contrast/md-pressed`;
+		cn += ` hover:bg-contrast/sm active:bg-contrast/sm-pressed`;
 	} else {
 		cn += ` opacity-50`;
 	}
