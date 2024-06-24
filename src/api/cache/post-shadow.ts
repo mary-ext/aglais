@@ -91,7 +91,7 @@ export const getPostShadow = (post: AppBskyFeedDefs.PostView): PostShadowView =>
 };
 
 export const updatePostShadow = (queryClient: QueryClient, uri: string, value: Partial<PostShadow>) => {
-	for (const post of findPostsInCache(queryClient, uri)) {
+	for (const post of findPostsInCache(queryClient, uri, true)) {
 		shadows.set(post, { ...shadows.get(post), ...value });
 	}
 
