@@ -100,11 +100,8 @@ const VirtualItem = (props: VirtualItemProps) => {
 	return (
 		<article
 			ref={startMeasure}
-			class="shrink-0"
-			style={{
-				contain: 'content',
-				height: shouldHide() ? `${_height ?? 0}px` : undefined,
-			}}
+			class="shrink-0 contain-content"
+			style={{ height: shouldHide() ? `${_height ?? 0}px` : undefined }}
 			prop:$onintersect={handleIntersect}
 		>
 			{(() => {
