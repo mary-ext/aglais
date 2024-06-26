@@ -75,7 +75,7 @@ const buildHtml = (rt: PreliminaryRichText) => {
 		} else if (type === 'escape') {
 			str += `<span class=opacity-50>` + escape(segment.raw, false) + `</span>`;
 		} else if (type === 'mdlink') {
-			const className = segment.valid ? `text-accent` : `text-red-500`;
+			const className = segment.valid ? `text-accent` : `text-error`;
 			const [_0, label, _1, uri, _2] = segment.raw;
 
 			str +=
