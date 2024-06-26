@@ -26,6 +26,7 @@ import ReplyOutlinedIcon from '../icons-central/reply-outline';
 import ShareOutlinedIcon from '../icons-central/share-outline';
 import RichText from '../rich-text';
 
+import ComposerDialogLazy from '../composer/composer-dialog-lazy';
 import Embed from '../embeds/embed';
 import RepostMenu from '../feeds/repost-menu';
 import ContentHider from '../moderation/content-hider';
@@ -136,6 +137,14 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 
 			<div class="flex h-13 items-center justify-around text-contrast-muted">
 				<button
+					onClick={() => {
+						if (replyDisabled()) {
+							return;
+						}
+
+						const $post = post();
+						openModal(() => <ComposerDialogLazy params={{ reply: $post }} />);
+					}}
 					class={`flex h-9 w-9 items-center justify-center rounded-full text-xl hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed`}
 				>
 					<ReplyOutlinedIcon />
@@ -149,7 +158,10 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 							<RepostMenu
 								anchor={anchor}
 								isReposted={isReposted()}
-								onQuote={() => {}}
+								onQuote={() => {
+									const $post = post();
+									openModal(() => <ComposerDialogLazy params={{ quote: $post }} />);
+								}}
 								onRepost={toggleRepost}
 							/>
 						));
