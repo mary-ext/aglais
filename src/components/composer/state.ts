@@ -83,7 +83,9 @@ export type PostEmbed = PostMediaEmbed | PostRecordEmbed | PostRecordWithMediaEm
 export function getAvailableEmbed(embed: PostEmbed | undefined): number {
 	if (embed !== undefined) {
 		switch (embed.type) {
-			case EmbedKind.EXTERNAL:
+			case EmbedKind.EXTERNAL: {
+				return EmbedKind.NONE;
+			}
 			case EmbedKind.GIF: {
 				return EmbedKind.RECORD;
 			}
@@ -93,7 +95,7 @@ export function getAvailableEmbed(embed: PostEmbed | undefined): number {
 			case EmbedKind.FEED:
 			case EmbedKind.LIST:
 			case EmbedKind.QUOTE: {
-				return EmbedKind.MEDIA;
+				return EmbedKind.GIF | EmbedKind.IMAGE;
 			}
 			case EmbedKind.RECORD_WITH_MEDIA: {
 				const media = embed.media;
