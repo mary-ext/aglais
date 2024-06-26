@@ -5,7 +5,6 @@ import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
 import { parseRt, type PreliminaryRichText } from '~/api/richtext/parser/parse';
 
 import { assert } from '~/lib/invariant';
-import { signal, type Signal } from '~/lib/signals';
 
 const MAXIMUM_IMAGE_COUNT = 4;
 
