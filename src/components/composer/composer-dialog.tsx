@@ -20,12 +20,15 @@ import EarthOutlinedIcon from '../icons-central/earth-outline';
 import EmojiSmileOutlinedIcon from '../icons-central/emoji-smile-outline';
 import GifSquareOutlinedIcon from '../icons-central/gif-square-outline';
 import ImageOutlinedIcon from '../icons-central/image-outline';
+import LinkOutlinedIcon from '../icons-central/link-outline';
 import ShieldOutlinedIcon from '../icons-central/shield-outline';
 
 import ComposerInput from './composer-input';
 import {
+	EmbedKind,
 	createComposerState,
 	createPostState,
+	getAvailableEmbed,
 	getPostRt,
 	type CreateComposerStateOptions,
 	type PostState,
@@ -104,6 +107,9 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 							const canRemove = createMemo(() => {
 								return isActive() && (hasPrevious() || hasNext()) && !isFilled();
 							});
+							const canEmbed = createMemo(() => {
+								return getAvailableEmbed(post.embed);
+							});
 
 							addCloseGuard(isFilled);
 							addSubmitGuard(() => {
@@ -135,7 +141,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 
 									<div
 										inert={!isActive()}
-										class={`relative min-w-0 grow py-3` + (!isActive() ? ` opacity-50` : ``)}
+										class={`relative flex min-w-0 grow flex-col py-3` + (!isActive() ? ` opacity-50` : ``)}
 									>
 										<ComposerInput
 											ref={(node) => {
@@ -155,6 +161,27 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 											}
 											minRows={isActive() ? 2 : 1}
 										/>
+
+										<div class="mt-3 flex flex-col gap-3 empty:hidden">
+											{isActive() && canEmbed() & EmbedKind.EXTERNAL && (
+												<div class="flex flex-col gap-1.5 empty:hidden">
+													<For each={getPostRt(post).links}>
+														{(href) => {
+															href = href.replace(/^https?:\/\//i, '');
+
+															return (
+																<button class="flex items-center gap-3 rounded border border-outline px-3 py-2.5 text-sm hover:bg-contrast-hinted/sm active:bg-contrast-hinted/sm-pressed">
+																	<LinkOutlinedIcon class="shrink-0 text-contrast-muted" />
+																	<span class="overflow-hidden text-ellipsis whitespace-nowrap text-accent">
+																		{href}
+																	</span>
+																</button>
+															);
+														}}
+													</For>
+												</div>
+											)}
+										</div>
 
 										{canRemove() && (
 											<div class="absolute -right-2 top-0 z-1 mt-3">
