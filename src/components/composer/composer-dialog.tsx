@@ -141,7 +141,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 											<div class="absolute top-0 h-2 border-l-2 border-outline-md"></div>
 										)}
 
-										<Avatar type="user" src={profile.data?.avatar} />
+										<Avatar type="user" src={profile.data?.avatar} class={!isActive() ? `opacity-50` : ``} />
 
 										{hasNext() && <div class="mt-1 grow border-l-2 border-outline-md"></div>}
 									</div>
