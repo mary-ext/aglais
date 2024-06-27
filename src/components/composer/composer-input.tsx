@@ -20,7 +20,7 @@ const ComposerInput = (props: ComposerInputProps) => {
 			<div
 				inert
 				innerHTML={buildHtml(props.rt)}
-				class={`absolute inset-0 z-0 whitespace-pre-wrap break-words` + ` pb-2 pr-4 pt-1`}
+				class={`absolute inset-0 z-0 whitespace-pre-wrap break-words` + ` pb-2 pt-1`}
 			></div>
 
 			<TextareaAutosize
@@ -32,7 +32,7 @@ const ComposerInput = (props: ComposerInputProps) => {
 				minRows={props.minRows}
 				class={
 					`relative z-10 block w-full resize-none overflow-hidden bg-transparent text-transparent caret-contrast outline-none placeholder:text-contrast-muted` +
-					` pb-2 pr-4 pt-1`
+					` pb-2 pt-1`
 				}
 				onInput={(ev) => {
 					onChange(ev.target.value);
