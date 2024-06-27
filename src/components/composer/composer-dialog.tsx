@@ -287,7 +287,7 @@ const ThreadgateAction = () => {
 		<>
 			<Divider class="opacity-70" />
 
-			<button class="flex h-11 select-none items-center gap-2 px-2 text-accent hover:bg-contrast/sm active:bg-contrast/sm-pressed">
+			<button class="flex h-11 shrink-0 select-none items-center gap-2 px-2 text-accent hover:bg-contrast/sm active:bg-contrast/sm-pressed">
 				<EarthOutlinedIcon class="w-9 text-lg" />
 				<span class="text-de font-medium">Everyone can reply</span>
 			</button>
