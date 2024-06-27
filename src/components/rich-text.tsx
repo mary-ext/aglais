@@ -3,8 +3,14 @@ import type { JSX } from 'solid-js';
 import type { AppBskyRichtextFacet } from '@mary/bluesky-client/lexicons';
 
 import { segmentRichText } from '~/api/richtext/segment';
-
 import { isLinkValid, safeUrlParse } from '~/api/utils/strings';
+
+import {
+	BSKY_FEED_LINK_RE,
+	BSKY_LIST_LINK_RE,
+	BSKY_POST_LINK_RE,
+	BSKY_PROFILE_LINK_RE,
+} from '~/lib/bsky/link-detection';
 
 export interface RichTextProps {
 	text: string;
@@ -127,19 +133,19 @@ const findLinkRedirect = (uri: string): string | null => {
 	let match: RegExpExecArray | null | undefined;
 
 	if (host === 'bsky.app') {
-		if ((match = /^\/profile\/(?=.+[:.])([^/]+)\/?$/.exec(pathname))) {
+		if ((match = BSKY_PROFILE_LINK_RE.exec(pathname))) {
 			return `/${match[1]}`;
 		}
 
-		if ((match = /^\/profile\/(?=.+[:.])([^/]+)\/post\/([^/]{13})\/?$/.exec(pathname))) {
+		if ((match = BSKY_POST_LINK_RE.exec(pathname))) {
 			return `/${match[1]}/${match[2]}`;
 		}
 
-		if ((match = /^\/profile\/(?=.+[:.])([^/]+)\/lists\/([^/]+)\/?$/.exec(pathname))) {
+		if ((match = BSKY_LIST_LINK_RE.exec(pathname))) {
 			return `/${match[1]}/lists/${match[2]}`;
 		}
 
-		if ((match = /^\/profile\/(?=.+[:.])([^/]+)\/feed\/([^/]+)\/?$/.exec(pathname))) {
+		if ((match = BSKY_FEED_LINK_RE.exec(pathname))) {
 			return `/${match[1]}/feeds/${match[2]}`;
 		}
 	}
