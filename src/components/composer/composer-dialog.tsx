@@ -32,7 +32,7 @@ import {
 	getPostRt,
 	type CreateComposerStateOptions,
 	type PostState,
-} from './state';
+} from './lib/state';
 
 export interface ComposerDialogProps {
 	/** This is static, meant for initializing the composer state */
