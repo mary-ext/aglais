@@ -97,7 +97,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 					</Dialog.HeaderAccessory>
 				</Dialog.Header>
 
-				<Dialog.Body unpadded>
+				<Dialog.Body unpadded class="min-h-[9.75rem]">
 					<For each={state.posts}>
 						{(post, idx) => {
 							let textarea: HTMLTextAreaElement;
