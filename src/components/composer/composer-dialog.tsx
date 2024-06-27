@@ -45,7 +45,7 @@ export interface ComposerDialogProps {
 	params?: CreateComposerStateOptions;
 }
 
-const MAX_POSTS = 3;
+const MAX_POSTS = 25;
 const MAX_TEXT_LENGTH = 300;
 
 const ComposerDialog = (props: ComposerDialogProps) => {
