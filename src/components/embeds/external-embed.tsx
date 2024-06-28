@@ -49,7 +49,7 @@ const ExternalEmbed = ({ embed, interactive }: ExternalEmbedProps) => {
 						});
 					}}
 					tabindex={-1}
-					poster={thumb}
+					poster={/* @once */ snippet.thumb}
 					src={/* @once */ snippet.url}
 					loop
 					onWaiting={() => {

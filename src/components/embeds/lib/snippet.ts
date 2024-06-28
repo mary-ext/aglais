@@ -21,8 +21,10 @@ interface LinkSnippet {
 
 interface BlueskyGifSnippet {
 	type: SnippetType.BLUESKY_GIF;
-	/** Video URL */
+	/** GIF video URL */
 	url: string;
+	/** GIF thumbnail URL */
+	thumb: string | undefined;
 	/** Aspect ratio */
 	ratio: string;
 	/** Alt text description */
@@ -43,9 +45,7 @@ interface IframeSnippet {
 
 export type Snippet = LinkSnippet | BlueskyGifSnippet | IframeSnippet;
 
-export const detectSnippet = (
-	link: Pick<AppBskyEmbedExternal.ViewExternal, 'uri' | 'description'>,
-): Snippet => {
+export const detectSnippet = (link: AppBskyEmbedExternal.ViewExternal): Snippet => {
 	const url = link.uri;
 	const u = safeUrlParse(url);
 
@@ -73,6 +73,7 @@ export const detectSnippet = (
 			return {
 				type: SnippetType.BLUESKY_GIF,
 				url: `https://t.gifs.bsky.app/${id}/${file}`,
+				thumb: link.thumb,
 				ratio: `${width}/${height}`,
 				description: link.description.replace(/^(ALT|Alt): /, ''),
 			};
