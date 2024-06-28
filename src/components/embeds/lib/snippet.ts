@@ -13,13 +13,13 @@ export const enum SnippetSource {
 	SOUNDCLOUD,
 }
 
-interface LinkSnippet {
+export interface LinkSnippet {
 	type: SnippetType.LINK;
 	/** Domain name */
 	domain?: string;
 }
 
-interface BlueskyGifSnippet {
+export interface BlueskyGifSnippet {
 	type: SnippetType.BLUESKY_GIF;
 	/** GIF video URL */
 	url: string;
@@ -31,7 +31,7 @@ interface BlueskyGifSnippet {
 	description: string;
 }
 
-interface IframeSnippet {
+export interface IframeSnippet {
 	type: SnippetType.IFRAME;
 	/** Source type */
 	source: SnippetSource;
