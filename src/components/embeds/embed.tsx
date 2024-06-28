@@ -12,6 +12,7 @@ import { parseAtUri } from '~/api/utils/strings';
 import ContentHider from '../moderation/content-hider';
 
 import ExternalEmbed from './external-embed';
+import FeedEmbed from './feed-embed';
 import ImageEmbed from './image-embed';
 import QuoteEmbed from './quote-embed';
 
@@ -116,6 +117,7 @@ const RecordEmbed = (props: RecordEmbedProps) => {
 	}
 
 	if (type === 'app.bsky.feed.defs#generatorView') {
+		return <FeedEmbed feed={record} interactive />;
 	}
 
 	if (type === 'app.bsky.graph.defs#listView') {
