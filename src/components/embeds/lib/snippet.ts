@@ -45,7 +45,7 @@ export interface IframeSnippet {
 
 export type Snippet = LinkSnippet | BlueskyGifSnippet | IframeSnippet;
 
-export const detectSnippet = (link: AppBskyEmbedExternal.ViewExternal): Snippet => {
+export const detectSnippet = (link: AppBskyEmbedExternal.ViewExternal, linkOnly = false): Snippet => {
 	const url = link.uri;
 	const u = safeUrlParse(url);
 
@@ -60,6 +60,13 @@ export const detectSnippet = (link: AppBskyEmbedExternal.ViewExternal): Snippet 
 	const d = h.startsWith('www.') ? h.slice(4) : h;
 
 	let m: RegExpExecArray | null | undefined;
+
+	if (linkOnly) {
+		return {
+			type: SnippetType.LINK,
+			domain: d,
+		};
+	}
 
 	if (d === 'media.tenor.com') {
 		// Bluesky GIFs

@@ -24,14 +24,14 @@ const ExternalEmbed = ({ embed, interactive }: ExternalEmbedProps) => {
 	const url = safeUrlParse(uri);
 	const domain = trimDomain(url?.host ?? '');
 
-	const snippet = detectSnippet(embed.external);
+	const snippet = detectSnippet(embed.external, !interactive);
 	const type = snippet.type;
 
-	if (interactive && type === SnippetType.BLUESKY_GIF) {
+	if (type === SnippetType.BLUESKY_GIF) {
 		return <GifPlayer snippet={snippet} />;
 	}
 
-	if (interactive && type === SnippetType.IFRAME) {
+	if (type === SnippetType.IFRAME) {
 		const [show, setShow] = createSignal(false);
 
 		return on(show, (isShowing) => {
