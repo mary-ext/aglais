@@ -72,8 +72,17 @@ const renderAvatar = (type: keyof typeof AVATARS, src: string | undefined, shoul
 	);
 };
 
-const avatarClassNames = ({ size = 'md', class: className }: AvatarProps, interactive: boolean): string => {
-	let cn = `shrink-0 overflow-hidden rounded-full bg-outline-md`;
+const avatarClassNames = (
+	{ type, size = 'md', class: className }: AvatarProps,
+	interactive: boolean,
+): string => {
+	let cn = `shrink-0 overflow-hidden bg-outline-md`;
+
+	if (type === 'user') {
+		cn += ` rounded-full`;
+	} else {
+		cn += ` rounded-md`;
+	}
 
 	if (interactive) {
 		cn += ` hover:opacity-80`;
