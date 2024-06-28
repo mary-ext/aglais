@@ -39,6 +39,7 @@ import {
 	type CreateComposerStateOptions,
 	type PostState,
 } from './lib/state';
+import FeedEmbed from './embeds/feed-embed';
 
 export interface ComposerDialogProps {
 	/** This is static, meant for initializing the composer state */
@@ -380,6 +381,11 @@ const PostEmbeds = (props: BaseEmbedProps) => {
 				if (type === EmbedKind.EXTERNAL) {
 					// @ts-expect-error
 					return <ExternalEmbed {...props} />;
+				}
+
+				if (type === EmbedKind.FEED) {
+					// @ts-expect-error
+					return <FeedEmbed {...props} />;
 				}
 
 				return null;
