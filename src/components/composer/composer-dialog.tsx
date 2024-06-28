@@ -148,8 +148,8 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 										{hasNext() && <div class="mt-1 grow border-l-2 border-outline-md"></div>}
 									</div>
 
-									<div
-										inert={!isActive()}
+									<fieldset
+										disabled={!isActive()}
 										class={
 											`relative flex min-w-0 grow flex-col gap-3 py-3` + (!isActive() ? ` opacity-50` : ``)
 										}
@@ -264,7 +264,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 												/>
 											</div>
 										)}
-									</div>
+									</fieldset>
 
 									{!isActive() && (
 										<button
