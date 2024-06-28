@@ -14,6 +14,7 @@ import ContentHider from '../moderation/content-hider';
 import ExternalEmbed from './external-embed';
 import FeedEmbed from './feed-embed';
 import ImageEmbed from './image-embed';
+import ListEmbed from './list-embed';
 import QuoteEmbed from './quote-embed';
 
 export interface EmbedProps {
@@ -121,6 +122,7 @@ const RecordEmbed = (props: RecordEmbedProps) => {
 	}
 
 	if (type === 'app.bsky.graph.defs#listView') {
+		return <ListEmbed list={record} interactive />;
 	}
 
 	return renderEmpty(`Unsupported record`);
