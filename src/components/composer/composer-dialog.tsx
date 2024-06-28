@@ -40,6 +40,7 @@ import {
 	type PostState,
 } from './lib/state';
 import FeedEmbed from './embeds/feed-embed';
+import InfoOutlinedIcon from '../icons-central/info-outline';
 
 export interface ComposerDialogProps {
 	/** This is static, meant for initializing the composer state */
@@ -231,6 +232,16 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 												/>
 											)}
 										</Show>
+
+										{false && (
+											<div class="flex gap-1.5 text-contrast-muted">
+												<InfoOutlinedIcon class="mt-0.5 shrink-0 text-base" />
+												<p class="text-de">
+													Alt text helps to describe images for low-vision users and provides context to
+													everyone.
+												</p>
+											</div>
+										)}
 
 										{canRemove() && (
 											<div class="absolute -right-2 top-0 z-1 mt-3">
