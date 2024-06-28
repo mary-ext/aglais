@@ -5,23 +5,20 @@ const TRIM_URLTEXT_RE = /^\s*(https?:\/\/)?(?:www\.)?/;
 const PATH_MAX_LENGTH = 18;
 
 export const toShortUrl = (uri: string): string => {
-	try {
-		const url = new URL(uri);
-		const protocol = url.protocol;
+	const url = safeUrlParse(uri);
 
+	if (url !== null) {
 		const host = url.host.replace(TRIM_HOST_RE, '');
 		const pathname = url.pathname;
 
 		const path = (pathname === '/' ? '' : pathname) + url.search + url.hash;
 
-		if (protocol === 'http:' || protocol === 'https:') {
-			if (path.length > PATH_MAX_LENGTH) {
-				return host + path.slice(0, PATH_MAX_LENGTH - 1) + '…';
-			}
-
-			return host + path;
+		if (path.length > PATH_MAX_LENGTH) {
+			return host + path.slice(0, PATH_MAX_LENGTH - 1) + '…';
 		}
-	} catch {}
+
+		return host + path;
+	}
 
 	return uri;
 };
