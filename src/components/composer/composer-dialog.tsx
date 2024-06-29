@@ -30,6 +30,7 @@ import ComposerInput from './composer-input';
 import ExternalEmbed from './embeds/external-embed';
 import FeedEmbed from './embeds/feed-embed';
 import GifEmbed from './embeds/gif-embed';
+import ListEmbed from './embeds/list-embed';
 import GifSearchDialogLazy from './gifs/gif-search-dialog-lazy';
 
 import type { BaseEmbedProps } from './embeds/types';
@@ -450,6 +451,11 @@ const PostEmbeds = (props: BaseEmbedProps) => {
 				if (type === EmbedKind.FEED) {
 					// @ts-expect-error
 					return <FeedEmbed {...props} />;
+				}
+
+				if (type === EmbedKind.LIST) {
+					// @ts-expect-error
+					return <ListEmbed {...props} />;
 				}
 
 				return null;
