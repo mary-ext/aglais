@@ -1,4 +1,4 @@
-import { createInfiniteQuery, keepPreviousData, type InfiniteData } from '@mary/solid-query';
+import { createInfiniteQuery, type InfiniteData } from '@mary/solid-query';
 
 const GIF_ENDPOINT = `https://gifs.bsky.app`;
 
@@ -29,7 +29,6 @@ export const createGifSearchQuery = (search: () => string) => {
 			},
 			initialPageParam: undefined as string | undefined,
 			getNextPageParam: (last) => last.next,
-			placeholderData: keepPreviousData,
 			structuralSharing: false,
 			select: selectFn,
 		};
