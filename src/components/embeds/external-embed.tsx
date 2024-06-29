@@ -105,11 +105,16 @@ const trimDomain = (host: string) => {
 
 export interface GifPlayerProps {
 	snippet: BlueskyGifSnippet;
+	disabled?: boolean;
 }
 
-export const GifPlayer = ({ snippet }: GifPlayerProps) => {
+export const GifPlayer = (props: GifPlayerProps) => {
+	const snippet = props.snippet;
+
 	const [playing, setPlaying] = createSignal(false);
 	const [stalling, setStalling] = createSignal(false);
+
+	const isPlaying = () => playing() && !props.disabled;
 
 	let _stallTimeout: number | undefined;
 
@@ -121,7 +126,7 @@ export const GifPlayer = ({ snippet }: GifPlayerProps) => {
 			<video
 				ref={(node) => {
 					createEffect(() => {
-						if (playing()) {
+						if (isPlaying()) {
 							node.play();
 						} else if (!node.paused) {
 							node.pause();
@@ -147,11 +152,12 @@ export const GifPlayer = ({ snippet }: GifPlayerProps) => {
 			{/* FIXME: this is the same hack as standalone images in image embeds */}
 			<div class="h-screen w-screen"></div>
 
-			<div hidden={!(!playing() || stalling())} class="absolute inset-0 bg-black/50"></div>
+			<div hidden={!(!isPlaying() || stalling())} class="absolute inset-0 bg-black/50"></div>
 
 			<button
+				hidden={props.disabled}
 				title={!playing() ? 'Play GIF' : `Pause GIF`}
-				aria-description={/* @once */ snippet.description}
+				aria-description={snippet.description}
 				onClick={() => setPlaying(!playing())}
 				class="absolute inset-0 grid place-items-center rounded-md outline-2 -outline-offset-2 outline-white focus-visible:outline"
 			>

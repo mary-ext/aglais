@@ -3,7 +3,7 @@ import { createMutable } from 'solid-js/store';
 
 import { useProfileQuery } from '~/api/queries/profile';
 
-import { useModalContext } from '~/globals/modals';
+import { openModal, useModalContext } from '~/globals/modals';
 
 import { createGuard } from '~/lib/hooks/guard';
 import { useSession } from '~/lib/states/session';
@@ -20,14 +20,19 @@ import EarthOutlinedIcon from '../icons-central/earth-outline';
 import EmojiSmileOutlinedIcon from '../icons-central/emoji-smile-outline';
 import GifSquareOutlinedIcon from '../icons-central/gif-square-outline';
 import ImageOutlinedIcon from '../icons-central/image-outline';
+import InfoOutlinedIcon from '../icons-central/info-outline';
 import LinkOutlinedIcon from '../icons-central/link-outline';
 import ShieldOutlinedIcon from '../icons-central/shield-outline';
 import Keyed from '../keyed';
 
 import ComposerInput from './composer-input';
-import ExternalEmbed from './embeds/external-embed';
-import type { BaseEmbedProps } from './embeds/types';
 
+import ExternalEmbed from './embeds/external-embed';
+import FeedEmbed from './embeds/feed-embed';
+import GifEmbed from './embeds/gif-embed';
+import GifSearchDialogLazy from './gifs/gif-search-dialog-lazy';
+
+import type { BaseEmbedProps } from './embeds/types';
 import { getEmbedFromLink } from './lib/link-detection';
 import {
 	EmbedKind,
@@ -35,12 +40,13 @@ import {
 	createPostState,
 	getAvailableEmbed,
 	getEmbedLabels,
+	getPostEmbedFlags,
 	getPostRt,
 	type CreateComposerStateOptions,
+	type PostEmbed,
+	type PostRecordEmbed,
 	type PostState,
 } from './lib/state';
-import FeedEmbed from './embeds/feed-embed';
-import InfoOutlinedIcon from '../icons-central/info-outline';
 
 export interface ComposerDialogProps {
 	/** This is static, meant for initializing the composer state */
@@ -233,11 +239,11 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 											)}
 										</Show>
 
-										{false && (
-											<div class="flex gap-1.5 text-contrast-muted">
+										{(getPostEmbedFlags(post.embed) & (EmbedKind.GIF | EmbedKind.IMAGE)) !== 0 && (
+											<div class={`gap-2 text-contrast-muted` + (isActive() ? ` flex` : ` hidden`)}>
 												<InfoOutlinedIcon class="mt-0.5 shrink-0 text-base" />
 												<p class="text-de">
-													Alt text helps to describe images for low-vision users and provides context to
+													Alt text helps describe images for low-vision users and provide context for
 													everyone.
 												</p>
 											</div>
@@ -350,6 +356,38 @@ const PostAction = (props: {
 						icon={GifSquareOutlinedIcon}
 						title="Attach GIF..."
 						disabled={!(canEmbed() & EmbedKind.GIF)}
+						onClick={() => {
+							openModal(() => (
+								<GifSearchDialogLazy
+									onPick={(gif) => {
+										if (!(canEmbed() & EmbedKind.GIF)) {
+											return;
+										}
+
+										const post = props.post;
+
+										const prev = post.embed;
+										let next: PostEmbed = {
+											type: EmbedKind.GIF,
+											gif: gif,
+											alt: undefined,
+										};
+
+										if (prev) {
+											if (prev.type & EmbedKind.RECORD) {
+												next = {
+													type: EmbedKind.RECORD_WITH_MEDIA,
+													record: prev as PostRecordEmbed,
+													media: next,
+												};
+											}
+										}
+
+										post.embed = next;
+									}}
+								/>
+							));
+						}}
 						variant="accent"
 					/>
 					<IconButton icon={EmojiSmileOutlinedIcon} title="Insert emoji..." variant="accent" />
@@ -392,6 +430,11 @@ const PostEmbeds = (props: BaseEmbedProps) => {
 				if (type === EmbedKind.EXTERNAL) {
 					// @ts-expect-error
 					return <ExternalEmbed {...props} />;
+				}
+
+				if (type === EmbedKind.GIF) {
+					// @ts-expect-error
+					return <GifEmbed {...props} />;
 				}
 
 				if (type === EmbedKind.FEED) {

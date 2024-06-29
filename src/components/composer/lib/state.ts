@@ -6,6 +6,8 @@ import { parseRt, type PreliminaryRichText } from '~/api/richtext/parser/parse';
 
 import { assert } from '~/lib/invariant';
 
+import type { GifMedia } from '../gifs/gif-search-dialog';
+
 const MAXIMUM_IMAGE_COUNT = 4;
 
 // Embeds
@@ -40,7 +42,7 @@ export interface PostExternalEmbed {
 
 export interface PostGifEmbed {
 	type: EmbedKind.GIF;
-	gif: unknown;
+	gif: GifMedia;
 	/** User-provided alt, undefined if not provided. */
 	alt?: string;
 }
@@ -215,6 +217,18 @@ export const getPostRt = (post: PostState) => {
 	}
 
 	return existing.r;
+};
+
+export const getPostEmbedFlags = (embed: PostEmbed | undefined) => {
+	if (embed !== undefined) {
+		if (embed.type === EmbedKind.RECORD_WITH_MEDIA) {
+			return embed.media.type | embed.record.type;
+		}
+
+		return embed.type;
+	}
+
+	return 0;
 };
 
 interface ParsedPost {
