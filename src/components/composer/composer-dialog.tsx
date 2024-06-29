@@ -239,6 +239,21 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 											)}
 										</Show>
 
+										<Show when={getEmbedLabels(post.embed)}>
+											{(labels) => {
+												const shown = () => labels.length !== 0 || isActive();
+
+												return (
+													<button
+														class={`gap-2 text-accent hover:underline` + (shown() ? ` flex` : ` hidden`)}
+													>
+														<ShieldOutlinedIcon class="mt-0.5 shrink-0 text-base" />
+														<span class="text-de">Add content warning</span>
+													</button>
+												);
+											}}
+										</Show>
+
 										{(getPostEmbedFlags(post.embed) & (EmbedKind.GIF | EmbedKind.IMAGE)) !== 0 && (
 											<div class={`gap-2 text-contrast-muted` + (isActive() ? ` flex` : ` hidden`)}>
 												<InfoOutlinedIcon class="mt-0.5 shrink-0 text-base" />
@@ -336,9 +351,6 @@ const PostAction = (props: {
 	const canEmbed = createMemo(() => {
 		return getAvailableEmbed(props.post.embed);
 	});
-	const embedLabels = createMemo(() => {
-		return getEmbedLabels(props.post.embed);
-	});
 
 	return (
 		<>
@@ -397,10 +409,6 @@ const PostAction = (props: {
 					<span class="text-xs font-medium tabular-nums text-contrast-muted">
 						{MAX_TEXT_LENGTH - getPostRt(props.post).length}
 					</span>
-
-					{embedLabels() && (
-						<IconButton icon={ShieldOutlinedIcon} title="Select content warning..." variant="accent" />
-					)}
 
 					<IconButton
 						icon={() => <span class="select-none text-xs font-bold tracking-widest">EN</span>}
