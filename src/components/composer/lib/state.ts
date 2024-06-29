@@ -1,6 +1,6 @@
 import { unwrap } from 'solid-js/store';
 
-import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@mary/bluesky-client/lexicons';
 
 import { parseRt, type PreliminaryRichText } from '~/api/richtext/parser/parse';
 
@@ -268,7 +268,7 @@ export interface ComposerState {
 	active: number;
 	reply: AppBskyFeedDefs.PostView | undefined;
 	posts: PostState[];
-	threadgate: unknown;
+	threadgate: AppBskyFeedThreadgate.Record['allow'];
 }
 
 export function createComposerState({
@@ -297,3 +297,34 @@ export function createComposerState({
 		threadgate: undefined,
 	};
 }
+
+export const enum ThreadgateKnownValue {
+	EVERYONE,
+	NONE,
+	FOLLOWS,
+	MENTIONS,
+	CUSTOM,
+}
+
+export const getThreadgateValue = (allow: AppBskyFeedThreadgate.Record['allow']) => {
+	if (!allow) {
+		return ThreadgateKnownValue.EVERYONE;
+	}
+
+	if (allow.length === 0) {
+		return ThreadgateKnownValue.NONE;
+	}
+
+	if (allow.length === 1) {
+		const rule = allow[0];
+
+		if (rule.$type === 'app.bsky.feed.threadgate#followingRule') {
+			return ThreadgateKnownValue.FOLLOWS;
+		}
+		if (rule.$type === 'app.bsky.feed.threadgate#mentionRule') {
+			return ThreadgateKnownValue.MENTIONS;
+		}
+	}
+
+	return ThreadgateKnownValue.CUSTOM;
+};

@@ -1,4 +1,13 @@
-import { For, Show, batch, createEffect, createMemo, type JSX } from 'solid-js';
+import {
+	For,
+	Show,
+	batch,
+	createEffect,
+	createMemo,
+	type Component,
+	type ComponentProps,
+	type JSX,
+} from 'solid-js';
 import { createMutable } from 'solid-js/store';
 
 import { useProfileQuery } from '~/api/queries/profile';
@@ -7,6 +16,7 @@ import { primarySystemLanguage } from '~/globals/locales';
 import { openModal, useModalContext } from '~/globals/modals';
 
 import { createGuard } from '~/lib/hooks/guard';
+import { assert } from '~/lib/invariant';
 import { on } from '~/lib/misc';
 import { useSession } from '~/lib/states/session';
 
@@ -30,6 +40,12 @@ import Keyed from '../keyed';
 
 import ComposerInput from './composer-input';
 
+import AtOutlinedIcon from '../icons-central/at-outline';
+import BlockOutlinedIcon from '../icons-central/block-outline';
+import PeopleOutlinedIcon from '../icons-central/people-outline';
+import PersonCheckOutlinedIcon from '../icons-central/person-check-outline';
+import LanguageSelectDialogLazy from './dialogs/language-select-dialog-lazy';
+import ThreadgateMenu from './dialogs/threadgate-menu';
 import ExternalEmbed from './embeds/external-embed';
 import FeedEmbed from './embeds/feed-embed';
 import GifEmbed from './embeds/gif-embed';
@@ -38,17 +54,19 @@ import ListEmbed from './embeds/list-embed';
 import QuoteEmbed from './embeds/quote-embed';
 import GifSearchDialogLazy from './gifs/gif-search-dialog-lazy';
 
-import LanguageSelectDialogLazy from './dialogs/language-select-dialog-lazy';
 import type { BaseEmbedProps } from './embeds/types';
 import { getEmbedFromLink } from './lib/link-detection';
 import {
 	EmbedKind,
+	ThreadgateKnownValue,
 	createComposerState,
 	createPostState,
 	getAvailableEmbed,
 	getEmbedLabels,
 	getPostEmbedFlags,
 	getPostRt,
+	getThreadgateValue,
+	type ComposerState,
 	type CreateComposerStateOptions,
 	type PostEmbed,
 	type PostRecordEmbed,
@@ -336,7 +354,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 					</For>
 				</Dialog.Body>
 
-				{!state.reply && <ThreadgateAction />}
+				{!state.reply && <ThreadgateAction state={state} />}
 
 				<PostAction
 					disabled={false}
@@ -351,14 +369,54 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 
 export default ComposerDialog;
 
-const ThreadgateAction = () => {
+const ThreadgateAction = ({ state }: { state: ComposerState }) => {
 	return (
 		<>
 			<Divider class="opacity-70" />
 
-			<button class="flex h-11 shrink-0 select-none items-center gap-2 px-2 text-accent hover:bg-contrast/sm active:bg-contrast/sm-pressed">
-				<EarthOutlinedIcon class="w-9 text-lg" />
-				<span class="text-de font-medium">Everyone can reply</span>
+			<button
+				onClick={(ev) => {
+					const anchor = ev.currentTarget;
+
+					openModal(() => (
+						<ThreadgateMenu
+							anchor={anchor}
+							value={state.threadgate}
+							onChange={(next) => {
+								state.threadgate = next;
+							}}
+						/>
+					));
+				}}
+				class="flex h-11 shrink-0 select-none items-center gap-2 px-2 text-accent hover:bg-contrast/sm active:bg-contrast/sm-pressed"
+			>
+				{(() => {
+					let Icon: Component<ComponentProps<'svg'>>;
+					let label: string;
+
+					const value = getThreadgateValue(state.threadgate);
+
+					if (value === ThreadgateKnownValue.CUSTOM) {
+						Icon = PeopleOutlinedIcon;
+						label = `Some users can reply`;
+					} else if (value === ThreadgateKnownValue.EVERYONE) {
+						Icon = EarthOutlinedIcon;
+						label = `Everyone can reply`;
+					} else if (value === ThreadgateKnownValue.FOLLOWS) {
+						Icon = PersonCheckOutlinedIcon;
+						label = `Followed users can reply`;
+					} else if (value === ThreadgateKnownValue.MENTIONS) {
+						Icon = AtOutlinedIcon;
+						label = `Mentioned users can reply`;
+					} else if (value === ThreadgateKnownValue.NONE) {
+						Icon = BlockOutlinedIcon;
+						label = `No one can reply`;
+					} else {
+						assert(false, `unexpected condition`);
+					}
+
+					return [<Icon class="w-9 text-lg" />, <span class="text-de font-medium">{label}</span>];
+				})()}
 			</button>
 		</>
 	);
