@@ -39,7 +39,7 @@ const fetchTenor = async ({ uri, params, signal }: FetchTenorOptions): Promise<T
 	const defaultedParams: Record<string, string | number | undefined> = {
 		client_key: 'bluesky-web',
 		contentfilter: 'high',
-		// media_filter: ['gif'].join(','),
+		media_filter: ['gif'].join(','),
 		locale: navigator.language.replace('-', '_'),
 		limit: 30,
 		...params,
