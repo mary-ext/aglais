@@ -29,8 +29,7 @@ export const enum EmbedKind {
 }
 
 export interface PostImage {
-	image: Blob;
-	ratio: { width: number; height: number };
+	blob: Blob;
 	alt: string;
 }
 

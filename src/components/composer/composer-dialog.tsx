@@ -30,6 +30,7 @@ import ComposerInput from './composer-input';
 import ExternalEmbed from './embeds/external-embed';
 import FeedEmbed from './embeds/feed-embed';
 import GifEmbed from './embeds/gif-embed';
+import ImageEmbed from './embeds/image-embed';
 import ListEmbed from './embeds/list-embed';
 import QuoteEmbed from './embeds/quote-embed';
 import GifSearchDialogLazy from './gifs/gif-search-dialog-lazy';
@@ -57,6 +58,7 @@ export interface ComposerDialogProps {
 }
 
 const MAX_POSTS = 25;
+const MAX_IMAGES = 4;
 const MAX_TEXT_LENGTH = 300;
 
 const ComposerDialog = (props: ComposerDialogProps) => {
@@ -374,6 +376,46 @@ const PostAction = (props: {
 						icon={ImageOutlinedIcon}
 						title="Attach image..."
 						disabled={!(canEmbed() & EmbedKind.IMAGE)}
+						onClick={() => {
+							const input = document.createElement('input');
+
+							input.type = 'file';
+							input.multiple = true;
+							input.accept = `image/png,image/jpeg,image/webp,image/avif,image/gif`;
+
+							input.oninput = () => {
+								if (!(canEmbed() & EmbedKind.IMAGE)) {
+									return;
+								}
+
+								const blobs = Array.from(input.files!).slice(0, MAX_IMAGES);
+								const post = props.post;
+
+								const prev = post.embed;
+								let next: PostEmbed = {
+									type: EmbedKind.IMAGE,
+									images: blobs.map((blob) => ({ blob: blob, alt: '' })),
+									labels: [],
+								};
+
+								if (prev) {
+									if (prev.type === EmbedKind.IMAGE) {
+										prev.images = prev.images.concat(next.images.slice(0, MAX_IMAGES - prev.images.length));
+										return;
+									} else if (prev.type & EmbedKind.RECORD) {
+										next = {
+											type: EmbedKind.RECORD_WITH_MEDIA,
+											record: prev as PostRecordEmbed,
+											media: next,
+										};
+									}
+								}
+
+								post.embed = next;
+							};
+
+							input.click();
+						}}
 						variant="accent"
 					/>
 					<IconButton
@@ -455,6 +497,11 @@ const PostEmbeds = (props: BaseEmbedProps) => {
 				if (type === EmbedKind.GIF) {
 					// @ts-expect-error
 					return <GifEmbed {...props} />;
+				}
+
+				if (type === EmbedKind.IMAGE) {
+					// @ts-expect-error
+					return <ImageEmbed {...props} />;
 				}
 
 				if (type === EmbedKind.FEED) {
