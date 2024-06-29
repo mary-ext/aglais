@@ -270,7 +270,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 										<button
 											title={`Post #${idx()}`}
 											onClick={() => (state.active = idx())}
-											class="absolute inset-0 z-1 outline-2 -outline-offset-2 outline-contrast focus-visible:outline"
+											class="absolute inset-0 z-1 outline-2 -outline-offset-2 outline-accent focus-visible:outline"
 										></button>
 									)}
 								</div>
