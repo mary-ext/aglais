@@ -66,7 +66,7 @@ const GifSearchDialog = (props: GifSearchDialogProps) => {
 											}}
 											class="aspect-square overflow-hidden bg-outline-md"
 										>
-											<img src={media.embedUrl} class="h-full w-full bg-black object-cover" />
+											<img src={media.gifUrl} class="h-full w-full bg-black object-cover" />
 										</button>
 									);
 								});
@@ -86,6 +86,7 @@ export interface GifMedia {
 	alt: string;
 	ratio: { width: number; height: number };
 
+	gifUrl: string;
 	videoUrl: string;
 	thumbUrl: string;
 }
@@ -103,9 +104,11 @@ const getGifMedia = (gif: Gif): GifMedia => {
 		alt: gif.content_description,
 		ratio: { width: dimensions[0], height: dimensions[1] },
 
+		// AAAAM -> tinygif
+		gifUrl: `https://t.gifs.bsky.app/${id.replace(/AAAAC$/, 'AAAAM')}/${file}.gif`,
 		// AAAP3 -> tinywebm
-		videoUrl: `https://t.gifs.bsky.app/${id.replace(/AAAAC$/, 'AAAP3')}/${file}`,
-		// AAAAT -> nanogifpreview
-		thumbUrl: `https://t.gifs.bsky.app/${id.replace(/AAAAC$/, 'AAAAT')}/${file}`,
+		videoUrl: `https://t.gifs.bsky.app/${id.replace(/AAAAC$/, 'AAAP3')}/${file}.webm`,
+		// AAAAF -> tinygifpreview
+		thumbUrl: `https://t.gifs.bsky.app/${id.replace(/AAAAC$/, 'AAAAF')}/${file}.png`,
 	};
 };
