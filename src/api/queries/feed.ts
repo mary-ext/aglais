@@ -2,6 +2,7 @@ import type { AppBskyFeedDefs, At } from '@mary/bluesky-client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
+
 import { isDid, parseAtUri } from '../utils/strings';
 import { resolveHandle } from './handle';
 
