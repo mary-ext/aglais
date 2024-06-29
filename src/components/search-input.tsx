@@ -1,4 +1,4 @@
-import { modelText } from '~/lib/input-refs';
+import { autofocusIfEnabled, modelText } from '~/lib/input-refs';
 
 import MagnifyingGlassOutlinedIcon from './icons-central/magnifying-glass-outline';
 
@@ -6,6 +6,7 @@ export interface SearchInputProps {
 	value: string;
 	onChange: (next: string) => void;
 	placeholder?: string;
+	autofocus?: boolean;
 }
 
 const SearchInput = (props: SearchInputProps) => {
@@ -18,6 +19,10 @@ const SearchInput = (props: SearchInputProps) => {
 			<input
 				ref={(node) => {
 					modelText(node, () => props.value, props.onChange);
+
+					if ('autofocus' in props) {
+						autofocusIfEnabled(node, () => props.autofocus ?? false);
+					}
 				}}
 				type="text"
 				placeholder={props.placeholder ?? `Search`}
