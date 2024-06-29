@@ -245,10 +245,12 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 
 												return (
 													<button
-														class={`gap-2 text-accent hover:underline` + (shown() ? ` flex` : ` hidden`)}
+														class={
+															`w-max gap-2 text-accent hover:underline` + (shown() ? ` flex` : ` hidden`)
+														}
 													>
 														<ShieldOutlinedIcon class="mt-0.5 shrink-0 text-base" />
-														<span class="text-de">Add content warning</span>
+														<span class="text-de font-medium">Add content warning</span>
 													</button>
 												);
 											}}
