@@ -495,8 +495,6 @@ const PostAction = (props: {
 										return <TranslateOutlinedIcon />;
 									}
 
-									console.log(languages.length);
-
 									const code = languages[0] + (languages.length !== 1 ? `+` : ``);
 									return <span class="select-none text-xs font-bold uppercase tracking-widest">{code}</span>;
 								},
@@ -508,7 +506,6 @@ const PostAction = (props: {
 								<LanguageSelectDialogLazy
 									languages={props.post.languages.slice()}
 									onChange={(next) => {
-										console.log(next);
 										props.post.languages = next;
 									}}
 								/>
