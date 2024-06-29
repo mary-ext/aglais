@@ -66,14 +66,7 @@ const GifSearchDialog = (props: GifSearchDialogProps) => {
 											}}
 											class="aspect-square overflow-hidden bg-outline-md"
 										>
-											<video
-												tabindex={-1}
-												poster={/* @once */ media.thumbUrl}
-												src={/* @once */ media.videoUrl}
-												autoplay
-												loop
-												class="h-full w-full bg-black object-cover"
-											/>
+											<img src={media.embedUrl} class="h-full w-full bg-black object-cover" />
 										</button>
 									);
 								});
