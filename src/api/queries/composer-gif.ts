@@ -30,6 +30,7 @@ export const createGifSearchQuery = (search: () => string) => {
 			initialPageParam: undefined as string | undefined,
 			getNextPageParam: (last) => last.next,
 			placeholderData: keepPreviousData,
+			structuralSharing: false,
 			select: selectFn,
 		};
 	});

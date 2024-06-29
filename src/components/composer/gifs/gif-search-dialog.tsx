@@ -1,14 +1,19 @@
-import { For, createSignal } from 'solid-js';
+import { For, Match, Switch, createSignal } from 'solid-js';
 
 import { createGifSearchQuery, type Gif } from '~/api/queries/composer-gif';
+import { chunked } from '~/api/utils/utils';
 
 import { useModalContext } from '~/globals/modals';
 
+import { ifIntersect } from '~/lib/element-refs';
 import { createDebouncedValue } from '~/lib/hooks/debounced-value';
 import { modelText } from '~/lib/input-refs';
 
+import CircularProgress from '../../circular-progress';
 import * as Dialog from '../../dialog';
+import ErrorView from '../../error-view';
 import MagnifyingGlassOutlinedIcon from '../../icons-central/magnifying-glass-outline';
+import VirtualItem from '../../virtual-item';
 
 export interface GifSearchDialogProps {
 	onPick: (gif: GifMedia) => void;
@@ -52,27 +57,64 @@ const GifSearchDialog = (props: GifSearchDialogProps) => {
 				</Dialog.Header>
 
 				<Dialog.Body unpadded>
-					<div class="grid grid-cols-3 gap-0.5">
+					<div class="flex flex-col gap-0.5">
 						<For each={query.data}>
 							{(gifs) => {
-								return gifs.map((gif) => {
-									const media = getGifMedia(gif);
-
+								return chunked(gifs, 3).map((chunk) => {
 									return (
-										<button
-											onClick={() => {
-												close();
-												onPick(media);
-											}}
-											class="aspect-square overflow-hidden bg-outline-md"
-										>
-											<img src={media.gifUrl} class="h-full w-full bg-black object-cover" />
-										</button>
+										<VirtualItem>
+											<div class="flex gap-0.5">
+												{chunk.map((gif) => {
+													const media = getGifMedia(gif);
+
+													return (
+														<button
+															onClick={() => {
+																close();
+																onPick(media);
+															}}
+															class="aspect-square grow basis-0 overflow-hidden bg-outline-md"
+														>
+															<img src={media.gifUrl} class="h-full w-full bg-black object-cover" />
+														</button>
+													);
+												})}
+											</div>
+										</VirtualItem>
 									);
 								});
 							}}
 						</For>
 					</div>
+
+					<Switch>
+						<Match when={query.isRefetching}>{null}</Match>
+
+						<Match when={query.error}>
+							{(err) => <ErrorView error={err()} onRetry={() => query.fetchNextPage()} />}
+						</Match>
+
+						<Match when={query.isFetching || query.hasNextPage}>
+							<div
+								ref={(node) => {
+									const onEndReached = () => query.fetchNextPage();
+
+									ifIntersect(node, () => !query.isFetching && query.hasNextPage, onEndReached, {
+										rootMargin: `150% 0%`,
+									});
+								}}
+								class="grid h-13 shrink-0 place-items-center"
+							>
+								<CircularProgress />
+							</div>
+						</Match>
+
+						<Match when>
+							<div class="grid h-13 shrink-0 place-items-center">
+								<p class="text-sm text-contrast-muted">End of list</p>
+							</div>
+						</Match>
+					</Switch>
 				</Dialog.Body>
 			</Dialog.Container>
 		</>
