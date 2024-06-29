@@ -66,11 +66,16 @@ const fetchTenor = async ({ uri, params, signal }: FetchTenorOptions): Promise<T
 		throw new Error(`Response error ${response.status}`);
 	}
 
-	return await response.json();
+	const json: TenorResponse = await response.json();
+	if (json.next === '') {
+		json.next = undefined;
+	}
+
+	return json;
 };
 
 export interface TenorResponse {
-	next: string;
+	next: string | undefined;
 	results: Gif[];
 }
 
