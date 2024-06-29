@@ -80,8 +80,8 @@ export const detectSnippet = (link: AppBskyEmbedExternal.ViewExternal, linkOnly 
 				type: SnippetType.BLUESKY_GIF,
 				// AAAP3 -> tinywebm
 				url: `https://t.gifs.bsky.app/${m[1].replace(/AAAAC$/, 'AAAP3')}/${file}`,
-				// AAAAT -> nanogifpreview
-				thumb: `https://t.gifs.bsky.app/${m[1].replace(/AAAAC$/, 'AAAAT')}/${file}`,
+				// AAAAF -> tinygifpreview
+				thumb: `https://t.gifs.bsky.app/${m[1].replace(/AAAAC$/, 'AAAAF')}/${file}`,
 				ratio: `${width}/${height}`,
 				description: link.description.replace(/^(ALT|Alt): /, ''),
 			};
