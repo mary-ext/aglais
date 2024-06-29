@@ -1,9 +1,11 @@
+import type { JSX } from 'solid-js';
+
 import CheckOutlinedIcon from './icons-central/check-outline';
 
 export interface AltButtonProps {
 	checked?: boolean;
 	title: string;
-	onClick?: () => void;
+	onClick?: JSX.EventHandler<HTMLButtonElement, MouseEvent>;
 }
 
 const AltButton = (props: AltButtonProps) => {
