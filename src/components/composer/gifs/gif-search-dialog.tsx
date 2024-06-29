@@ -7,12 +7,11 @@ import { useModalContext } from '~/globals/modals';
 
 import { ifIntersect } from '~/lib/element-refs';
 import { createDebouncedValue } from '~/lib/hooks/debounced-value';
-import { modelText } from '~/lib/input-refs';
 
 import CircularProgress from '../../circular-progress';
 import * as Dialog from '../../dialog';
 import ErrorView from '../../error-view';
-import MagnifyingGlassOutlinedIcon from '../../icons-central/magnifying-glass-outline';
+import SearchInput from '../../search-input';
 import VirtualItem from '../../virtual-item';
 
 export interface GifSearchDialogProps {
@@ -39,20 +38,7 @@ const GifSearchDialog = (props: GifSearchDialogProps) => {
 					</Dialog.HeaderAccessory>
 
 					<div class="flex grow pr-2">
-						<div class="relative h-max grow">
-							<div class="pointer-events-none absolute inset-y-0 ml-px grid w-10 place-items-center">
-								<MagnifyingGlassOutlinedIcon class="text-lg text-contrast-muted" />
-							</div>
-
-							<input
-								ref={(node) => {
-									modelText(node, search, setSearch);
-								}}
-								type="text"
-								placeholder="Search for GIFs"
-								class="h-10 w-full rounded-full border border-outline-md bg-background px-3 pl-10 text-sm text-contrast outline-2 -outline-offset-2 outline-accent placeholder:text-contrast-muted focus:outline"
-							/>
-						</div>
+						<SearchInput value={search()} onChange={setSearch} placeholder="Search for GIFs" />
 					</div>
 				</Dialog.Header>
 
