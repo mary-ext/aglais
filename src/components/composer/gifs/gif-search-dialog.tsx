@@ -133,7 +133,7 @@ const getGifMedia = (gif: Gif): GifMedia => {
 		ratio: { width: dimensions[0], height: dimensions[1] },
 
 		// AAAAM -> tinygif
-		gifUrl: `https://t.gifs.bsky.app/${id.replace(/AAAAC$/, 'AAAAM')}/${file}.gif`,
+		gifUrl: `https://media.tenor.com/${id.replace(/AAAAC$/, 'AAAAM')}/${file}.gif`,
 		// AAAP3 -> tinywebm
 		videoUrl: `https://t.gifs.bsky.app/${id.replace(/AAAAC$/, 'AAAP3')}/${file}.webm`,
 		// AAAAF -> tinygifpreview
