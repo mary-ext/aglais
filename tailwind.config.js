@@ -105,6 +105,7 @@ export default {
 
 				p: {
 					neutral: colors.neutral,
+					green: colors.green,
 				},
 			};
 		},

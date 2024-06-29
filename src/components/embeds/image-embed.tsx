@@ -1,4 +1,5 @@
 import type { AppBskyEmbedImages } from '@mary/bluesky-client/lexicons';
+import AltButton from '../alt-button';
 
 export interface ImageEmbedProps {
 	/** Expected to be static */
@@ -71,12 +72,9 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 				{/* @once */ mode === RenderMode.STANDALONE_RATIO && <div class="h-screen w-screen"></div>}
 
 				{interactive && alt && (
-					<button
-						class="absolute bottom-0 left-0 m-2 h-5 rounded bg-black/70 px-1 text-xs font-medium text-white"
-						title="Show image description"
-					>
-						ALT
-					</button>
+					<div class="absolute bottom-0 left-0 p-2">
+						<AltButton title="Show image description" />
+					</div>
 				)}
 			</div>
 		);
