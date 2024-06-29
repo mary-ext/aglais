@@ -65,3 +65,7 @@ export const reconcile = <T extends { id: string | number }>(prev: T[] | undefin
 };
 
 export const requestIdle = typeof requestIdleCallback === 'function' ? requestIdleCallback : setTimeout;
+
+export const uniq = <T>(items: T[]): T[] => {
+	return Array.from(new Set(items));
+};

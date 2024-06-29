@@ -1,6 +1,4 @@
-const uniq = <T>(items: T[]): T[] => {
-	return Array.from(new Set(items));
-};
+import { uniq } from '~/lib/misc';
 
 export const systemLanguages = uniq(navigator.languages.map((lang) => lang.split('-')[0]));
 
