@@ -68,6 +68,8 @@ const iconButtonClasses = (
 
 		if (!isDisabled()) {
 			cn += ` hover:bg-p-neutral-800/75 active:bg-p-neutral-700/75`;
+		} else {
+			cn += ` opacity-50`;
 		}
 	}
 
