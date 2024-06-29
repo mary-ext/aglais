@@ -71,16 +71,17 @@ export const detectSnippet = (link: AppBskyEmbedExternal.ViewExternal, linkOnly 
 	if (d === 'media.tenor.com') {
 		// Bluesky GIFs
 		if ((m = /\/([^/]+?AAAAC)\/([^/]+?)\?hh=(\d+?)&ww=(\d+?)$/.exec(url))) {
-			const id = m[1].replace(/AAAAC$/, 'AAAP3');
-			const file = m[2].replace(/\.gif$/, '.webm');
+			const file = m[2].replace(/\.gif$/, '');
 
 			const width = m[4];
 			const height = m[3];
 
 			return {
 				type: SnippetType.BLUESKY_GIF,
-				url: `https://t.gifs.bsky.app/${id}/${file}`,
-				thumb: link.thumb,
+				// AAAP3 -> tinywebm
+				url: `https://t.gifs.bsky.app/${m[1].replace(/AAAAC$/, 'AAAP3')}/${file}`,
+				// AAAAT -> nanogifpreview
+				thumb: `https://t.gifs.bsky.app/${m[1].replace(/AAAAC$/, 'AAAAT')}/${file}`,
 				ratio: `${width}/${height}`,
 				description: link.description.replace(/^(ALT|Alt): /, ''),
 			};
