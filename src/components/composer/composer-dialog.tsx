@@ -1,11 +1,13 @@
-import { For, Show, batch, createEffect, createMemo } from 'solid-js';
+import { For, Show, batch, createEffect, createMemo, type JSX } from 'solid-js';
 import { createMutable } from 'solid-js/store';
 
 import { useProfileQuery } from '~/api/queries/profile';
 
+import { primarySystemLanguage } from '~/globals/locales';
 import { openModal, useModalContext } from '~/globals/modals';
 
 import { createGuard } from '~/lib/hooks/guard';
+import { on } from '~/lib/misc';
 import { useSession } from '~/lib/states/session';
 
 import Button from '../button';
@@ -23,6 +25,7 @@ import ImageOutlinedIcon from '../icons-central/image-outline';
 import InfoOutlinedIcon from '../icons-central/info-outline';
 import LinkOutlinedIcon from '../icons-central/link-outline';
 import ShieldOutlinedIcon from '../icons-central/shield-outline';
+import TranslateOutlinedIcon from '../icons-central/translate-outline';
 import Keyed from '../keyed';
 
 import ComposerInput from './composer-input';
@@ -35,6 +38,7 @@ import ListEmbed from './embeds/list-embed';
 import QuoteEmbed from './embeds/quote-embed';
 import GifSearchDialogLazy from './gifs/gif-search-dialog-lazy';
 
+import LanguageSelectDialogLazy from './dialogs/language-select-dialog-lazy';
 import type { BaseEmbedProps } from './embeds/types';
 import { getEmbedFromLink } from './lib/link-detection';
 import {
@@ -61,6 +65,18 @@ const MAX_POSTS = 25;
 const MAX_IMAGES = 4;
 const MAX_TEXT_LENGTH = 300;
 
+const resolveDefaultLanguage = (lang: 'none' | 'system' | (string & {})) => {
+	if (lang === 'none') {
+		return [];
+	}
+
+	if (lang === 'system') {
+		return [primarySystemLanguage];
+	}
+
+	return [lang];
+};
+
 const ComposerDialog = (props: ComposerDialogProps) => {
 	const { close } = useModalContext();
 	const { currentAccount } = useSession();
@@ -77,7 +93,12 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 		close();
 	};
 
-	const state = createMutable(createComposerState(props.params));
+	const state = createMutable(
+		createComposerState({
+			...props.params,
+			languages: resolveDefaultLanguage(currentAccount!.preferences.language.defaultPostLanguage),
+		}),
+	);
 
 	const addPost = () => {
 		const currentPosts = state.posts;
@@ -466,8 +487,33 @@ const PostAction = (props: {
 					</span>
 
 					<IconButton
-						icon={() => <span class="select-none text-xs font-bold tracking-widest">EN</span>}
+						icon={() => {
+							return on(
+								() => props.post.languages,
+								(languages) => {
+									if (languages.length === 0) {
+										return <TranslateOutlinedIcon />;
+									}
+
+									console.log(languages.length);
+
+									const code = languages[0] + (languages.length !== 1 ? `+` : ``);
+									return <span class="select-none text-xs font-bold uppercase tracking-widest">{code}</span>;
+								},
+							) as unknown as JSX.Element;
+						}}
 						title="Select language..."
+						onClick={() => {
+							openModal(() => (
+								<LanguageSelectDialogLazy
+									languages={props.post.languages.slice()}
+									onChange={(next) => {
+										console.log(next);
+										props.post.languages = next;
+									}}
+								/>
+							));
+						}}
 						variant="accent"
 					/>
 

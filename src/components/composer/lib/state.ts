@@ -260,6 +260,7 @@ export interface CreateComposerStateOptions {
 	reply?: AppBskyFeedDefs.PostView;
 	text?: string;
 	quote?: AppBskyFeedDefs.PostView;
+	languages?: string[];
 }
 
 export interface ComposerState {
@@ -270,7 +271,12 @@ export interface ComposerState {
 	threadgate: unknown;
 }
 
-export function createComposerState({ reply, text, quote }: CreateComposerStateOptions = {}): ComposerState {
+export function createComposerState({
+	reply,
+	text,
+	quote,
+	languages,
+}: CreateComposerStateOptions = {}): ComposerState {
 	return {
 		error: undefined,
 		active: 0,
@@ -285,6 +291,7 @@ export function createComposerState({ reply, text, quote }: CreateComposerStateO
 							origin: true,
 						}
 					: undefined,
+				languages,
 			}),
 		],
 		threadgate: undefined,

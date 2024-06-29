@@ -198,4 +198,11 @@ export const LANGUAGE_CODES = [
 	'zu', // Zulu
 ];
 
-export const languageNames = new Intl.DisplayNames('en', { type: 'language', fallback: 'none' });
+const englishLanguageNames = new Intl.DisplayNames('en', { type: 'language', fallback: 'none' });
+
+export const getEnglishLanguageName = (code: string) => {
+	return englishLanguageNames.of(code);
+};
+export const getNativeLanguageName = (code: string) => {
+	return new Intl.DisplayNames(code, { type: 'language', fallback: 'none' }).of(code);
+};
