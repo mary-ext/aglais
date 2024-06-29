@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from 'solid-js';
+import { createEffect, createSignal, type JSX } from 'solid-js';
 
 import type { AppBskyEmbedExternal } from '@mary/bluesky-client/lexicons';
 
@@ -72,7 +72,7 @@ const ExternalEmbed = ({ embed, interactive }: ExternalEmbedProps) => {
 					</a>
 				</div>
 			);
-		});
+		}) as unknown as JSX.Element;
 	}
 
 	return (
