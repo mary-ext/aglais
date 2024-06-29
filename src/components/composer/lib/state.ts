@@ -68,7 +68,7 @@ export interface PostListEmbed {
 export interface PostQuoteEmbed {
 	type: EmbedKind.QUOTE;
 	uri: string;
-	data?: AppBskyFeedDefs.PostView;
+	origin: boolean;
 }
 
 export type PostRecordEmbed = PostFeedEmbed | PostListEmbed | PostQuoteEmbed;
@@ -283,7 +283,7 @@ export function createComposerState({ reply, text, quote }: CreateComposerStateO
 					? {
 							type: EmbedKind.QUOTE,
 							uri: quote.uri,
-							data: quote,
+							origin: true,
 						}
 					: undefined,
 			}),

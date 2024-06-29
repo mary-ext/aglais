@@ -31,6 +31,7 @@ import ExternalEmbed from './embeds/external-embed';
 import FeedEmbed from './embeds/feed-embed';
 import GifEmbed from './embeds/gif-embed';
 import ListEmbed from './embeds/list-embed';
+import QuoteEmbed from './embeds/quote-embed';
 import GifSearchDialogLazy from './gifs/gif-search-dialog-lazy';
 
 import type { BaseEmbedProps } from './embeds/types';
@@ -46,6 +47,7 @@ import {
 	type CreateComposerStateOptions,
 	type PostEmbed,
 	type PostRecordEmbed,
+	type PostRecordWithMediaEmbed,
 	type PostState,
 } from './lib/state';
 
@@ -116,7 +118,11 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 
 							const isActive = createMemo(() => idx() === state.active);
 							const isFilled = () => {
-								return !(getPostRt(post).length === 0 && !post.embed);
+								const embed = post.embed;
+
+								return (
+									(embed && (embed.type !== EmbedKind.QUOTE || !embed.origin)) || getPostRt(post).length !== 0
+								);
 							};
 
 							const canRemove = createMemo(() => {
@@ -133,7 +139,10 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 
 								const rtLength = richtext.length;
 
-								return (embed || rtLength > 0) && rtLength < MAX_TEXT_LENGTH;
+								return (
+									((embed && (embed.type !== EmbedKind.QUOTE || !embed.origin)) || rtLength > 0) &&
+									rtLength < MAX_TEXT_LENGTH
+								);
 							});
 
 							createEffect(() => {
@@ -456,6 +465,20 @@ const PostEmbeds = (props: BaseEmbedProps) => {
 				if (type === EmbedKind.LIST) {
 					// @ts-expect-error
 					return <ListEmbed {...props} />;
+				}
+
+				if (type === EmbedKind.QUOTE) {
+					// @ts-expect-error
+					return <QuoteEmbed {...props} />;
+				}
+
+				if (type === EmbedKind.RECORD_WITH_MEDIA) {
+					return (
+						<>
+							<PostEmbeds {...props} embed={(props.embed as PostRecordWithMediaEmbed).media} />
+							<PostEmbeds {...props} embed={(props.embed as PostRecordWithMediaEmbed).record} />
+						</>
+					);
 				}
 
 				return null;

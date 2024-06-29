@@ -20,6 +20,7 @@ export const getEmbedFromLink = (href: string): PostRecordEmbed | PostExternalEm
 				return {
 					type: EmbedKind.QUOTE,
 					uri: `at://${handleOrDid}/app.bsky.feed.post/${rkey}`,
+					origin: false,
 				};
 			}
 
