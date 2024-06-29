@@ -23,7 +23,7 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 					onCleanup(() => URL.revokeObjectURL(thumbUrl));
 
 					return (
-						<div class="relative shrink-0 snap-center snap-always overflow-hidden rounded border border-outline">
+						<div class="relative shrink-0 snap-end snap-always overflow-hidden rounded border border-outline">
 							<img src={thumbUrl} class="h-32 w-32 object-cover" />
 
 							<div hidden={!props.active} class="absolute right-0 top-0 p-1">
