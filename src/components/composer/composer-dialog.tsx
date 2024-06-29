@@ -258,7 +258,8 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 												return (
 													<button
 														class={
-															`w-max gap-2 text-accent hover:underline` + (shown() ? ` flex` : ` hidden`)
+															`w-max gap-2 text-accent hover:underline active:opacity-75` +
+															(shown() ? ` flex` : ` hidden`)
 														}
 													>
 														<ShieldOutlinedIcon class="mt-0.5 shrink-0 text-base" />
