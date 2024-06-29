@@ -36,7 +36,15 @@ const virtualStoreMap = new WeakMap<
 	ReturnType<typeof createVirtualStore>
 >();
 
-const getVirtualStore = (ctx: ReturnType<typeof UNSAFE_useViewContext>) => {
+const dummyStore: ReturnType<typeof createVirtualStore> = {
+	disabled: false,
+};
+
+const getVirtualStore = (ctx: ReturnType<typeof UNSAFE_useViewContext> | undefined) => {
+	if (ctx === undefined) {
+		return dummyStore;
+	}
+
 	let store = virtualStoreMap.get(ctx);
 	if (store === undefined) {
 		virtualStoreMap.set(ctx, (store = createVirtualStore(ctx)));
