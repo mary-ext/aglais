@@ -75,32 +75,38 @@ export default {
 			sans: `"Roboto", ui-sans-serif, sans-serif, "Noto Color Emoji", "Twemoji Mozilla"`,
 			mono: `"JetBrains Mono NL", ui-monospace, monospace`,
 		},
-		colors: {
-			transparent: `transparent`,
-			white: `#ffffff`,
-			black: `#000000`,
+		colors: ({ colors }) => {
+			return {
+				transparent: `transparent`,
+				white: `#ffffff`,
+				black: `#000000`,
 
-			background: `rgb(var(--p-background))`,
-			contrast: {
-				DEFAULT: `rgb(var(--p-contrast))`,
-				hinted: `rgb(var(--p-contrast-hinted))`,
-				muted: `rgb(var(--p-contrast-muted))`,
-				overlay: `rgb(var(--p-contrast-overlay))`,
-			},
-			accent: {
-				DEFAULT: `rgb(var(--p-accent))`,
-				hover: `rgb(var(--p-accent-hover))`,
-				active: `rgb(var(--p-accent-active))`,
-				fg: `rgb(var(--p-accent-fg))`,
-			},
-			repost: `rgb(var(--p-repost))`,
-			like: `rgb(var(--p-like))`,
-			error: `rgb(var(--p-error))`,
-			outline: {
-				DEFAULT: `rgb(var(--p-outline))`,
-				md: `rgb(var(--p-outline-md))`,
-				lg: `rgb(var(--p-outline-lg))`,
-			},
+				background: `rgb(var(--p-background))`,
+				contrast: {
+					DEFAULT: `rgb(var(--p-contrast))`,
+					hinted: `rgb(var(--p-contrast-hinted))`,
+					muted: `rgb(var(--p-contrast-muted))`,
+					overlay: `rgb(var(--p-contrast-overlay))`,
+				},
+				accent: {
+					DEFAULT: `rgb(var(--p-accent))`,
+					hover: `rgb(var(--p-accent-hover))`,
+					active: `rgb(var(--p-accent-active))`,
+					fg: `rgb(var(--p-accent-fg))`,
+				},
+				repost: `rgb(var(--p-repost))`,
+				like: `rgb(var(--p-like))`,
+				error: `rgb(var(--p-error))`,
+				outline: {
+					DEFAULT: `rgb(var(--p-outline))`,
+					md: `rgb(var(--p-outline-md))`,
+					lg: `rgb(var(--p-outline-lg))`,
+				},
+
+				p: {
+					neutral: colors.neutral,
+				},
+			};
 		},
 	},
 	corePlugins: {
