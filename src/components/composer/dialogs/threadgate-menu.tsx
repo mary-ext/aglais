@@ -9,7 +9,7 @@ import EarthOutlinedIcon from '../../icons-central/earth-outline';
 import PersonCheckOutlinedIcon from '../../icons-central/person-check-outline';
 import * as Menu from '../../menu';
 
-import { getThreadgateValue } from '../lib/state';
+import { ThreadgateKnownValue, getThreadgateValue } from '../lib/state';
 
 export interface ThreadgateMenuProps {
 	anchor: HTMLElement;
@@ -33,6 +33,7 @@ const ThreadgateMenu = (props: ThreadgateMenuProps) => {
 			<Menu.Item
 				icon={EarthOutlinedIcon}
 				label="Everyone"
+				checked={value() === ThreadgateKnownValue.EVERYONE}
 				onClick={() => {
 					close();
 					onChange(undefined);
@@ -41,6 +42,7 @@ const ThreadgateMenu = (props: ThreadgateMenuProps) => {
 			<Menu.Item
 				icon={AtOutlinedIcon}
 				label="Mentioned users"
+				checked={value() === ThreadgateKnownValue.MENTIONS}
 				onClick={() => {
 					close();
 					onChange([{ $type: 'app.bsky.feed.threadgate#mentionRule' }]);
@@ -49,6 +51,7 @@ const ThreadgateMenu = (props: ThreadgateMenuProps) => {
 			<Menu.Item
 				icon={PersonCheckOutlinedIcon}
 				label="Followed users"
+				checked={value() === ThreadgateKnownValue.FOLLOWS}
 				onClick={() => {
 					close();
 					onChange([{ $type: 'app.bsky.feed.threadgate#followingRule' }]);

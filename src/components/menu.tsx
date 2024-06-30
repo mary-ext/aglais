@@ -11,6 +11,7 @@ import { useModalClose } from '~/lib/hooks/modal-close';
 import { on } from '~/lib/misc';
 
 import Button from './button';
+import CheckOutlinedIcon from './icons-central/check-outline';
 
 export interface MenuContainerProps {
 	anchor: HTMLElement;
@@ -107,10 +108,13 @@ export interface MenuItemProps {
 	icon: Component;
 	label: string;
 	disabled?: boolean;
+	checked?: boolean;
 	onClick?: () => void;
 }
 
 const MenuItem = (props: MenuItemProps) => {
+	const hasChecked = 'checked' in props;
+
 	return (
 		<button role="menuitem" disabled={props.disabled} onClick={props.onClick} class={menuItemClasses(props)}>
 			<div class="mt-0.5 text-lg">
@@ -120,12 +124,18 @@ const MenuItem = (props: MenuItemProps) => {
 				})()}
 			</div>
 
-			<span class="text-sm font-bold">{props.label}</span>
+			<span class="grow text-sm font-bold">{props.label}</span>
+
+			{hasChecked && (
+				<CheckOutlinedIcon
+					class={'-my-0.5 shrink-0 text-2xl text-accent' + (!props.checked ? ` invisible` : ``)}
+				/>
+			)}
 		</button>
 	);
 };
 const menuItemClasses = ({ disabled }: MenuItemProps) => {
-	let cn = `flex gap-3 px-4 py-3 text-contrast`;
+	let cn = `flex gap-3 px-4 py-3 text-left text-contrast`;
 
 	if (!disabled) {
 		cn += ` hover:bg-contrast/sm active:bg-contrast/sm-pressed`;
