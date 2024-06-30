@@ -246,6 +246,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 								idx={idx}
 								addCloseGuard={addCloseGuard}
 								addSubmitGuard={addSubmitGuard}
+								onSubmit={handleSubmit}
 							/>
 						)}
 					</For>
@@ -273,6 +274,7 @@ const Post = ({
 	idx,
 	addCloseGuard,
 	addSubmitGuard,
+	onSubmit,
 }: {
 	profile: CreateQueryResult<AppBskyActorDefs.ProfileViewDetailed>;
 	state: ComposerState;
@@ -280,6 +282,7 @@ const Post = ({
 	idx: () => number;
 	addCloseGuard: (guard: GuardFunction) => void;
 	addSubmitGuard: (guard: GuardFunction) => void;
+	onSubmit: () => void;
 }) => {
 	let textarea: HTMLTextAreaElement;
 
@@ -347,6 +350,7 @@ const Post = ({
 					onChange={(next) => {
 						post.text = next;
 					}}
+					onSubmit={onSubmit}
 					placeholder={
 						!hasPrevious() ? (state.reply ? `Write your reply` : `What's up?`) : `Write another post`
 					}

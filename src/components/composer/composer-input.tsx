@@ -1,5 +1,8 @@
 import TextareaAutosize from 'solid-textarea-autosize';
+
 import { type PreliminaryRichText } from '~/api/richtext/parser/parse';
+
+import { isCtrlKeyPressed } from '~/lib/interaction';
 
 export interface ComposerInputProps {
 	ref?: (el: HTMLTextAreaElement) => void;
@@ -7,6 +10,7 @@ export interface ComposerInputProps {
 	value: string;
 	rt: PreliminaryRichText;
 	onChange: (next: string) => void;
+	onSubmit?: () => void;
 
 	minRows?: number;
 	placeholder?: string;
@@ -14,6 +18,7 @@ export interface ComposerInputProps {
 
 const ComposerInput = (props: ComposerInputProps) => {
 	const onChange = props.onChange;
+	const onSubmit = props.onSubmit;
 
 	return (
 		<div class="group relative z-0 text-base">
@@ -36,6 +41,16 @@ const ComposerInput = (props: ComposerInputProps) => {
 				}
 				onInput={(ev) => {
 					onChange(ev.target.value);
+				}}
+				onKeyDown={(ev) => {
+					const key = ev.key;
+
+					if (onSubmit && key === 'Enter' && isCtrlKeyPressed(ev)) {
+						ev.preventDefault();
+						onSubmit();
+
+						return;
+					}
 				}}
 			/>
 		</div>
