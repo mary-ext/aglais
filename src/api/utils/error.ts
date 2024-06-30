@@ -1,5 +1,13 @@
 import { XRPCError } from '@mary/bluesky-client/xrpc';
 
+export const isNetworkError = (err: unknown) => {
+	if (err instanceof Error) {
+		return /NetworkError|Failed to fetch|timed out|abort/.test(err.message);
+	}
+
+	return false;
+};
+
 export const formatXRPCError = (err: XRPCError): string => {
 	const name = err.kind;
 	return (name ? name + ': ' : '') + err.message;

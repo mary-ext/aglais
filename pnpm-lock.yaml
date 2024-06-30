@@ -37,6 +37,15 @@ importers:
       '@floating-ui/utils':
         specifier: ^0.2.2
         version: 0.2.2
+      '@mary/atproto-cid':
+        specifier: npm:@jsr/mary__atproto-cid@^0.1.4
+        version: '@jsr/mary__atproto-cid@0.1.4'
+      '@mary/atproto-tid':
+        specifier: npm:@jsr/mary__atproto-tid@^0.1.1
+        version: '@jsr/mary__atproto-tid@0.1.1'
+      '@mary/base32':
+        specifier: npm:@jsr/mary__base32@^0.1.0
+        version: '@jsr/mary__base32@0.1.0'
       '@mary/bluesky-client':
         specifier: npm:@jsr/mary__bluesky-client@^0.5.23
         version: '@jsr/mary__bluesky-client@0.5.23'
@@ -1070,11 +1079,23 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
+  '@jsr/mary__atproto-cid@0.1.4':
+    resolution: {integrity: sha512-sq6bpcLTluVL2De73sAeAuf6HIKveEO8/sUd4/Y+ntQ1HIvmMv5HX5gLhiPIwT1nAA+Cmsk2aXMUuSLjgP0oyA==, tarball: https://npm.jsr.io/~/11/@jsr/mary__atproto-cid/0.1.4.tgz}
+
+  '@jsr/mary__atproto-tid@0.1.1':
+    resolution: {integrity: sha512-wQumCF4gT+D/AGjlBc0s6h2/9m9gv+W7uaE5ovy4IBEVNccddZgbLMIuA4w5iH0iFir1gICI+Bbaq+NnCBJRww==, tarball: https://npm.jsr.io/~/11/@jsr/mary__atproto-tid/0.1.1.tgz}
+
+  '@jsr/mary__base32@0.1.0':
+    resolution: {integrity: sha512-DCSSLoazbiumZdEAyBlNS6T/NtOPPJPwZH3hzyLnHZ/HKI5HT1ajZBAPLXVNzsIsFC3AgYpX/IXGGR2bS8AB6w==, tarball: https://npm.jsr.io/~/11/@jsr/mary__base32/0.1.0.tgz}
+
   '@jsr/mary__bluesky-client@0.5.23':
     resolution: {integrity: sha512-k1sZVbRvZ//kx3Fq/tEd6W5pAf3IrdE1cUSXl6lqem4cYGv67NrRHMdz51zVIud00BfwVLxHbb97cWeDHDm16Q==, tarball: https://npm.jsr.io/~/11/@jsr/mary__bluesky-client/0.5.23.tgz}
 
   '@jsr/mary__events@0.1.0':
     resolution: {integrity: sha512-oS6jVOaXTaNEa6avRncwrEtUYaBKrq/HEybPa9Z3aoeMs+RSly0vn0KcOj/fy2H6iTBkeh3wa8+/9nFjhKyKIg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__events/0.1.0.tgz}
+
+  '@jsr/mary__varint@0.1.0':
+    resolution: {integrity: sha512-iT8XYsAyHnR5EfkWkBxqE2ecTHuvcuVEZQEts8sInADA3O3E/IepPY5qwFSwNCnUXfQ6+RIMi1RhJ9kahrTI5w==, tarball: https://npm.jsr.io/~/11/@jsr/mary__varint/0.1.0.tgz}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -3747,9 +3768,20 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
 
+  '@jsr/mary__atproto-cid@0.1.4':
+    dependencies:
+      '@jsr/mary__base32': 0.1.0
+      '@jsr/mary__varint': 0.1.0
+
+  '@jsr/mary__atproto-tid@0.1.1': {}
+
+  '@jsr/mary__base32@0.1.0': {}
+
   '@jsr/mary__bluesky-client@0.5.23': {}
 
   '@jsr/mary__events@0.1.0': {}
+
+  '@jsr/mary__varint@0.1.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:

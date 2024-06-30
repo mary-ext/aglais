@@ -4,24 +4,28 @@ import {
 	batch,
 	createEffect,
 	createMemo,
+	createSignal,
 	type Component,
 	type ComponentProps,
 	type JSX,
 } from 'solid-js';
-import { createMutable } from 'solid-js/store';
+import { createMutable, unwrap } from 'solid-js/store';
 
 import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
-import type { CreateQueryResult } from '@mary/solid-query';
+import { useQueryClient, type CreateQueryResult } from '@mary/solid-query';
 
 import { GLOBAL_LABELS, getLocalizedLabel } from '~/api/moderation';
 import { useProfileQuery } from '~/api/queries/profile';
+import { isNetworkError } from '~/api/utils/error';
 
+import { globalEvents } from '~/globals/events';
 import { primarySystemLanguage } from '~/globals/locales';
 import { openModal, useModalContext } from '~/globals/modals';
 
 import { createGuard, type GuardFunction } from '~/lib/hooks/guard';
 import { assert } from '~/lib/invariant';
 import { on } from '~/lib/misc';
+import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
 import Button from '../button';
@@ -29,7 +33,9 @@ import * as Dialog from '../dialog';
 import IconButton from '../icon-button';
 
 import Avatar from '../avatar';
+import CircularProgress from '../circular-progress';
 import Divider from '../divider';
+import { useFieldset } from '../fieldset';
 import AddOutlinedIcon from '../icons-central/add-outline';
 import AtOutlinedIcon from '../icons-central/at-outline';
 import BlockOutlinedIcon from '../icons-central/block-outline';
@@ -61,6 +67,7 @@ import QuoteEmbed from './embeds/quote-embed';
 import GifSearchDialogLazy from './gifs/gif-search-dialog-lazy';
 
 import type { BaseEmbedProps } from './embeds/types';
+import { publish } from './lib/api';
 import { getEmbedFromLink } from './lib/link-detection';
 import {
 	EmbedKind,
@@ -83,6 +90,7 @@ import {
 export interface ComposerDialogProps {
 	/** This is static, meant for initializing the composer state */
 	params?: CreateComposerStateOptions;
+	onPublish?: () => void;
 }
 
 const MAX_POSTS = 25;
@@ -108,8 +116,15 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 	const { currentAccount } = useSession();
 	const profile = useProfileQuery(() => currentAccount!.did);
 
+	const queryClient = useQueryClient();
+	const agent = useAgent();
+
 	const [isCloseGuarded, addCloseGuard] = createGuard('some');
 	const [canSubmit, addSubmitGuard] = createGuard('every');
+
+	const [pending, setPending] = createSignal(false);
+	const [error, setError] = createSignal<string>();
+	const [message, setMessage] = createSignal<string>();
 
 	const handleClose = () => {
 		if (isCloseGuarded()) {
@@ -141,20 +156,57 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 		});
 	};
 
+	const handleSubmit = async () => {
+		setMessage(`Processing posts`);
+		setPending(true);
+
+		let success = false;
+
+		try {
+			await publish({
+				agent: agent,
+				queryClient: queryClient,
+				state: unwrap(state),
+				onLog: setMessage,
+			});
+
+			success = true;
+		} catch (err) {
+			if (isNetworkError(err)) {
+			}
+		} finally {
+			setPending(false);
+		}
+
+		if (success) {
+			close();
+
+			globalEvents.emit('postpublished');
+			props.onPublish?.();
+		}
+	};
+
 	return (
 		<>
 			<Dialog.Backdrop />
-			<Dialog.Container onClose={handleClose}>
+			<Dialog.Container disabled={pending()} onClose={handleClose}>
 				<Dialog.Header>
 					<Dialog.HeaderAccessory>
 						<Dialog.Close onClose={handleClose} />
 					</Dialog.HeaderAccessory>
 
-					<Dialog.HeaderAccessory>
-						<Button disabled={!canSubmit()} variant="primary">
-							Post
-						</Button>
-					</Dialog.HeaderAccessory>
+					{!pending() ? (
+						<Dialog.HeaderAccessory>
+							<Button disabled={!canSubmit()} onClick={handleSubmit} variant="primary">
+								Post
+							</Button>
+						</Dialog.HeaderAccessory>
+					) : (
+						<div class="flex items-center gap-6 px-2">
+							<span class="text-de text-contrast-muted">{message()}</span>
+							<CircularProgress />
+						</div>
+					)}
 				</Dialog.Header>
 
 				<Dialog.Body unpadded class="min-h-[9.75rem] pb-6">
@@ -204,10 +256,12 @@ const Post = ({
 }) => {
 	let textarea: HTMLTextAreaElement;
 
+	const fieldset = useFieldset();
+
 	const hasPrevious = createMemo(() => idx() !== 0);
 	const hasNext = createMemo(() => idx() !== state.posts.length - 1);
 
-	const isActive = createMemo(() => idx() === state.active);
+	const isActive = createMemo(() => idx() === state.active && !fieldset.disabled);
 	const isFilled = () => {
 		const embed = post.embed;
 
@@ -417,7 +471,7 @@ const Post = ({
 				)}
 			</fieldset>
 
-			{!isActive() && (
+			{!isActive() && !fieldset.disabled && (
 				<button
 					title={`Post #${idx() + 1}`}
 					onClick={() => (state.active = idx())}
@@ -429,11 +483,14 @@ const Post = ({
 };
 
 const ThreadgateAction = ({ state }: { state: ComposerState }) => {
+	const fieldset = useFieldset();
+
 	return (
 		<>
 			<Divider class="opacity-70" />
 
 			<button
+				disabled={fieldset.disabled}
 				onClick={(ev) => {
 					const anchor = ev.currentTarget;
 
@@ -447,7 +504,10 @@ const ThreadgateAction = ({ state }: { state: ComposerState }) => {
 						/>
 					));
 				}}
-				class="flex h-11 shrink-0 select-none items-center gap-2 px-2 text-accent hover:bg-contrast/sm active:bg-contrast/sm-pressed"
+				class={
+					`flex h-11 shrink-0 select-none items-center gap-2 px-2 text-accent` +
+					(!fieldset.disabled ? ` hover:bg-contrast/sm active:bg-contrast/sm-pressed` : ` opacity-50`)
+				}
 			>
 				{(() => {
 					let Icon: Component<ComponentProps<'svg'>>;
@@ -487,6 +547,8 @@ const PostAction = (props: {
 	canAddPost: boolean;
 	onAddPost: () => void;
 }) => {
+	const fieldset = useFieldset();
+
 	const canAddPost = () => {
 		if (!props.canAddPost) {
 			return false;
@@ -603,7 +665,12 @@ const PostAction = (props: {
 				</div>
 
 				<div class="flex items-center gap-2">
-					<span class="text-xs font-medium tabular-nums text-contrast-muted">
+					<span
+						class={
+							`text-xs font-medium tabular-nums text-contrast-muted` +
+							(fieldset.disabled ? ` opacity-50` : ``)
+						}
+					>
 						{MAX_TEXT_LENGTH - getPostRt(props.post).length}
 					</span>
 

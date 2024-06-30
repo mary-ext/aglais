@@ -24,7 +24,7 @@ export const createLinkMetaQuery = (uri: () => string) => {
 
 		return {
 			queryKey: ['link-meta', $uri],
-			async queryFn(ctx) {
+			async queryFn(ctx): Promise<LinkMeta> {
 				const response = await fetch(`${LINK_PROXY_ENDPOINT}?url=${encodeURIComponent($uri)}`, {
 					signal: followAbortSignal([ctx.signal, AbortSignal.timeout(5_000)]),
 				});

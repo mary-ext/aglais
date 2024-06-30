@@ -11,6 +11,9 @@
 	"dependencies": {
 		"@floating-ui/dom": "^1.6.5",
 		"@floating-ui/utils": "^0.2.2",
+		"@mary/atproto-cid": "npm:@jsr/mary__atproto-cid@^0.1.4",
+		"@mary/atproto-tid": "npm:@jsr/mary__atproto-tid@^0.1.1",
+		"@mary/base32": "npm:@jsr/mary__base32@^0.1.0",
 		"@mary/bluesky-client": "npm:@jsr/mary__bluesky-client@^0.5.23",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",

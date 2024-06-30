@@ -264,7 +264,6 @@ export interface CreateComposerStateOptions {
 }
 
 export interface ComposerState {
-	error: string | undefined;
 	active: number;
 	reply: AppBskyFeedDefs.PostView | undefined;
 	posts: PostState[];
@@ -278,7 +277,6 @@ export function createComposerState({
 	languages,
 }: CreateComposerStateOptions = {}): ComposerState {
 	return {
-		error: undefined,
 		active: 0,
 		reply: reply,
 		posts: [
