@@ -15,10 +15,17 @@ export const formatXRPCError = (err: XRPCError): string => {
 
 export const formatQueryError = (err: unknown) => {
 	if (err instanceof XRPCError) {
-		const error = err.kind;
+		const kind = err.kind;
+		const message = err.message;
 
-		if (error === 'InvalidToken' || error === 'ExpiredToken') {
+		if (kind === 'InvalidToken' || kind === 'ExpiredToken') {
 			return `Account session invalid, please sign in again`;
+		}
+		if (kind === 'UpstreamFailure') {
+			return `Server appears to be experiencing issues, please try again later`;
+		}
+		if (message.includes('Bad token scope')) {
+			return `This functionality is unavailable when using app passwords, please sign in with your main password`;
 		}
 
 		return formatXRPCError(err);
