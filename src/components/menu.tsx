@@ -87,7 +87,7 @@ const MenuContainer = (props: MenuContainerProps) => {
 		} else {
 			return (
 				<div class="flex grow flex-col self-stretch overflow-y-auto bg-contrast-overlay/40">
-					<div class="h-[50vh] shrink-0"></div>
+					<div class="h-[40dvh] shrink-0"></div>
 					<div ref={containerRef} role="menu" class="mt-auto flex flex-col bg-background">
 						<div class="flex flex-col pt-1">{props.children}</div>
 
