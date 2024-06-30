@@ -20,6 +20,10 @@ export const autofocusOnMutation = (
 	}, first);
 };
 
+export const autofocusNode = (node: FocusableElement) => {
+	setTimeout(() => node.focus(), 0);
+};
+
 export const autofocusIfEnabled = (node: FocusableElement, enabled: () => boolean) => {
 	// Render effects are not affected by <Suspense>
 	createRenderEffect(() => {

@@ -10,7 +10,7 @@ import { isDid } from '~/api/utils/strings';
 
 import { closeAllModals } from '~/globals/modals';
 
-import { autofocusIfEnabled, autofocusOnMutation, modelText } from '~/lib/input-refs';
+import { autofocusNode, autofocusOnMutation, modelText } from '~/lib/input-refs';
 import { useSession } from '~/lib/states/session';
 
 import Button from '../button';
@@ -309,7 +309,7 @@ const SignInDialog = () => {
 									<div class="flex flex-col gap-4">
 										<TextInput
 											ref={(node) => {
-												autofocusIfEnabled(node, () => true);
+												autofocusNode(node);
 												modelText(node, identifier, setIdentifier);
 											}}
 											type="email"
