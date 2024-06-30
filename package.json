@@ -16,6 +16,7 @@
 		"@mary/base32": "npm:@jsr/mary__base32@^0.1.0",
 		"@mary/bluesky-client": "npm:@jsr/mary__bluesky-client@^0.5.23",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
+		"@mary/exif-rm": "npm:@jsr/mary__exif-rm@^0.2.1",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
 		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.5",
 		"cborg": "4.0.7",

@@ -17,10 +17,12 @@ import type {
 import { XRPCError } from '@mary/bluesky-client/xrpc';
 import type { QueryClient } from '@mary/solid-query';
 
+import { uploadBlob } from '~/api/queries/blob';
 import type { LinkMeta } from '~/api/queries/composer';
 import { getUtf8Length } from '~/api/richtext/intl';
 import type { PreliminaryRichText } from '~/api/richtext/parser/parse';
 
+import { compressPostImage } from '~/lib/bsky/image';
 import { assert } from '~/lib/invariant';
 import type { AgentContext } from '~/lib/states/agent';
 
@@ -184,6 +186,15 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				const thumb = meta.thumb;
 				let thumbBlob: At.Blob<any> | undefined;
 
+				if (thumb !== undefined) {
+					log?.(`Uploading link thumbnail`);
+
+					const compressed = await compressPostImage(thumb);
+					const blob = await uploadBlob(rpc, compressed.blob);
+
+					thumbBlob = blob;
+				}
+
 				return {
 					$type: 'app.bsky.embed.external',
 					external: {
@@ -215,7 +226,14 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				const images: AppBskyEmbedImages.Image[] = [];
 
 				for (const image of embed.images) {
-					// compress... upload...
+					const compressed = await compressPostImage(image.blob);
+					const result = await uploadBlob(rpc, compressed.blob);
+
+					images.push({
+						image: result,
+						alt: image.alt,
+						aspectRatio: compressed.ratio,
+					});
 				}
 
 				return {
