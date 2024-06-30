@@ -227,9 +227,6 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 				) : null}
 
 				<Dialog.Body unpadded class="min-h-[9.75rem] pb-6">
-					{/* <Show when={state.reply}>
-						{(reply) => <PostFeedItem item={{ post: reply, reason: undefined,}} />}
-					</Show> */}
 					<Keyed value={state.reply}>
 						{(reply) => {
 							if (!reply) {
