@@ -16,7 +16,7 @@ import { useQueryClient, type CreateQueryResult } from '@mary/solid-query';
 
 import { GLOBAL_LABELS, getLocalizedLabel } from '~/api/moderation';
 import { useProfileQuery } from '~/api/queries/profile';
-import { isNetworkError } from '~/api/utils/error';
+import { formatQueryError } from '~/api/utils/error';
 
 import { globalEvents } from '~/globals/events';
 import { primarySystemLanguage } from '~/globals/locales';
@@ -157,7 +157,11 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 	};
 
 	const handleSubmit = async () => {
-		setMessage(`Processing posts`);
+		if (pending() || !canSubmit()) {
+			return;
+		}
+
+		setError();
 		setPending(true);
 
 		let success = false;
@@ -172,8 +176,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 
 			success = true;
 		} catch (err) {
-			if (isNetworkError(err)) {
-			}
+			setError(formatQueryError(err));
 		} finally {
 			setPending(false);
 		}
@@ -208,6 +211,12 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 						</div>
 					)}
 				</Dialog.Header>
+
+				{error() ? (
+					<p class="mx-2.5 flex gap-4 rounded bg-p-red-900 px-3 py-2 text-de font-medium text-p-red-100">
+						{error()}
+					</p>
+				) : null}
 
 				<Dialog.Body unpadded class="min-h-[9.75rem] pb-6">
 					<For each={state.posts}>

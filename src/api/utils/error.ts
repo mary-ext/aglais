@@ -1,13 +1,5 @@
 import { XRPCError } from '@mary/bluesky-client/xrpc';
 
-export const isNetworkError = (err: unknown) => {
-	if (err instanceof Error) {
-		return /NetworkError|Failed to fetch|timed out|abort/.test(err.message);
-	}
-
-	return false;
-};
-
 export const formatXRPCError = (err: XRPCError): string => {
 	const name = err.kind;
 	return (name ? name + ': ' : '') + err.message;
@@ -29,6 +21,12 @@ export const formatQueryError = (err: unknown) => {
 		}
 
 		return formatXRPCError(err);
+	}
+
+	if (err instanceof Error) {
+		if (/NetworkError|Failed to fetch|timed out|abort/.test(err.message)) {
+			return `Unable to access the internet, please try again later`;
+		}
 	}
 
 	return '' + err;
