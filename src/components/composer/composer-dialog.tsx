@@ -327,7 +327,6 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 															const $labels = labels();
 															const label = $labels.length !== 0 ? $labels[0] : undefined;
 
-															console.log($labels, label);
 															if (label !== undefined) {
 																if (label in GLOBAL_LABELS) {
 																	const matched = GLOBAL_LABELS[label];
