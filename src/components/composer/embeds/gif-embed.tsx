@@ -1,10 +1,14 @@
-import IconButton from '~/components/icon-button';
-import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outline';
-import Keyed from '~/components/keyed';
+import { openModal } from '~/globals/modals';
 
-import AltButton from '~/components/alt-button';
-import { GifPlayer } from '~/components/embeds/external-embed';
-import { SnippetType, type BlueskyGifSnippet } from '~/components/embeds/lib/snippet';
+import IconButton from '../../icon-button';
+import CrossLargeOutlinedIcon from '../../icons-central/cross-large-outline';
+import Keyed from '../../keyed';
+
+import AltButton from '../../alt-button';
+import { GifPlayer } from '../../embeds/external-embed';
+import { SnippetType, type BlueskyGifSnippet } from '../../embeds/lib/snippet';
+
+import GifAltDialogLazy from '../dialogs/gif-alt-dialog-lazy';
 
 import type { PostGifEmbed } from '../lib/state';
 import type { BaseEmbedProps } from './types';
@@ -45,7 +49,21 @@ const GifEmbed = (props: GifEmbedProps) => {
 			</div>
 
 			<div class="absolute bottom-0 left-0 p-2">
-				<AltButton title="Add GIF description..." checked={props.embed.alt !== undefined} />
+				<AltButton
+					title="Add GIF description..."
+					checked={props.embed.alt !== undefined}
+					onClick={() => {
+						openModal(() => (
+							<GifAltDialogLazy
+								gif={props.embed.gif}
+								value={props.embed.alt}
+								onChange={(next) => {
+									props.embed.alt = next;
+								}}
+							/>
+						));
+					}}
+				/>
 			</div>
 		</div>
 	);
