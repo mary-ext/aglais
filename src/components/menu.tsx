@@ -105,7 +105,7 @@ const MenuContainer = (props: MenuContainerProps) => {
 export { MenuContainer as Container };
 
 export interface MenuItemProps {
-	icon: Component;
+	icon?: Component;
 	label: string;
 	disabled?: boolean;
 	checked?: boolean;
@@ -113,16 +113,19 @@ export interface MenuItemProps {
 }
 
 const MenuItem = (props: MenuItemProps) => {
+	const hasIcon = 'icon' in props;
 	const hasChecked = 'checked' in props;
 
 	return (
 		<button role="menuitem" disabled={props.disabled} onClick={props.onClick} class={menuItemClasses(props)}>
-			<div class="mt-0.5 text-lg">
-				{(() => {
-					const Icon = props.icon;
-					return <Icon />;
-				})()}
-			</div>
+			{hasIcon && (
+				<div class="mt-0.5 text-lg">
+					{(() => {
+						const Icon = props.icon;
+						return Icon && <Icon />;
+					})()}
+				</div>
+			)}
 
 			<span class="grow text-sm font-bold">{props.label}</span>
 
