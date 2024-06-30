@@ -128,7 +128,7 @@ const MenuItem = (props: MenuItemProps) => {
 
 			{hasChecked && (
 				<CheckOutlinedIcon
-					class={'-my-0.5 shrink-0 text-2xl text-accent' + (!props.checked ? ` invisible` : ``)}
+					class={'-my-0.5 -mr-1 shrink-0 text-2xl text-accent' + (!props.checked ? ` invisible` : ``)}
 				/>
 			)}
 		</button>
