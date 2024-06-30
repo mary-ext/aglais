@@ -69,7 +69,7 @@ const LanguageSelectDialog = (props: LanguageSelectDialogProps) => {
 	return (
 		<>
 			<Dialog.Backdrop />
-			<Dialog.Container fullHeight>
+			<Dialog.Container maxWidth="sm" fullHeight>
 				<Dialog.Header>
 					<Dialog.HeaderAccessory>
 						<Dialog.Close />
