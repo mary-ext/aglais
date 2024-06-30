@@ -10,13 +10,16 @@ import {
 } from 'solid-js';
 import { createMutable } from 'solid-js/store';
 
+import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
+import type { CreateQueryResult } from '@mary/solid-query';
+
 import { GLOBAL_LABELS, getLocalizedLabel } from '~/api/moderation';
 import { useProfileQuery } from '~/api/queries/profile';
 
 import { primarySystemLanguage } from '~/globals/locales';
 import { openModal, useModalContext } from '~/globals/modals';
 
-import { createGuard } from '~/lib/hooks/guard';
+import { createGuard, type GuardFunction } from '~/lib/hooks/guard';
 import { assert } from '~/lib/invariant';
 import { on } from '~/lib/misc';
 import { useSession } from '~/lib/states/session';
@@ -156,241 +159,16 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 
 				<Dialog.Body unpadded class="min-h-[9.75rem] pb-6">
 					<For each={state.posts}>
-						{(post, idx) => {
-							let textarea: HTMLTextAreaElement;
-
-							const hasPrevious = createMemo(() => idx() !== 0);
-							const hasNext = createMemo(() => idx() !== state.posts.length - 1);
-
-							const isActive = createMemo(() => idx() === state.active);
-							const isFilled = () => {
-								const embed = post.embed;
-
-								return (
-									(embed && (embed.type !== EmbedKind.QUOTE || !embed.origin)) || getPostRt(post).length !== 0
-								);
-							};
-
-							const canRemove = createMemo(() => {
-								return isActive() && (hasPrevious() || hasNext()) && !isFilled();
-							});
-							const canEmbed = createMemo(() => {
-								return getAvailableEmbed(post.embed);
-							});
-
-							addCloseGuard(isFilled);
-							addSubmitGuard(() => {
-								const embed = post.embed;
-								const richtext = getPostRt(post);
-
-								const rtLength = richtext.length;
-
-								return (
-									((embed && (embed.type !== EmbedKind.QUOTE || !embed.origin)) || rtLength > 0) &&
-									rtLength < MAX_TEXT_LENGTH
-								);
-							});
-
-							createEffect(() => {
-								if (isActive()) {
-									post.embed;
-									textarea.focus();
-								}
-							});
-
-							return (
-								<div class="relative flex gap-3 px-4">
-									<div class="flex shrink-0 flex-col items-center pt-3">
-										{(hasPrevious() || state.reply) && (
-											<div class="absolute top-0 h-2 border-l-2 border-outline-md"></div>
-										)}
-
-										<Avatar type="user" src={profile.data?.avatar} class={!isActive() ? `opacity-50` : ``} />
-
-										{hasNext() && <div class="mt-1 grow border-l-2 border-outline-md"></div>}
-									</div>
-
-									<fieldset
-										disabled={!isActive()}
-										class={
-											`relative flex min-w-0 grow flex-col gap-3 py-3` + (!isActive() ? ` opacity-50` : ``)
-										}
-									>
-										<ComposerInput
-											ref={(node) => {
-												textarea = node;
-											}}
-											value={post.text}
-											rt={getPostRt(post)}
-											onChange={(next) => {
-												post.text = next;
-											}}
-											placeholder={
-												!hasPrevious()
-													? state.reply
-														? `Write your reply`
-														: `What's up?`
-													: `Write another post`
-											}
-											minRows={isActive() ? 2 : 1}
-										/>
-
-										{(canEmbed() & EmbedKind.EXTERNAL) !== 0 && (
-											<div class={`flex-col gap-1.5` + (isActive() ? ` flex empty:hidden` : ` hidden`)}>
-												<For each={getPostRt(post).links}>
-													{(href) => {
-														const pretty = href.replace(/^https?:\/\//i, '');
-
-														const addLink = () => {
-															post.embed = getEmbedFromLink(href);
-														};
-
-														return (
-															<button
-																onClick={addLink}
-																class="flex items-center gap-3 rounded border border-outline px-3 py-2.5 text-sm hover:bg-contrast-hinted/sm active:bg-contrast-hinted/sm-pressed"
-															>
-																<LinkOutlinedIcon class="shrink-0 text-contrast-muted" />
-																<span class="overflow-hidden text-ellipsis whitespace-nowrap text-contrast-muted">
-																	{pretty}
-																</span>
-															</button>
-														);
-													}}
-												</For>
-											</div>
-										)}
-
-										<Show when={post.embed}>
-											{(embed) => (
-												<PostEmbeds
-													embed={embed()}
-													active={isActive()}
-													dispatch={(action) => {
-														const $embed = embed();
-														const kind = $embed.type;
-
-														switch (action.type) {
-															case 'remove_media': {
-																if (kind === EmbedKind.RECORD_WITH_MEDIA) {
-																	post.embed = $embed.record;
-																} else if (kind & EmbedKind.MEDIA) {
-																	post.embed = undefined;
-																}
-
-																break;
-															}
-															case 'remove_record': {
-																if (kind === EmbedKind.RECORD_WITH_MEDIA) {
-																	post.embed = $embed.media;
-																} else if (kind & EmbedKind.RECORD) {
-																	post.embed = undefined;
-																}
-
-																break;
-															}
-														}
-													}}
-												/>
-											)}
-										</Show>
-
-										<Show when={getEmbedLabels(post.embed)}>
-											{(labels) => {
-												const shown = () => labels().length !== 0 || isActive();
-
-												return (
-													<button
-														onClick={(ev) => {
-															const anchor = ev.currentTarget;
-
-															openModal(() => (
-																<ContentWarningMenu
-																	anchor={anchor}
-																	value={labels()}
-																	onChange={(next) => {
-																		const $labels = labels();
-																		$labels.splice(0, $labels.length, ...next);
-																	}}
-																/>
-															));
-														}}
-														class={
-															`w-max gap-2 text-accent hover:underline active:opacity-75` +
-															(shown() ? ` flex` : ` hidden`)
-														}
-													>
-														{(() => {
-															let Icon = ShieldOutlinedIcon;
-															let text = `Add content warning`;
-
-															const $labels = labels();
-															const label = $labels.length !== 0 ? $labels[0] : undefined;
-
-															if (label !== undefined) {
-																if (label in GLOBAL_LABELS) {
-																	const matched = GLOBAL_LABELS[label];
-																	text = getLocalizedLabel(matched).n;
-																} else {
-																	text = label;
-																}
-
-																Icon = ShieldCheckOutlinedIcon;
-															}
-
-															return [
-																<Icon class="mt-0.5 shrink-0 text-base" />,
-																<span class="text-de font-medium">{text}</span>,
-															];
-														})()}
-													</button>
-												);
-											}}
-										</Show>
-
-										{(getPostEmbedFlags(post.embed) & (EmbedKind.GIF | EmbedKind.IMAGE)) !== 0 && (
-											<div class={`gap-2 text-contrast-muted` + (isActive() ? ` flex` : ` hidden`)}>
-												<InfoOutlinedIcon class="mt-0.5 shrink-0 text-base" />
-												<p class="text-de">
-													Alt text helps describe images for low-vision users and provide context for
-													everyone.
-												</p>
-											</div>
-										)}
-
-										{canRemove() && (
-											<div class="absolute -right-2 top-0 z-1 mt-3">
-												<IconButton
-													icon={CrossLargeOutlinedIcon}
-													title="Remove this post"
-													onClick={() => {
-														const posts = state.posts;
-
-														const index = idx();
-														const nextIndex = posts[index + 1] ? index : posts[index - 1] ? index - 1 : null;
-
-														if (nextIndex !== null) {
-															batch(() => {
-																state.active = nextIndex;
-																state.posts = posts.toSpliced(index, 1);
-															});
-														}
-													}}
-												/>
-											</div>
-										)}
-									</fieldset>
-
-									{!isActive() && (
-										<button
-											title={`Post #${idx() + 1}`}
-											onClick={() => (state.active = idx())}
-											class="absolute inset-0 z-1 outline-2 -outline-offset-2 outline-accent focus-visible:outline"
-										></button>
-									)}
-								</div>
-							);
-						}}
+						{(post, idx) => (
+							<Post
+								profile={profile}
+								state={state}
+								post={post}
+								idx={idx}
+								addCloseGuard={addCloseGuard}
+								addSubmitGuard={addSubmitGuard}
+							/>
+						)}
 					</For>
 				</Dialog.Body>
 
@@ -408,6 +186,247 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 };
 
 export default ComposerDialog;
+
+const Post = ({
+	profile,
+	state,
+	post,
+	idx,
+	addCloseGuard,
+	addSubmitGuard,
+}: {
+	profile: CreateQueryResult<AppBskyActorDefs.ProfileViewDetailed>;
+	state: ComposerState;
+	post: PostState;
+	idx: () => number;
+	addCloseGuard: (guard: GuardFunction) => void;
+	addSubmitGuard: (guard: GuardFunction) => void;
+}) => {
+	let textarea: HTMLTextAreaElement;
+
+	const hasPrevious = createMemo(() => idx() !== 0);
+	const hasNext = createMemo(() => idx() !== state.posts.length - 1);
+
+	const isActive = createMemo(() => idx() === state.active);
+	const isFilled = () => {
+		const embed = post.embed;
+
+		return (embed && (embed.type !== EmbedKind.QUOTE || !embed.origin)) || getPostRt(post).length !== 0;
+	};
+
+	const canRemove = createMemo(() => {
+		return isActive() && (hasPrevious() || hasNext()) && !isFilled();
+	});
+	const canEmbed = createMemo(() => {
+		return getAvailableEmbed(post.embed);
+	});
+
+	addCloseGuard(isFilled);
+	addSubmitGuard(() => {
+		const embed = post.embed;
+		const richtext = getPostRt(post);
+
+		const rtLength = richtext.length;
+
+		return (
+			((embed && (embed.type !== EmbedKind.QUOTE || !embed.origin)) || rtLength > 0) &&
+			rtLength < MAX_TEXT_LENGTH
+		);
+	});
+
+	createEffect(() => {
+		if (isActive()) {
+			post.embed;
+			textarea.focus();
+		}
+	});
+
+	return (
+		<div class="relative flex gap-3 px-4">
+			<div class="flex shrink-0 flex-col items-center pt-3">
+				{(hasPrevious() || state.reply) && (
+					<div class="absolute top-0 h-2 border-l-2 border-outline-md"></div>
+				)}
+
+				<Avatar type="user" src={profile.data?.avatar} class={!isActive() ? `opacity-50` : ``} />
+
+				{hasNext() && <div class="mt-1 grow border-l-2 border-outline-md"></div>}
+			</div>
+
+			<fieldset
+				disabled={!isActive()}
+				class={`relative flex min-w-0 grow flex-col gap-3 py-3` + (!isActive() ? ` opacity-50` : ``)}
+			>
+				<ComposerInput
+					ref={(node) => {
+						textarea = node;
+					}}
+					value={post.text}
+					rt={getPostRt(post)}
+					onChange={(next) => {
+						post.text = next;
+					}}
+					placeholder={
+						!hasPrevious() ? (state.reply ? `Write your reply` : `What's up?`) : `Write another post`
+					}
+					minRows={isActive() ? 2 : 1}
+				/>
+
+				{(canEmbed() & EmbedKind.EXTERNAL) !== 0 && (
+					<div class={`flex-col gap-1.5` + (isActive() ? ` flex empty:hidden` : ` hidden`)}>
+						<For each={getPostRt(post).links}>
+							{(href) => {
+								const pretty = href.replace(/^https?:\/\//i, '');
+
+								const addLink = () => {
+									post.embed = getEmbedFromLink(href);
+								};
+
+								return (
+									<button
+										onClick={addLink}
+										class="flex items-center gap-3 rounded border border-outline px-3 py-2.5 text-sm hover:bg-contrast-hinted/sm active:bg-contrast-hinted/sm-pressed"
+									>
+										<LinkOutlinedIcon class="shrink-0 text-contrast-muted" />
+										<span class="overflow-hidden text-ellipsis whitespace-nowrap text-contrast-muted">
+											{pretty}
+										</span>
+									</button>
+								);
+							}}
+						</For>
+					</div>
+				)}
+
+				<Show when={post.embed}>
+					{(embed) => (
+						<PostEmbeds
+							embed={embed()}
+							active={isActive()}
+							dispatch={(action) => {
+								const $embed = embed();
+								const kind = $embed.type;
+
+								switch (action.type) {
+									case 'remove_media': {
+										if (kind === EmbedKind.RECORD_WITH_MEDIA) {
+											post.embed = $embed.record;
+										} else if (kind & EmbedKind.MEDIA) {
+											post.embed = undefined;
+										}
+
+										break;
+									}
+									case 'remove_record': {
+										if (kind === EmbedKind.RECORD_WITH_MEDIA) {
+											post.embed = $embed.media;
+										} else if (kind & EmbedKind.RECORD) {
+											post.embed = undefined;
+										}
+
+										break;
+									}
+								}
+							}}
+						/>
+					)}
+				</Show>
+
+				<Show when={getEmbedLabels(post.embed)}>
+					{(labels) => {
+						const shown = () => labels().length !== 0 || isActive();
+
+						return (
+							<button
+								onClick={(ev) => {
+									const anchor = ev.currentTarget;
+
+									openModal(() => (
+										<ContentWarningMenu
+											anchor={anchor}
+											value={labels()}
+											onChange={(next) => {
+												const $labels = labels();
+												$labels.splice(0, $labels.length, ...next);
+											}}
+										/>
+									));
+								}}
+								class={
+									`w-max gap-2 text-accent hover:underline active:opacity-75` +
+									(shown() ? ` flex` : ` hidden`)
+								}
+							>
+								{(() => {
+									let Icon = ShieldOutlinedIcon;
+									let text = `Add content warning`;
+
+									const $labels = labels();
+									const label = $labels.length !== 0 ? $labels[0] : undefined;
+
+									if (label !== undefined) {
+										if (label in GLOBAL_LABELS) {
+											const matched = GLOBAL_LABELS[label];
+											text = getLocalizedLabel(matched).n;
+										} else {
+											text = label;
+										}
+
+										Icon = ShieldCheckOutlinedIcon;
+									}
+
+									return [
+										<Icon class="mt-0.5 shrink-0 text-base" />,
+										<span class="text-de font-medium">{text}</span>,
+									];
+								})()}
+							</button>
+						);
+					}}
+				</Show>
+
+				{(getPostEmbedFlags(post.embed) & (EmbedKind.GIF | EmbedKind.IMAGE)) !== 0 && (
+					<div class={`gap-2 text-contrast-muted` + (isActive() ? ` flex` : ` hidden`)}>
+						<InfoOutlinedIcon class="mt-0.5 shrink-0 text-base" />
+						<p class="text-de">
+							Alt text helps describe images for low-vision users and provide context for everyone.
+						</p>
+					</div>
+				)}
+
+				{canRemove() && (
+					<div class="absolute -right-2 top-0 z-1 mt-3">
+						<IconButton
+							icon={CrossLargeOutlinedIcon}
+							title="Remove this post"
+							onClick={() => {
+								const posts = state.posts;
+
+								const index = idx();
+								const nextIndex = posts[index + 1] ? index : posts[index - 1] ? index - 1 : null;
+
+								if (nextIndex !== null) {
+									batch(() => {
+										state.active = nextIndex;
+										state.posts = posts.toSpliced(index, 1);
+									});
+								}
+							}}
+						/>
+					</div>
+				)}
+			</fieldset>
+
+			{!isActive() && (
+				<button
+					title={`Post #${idx() + 1}`}
+					onClick={() => (state.active = idx())}
+					class="absolute inset-0 z-1 outline-2 -outline-offset-2 outline-accent focus-visible:outline"
+				></button>
+			)}
+		</div>
+	);
+};
 
 const ThreadgateAction = ({ state }: { state: ComposerState }) => {
 	return (
