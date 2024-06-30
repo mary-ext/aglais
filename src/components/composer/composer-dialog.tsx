@@ -22,6 +22,7 @@ import { globalEvents } from '~/globals/events';
 import { primarySystemLanguage } from '~/globals/locales';
 import { openModal, useModalContext } from '~/globals/modals';
 
+import { createEventListener } from '~/lib/hooks/event-listener';
 import { createGuard, type GuardFunction } from '~/lib/hooks/guard';
 import { assert } from '~/lib/invariant';
 import { on } from '~/lib/misc';
@@ -189,6 +190,12 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 			props.onPublish?.();
 		}
 	};
+
+	createEventListener(window, 'beforeunload', (ev) => {
+		if (isCloseGuarded()) {
+			ev.preventDefault();
+		}
+	});
 
 	return (
 		<>
