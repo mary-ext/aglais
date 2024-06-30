@@ -10,6 +10,7 @@ import {
 } from 'solid-js';
 import { createMutable } from 'solid-js/store';
 
+import { GLOBAL_LABELS, getLocalizedLabel } from '~/api/moderation';
 import { useProfileQuery } from '~/api/queries/profile';
 
 import { primarySystemLanguage } from '~/globals/locales';
@@ -27,6 +28,8 @@ import IconButton from '../icon-button';
 import Avatar from '../avatar';
 import Divider from '../divider';
 import AddOutlinedIcon from '../icons-central/add-outline';
+import AtOutlinedIcon from '../icons-central/at-outline';
+import BlockOutlinedIcon from '../icons-central/block-outline';
 import CrossLargeOutlinedIcon from '../icons-central/cross-large-outline';
 import EarthOutlinedIcon from '../icons-central/earth-outline';
 import EmojiSmileOutlinedIcon from '../icons-central/emoji-smile-outline';
@@ -34,16 +37,16 @@ import GifSquareOutlinedIcon from '../icons-central/gif-square-outline';
 import ImageOutlinedIcon from '../icons-central/image-outline';
 import InfoOutlinedIcon from '../icons-central/info-outline';
 import LinkOutlinedIcon from '../icons-central/link-outline';
+import PeopleOutlinedIcon from '../icons-central/people-outline';
+import PersonCheckOutlinedIcon from '../icons-central/person-check-outline';
+import ShieldCheckOutlinedIcon from '../icons-central/shield-check-outline';
 import ShieldOutlinedIcon from '../icons-central/shield-outline';
 import TranslateOutlinedIcon from '../icons-central/translate-outline';
 import Keyed from '../keyed';
 
 import ComposerInput from './composer-input';
 
-import AtOutlinedIcon from '../icons-central/at-outline';
-import BlockOutlinedIcon from '../icons-central/block-outline';
-import PeopleOutlinedIcon from '../icons-central/people-outline';
-import PersonCheckOutlinedIcon from '../icons-central/person-check-outline';
+import ContentWarningMenu from './dialogs/content-warning-menu';
 import LanguageSelectDialogLazy from './dialogs/language-select-dialog-lazy';
 import ThreadgateMenu from './dialogs/threadgate-menu';
 import ExternalEmbed from './embeds/external-embed';
@@ -292,17 +295,53 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 
 										<Show when={getEmbedLabels(post.embed)}>
 											{(labels) => {
-												const shown = () => labels.length !== 0 || isActive();
+												const shown = () => labels().length !== 0 || isActive();
 
 												return (
 													<button
+														onClick={(ev) => {
+															const anchor = ev.currentTarget;
+
+															openModal(() => (
+																<ContentWarningMenu
+																	anchor={anchor}
+																	value={labels()}
+																	onChange={(next) => {
+																		const $labels = labels();
+																		$labels.splice(0, $labels.length, ...next);
+																	}}
+																/>
+															));
+														}}
 														class={
 															`w-max gap-2 text-accent hover:underline active:opacity-75` +
 															(shown() ? ` flex` : ` hidden`)
 														}
 													>
-														<ShieldOutlinedIcon class="mt-0.5 shrink-0 text-base" />
-														<span class="text-de font-medium">Add content warning</span>
+														{(() => {
+															let Icon = ShieldOutlinedIcon;
+															let text = `Add content warning`;
+
+															const $labels = labels();
+															const label = $labels.length !== 0 ? $labels[0] : undefined;
+
+															console.log($labels, label);
+															if (label !== undefined) {
+																if (label in GLOBAL_LABELS) {
+																	const matched = GLOBAL_LABELS[label];
+																	text = getLocalizedLabel(matched).n;
+																} else {
+																	text = label;
+																}
+
+																Icon = ShieldCheckOutlinedIcon;
+															}
+
+															return [
+																<Icon class="mt-0.5 shrink-0 text-base" />,
+																<span class="text-de font-medium">{text}</span>,
+															];
+														})()}
 													</button>
 												);
 											}}
