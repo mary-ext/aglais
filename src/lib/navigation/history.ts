@@ -294,8 +294,6 @@ export const createBrowserHistory = (options: BrowserHistoryOptions = {}): Brows
 const promptBeforeUnload = (event: BeforeUnloadEvent): void => {
 	// Cancel the event.
 	event.preventDefault();
-	// Chrome (and legacy IE) requires returnValue to be set.
-	event.returnValue = '';
 };
 
 interface Events<F extends (arg: any) => void> {
