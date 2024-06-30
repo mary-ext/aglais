@@ -20,7 +20,7 @@ const ContentWarningMenu = (props: ContentWarningMenuProps) => {
 	});
 
 	return (
-		<Menu.Container anchor={props.anchor}>
+		<Menu.Container anchor={props.anchor} placement="bottom-start" cover>
 			<div class="px-4 py-3">
 				<p class="text-sm font-bold">Content warning</p>
 				<p class="text-de text-contrast-muted">Choose the category suitable for this media</p>
