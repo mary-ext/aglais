@@ -55,6 +55,7 @@ import Keyed from '../keyed';
 
 import ComposerInput from './composer-input';
 
+import ComposerReplyContext from './composer-reply-context';
 import ContentWarningMenu from './dialogs/content-warning-menu';
 import LanguageSelectDialogLazy from './dialogs/language-select-dialog-lazy';
 import ThreadgateMenu from './dialogs/threadgate-menu';
@@ -219,6 +220,19 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 				) : null}
 
 				<Dialog.Body unpadded class="min-h-[9.75rem] pb-6">
+					{/* <Show when={state.reply}>
+						{(reply) => <PostFeedItem item={{ post: reply, reason: undefined,}} />}
+					</Show> */}
+					<Keyed value={state.reply}>
+						{(reply) => {
+							if (!reply) {
+								return;
+							}
+
+							return <ComposerReplyContext post={reply} />;
+						}}
+					</Keyed>
+
 					<For each={state.posts}>
 						{(post, idx) => (
 							<Post

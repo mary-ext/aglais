@@ -1,0 +1,100 @@
+import { createMemo } from 'solid-js';
+
+import type { AppBskyEmbedImages, AppBskyFeedDefs, AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
+
+import { useProfileShadow } from '~/api/cache/profile-shadow';
+import { ContextContentMedia, getModerationUI } from '~/api/moderation';
+import { moderatePost } from '~/api/moderation/entities/post';
+
+import { useModerationOptions } from '~/lib/states/moderation';
+
+import Avatar from '../avatar';
+import ImageEmbed from '../embeds/image-embed';
+import TimeAgo from '../time-ago';
+
+export interface ComposerReplyContextProps {
+	/** Expected to be static */
+	post: AppBskyFeedDefs.PostView;
+}
+
+const ComposerReplyContext = ({ post }: ComposerReplyContextProps) => {
+	const moderationOptions = useModerationOptions();
+
+	const author = post.author;
+	const record = post.record as AppBskyFeedPost.Record;
+
+	const authorShadow = useProfileShadow(author);
+
+	const moderation = createMemo(() => moderatePost(post, authorShadow(), moderationOptions()));
+	const shouldBlurImage = () => getModerationUI(moderation(), ContextContentMedia).b.length !== 0;
+
+	const displayName = author.displayName;
+	const handle = author.handle;
+	const image = getPostImage(post.embed);
+
+	return (
+		<div class="relative flex gap-3 px-4 pt-3">
+			<div class="flex shrink-0 flex-col items-center">
+				<Avatar
+					type={/* @once */ author.associated?.labeler ? 'labeler' : 'user'}
+					src={/* @once */ author.avatar}
+					moderation={moderation()}
+				/>
+
+				<div class="mt-1 grow border-l-2 border-outline-md" />
+			</div>
+
+			<div class="min-w-0 grow pb-3">
+				<div class="mb-0.5 flex items-center justify-between gap-4 text-contrast-muted">
+					<div class="flex items-center overflow-hidden text-sm">
+						<span class="flex max-w-full gap-1 overflow-hidden text-ellipsis whitespace-nowrap text-left">
+							{displayName ? (
+								<bdi class="overflow-hidden text-ellipsis font-bold text-contrast hover:underline">
+									{displayName}
+								</bdi>
+							) : (
+								<span class="block overflow-hidden text-ellipsis whitespace-nowrap">@{handle}</span>
+							)}
+						</span>
+
+						<span class="px-1">·</span>
+
+						<TimeAgo value={/* @once */ post.indexedAt}>
+							{(relative, absolute) => (
+								<span title={absolute()} class="whitespace-nowrap hover:underline">
+									{relative()}
+								</span>
+							)}
+						</TimeAgo>
+					</div>
+				</div>
+
+				<div class="flex items-start">
+					<div class="line-clamp-6 min-w-0 grow-4 basis-0 whitespace-pre-wrap break-words text-sm">
+						{/* @once */ record.text}
+					</div>
+
+					{image && (
+						<div class="ml-4 grow basis-0">
+							<ImageEmbed embed={image} blur={shouldBlurImage()} />
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
+	);
+};
+
+export default ComposerReplyContext;
+
+const getPostImage = (embed: AppBskyFeedDefs.PostView['embed']): AppBskyEmbedImages.View | undefined => {
+	if (embed) {
+		if (embed.$type === 'app.bsky.embed.images#view') {
+			return embed;
+		}
+
+		if (embed.$type === 'app.bsky.embed.recordWithMedia#view') {
+			return getPostImage(embed.media);
+		}
+	}
+};
