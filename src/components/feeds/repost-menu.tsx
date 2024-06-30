@@ -15,7 +15,7 @@ const RepostMenu = (props: RepostMenuProps) => {
 	const { close } = useModalContext();
 
 	return (
-		<Menu.Container anchor={props.anchor} placement="bottom">
+		<Menu.Container anchor={props.anchor} placement="bottom" cover>
 			<Menu.Item
 				icon={RepeatOutlinedIcon}
 				label={!props.isReposted ? `Repost` : `Undo repost`}

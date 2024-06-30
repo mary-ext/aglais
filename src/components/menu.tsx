@@ -16,6 +16,7 @@ import CheckOutlinedIcon from './icons-central/check-outline';
 export interface MenuContainerProps {
 	anchor: HTMLElement;
 	placement?: Placement;
+	cover?: boolean;
 	children: JSX.Element;
 }
 
@@ -34,7 +35,7 @@ const MenuContainer = (props: MenuContainerProps) => {
 				placement: props.placement ?? 'bottom-end',
 				strategy: 'absolute',
 				middleware: [
-					{
+					props.cover && {
 						name: 'offset',
 						fn(state) {
 							const reference = state.rects.reference;
