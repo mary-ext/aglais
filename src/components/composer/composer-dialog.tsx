@@ -86,6 +86,8 @@ const MAX_POSTS = 25;
 const MAX_IMAGES = 4;
 const MAX_TEXT_LENGTH = 300;
 
+const IS_UA_MOBILE = /Mobile/.test(navigator.userAgent);
+
 const resolveDefaultLanguage = (lang: 'none' | 'system' | (string & {})) => {
 	if (lang === 'none') {
 		return [];
@@ -537,6 +539,7 @@ const PostAction = (props: {
 						}}
 						variant="accent"
 					/>
+
 					<IconButton
 						icon={GifSquareOutlinedIcon}
 						title="Attach GIF..."
@@ -575,7 +578,10 @@ const PostAction = (props: {
 						}}
 						variant="accent"
 					/>
-					<IconButton icon={EmojiSmileOutlinedIcon} title="Insert emoji..." variant="accent" />
+
+					{!IS_UA_MOBILE && (
+						<IconButton icon={EmojiSmileOutlinedIcon} title="Insert emoji..." variant="accent" />
+					)}
 				</div>
 
 				<div class="flex items-center gap-2">
