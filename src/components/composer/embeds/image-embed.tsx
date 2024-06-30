@@ -1,11 +1,15 @@
 import { For, onCleanup } from 'solid-js';
 
-import IconButton from '~/components/icon-button';
-import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outline';
+import { openModal } from '~/globals/modals';
+
+import IconButton from '../../icon-button';
+import CrossLargeOutlinedIcon from '../../icons-central/cross-large-outline';
+
+import AltButton from '../../alt-button';
+import ImageAltDialogLazy from '../dialogs/image-alt-dialog-lazy';
 
 import type { PostImageEmbed } from '../lib/state';
 import type { BaseEmbedProps } from './types';
-import AltButton from '~/components/alt-button';
 
 export interface ImageEmbedProps extends BaseEmbedProps {
 	embed: PostImageEmbed;
@@ -45,7 +49,21 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 							</div>
 
 							<div class="absolute bottom-0 left-0 p-2">
-								<AltButton title="Add image description..." checked={image.alt !== ''} />
+								<AltButton
+									title="Add image description..."
+									checked={image.alt !== ''}
+									onClick={() => {
+										openModal(() => (
+											<ImageAltDialogLazy
+												image={image.blob}
+												value={image.alt}
+												onChange={(next) => {
+													image.alt = next;
+												}}
+											/>
+										));
+									}}
+								/>
 							</div>
 						</div>
 					);

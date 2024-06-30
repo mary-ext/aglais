@@ -92,6 +92,8 @@ const enum CharCode {
 const WS_RE = / +(?=\n)|\n(?=(?: *\n){2} *)/g;
 export const EOF_WS_RE = /\s+$| +(?=\n)|\n(?=(?: *\n){2}) */g;
 
+export const PLAIN_WS_RE = /^\s+|\s+$| +(?=\n)|\n(?=(?: *\n){2}) */g
+
 const MENTION_RE = /[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,})(@)?/y;
 const HASHTAG_RE = /(?!\ufe0f|\u20e3)[\p{N}]*[\p{L}\p{M}\p{Pc}][\p{L}\p{M}\p{Pc}\p{N}]*(#)?/uy;
 
