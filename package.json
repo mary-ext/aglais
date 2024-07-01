@@ -20,6 +20,7 @@
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
 		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.5",
 		"cborg": "4.0.7",
+		"idb": "^8.0.0",
 		"nanoid": "^5.0.7",
 		"solid-floating-ui": "~0.2.1",
 		"solid-js": "^1.8.17",

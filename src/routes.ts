@@ -58,6 +58,11 @@ const routes: RouteDefinition[] = [
 	},
 
 	{
+		path: '/bookmarks',
+		component: lazy(() => import('./views/bookmarks')),
+	},
+
+	{
 		path: '/:didOrHandle/:rkey',
 		component: lazy(() => import('./views/post-thread')),
 		validate(params) {

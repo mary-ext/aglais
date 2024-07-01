@@ -64,6 +64,9 @@ importers:
       cborg:
         specifier: 4.0.7
         version: 4.0.7(patch_hash=dz6b6r6dc4jadjfng7vtgi53hy)
+      idb:
+        specifier: ^8.0.0
+        version: 8.0.0
       nanoid:
         specifier: ^5.0.7
         version: 5.0.7
@@ -1766,6 +1769,9 @@ packages:
 
   idb@7.1.1:
     resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
+
+  idb@8.0.0:
+    resolution: {integrity: sha512-l//qvlAKGmQO31Qn7xdzagVPPaHTxXx199MhrAFuVBTPqydcPYBWjkrbv4Y0ktB+GmWOiwHl237UUOrLmQxLvw==}
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
@@ -4522,6 +4528,8 @@ snapshots:
   html-entities@2.3.3: {}
 
   idb@7.1.1: {}
+
+  idb@8.0.0: {}
 
   inflight@1.0.6:
     dependencies:

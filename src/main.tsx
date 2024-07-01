@@ -14,6 +14,7 @@ import { configureRouter } from './lib/navigation/router';
 import type { AccountData } from './lib/preferences/sessions';
 
 import { AgentProvider } from './lib/states/agent';
+import { BookmarksProvider } from './lib/states/bookmarks';
 import { ModerationProvider } from './lib/states/moderation';
 import { SessionProvider, useSession } from './lib/states/session';
 import { ThemeProvider } from './lib/states/theme';
@@ -61,8 +62,10 @@ const InnerApp = () => {
 			<AgentProvider>
 				{/* Anything under <AgentProvider> gets remounted on account changes */}
 				<ModerationProvider>
-					<Shell />
-					<ModalRenderer />
+					<BookmarksProvider>
+						<Shell />
+						<ModalRenderer />
+					</BookmarksProvider>
 				</ModerationProvider>
 			</AgentProvider>
 		);

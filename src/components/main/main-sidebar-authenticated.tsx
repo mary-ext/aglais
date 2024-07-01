@@ -10,6 +10,7 @@ import { useSession } from '~/lib/states/session';
 import Avatar from '../avatar';
 import IconButton from '../icon-button';
 import AddOutlinedIcon from '../icons-central/add-outline';
+import BookmarkOutlinedIcon from '../icons-central/bookmark-outline';
 import BulletListOutlinedIcon from '../icons-central/bullet-list-outline';
 import GearOutlinedIcon from '../icons-central/gear-outline';
 import LeaveOutlinedIcon from '../icons-central/leave-outline';
@@ -31,6 +32,7 @@ const MainSidebarAuthenticated = () => {
 				<AuthenticatedHeader />
 
 				<Sidebar.NavItem icon={PersonOutlinedIcon} label="Profile" href={`/${currentAccount!.did}`} />
+				<Sidebar.NavItem icon={BookmarkOutlinedIcon} label="Bookmarks" href="/bookmarks" />
 				<Sidebar.NavItem icon={BulletListOutlinedIcon} label="Lists" href="/lists" />
 				<Sidebar.NavItem icon={ShieldOutlinedIcon} label="Moderation" href="/moderation" />
 				<Sidebar.NavItem icon={GearOutlinedIcon} label="Settings" href="/settings" />

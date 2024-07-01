@@ -1,7 +1,11 @@
 import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
 
+import { openModal } from '~/globals/modals';
+
 import MoreHorizOutlinedIcon from '../icons-central/more-horiz-outline';
 import TimeAgo from '../time-ago';
+
+import PostOverflowMenu from './post-overflow-menu';
 
 export interface PostMetaProps {
 	/** Expected to be static */
@@ -51,7 +55,13 @@ const PostMeta = ({ post, authorHref, href, compact, gutterBottom }: PostMetaPro
 			</div>
 
 			<div class="shrink-0">
-				<button class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed">
+				<button
+					onClick={(ev) => {
+						const anchor = ev.currentTarget;
+						openModal(() => <PostOverflowMenu anchor={anchor} post={post} />);
+					}}
+					class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed"
+				>
 					<MoreHorizOutlinedIcon />
 				</button>
 			</div>
