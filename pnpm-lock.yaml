@@ -86,6 +86,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.19(postcss@8.4.38)
+      babel-plugin-transform-typescript-const-enums:
+        specifier: ^0.1.0
+        version: 0.1.0(@babel/core@7.24.7)
       prettier:
         specifier: ^3.3.2
         version: 3.3.2
@@ -1380,6 +1383,11 @@ packages:
     resolution: {integrity: sha512-2R25rQZWP63nGwaAswvDazbPXfrM3HwVoBXK6HcqeKrSrL/JqcC/rDcf95l4r7LXLyxDXc8uQDa064GubtCABg==}
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
+
+  babel-plugin-transform-typescript-const-enums@0.1.0:
+    resolution: {integrity: sha512-GmMU8ZZYFHojxPgl0xsv+A4gT2sffC5N0V89C4DT7v2z/bq7LbYDeJ+a6huxDcP9mB3aO/se+TudW5F8GDK+Gw==}
+    peerDependencies:
+      '@babel/core': ^7.24.4
 
   babel-preset-solid@1.8.17:
     resolution: {integrity: sha512-s/FfTZOeds0hYxYqce90Jb+0ycN2lrzC7VP1k1JIn3wBqcaexDKdYi6xjB+hMNkL+Q6HobKbwsriqPloasR9LA==}
@@ -4065,6 +4073,12 @@ snapshots:
       '@babel/helper-define-polyfill-provider': 0.6.2(@babel/core@7.24.7)
     transitivePeerDependencies:
       - supports-color
+
+  babel-plugin-transform-typescript-const-enums@0.1.0(@babel/core@7.24.7):
+    dependencies:
+      '@babel/core': 7.24.7
+      '@babel/helper-plugin-utils': 7.24.7
+      '@babel/types': 7.24.7
 
   babel-preset-solid@1.8.17(@babel/core@7.24.7):
     dependencies:

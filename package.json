@@ -29,6 +29,7 @@
 	"devDependencies": {
 		"@types/dom-close-watcher": "^1.0.0",
 		"autoprefixer": "^10.4.19",
+		"babel-plugin-transform-typescript-const-enums": "^0.1.0",
 		"prettier": "^3.3.2",
 		"prettier-plugin-tailwindcss": "^0.6.5",
 		"tailwindcss": "^3.4.4",

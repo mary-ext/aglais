@@ -4,7 +4,6 @@ import { defineConfig } from 'vite';
 import solid from 'vite-plugin-solid';
 
 export default defineConfig({
-	plugins: [solid()],
 	build: {
 		target: 'esnext',
 		minify: 'terser',
@@ -16,4 +15,11 @@ export default defineConfig({
 			'~': path.join(__dirname, './src'),
 		},
 	},
+	plugins: [
+		solid({
+			babel: {
+				plugins: [['babel-plugin-transform-typescript-const-enums']],
+			},
+		}),
+	],
 });
