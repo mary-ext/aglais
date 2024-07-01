@@ -32,6 +32,7 @@ import { useSession } from '~/lib/states/session';
 import Button from '../button';
 import * as Dialog from '../dialog';
 import IconButton from '../icon-button';
+import * as Prompt from '../prompt';
 
 import Avatar from '../avatar';
 import CircularProgress from '../circular-progress';
@@ -130,6 +131,15 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 
 	const handleClose = () => {
 		if (isCloseGuarded()) {
+			openModal(() => (
+				<Prompt.Confirm
+					title="Discard draft?"
+					description="You won't be able to retrieve what you've written"
+					danger
+					onConfirm={close}
+				/>
+			));
+
 			return;
 		}
 
