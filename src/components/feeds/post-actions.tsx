@@ -45,7 +45,7 @@ const PostActions = (props: PostActionsProps) => {
 	};
 
 	return (
-		<div class={`mt-3 flex items-center text-contrast-muted` + (!compact ? `` : ` gap-3`)}>
+		<div class={`mt-3 flex items-center text-contrast-muted` + (!compact ? ` gap-2` : ` gap-3`)}>
 			<div class={`min-w-0` + (!compact ? ` grow basis-0` : ``)}>
 				<button
 					onClick={() => {
