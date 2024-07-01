@@ -1,4 +1,4 @@
-import { createMemo, createRenderEffect, untrack } from 'solid-js';
+import { createEffect, createMemo, createRenderEffect, onCleanup, untrack } from 'solid-js';
 
 import type { BskyXRPC } from '@mary/bluesky-client';
 import type {
@@ -16,6 +16,8 @@ import {
 	useQueryClient,
 	type InfiniteData,
 } from '@mary/solid-query';
+
+import { globalEvents } from '~/globals/events';
 
 import { assert } from '~/lib/invariant';
 import { useAgent } from '~/lib/states/agent';
@@ -379,6 +381,26 @@ export const useTimelineQuery = (_params: () => TimelineParams) => {
 
 		return next;
 	}, 0 as const);
+
+	if (currentAccount) {
+		createEffect(() => {
+			const params = getParams();
+
+			if (params.type === 'following' || (params.type === 'profile' && params.actor === currentAccount.did)) {
+				onCleanup(
+					globalEvents.on('postpublished', () => {
+						// @todo: not sure about refetching the entire timeline yet, let's
+						// just limit it to if there's one page.
+						if (timeline.data?.pages.length === 1) {
+							timeline.refetch();
+						} else {
+							latest.refetch();
+						}
+					}),
+				);
+			}
+		});
+	}
 
 	return { timeline, reset, isStale };
 };
