@@ -12,7 +12,7 @@ export interface ButtonProps {
 	children: JSX.Element;
 
 	size?: 'sm' | 'md';
-	variant?: 'outline' | 'primary' | 'ghost';
+	variant?: 'outline' | 'primary' | 'danger' | 'ghost';
 	class?: string;
 }
 
@@ -85,6 +85,14 @@ const buttonClassNames = (
 
 		if (!isDisabled()) {
 			cn += ` hover:bg-contrast-hinted/md active:bg-contrast-hinted/md-pressed`;
+		} else {
+			cn += ` opacity-50`;
+		}
+	} else if (variant === 'danger') {
+		cn += ` text-white bg-p-red-600`;
+
+		if (!isDisabled()) {
+			cn += ` hover:bg-p-red-700 active:bg-p-red-800`;
 		} else {
 			cn += ` opacity-50`;
 		}
