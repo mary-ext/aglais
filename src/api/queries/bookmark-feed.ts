@@ -1,11 +1,9 @@
-import type { AppBskyActorDefs, AppBskyFeedDefs, At } from '@mary/bluesky-client/lexicons';
-import { QueryClient, createInfiniteQuery, type InfiniteData } from '@mary/solid-query';
+import { createInfiniteQuery } from '@mary/solid-query';
 
 import type { BookmarkItem, HydratedBookmarkItem } from '~/lib/aglais-bookmarks/db';
 import { useAgent } from '~/lib/states/agent';
 import { useBookmarks } from '~/lib/states/bookmarks';
 
-import { embedViewRecordToPostView, getEmbeddedPost } from '../utils/post';
 import { chunked } from '../utils/utils';
 
 export interface BookmarkFeedReturn {
@@ -104,74 +102,3 @@ export const createBookmarkFeedQuery = (tagId: () => number | undefined) => {
 
 	return listing;
 };
-
-export function* findAllPostsInQueryData(
-	queryClient: QueryClient,
-	uri: string,
-	includeQuote = false,
-): Generator<AppBskyFeedDefs.PostView> {
-	const entries = queryClient.getQueriesData<InfiniteData<BookmarkFeedReturn>>({
-		queryKey: ['post-thread'],
-	});
-
-	for (const [_key, data] of entries) {
-		if (data === undefined) {
-			continue;
-		}
-
-		for (const page of data.pages) {
-			for (const item of page.items) {
-				if (item.stale) {
-					continue;
-				}
-
-				const post = item.post;
-
-				if (post.uri === uri) {
-					yield post;
-				}
-
-				if (includeQuote) {
-					const embeddedPost = getEmbeddedPost(post.embed);
-					if (embeddedPost && embeddedPost.uri === uri) {
-						yield embedViewRecordToPostView(embeddedPost);
-					}
-				}
-			}
-		}
-	}
-}
-
-export function* findAllProfilesInQueryData(
-	queryClient: QueryClient,
-	did: At.DID,
-): Generator<AppBskyActorDefs.ProfileViewBasic> {
-	const entries = queryClient.getQueriesData<InfiniteData<BookmarkFeedReturn>>({
-		queryKey: ['post-thread'],
-	});
-
-	for (const [_key, data] of entries) {
-		if (data === undefined) {
-			continue;
-		}
-
-		for (const page of data.pages) {
-			for (const item of page.items) {
-				if (item.stale) {
-					continue;
-				}
-
-				const post = item.post;
-
-				if (post.author.did === did) {
-					yield post.author;
-				}
-
-				const embeddedPost = getEmbeddedPost(post.embed);
-				if (embeddedPost && embeddedPost.author.did === did) {
-					yield embeddedPost.author;
-				}
-			}
-		}
-	}
-}

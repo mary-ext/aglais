@@ -1,5 +1,5 @@
-import type { AppBskyActorDefs, At } from '@mary/bluesky-client/lexicons';
-import { QueryClient, createQuery, type QueryPersister } from '@mary/solid-query';
+import type { At } from '@mary/bluesky-client/lexicons';
+import { createQuery, type QueryPersister } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
@@ -33,14 +33,3 @@ export const useProfileQuery = (did: () => At.DID, persister?: QueryPersister) =
 		};
 	});
 };
-
-export function* findAllProfilesInQueryData(
-	queryClient: QueryClient,
-	did: At.DID,
-): Generator<AppBskyActorDefs.ProfileViewDetailed> {
-	const data = queryClient.getQueryData<AppBskyActorDefs.ProfileViewDetailed>(['profile', did]);
-
-	if (data !== undefined && data.did === did) {
-		yield data;
-	}
-}

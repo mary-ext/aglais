@@ -4,9 +4,9 @@ import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
 import { EventEmitter } from '@mary/events';
 import type { QueryClient } from '@mary/solid-query';
 
-import { findAllPostsInQueryData as findAllPostsInBookmarkFeedQueryData } from '../queries/bookmark-feed';
-import { findAllPostsInQueryData as findAllPostsInPostThreadQueryData } from '../queries/post-thread';
-import { findAllPostsInQueryData as findAllPostsInTimelineQueryData } from '../queries/timeline';
+import { findAllPostsInQueryData as findAllPostsInBookmarkFeedQueryData } from '../queries-cache/bookmark-feed';
+import { findAllPostsInQueryData as findAllPostsInPostThreadQueryData } from '../queries-cache/post-thread';
+import { findAllPostsInQueryData as findAllPostsInTimelineQueryData } from '../queries-cache/timeline';
 import { EQUALS_DEQUAL } from '../utils/dequal';
 import type { AccessorMaybe } from '../utils/types';
 

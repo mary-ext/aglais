@@ -4,10 +4,10 @@ import type { AppBskyActorDefs, At } from '@mary/bluesky-client/lexicons';
 import { EventEmitter } from '@mary/events';
 import type { QueryClient } from '@mary/solid-query';
 
-import { findAllProfilesInQueryData as findAllProfilesInBookmarkFeedQueryData } from '../queries/bookmark-feed';
-import { findAllProfilesInQueryData as findAllProfilesInPostThreadQueryData } from '../queries/post-thread';
-import { findAllProfilesInQueryData as findAllProfilesInProfileQueryData } from '../queries/profile';
-import { findAllProfilesInQueryData as findAllProfilesInTimelineQueryData } from '../queries/timeline';
+import { findAllProfilesInQueryData as findAllProfilesInBookmarkFeedQueryData } from '../queries-cache/bookmark-feed';
+import { findAllProfilesInQueryData as findAllProfilesInPostThreadQueryData } from '../queries-cache/post-thread';
+import { findAllProfilesInQueryData as findAllProfilesInProfileQueryData } from '../queries-cache/profile';
+import { findAllProfilesInQueryData as findAllProfilesInTimelineQueryData } from '../queries-cache/timeline';
 import { EQUALS_DEQUAL } from '../utils/dequal';
 import type { AccessorMaybe } from '../utils/types';
 
