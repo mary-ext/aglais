@@ -123,9 +123,7 @@ const PromptConfirm = (props: PromptConfirmProps) => {
 					{props.confirmLabel ?? `Confirm`}
 				</PromptAction>
 
-				{!props.noCancel && (
-					<PromptAction onClick={props.onConfirm}>{props.cancelLabel ?? `Cancel`}</PromptAction>
-				)}
+				{!props.noCancel && <PromptAction>{props.cancelLabel ?? `Cancel`}</PromptAction>}
 			</PromptActions>
 		</PromptContainer>
 	);
