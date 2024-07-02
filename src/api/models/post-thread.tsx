@@ -358,7 +358,7 @@ const getDateInt = (timestamp: string): number => {
 	return new Date(timestamp).getTime();
 };
 
-const push = <T>(target: T[], source: T[]) => {
+const push = <T,>(target: T[], source: T[]) => {
 	for (let idx = 0, len = source.length; idx < len; idx++) {
 		const item = source[idx];
 		target.push(item);
