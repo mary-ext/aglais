@@ -21,5 +21,20 @@ export default defineConfig({
 				plugins: [['babel-plugin-transform-typescript-const-enums']],
 			},
 		}),
+		// Transform the icon components to remove the `() => _tmpl$()` wrapper
+		{
+			transform(code, id) {
+				if (!id.includes('/icons-central/')) {
+					return;
+				}
+
+				const transformed = code.replace(
+					/(?<=createIcon\()\(\)\s*=>*.([\w$]+)\(\)(?=\))/g,
+					(match, id) => id,
+				);
+
+				return { code: transformed, map: null };
+			},
+		},
 	],
 });
