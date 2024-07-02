@@ -9,12 +9,12 @@
 		"fmt": "prettier --cache --write ."
 	},
 	"dependencies": {
-		"@floating-ui/dom": "^1.6.5",
-		"@floating-ui/utils": "^0.2.2",
+		"@floating-ui/dom": "^1.6.7",
+		"@floating-ui/utils": "^0.2.4",
 		"@mary/atproto-cid": "npm:@jsr/mary__atproto-cid@^0.1.4",
 		"@mary/atproto-tid": "npm:@jsr/mary__atproto-tid@^0.1.1",
 		"@mary/base32": "npm:@jsr/mary__base32@^0.1.0",
-		"@mary/bluesky-client": "npm:@jsr/mary__bluesky-client@^0.5.23",
+		"@mary/bluesky-client": "npm:@jsr/mary__bluesky-client@^0.5.24",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
 		"@mary/exif-rm": "npm:@jsr/mary__exif-rm@^0.2.1",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
@@ -23,7 +23,7 @@
 		"idb": "^8.0.0",
 		"nanoid": "^5.0.7",
 		"solid-floating-ui": "~0.2.1",
-		"solid-js": "^1.8.17",
+		"solid-js": "^1.8.18",
 		"solid-textarea-autosize": "^0.0.5"
 	},
 	"devDependencies": {
@@ -34,21 +34,21 @@
 		"prettier-plugin-tailwindcss": "^0.6.5",
 		"tailwindcss": "^3.4.4",
 		"terser": "^5.31.1",
-		"typescript": "^5.5.2",
-		"vite": "^5.3.1",
+		"typescript": "^5.5.3",
+		"vite": "^5.3.2",
 		"vite-plugin-pwa": "0.17.4",
 		"vite-plugin-solid": "^2.10.2",
-		"wrangler": "^3.61.0"
+		"wrangler": "^3.62.0"
 	},
 	"pnpm": {
 		"patchedDependencies": {
 			"@tanstack/query-core@5.17.19": "patches/@tanstack__query-core@5.17.19.patch",
 			"cborg@4.0.7": "patches/cborg@4.0.7.patch",
+			"solid-js@1.8.18": "patches/solid-js@1.8.18.patch",
 			"solid-textarea-autosize@0.0.5": "patches/solid-textarea-autosize@0.0.5.patch",
 			"vite-plugin-pwa@0.17.4": "patches/vite-plugin-pwa@0.17.4.patch",
-			"solid-js@1.8.17": "patches/solid-js@1.8.17.patch",
-			"workbox-precaching@7.1.0": "patches/workbox-precaching@7.1.0.patch",
-			"vite@5.3.1": "patches/vite@5.3.1.patch"
+			"vite@5.3.2": "patches/vite@5.3.2.patch",
+			"workbox-precaching@7.1.0": "patches/workbox-precaching@7.1.0.patch"
 		}
 	}
 }
