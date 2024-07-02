@@ -6,9 +6,14 @@ import solid from 'vite-plugin-solid';
 export default defineConfig({
 	build: {
 		target: 'esnext',
-		minify: 'terser',
 		modulePreload: false,
 		sourcemap: true,
+		minify: 'terser',
+		terserOptions: {
+			compress: {
+				passes: 3,
+			},
+		},
 	},
 	resolve: {
 		alias: {
