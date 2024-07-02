@@ -69,13 +69,13 @@ const ComposerReplyContext = ({ post }: ComposerReplyContextProps) => {
 					</div>
 				</div>
 
-				<div class="flex items-start">
+				<div class="flex items-start gap-4">
 					<div class="line-clamp-6 min-w-0 grow-4 basis-0 whitespace-pre-wrap break-words text-sm">
 						{/* @once */ record.text}
 					</div>
 
 					{image && (
-						<div class="ml-4 grow basis-0">
+						<div class="grow basis-0">
 							<ImageEmbed embed={image} blur={shouldBlurImage()} />
 						</div>
 					)}
