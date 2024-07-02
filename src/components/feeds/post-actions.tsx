@@ -20,6 +20,7 @@ export interface PostActionsProps {
 	/** Not static, but expects the URI (post identifier) to be static */
 	post: AppBskyFeedDefs.PostView;
 	shadow: PostShadowView;
+	disabled?: boolean;
 	/** Expected to be static */
 	compact?: boolean;
 }
@@ -45,7 +46,14 @@ const PostActions = (props: PostActionsProps) => {
 	};
 
 	return (
-		<div class={`mt-3 flex items-center text-contrast-muted` + (!compact ? ` gap-2` : ` gap-3`)}>
+		<fieldset
+			disabled={props.disabled}
+			class={
+				`mt-3 flex items-center text-contrast-muted` +
+				(!compact ? ` gap-2` : ` gap-3`) +
+				(props.disabled ? ` opacity-50` : ``)
+			}
+		>
 			<div class={`min-w-0` + (!compact ? ` grow basis-0` : ``)}>
 				<button
 					onClick={() => {
@@ -56,9 +64,9 @@ const PostActions = (props: PostActionsProps) => {
 						const $post = post();
 						openModal(() => <ComposerDialogLazy params={{ reply: $post }} />);
 					}}
-					class={`group flex max-w-full grow basis-0 items-end gap-0.5 hover:text-accent`}
+					class={`group flex max-w-full grow basis-0 items-end gap-2.5 hover:text-accent`}
 				>
-					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-accent/md group-active:bg-accent/md-pressed">
+					<div class="-mx-2 -my-1.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-accent/md group-active:bg-accent/md-pressed">
 						<ReplyOutlinedIcon />
 					</div>
 
@@ -86,11 +94,11 @@ const PostActions = (props: PostActionsProps) => {
 						));
 					}}
 					class={
-						`group flex max-w-full grow basis-0 items-end gap-0.5` +
+						`group flex max-w-full grow basis-0 items-end gap-2.5` +
 						(isReposted() ? ` text-repost` : ` hover:text-repost`)
 					}
 				>
-					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-repost/md group-active:bg-repost/md-pressed">
+					<div class="-mx-2 -my-1.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-repost/md group-active:bg-repost/md-pressed">
 						<RepeatOutlinedIcon />
 					</div>
 
@@ -104,11 +112,11 @@ const PostActions = (props: PostActionsProps) => {
 				<button
 					onClick={toggleLike}
 					class={
-						`group flex max-w-full grow basis-0 items-end gap-0.5` +
+						`group flex max-w-full grow basis-0 items-end gap-2.5` +
 						(isLiked() ? ` text-like` : ` hover:text-like`)
 					}
 				>
-					<div class="-my-1.5 -ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-like/md group-active:bg-like/md-pressed">
+					<div class="-mx-2 -my-1.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base group-hover:bg-like/md group-active:bg-like/md-pressed">
 						{(() => {
 							const Icon = !isLiked() ? HeartOutlinedIcon : HeartSolidIcon;
 							return <Icon />;
@@ -126,7 +134,7 @@ const PostActions = (props: PostActionsProps) => {
 					<ShareOutlinedIcon />
 				</button>
 			</div>
-		</div>
+		</fieldset>
 	);
 };
 

@@ -4,6 +4,7 @@ import type { AppBskyActorDefs, At } from '@mary/bluesky-client/lexicons';
 import { EventEmitter } from '@mary/events';
 import type { QueryClient } from '@mary/solid-query';
 
+import { findAllProfilesInQueryData as findAllProfilesInBookmarkFeedQueryData } from '../queries/bookmark-feed';
 import { findAllProfilesInQueryData as findAllProfilesInPostThreadQueryData } from '../queries/post-thread';
 import { findAllProfilesInQueryData as findAllProfilesInProfileQueryData } from '../queries/profile';
 import { findAllProfilesInQueryData as findAllProfilesInTimelineQueryData } from '../queries/timeline';
@@ -72,4 +73,5 @@ export function* findProfilesInCache(queryClient: QueryClient, did: At.DID): Gen
 	yield* findAllProfilesInProfileQueryData(queryClient, did);
 	yield* findAllProfilesInTimelineQueryData(queryClient, did);
 	yield* findAllProfilesInPostThreadQueryData(queryClient, did);
+	yield* findAllProfilesInBookmarkFeedQueryData(queryClient, did);
 }
