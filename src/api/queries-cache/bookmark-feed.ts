@@ -10,7 +10,7 @@ export function* findAllPostsInQueryData(
 	includeQuote = false,
 ): Generator<AppBskyFeedDefs.PostView> {
 	const entries = queryClient.getQueriesData<InfiniteData<BookmarkFeedReturn>>({
-		queryKey: ['post-thread'],
+		queryKey: ['bookmarks-feed'],
 	});
 
 	for (const [_key, data] of entries) {
@@ -46,7 +46,7 @@ export function* findAllProfilesInQueryData(
 	did: At.DID,
 ): Generator<AppBskyActorDefs.ProfileViewBasic> {
 	const entries = queryClient.getQueriesData<InfiniteData<BookmarkFeedReturn>>({
-		queryKey: ['post-thread'],
+		queryKey: ['bookmarks-feed'],
 	});
 
 	for (const [_key, data] of entries) {
