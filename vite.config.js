@@ -8,6 +8,7 @@ export default defineConfig({
 		target: 'esnext',
 		modulePreload: false,
 		sourcemap: true,
+		assetsInlineLimit: 0,
 		minify: 'terser',
 		terserOptions: {
 			compress: {
