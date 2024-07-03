@@ -62,6 +62,7 @@ import ComposerReplyContext from './composer-reply-context';
 import ContentWarningMenu from './dialogs/content-warning-menu';
 import LanguageSelectDialogLazy from './dialogs/language-select-dialog-lazy';
 import ThreadgateMenu from './dialogs/threadgate-menu';
+import DraftListDialogLazy from './drafts/draft-list-dialog-lazy';
 import ExternalEmbed from './embeds/external-embed';
 import FeedEmbed from './embeds/feed-embed';
 import GifEmbed from './embeds/gif-embed';
@@ -239,6 +240,17 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 
 					{!pending() ? (
 						<Dialog.HeaderAccessory>
+							{!state.reply && !isCloseGuarded() && (
+								<Button
+									onClick={() => {
+										openModal(() => <DraftListDialogLazy />);
+									}}
+									variant="ghost"
+								>
+									Drafts
+								</Button>
+							)}
+
 							<Button disabled={!canSubmit()} onClick={handleSubmit} variant="primary">
 								Post
 							</Button>
@@ -768,15 +780,15 @@ const PostAction = (props: {
 
 					{props.showAddPost && (
 						<>
-					<div class="my-2 self-stretch border-l border-outline opacity-70"></div>
+							<div class="my-2 self-stretch border-l border-outline opacity-70"></div>
 
-					<IconButton
-						icon={AddOutlinedIcon}
-						title="Add post"
-						disabled={!canAddPost()}
-						onClick={props.onAddPost}
-						variant="accent"
-					/>
+							<IconButton
+								icon={AddOutlinedIcon}
+								title="Add post"
+								disabled={!canAddPost()}
+								onClick={props.onAddPost}
+								variant="accent"
+							/>
 						</>
 					)}
 				</div>
