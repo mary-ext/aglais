@@ -4,12 +4,13 @@ import type { AppBskyActorDefs, At } from '@mary/bluesky-client/lexicons';
 import { EventEmitter } from '@mary/events';
 import type { QueryClient } from '@mary/solid-query';
 
-import { findAllProfilesInQueryData as findAllProfilesInBookmarkFeedQueryData } from '../queries-cache/bookmark-feed';
-import { findAllProfilesInQueryData as findAllProfilesInPostThreadQueryData } from '../queries-cache/post-thread';
-import { findAllProfilesInQueryData as findAllProfilesInProfileQueryData } from '../queries-cache/profile';
-import { findAllProfilesInQueryData as findAllProfilesInTimelineQueryData } from '../queries-cache/timeline';
+import { findAllProfiles as findAllProfilesInBookmarkFeedQueryData } from '../queries-cache/bookmark-feed';
+import { findAllProfiles as findAllProfilesInPostThreadQueryData } from '../queries-cache/post-thread';
+import { findAllProfiles as findAllProfilesInProfileQueryData } from '../queries-cache/profile';
+import { findAllProfiles as findAllProfilesInTimelineQueryData } from '../queries-cache/timeline';
 import { EQUALS_DEQUAL } from '../utils/dequal';
 import type { AccessorMaybe } from '../utils/types';
+import { iterateQueryCache } from './utils';
 
 export interface ProfileShadow {
 	blockUri?: string;
@@ -69,9 +70,11 @@ export const updateProfileShadow = (queryClient: QueryClient, did: At.DID, value
 	batch(() => emitter.emit(did));
 };
 
-export function* findProfilesInCache(queryClient: QueryClient, did: At.DID): Generator<AllProfileView> {
-	yield* findAllProfilesInProfileQueryData(queryClient, did);
-	yield* findAllProfilesInTimelineQueryData(queryClient, did);
-	yield* findAllProfilesInPostThreadQueryData(queryClient, did);
-	yield* findAllProfilesInBookmarkFeedQueryData(queryClient, did);
+export function findProfilesInCache(queryClient: QueryClient, did: At.DID): Generator<AllProfileView> {
+	return iterateQueryCache<AllProfileView>(queryClient, [
+		findAllProfilesInProfileQueryData(did),
+		findAllProfilesInTimelineQueryData(did),
+		findAllProfilesInPostThreadQueryData(did),
+		findAllProfilesInBookmarkFeedQueryData(did),
+	]);
 }

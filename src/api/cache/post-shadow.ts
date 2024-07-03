@@ -4,11 +4,12 @@ import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
 import { EventEmitter } from '@mary/events';
 import type { QueryClient } from '@mary/solid-query';
 
-import { findAllPostsInQueryData as findAllPostsInBookmarkFeedQueryData } from '../queries-cache/bookmark-feed';
-import { findAllPostsInQueryData as findAllPostsInPostThreadQueryData } from '../queries-cache/post-thread';
-import { findAllPostsInQueryData as findAllPostsInTimelineQueryData } from '../queries-cache/timeline';
+import { findAllPosts as findAllPostsInBookmarkFeed } from '../queries-cache/bookmark-feed';
+import { findAllPosts as findAllPostsInPostThread } from '../queries-cache/post-thread';
+import { findAllPosts as findAllPostsInTimeline } from '../queries-cache/timeline';
 import { EQUALS_DEQUAL } from '../utils/dequal';
 import type { AccessorMaybe } from '../utils/types';
+import { iterateQueryCache } from './utils';
 
 export interface PostShadow {
 	deleted?: boolean;
@@ -99,12 +100,14 @@ export const updatePostShadow = (queryClient: QueryClient, uri: string, value: P
 	batch(() => emitter.emit(uri));
 };
 
-export function* findPostsInCache(
+export function findPostsInCache(
 	queryClient: QueryClient,
 	uri: string,
 	includeQuote = false,
 ): Generator<AppBskyFeedDefs.PostView> {
-	yield* findAllPostsInTimelineQueryData(queryClient, uri, includeQuote);
-	yield* findAllPostsInPostThreadQueryData(queryClient, uri, includeQuote);
-	yield* findAllPostsInBookmarkFeedQueryData(queryClient, uri, includeQuote);
+	return iterateQueryCache(queryClient, [
+		findAllPostsInTimeline(uri, includeQuote),
+		findAllPostsInPostThread(uri, includeQuote),
+		findAllPostsInBookmarkFeed(uri, includeQuote),
+	]);
 }

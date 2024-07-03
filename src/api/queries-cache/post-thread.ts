@@ -4,8 +4,8 @@ import type {
 	AppBskyFeedGetPostThread,
 	At,
 } from '@mary/bluesky-client/lexicons';
-import type { QueryClient } from '@mary/solid-query';
 
+import type { CacheMatcher } from '../cache/utils';
 import { embedViewRecordToPostView, getEmbeddedPost } from '../utils/post';
 
 function* traverseThread(
@@ -30,54 +30,39 @@ function* traverseThread(
 	}
 }
 
-export function* findAllPostsInQueryData(
-	queryClient: QueryClient,
-	uri: string,
-	includeQuote = false,
-): Generator<AppBskyFeedDefs.PostView> {
-	const entries = queryClient.getQueriesData<AppBskyFeedGetPostThread.Output['thread']>({
-		queryKey: ['post-thread'],
-	});
+export const findAllPosts = (uri: string, includeQuote = false): CacheMatcher<AppBskyFeedDefs.PostView> => {
+	return {
+		filter: {
+			queryKey: ['post-thread'],
+		},
+		*iterate(data: AppBskyFeedGetPostThread.Output['thread']) {
+			for (const thread of traverseThread(data)) {
+				const post = thread.post;
 
-	for (const [_key, data] of entries) {
-		if (data === undefined) {
-			continue;
-		}
+				if (post.uri === uri) {
+					yield post;
+				}
 
-		for (const thread of traverseThread(data)) {
-			const post = thread.post;
-
-			if (post.uri === uri) {
-				yield post;
-			}
-
-			if (includeQuote) {
-				const embeddedPost = getEmbeddedPost(post.embed);
-				if (embeddedPost && embeddedPost.uri === uri) {
-					yield embedViewRecordToPostView(embeddedPost);
+				if (includeQuote) {
+					const embeddedPost = getEmbeddedPost(post.embed);
+					if (embeddedPost && embeddedPost.uri === uri) {
+						yield embedViewRecordToPostView(embeddedPost);
+					}
 				}
 			}
-		}
-	}
-}
+		},
+	};
+};
 
-export function* findAllProfilesInQueryData(
-	queryClient: QueryClient,
-	did: At.DID,
-): Generator<AppBskyActorDefs.ProfileViewBasic> {
-	const entries = queryClient.getQueriesData<AppBskyFeedGetPostThread.Output['thread']>({
-		queryKey: ['post-thread'],
-	});
+export const findAllProfiles = (did: At.DID): CacheMatcher<AppBskyActorDefs.ProfileViewBasic> => {
+	return {
+		filter: {
+			queryKey: ['post-thread'],
+		},
+		*iterate(data: AppBskyFeedGetPostThread.Output['thread']) {
+			for (const thread of traverseThread(data)) {
+				const post = thread.post;
 
-	for (const [_key, data] of entries) {
-		if (data === undefined) {
-			continue;
-		}
-
-		for (const thread of traverseThread(data)) {
-			const post = thread.post;
-
-			{
 				if (post.author.did === did) {
 					yield post.author;
 				}
@@ -87,6 +72,6 @@ export function* findAllProfilesInQueryData(
 					yield embeddedPost.author;
 				}
 			}
-		}
-	}
-}
+		},
+	};
+};
