@@ -269,7 +269,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 					</p>
 				) : null}
 
-				<Dialog.Body unpadded class="min-h-[9.75rem] pb-6">
+				<Dialog.Body unpadded class="z-1 min-h-[9.75rem] pb-6">
 					<Keyed value={state.reply}>
 						{(reply) => {
 							if (!reply) {
