@@ -11,12 +11,13 @@ import {
 } from 'solid-js';
 import { createMutable, unwrap } from 'solid-js/store';
 
-import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs, AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
 import { useQueryClient, type CreateQueryResult } from '@mary/solid-query';
 
 import { GLOBAL_LABELS, getLocalizedLabel } from '~/api/moderation';
 import { useProfileQuery } from '~/api/queries/profile';
 import { formatQueryError } from '~/api/utils/error';
+import { parseAtUri } from '~/api/utils/strings';
 
 import { globalEvents } from '~/globals/events';
 import { primarySystemLanguage } from '~/globals/locales';
@@ -153,6 +154,26 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 		}),
 	);
 
+	const showAddPostButton = () => {
+		var reply = state.reply;
+		if (reply) {
+			var ref = (reply.record as AppBskyFeedPost.Record).reply?.root;
+
+			if (ref) {
+				var uri = parseAtUri(ref.uri);
+				if (uri.repo !== currentAccount!.did) {
+					return false;
+				}
+			} else {
+				if (reply.author.did !== currentAccount!.did) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	};
+
 	const addPost = () => {
 		const currentPosts = state.posts;
 
@@ -268,6 +289,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 					disabled={false}
 					post={state.posts[state.active]}
 					canAddPost={state.posts.length < MAX_POSTS}
+					showAddPost={showAddPostButton()}
 					onAddPost={addPost}
 				/>
 			</Dialog.Container>
@@ -586,6 +608,7 @@ const PostAction = (props: {
 	disabled: boolean;
 	post: PostState;
 	canAddPost: boolean;
+	showAddPost: boolean;
 	onAddPost: () => void;
 }) => {
 	const fieldset = useFieldset();
@@ -743,6 +766,8 @@ const PostAction = (props: {
 						variant="accent"
 					/>
 
+					{props.showAddPost && (
+						<>
 					<div class="my-2 self-stretch border-l border-outline opacity-70"></div>
 
 					<IconButton
@@ -752,6 +777,8 @@ const PostAction = (props: {
 						onClick={props.onAddPost}
 						variant="accent"
 					/>
+						</>
+					)}
 				</div>
 			</div>
 		</>
