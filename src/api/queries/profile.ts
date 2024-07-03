@@ -1,4 +1,4 @@
-import type { At } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs, At } from '@mary/bluesky-client/lexicons';
 import { createQuery, type QueryPersister } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
@@ -8,14 +8,14 @@ export const useProfileQuery = (did: () => At.DID, persister?: QueryPersister) =
 	const { rpc } = useAgent();
 	const { currentAccount } = useSession();
 
-	return createQuery(() => {
+	return createQuery((queryClient) => {
 		const $did = did();
 
 		return {
 			queryKey: ['profile', $did],
 			// enabled: $did !== undefined,
 			persister: persister as any,
-			async queryFn(ctx) {
+			async queryFn(ctx): Promise<AppBskyActorDefs.ProfileViewDetailed> {
 				const { data } = await rpc.get('app.bsky.actor.getProfile', {
 					signal: ctx.signal,
 					params: {
@@ -29,6 +29,13 @@ export const useProfileQuery = (did: () => At.DID, persister?: QueryPersister) =
 				}
 
 				return data;
+			},
+			placeholderData() {
+				if (!$did) {
+					return;
+				}
+
+				return queryClient.getQueryData(['profile-precache', $did]);
 			},
 		};
 	});
