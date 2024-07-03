@@ -24,7 +24,7 @@ const ThreadgateMenu = (props: ThreadgateMenuProps) => {
 	const value = createMemo(() => getThreadgateValue(props.value));
 
 	return (
-		<Menu.Container anchor={props.anchor} placement="top-start">
+		<Menu.Container anchor={props.anchor} placement="bottom-start">
 			<div class="px-4 py-3">
 				<p class="text-sm font-bold">Who can reply?</p>
 				<p class="text-de text-contrast-muted">Choose who can reply to this post</p>
