@@ -1,4 +1,4 @@
-import { createContext, useContext, type ParentProps } from 'solid-js';
+import { createContext, onCleanup, useContext, type ParentProps } from 'solid-js';
 
 import type { IDBPDatabase } from 'idb';
 
@@ -22,9 +22,13 @@ export const BookmarksProvider = (props: ParentProps) => {
 	let promise: Promise<IDBPDatabase<BookmarkDBSchema>> | undefined;
 	const context: BookmarkContext = {
 		open(): Promise<IDBPDatabase<BookmarkDBSchema>> {
+			if (promise !== undefined) {
+				return promise;
+			}
+
 			assert(currentAccount !== undefined, `Can't open database when not signed in`);
 
-			return (promise ??= (async (): Promise<IDBPDatabase<BookmarkDBSchema>> => {
+			return (promise = (async (): Promise<IDBPDatabase<BookmarkDBSchema>> => {
 				const { openDB } = await import('idb');
 
 				const db = await openDB<BookmarkDBSchema>(`aglais-bookmarks-${currentAccount.did}`, 1, {
@@ -50,6 +54,17 @@ export const BookmarksProvider = (props: ParentProps) => {
 			})());
 		},
 	};
+
+	onCleanup(() => {
+		if (!promise) {
+			return;
+		}
+
+		const held = promise;
+		promise = undefined;
+
+		held.then((db) => db.close());
+	});
 
 	return <Context.Provider value={context}>{props.children}</Context.Provider>;
 };
