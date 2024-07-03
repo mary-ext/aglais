@@ -81,10 +81,10 @@ const buttonClassNames = (
 			cn += ` opacity-50`;
 		}
 	} else if (variant === 'ghost') {
-		cn += ` text-contrast`;
+		cn += ` text-accent`;
 
 		if (!isDisabled()) {
-			cn += ` hover:bg-contrast-hinted/md active:bg-contrast-hinted/md-pressed`;
+			cn += ` hover:bg-accent/md active:bg-accent/md-pressed`;
 		} else {
 			cn += ` opacity-50`;
 		}
