@@ -24,6 +24,8 @@ export interface BookmarkDBSchema extends DBSchema {
 export interface TagItem {
 	id: number;
 	name: string;
+	color: string | undefined;
+	icon: string | undefined;
 	created_at: number;
 }
 
