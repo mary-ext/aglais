@@ -4,8 +4,6 @@ import type { BookmarkItem, HydratedBookmarkItem } from '~/lib/aglais-bookmarks/
 import { useAgent } from '~/lib/states/agent';
 import { useBookmarks } from '~/lib/states/bookmarks';
 
-import { chunked } from '../utils/utils';
-
 export interface BookmarkFeedReturn {
 	cursor: number | undefined;
 	items: HydratedBookmarkItem[];
@@ -17,7 +15,7 @@ export const createBookmarkFeedQuery = (tagId: () => number | undefined) => {
 
 	const listing = createInfiniteQuery(() => {
 		const $tagId = tagId();
-		const limit = 50;
+		const limit = 25;
 
 		return {
 			queryKey: ['bookmarks-feed', $tagId],
@@ -59,23 +57,14 @@ export const createBookmarkFeedQuery = (tagId: () => number | undefined) => {
 
 				// Retrieve live view
 				{
-					const postUris = raws.map((item) => item.view.uri);
-					const posts = (
-						await Promise.all(
-							chunked(postUris, 25).map(async (uriChunk) => {
-								const { data } = await rpc.get('app.bsky.feed.getPosts', {
-									signal: ctx.signal,
-									params: {
-										uris: uriChunk,
-									},
-								});
+					const { data } = await rpc.get('app.bsky.feed.getPosts', {
+						signal: ctx.signal,
+						params: {
+							uris: raws.map((item) => item.view.uri),
+						},
+					});
 
-								return data.posts;
-							}),
-						)
-					).flat();
-
-					const postMap = new Map(posts.map((view) => [view.uri, view]));
+					const postMap = new Map(data.posts.map((view) => [view.uri, view]));
 
 					for (const item of raws) {
 						const hydratedView = postMap.get(item.view.uri);
