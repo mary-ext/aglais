@@ -1,7 +1,8 @@
-import type { JSX } from 'solid-js';
+import { createMemo, type JSX } from 'solid-js';
 import TextareaAutosize from 'solid-textarea-autosize';
 
 import { createId } from '~/lib/hooks/id';
+import { formatLong } from '~/lib/intl/number';
 
 import { useFieldset } from './fieldset';
 
@@ -60,3 +61,13 @@ const TextareaInput = (props: TextareaInputProps) => {
 };
 
 export default TextareaInput;
+
+export const CharCounter = (props: { value: number; max: number }) => {
+	const isOver = createMemo(() => props.value > props.max);
+
+	return (
+		<span class={`text-de` + (!isOver() ? ` text-contrast-muted` : ` text-p-red-500`)}>
+			{formatLong(props.value)}/{formatLong(props.max)}
+		</span>
+	);
+};

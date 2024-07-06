@@ -6,12 +6,11 @@ import { PLAIN_WS_RE } from '~/api/richtext/parser/parse';
 import { useModalContext } from '~/globals/modals';
 
 import { autofocusNode, modelText } from '~/lib/input-refs';
-import { formatLong } from '~/lib/intl/number';
 
 import Button from '../../button';
 import * as Dialog from '../../dialog';
 import Divider from '../../divider';
-import TextareaInput from '../../textarea-input';
+import TextareaInput, { CharCounter } from '../../textarea-input';
 
 export interface ImageAltDialogProps {
 	image: Blob;
@@ -88,13 +87,3 @@ const ImageAltDialog = (props: ImageAltDialogProps) => {
 };
 
 export default ImageAltDialog;
-
-const CharCounter = (props: { value: number; max: number }) => {
-	const isOver = createMemo(() => props.value > props.max);
-
-	return (
-		<span class={`text-de` + (!isOver() ? ` text-contrast-muted` : ` text-p-red-500`)}>
-			{formatLong(props.value)}/{formatLong(props.max)}
-		</span>
-	);
-};
