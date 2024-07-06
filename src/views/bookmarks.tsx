@@ -5,8 +5,8 @@ import { createQuery } from '@mary/solid-query';
 import { formatCompact } from '~/lib/intl/number';
 import { useBookmarks } from '~/lib/states/bookmarks';
 
+import BookmarkFolderAvatar from '~/components/bookmarks/bookmark-folder-avatar';
 import IconButton from '~/components/icon-button';
-import BookmarkSolidIcon from '~/components/icons-central/bookmark-solid';
 import ChevronRightOutlinedIcon from '~/components/icons-central/chevron-right-outline';
 import FolderAddOutlinedIcon from '~/components/icons-central/folder-add-outline';
 import * as Page from '~/components/page';
@@ -14,6 +14,8 @@ import * as Page from '~/components/page';
 interface TagEntry {
 	id: number | string;
 	name: string;
+	color?: string;
+	icon?: string;
 	count: number;
 }
 
@@ -44,10 +46,12 @@ const BookmarksPage = () => {
 						name: 'All bookmarks',
 						count: counts[0],
 					},
-					...tags.map((tag, idx) => {
+					...tags.map((tag, idx): TagEntry => {
 						return {
 							id: tag.id,
 							name: tag.name,
+							color: tag.color,
+							icon: tag.icon,
 							count: counts[idx + 1],
 						};
 					}),
@@ -66,7 +70,7 @@ const BookmarksPage = () => {
 				<Page.Heading title="Bookmarks" />
 
 				<Page.HeaderAccessory>
-					<IconButton icon={FolderAddOutlinedIcon} title="Create folder" disabled />
+					<IconButton icon={FolderAddOutlinedIcon} title="Create folder" />
 				</Page.HeaderAccessory>
 			</Page.Header>
 
@@ -77,9 +81,7 @@ const BookmarksPage = () => {
 							href={/* @once */ `/bookmarks/${entry.id}`}
 							class="flex items-center gap-4 px-4 py-3 hover:bg-contrast/sm active:bg-contrast/sm-pressed"
 						>
-							<div class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-accent text-base text-accent-fg">
-								<BookmarkSolidIcon />
-							</div>
+							<BookmarkFolderAvatar color={/* @once */ entry.color} icon={/* @once */ entry.icon} />
 
 							<span class="min-w-0 grow overflow-hidden text-ellipsis whitespace-nowrap break-words text-sm font-bold">
 								{/* @once */ entry.name}
