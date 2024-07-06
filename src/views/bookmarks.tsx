@@ -81,7 +81,9 @@ const BookmarksPage = () => {
 								<BookmarkSolidIcon />
 							</div>
 
-							<span class="min-w-0 grow break-words text-sm font-bold">{/* @once */ entry.name}</span>
+							<span class="min-w-0 grow overflow-hidden text-ellipsis whitespace-nowrap break-words text-sm font-bold">
+								{/* @once */ entry.name}
+							</span>
 
 							<div class="flex shrink-0 items-center gap-3">
 								<span class="text-sm text-contrast-muted">{/* @once */ formatCompact(entry.count)}</span>
