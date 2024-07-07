@@ -8,16 +8,14 @@ import BrushSolidIcon from '../icons-central/brush-solid';
 import DirectionalPadSolidIcon from '../icons-central/directional-pad-solid';
 import GraduationCapSolidIcon from '../icons-central/graduation-cap-solid';
 
-export const BOOKMARK_ICONS: Record<string, Component<ComponentProps<'svg'>>> = {
+export const BOOKMARK_ICONS = {
 	art: BrushSolidIcon,
 	education: GraduationCapSolidIcon,
 	gaming: DirectionalPadSolidIcon,
 	music: AudioSolidIcon,
 	shopping: BasketSolidIcon,
 	sports: AmericanFootballSolidIcon,
-};
-
-export const BOOKMARK_COLORS: string[] = ['#ffd400', '#f91880', '#7856ff', '#ff7a00', '#00ba7c'];
+} satisfies Record<string, Component<ComponentProps<'svg'>>>;
 
 export interface BookmarkFolderAvatarProps {
 	icon?: string;
@@ -32,11 +30,8 @@ const BookmarkFolderAvatar = (props: BookmarkFolderAvatarProps) => {
 				const rgb = bgColor && hexStringToRgb(bgColor);
 
 				if (rgb) {
-					const whiteContrast = contrastRatioAPCA(rgb, [255, 255, 255]);
-					const blackContrast = contrastRatioAPCA(rgb, [0, 0, 0]);
-					const textColor = whiteContrast >= blackContrast ? '#fff' : '#000';
-
-					return { 'background-color': bgColor, color: textColor };
+					const fgColor = getForegroundColor(rgb);
+					return { 'background-color': bgColor, color: fgColor };
 				}
 			})()}
 			class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-accent text-base text-accent-fg"
@@ -46,6 +41,7 @@ const BookmarkFolderAvatar = (props: BookmarkFolderAvatarProps) => {
 				let Icon: Component<ComponentProps<'svg'>> = BookmarkSolidIcon;
 
 				if (kind !== undefined && kind in BOOKMARK_ICONS) {
+					// @ts-expect-error
 					Icon = BOOKMARK_ICONS[kind];
 				}
 
@@ -59,7 +55,7 @@ export default BookmarkFolderAvatar;
 
 type RgbArray = [red: number, green: number, blue: number];
 
-const hexStringToRgb = (str: string): RgbArray | null => {
+export const hexStringToRgb = (str: string): RgbArray | null => {
 	str = str.toLowerCase();
 
 	if (/^#[0-9a-f]{6}$/.test(str)) {
@@ -71,6 +67,14 @@ const hexStringToRgb = (str: string): RgbArray | null => {
 	}
 
 	return null;
+};
+
+export const getForegroundColor = (rgb: RgbArray) => {
+	const whiteContrast = contrastRatioAPCA(rgb, [255, 255, 255]);
+	const blackContrast = contrastRatioAPCA(rgb, [0, 0, 0]);
+	const textColor = whiteContrast >= blackContrast ? '#fff' : '#000';
+
+	return textColor;
 };
 
 // https://github.com/ChromeDevTools/devtools-frontend/blob/28b11d7de94f583ba15df697a0ebb05440c3451f/front_end/core/common/ColorUtils.ts#L103-L160

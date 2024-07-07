@@ -2,15 +2,19 @@ import { For, Match, Switch } from 'solid-js';
 
 import { createQuery } from '@mary/solid-query';
 
+import { openModal } from '~/globals/modals';
+
 import type { TagItem } from '~/lib/aglais-bookmarks/db';
 import { formatCompact } from '~/lib/intl/number';
 import { useBookmarks } from '~/lib/states/bookmarks';
 
-import BookmarkFolderAvatar from '~/components/bookmarks/bookmark-folder-avatar';
 import IconButton from '~/components/icon-button';
 import ChevronRightOutlinedIcon from '~/components/icons-central/chevron-right-outline';
 import FolderAddOutlinedIcon from '~/components/icons-central/folder-add-outline';
 import * as Page from '~/components/page';
+
+import BookmarkFolderAvatar from '~/components/bookmarks/bookmark-folder-avatar';
+import CreateFolderDialogLazy from '~/components/bookmarks/create-folder-dialog-lazy';
 
 interface HydratedTagItem extends TagItem {
 	count: number;
@@ -59,7 +63,14 @@ const BookmarksPage = () => {
 				<Page.Heading title="Bookmarks" />
 
 				<Page.HeaderAccessory>
-					<IconButton icon={FolderAddOutlinedIcon} title="Create folder" />
+					<IconButton
+						icon={FolderAddOutlinedIcon}
+						title="Create folder"
+						disabled={query.isLoading}
+						onClick={() => {
+							openModal(() => <CreateFolderDialogLazy />);
+						}}
+					/>
 				</Page.HeaderAccessory>
 			</Page.Header>
 
