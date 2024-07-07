@@ -77,6 +77,7 @@ export default {
 		},
 		colors: ({ colors }) => {
 			return {
+				current: 'currentColor',
 				transparent: `transparent`,
 				white: `#ffffff`,
 				black: `#000000`,
