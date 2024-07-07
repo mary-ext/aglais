@@ -71,8 +71,7 @@ export const hexStringToRgb = (str: string): RgbArray | null => {
 
 export const getForegroundColor = (rgb: RgbArray) => {
 	const whiteContrast = contrastRatioAPCA(rgb, [255, 255, 255]);
-	const blackContrast = contrastRatioAPCA(rgb, [0, 0, 0]);
-	const textColor = whiteContrast >= blackContrast ? '#fff' : '#000';
+	const textColor = whiteContrast >= 20_000 ? '#fff' : '#000';
 
 	return textColor;
 };
