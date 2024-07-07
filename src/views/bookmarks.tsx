@@ -1,12 +1,10 @@
 import { For, Match, Switch } from 'solid-js';
 
-import { createQuery } from '@mary/solid-query';
+import { createBookmarkMetaQuery } from '~/api/queries/bookmark';
 
 import { openModal } from '~/globals/modals';
 
-import type { TagItem } from '~/lib/aglais-bookmarks/db';
 import { formatCompact } from '~/lib/intl/number';
-import { useBookmarks } from '~/lib/states/bookmarks';
 
 import IconButton from '~/components/icon-button';
 import ChevronRightOutlinedIcon from '~/components/icons-central/chevron-right-outline';
@@ -16,42 +14,8 @@ import * as Page from '~/components/page';
 import BookmarkFolderAvatar from '~/components/bookmarks/bookmark-folder-avatar';
 import BookmarkFolderFormDialogLazy from '~/components/bookmarks/bookmark-folder-form-dialog-lazy';
 
-interface HydratedTagItem extends TagItem {
-	count: number;
-}
-
 const BookmarksPage = () => {
-	const bookmarks = useBookmarks();
-
-	const query = createQuery(() => {
-		return {
-			queryKey: ['bookmarks'],
-			staleTime: 30_000,
-			async queryFn() {
-				const db = await bookmarks.open();
-				const tx = db.transaction(['tags', 'bookmarks'], 'readonly');
-
-				const tags = await tx.objectStore('tags').getAll();
-				const bookmarksStore = tx.objectStore('bookmarks');
-
-				const [totalCount, ...counts] = await Promise.all([
-					bookmarksStore.count(),
-					...tags.map((tag) => {
-						return bookmarksStore.index('tags').count(tag.id);
-					}),
-				]);
-
-				const hydrated = tags.map((tag, idx): HydratedTagItem => {
-					return {
-						...tag,
-						count: counts[idx],
-					};
-				});
-
-				return { totalCount, tags: hydrated };
-			},
-		};
-	});
+	const query = createBookmarkMetaQuery();
 
 	return (
 		<>
