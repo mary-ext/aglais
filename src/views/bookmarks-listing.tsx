@@ -1,4 +1,6 @@
-import { createBookmarkFeedQuery } from '~/api/queries/bookmark-feed';
+import { createBookmarkFeedQuery, createBookmarkFolderMetaQuery } from '~/api/queries/bookmark-feed';
+
+import { useParams } from '~/lib/navigation/router';
 
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
@@ -7,7 +9,10 @@ import VirtualItem from '~/components/virtual-item';
 import BookmarkFeedItem from '~/components/bookmarks/bookmark-feed-item';
 
 const BookmarksPage = () => {
-	const listing = createBookmarkFeedQuery(() => 'all');
+	const { tagId } = useParams();
+
+	const meta = tagId !== 'all' ? createBookmarkFolderMetaQuery(() => tagId) : undefined;
+	const listing = createBookmarkFeedQuery(() => tagId);
 
 	return (
 		<>
@@ -16,7 +21,7 @@ const BookmarksPage = () => {
 					<Page.Back to="/bookmarks" />
 				</Page.HeaderAccessory>
 
-				<Page.Heading title="All bookmarks" />
+				<Page.Heading title={meta ? meta.data?.name : `All Bookmarks`} />
 			</Page.Header>
 
 			<PagedList

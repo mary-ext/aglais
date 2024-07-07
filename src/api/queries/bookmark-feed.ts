@@ -1,8 +1,32 @@
-import { createInfiniteQuery } from '@mary/solid-query';
+import { createInfiniteQuery, createQuery } from '@mary/solid-query';
 
 import type { BookmarkItem, HydratedBookmarkItem } from '~/lib/aglais-bookmarks/db';
 import { useAgent } from '~/lib/states/agent';
 import { useBookmarks } from '~/lib/states/bookmarks';
+
+export const createBookmarkFolderMetaQuery = (tagId: () => string) => {
+	const bookmarks = useBookmarks();
+
+	const query = createQuery(() => {
+		const $tagId = tagId();
+
+		return {
+			queryKey: ['bookmark-folder-meta', $tagId],
+			async queryFn() {
+				const db = await bookmarks.open();
+				const entry = db.get('tags', $tagId);
+
+				if (!entry) {
+					throw new Error(`Folder not found`);
+				}
+
+				return entry;
+			},
+		};
+	});
+
+	return query;
+};
 
 export interface BookmarkFeedReturn {
 	cursor: number | undefined;
@@ -36,12 +60,13 @@ export const createBookmarkFeedQuery = (tagId: () => string) => {
 
 						iterator = bookmarksStore.index('bookmarked_at').iterate(query, 'prev');
 					} else {
-						const query =
-							pageParam !== undefined
-								? IDBKeyRange.bound([$tagId, undefined], [$tagId, pageParam], false, true)
-								: IDBKeyRange.bound([$tagId, undefined], [$tagId, undefined]);
+						if (pageParam === undefined) {
+							iterator = bookmarksStore.index('tags').iterate($tagId, 'prev');
+						} else {
+							const query = IDBKeyRange.bound([$tagId, undefined], [$tagId, pageParam], false, true);
 
-						iterator = bookmarksStore.index('tags,bookmarked_at').iterate(query, 'prev');
+							iterator = bookmarksStore.index('tags,bookmarked_at').iterate(query, 'prev');
+						}
 					}
 
 					for await (const cursor of iterator) {
@@ -56,7 +81,7 @@ export const createBookmarkFeedQuery = (tagId: () => string) => {
 				const hydrated: HydratedBookmarkItem[] = [];
 
 				// Retrieve live view
-				{
+				if (raws.length) {
 					const { data } = await rpc.get('app.bsky.feed.getPosts', {
 						signal: ctx.signal,
 						params: {
