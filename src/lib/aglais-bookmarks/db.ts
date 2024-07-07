@@ -4,7 +4,7 @@ import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
 
 export interface BookmarkDBSchema extends DBSchema {
 	tags: {
-		key: number;
+		key: string;
 		value: TagItem;
 		indexes: {
 			created_at: number;
@@ -15,14 +15,14 @@ export interface BookmarkDBSchema extends DBSchema {
 		value: BookmarkItem;
 		indexes: {
 			bookmarked_at: number;
-			'tags,bookmarked_at': [tag: number, bookmarked_at: number];
-			tags: number;
+			'tags,bookmarked_at': [tag: string, bookmarked_at: number];
+			tags: string;
 		};
 	};
 }
 
 export interface TagItem {
-	id: number;
+	id: string;
 	name: string;
 	color: string | undefined;
 	icon: string | undefined;
@@ -32,7 +32,7 @@ export interface TagItem {
 export interface BookmarkItem {
 	view: AppBskyFeedDefs.PostView;
 	bookmarked_at: number;
-	tags: number[];
+	tags: string[];
 }
 
 export interface HydratedBookmarkItem {

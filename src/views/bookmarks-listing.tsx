@@ -7,7 +7,7 @@ import VirtualItem from '~/components/virtual-item';
 import BookmarkFeedItem from '~/components/bookmarks/bookmark-feed-item';
 
 const BookmarksPage = () => {
-	const listing = createBookmarkFeedQuery(() => undefined);
+	const listing = createBookmarkFeedQuery(() => 'all');
 
 	return (
 		<>

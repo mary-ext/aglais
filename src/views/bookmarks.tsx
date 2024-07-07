@@ -14,7 +14,7 @@ import FolderAddOutlinedIcon from '~/components/icons-central/folder-add-outline
 import * as Page from '~/components/page';
 
 import BookmarkFolderAvatar from '~/components/bookmarks/bookmark-folder-avatar';
-import CreateFolderDialogLazy from '~/components/bookmarks/create-folder-dialog-lazy';
+import BookmarkFolderFormDialogLazy from '~/components/bookmarks/bookmark-folder-form-dialog-lazy';
 
 interface HydratedTagItem extends TagItem {
 	count: number;
@@ -68,7 +68,7 @@ const BookmarksPage = () => {
 						title="Create folder"
 						disabled={query.isLoading}
 						onClick={() => {
-							openModal(() => <CreateFolderDialogLazy />);
+							openModal(() => <BookmarkFolderFormDialogLazy onSave={() => query.refetch()} />);
 						}}
 					/>
 				</Page.HeaderAccessory>

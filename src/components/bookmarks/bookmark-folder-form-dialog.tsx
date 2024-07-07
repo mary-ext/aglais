@@ -1,5 +1,13 @@
 import { createMemo, createSignal } from 'solid-js';
 
+import * as TID from '@mary/atproto-tid';
+
+import { useModalContext } from '~/globals/modals';
+
+import type { TagItem } from '~/lib/aglais-bookmarks/db';
+import { modelText } from '~/lib/input-refs';
+import { useBookmarks } from '~/lib/states/bookmarks';
+
 import Button from '../button';
 import * as Dialog from '../dialog';
 import BookmarkSolidIcon from '../icons-central/bookmark-solid';
@@ -27,7 +35,12 @@ const rawIconOptions: { icon: keyof typeof BOOKMARK_ICONS | undefined; label: st
 	{ icon: 'sports', label: `Sports` },
 ];
 
-const CreateFolderDialog = () => {
+export interface BookmarkFolderFormDialogProps {
+	folder?: TagItem;
+	onSave?: () => void;
+}
+
+const BookmarkFolderFormDialog = ({ folder, onSave }: BookmarkFolderFormDialogProps) => {
 	const colorOptions = rawColorOptions.map(({ label, color }) => {
 		return {
 			value: color,
@@ -45,30 +58,75 @@ const CreateFolderDialog = () => {
 		};
 	});
 
+	const bookmarks = useBookmarks();
+	const { close } = useModalContext();
+
+	const [name, setName] = createSignal<string>('');
 	const [color, setColor] = createSignal<string>();
 	const [icon, setIcon] = createSignal<string>();
+
+	if (folder) {
+		setName(folder.name);
+		setColor(folder.color);
+		setIcon(folder.icon);
+	}
+
+	const isValid = createMemo(() => {
+		const $name = name();
+		const nameLen = $name.length;
+
+		return nameLen > 0 && nameLen <= 25;
+	});
+
+	const handleSubmit = async (ev: Event) => {
+		ev.preventDefault();
+
+		const db = await bookmarks.open();
+
+		const entry: TagItem = {
+			id: folder ? folder.id : TID.now(),
+			name: name(),
+			color: color(),
+			icon: icon(),
+			created_at: folder ? folder.created_at : Date.now(),
+		};
+
+		if (!folder) {
+			await db.add('tags', entry);
+		} else {
+			await db.put('tags', entry);
+		}
+
+		onSave?.();
+		close();
+	};
 
 	return (
 		<>
 			<Dialog.Backdrop />
 			<Dialog.Container fullHeight>
-				<form class="contents">
+				<form onSubmit={handleSubmit} class="contents">
 					<Dialog.Header>
 						<Dialog.HeaderAccessory>
 							<Dialog.Close />
 						</Dialog.HeaderAccessory>
 
-						<Dialog.Heading title="Create a bookmark folder" />
+						<Dialog.Heading title={!folder ? `Create a bookmark folder` : `Edit bookmark folder`} />
 
 						<Dialog.HeaderAccessory>
-							<Button type="submit" disabled variant="primary">
+							<Button type="submit" disabled={!isValid()} variant="primary">
 								Save
 							</Button>
 						</Dialog.HeaderAccessory>
 					</Dialog.Header>
 
 					<Dialog.Body class="flex flex-col gap-6">
-						<TextInput label="Folder name" />
+						<TextInput
+							ref={(node) => {
+								modelText(node, name, setName);
+							}}
+							label="Folder name"
+						/>
 
 						<div class="flex flex-col gap-3">
 							<span class="text-sm font-medium text-contrast">Folder color</span>
@@ -124,4 +182,4 @@ const CreateFolderDialog = () => {
 	);
 };
 
-export default CreateFolderDialog;
+export default BookmarkFolderFormDialog;

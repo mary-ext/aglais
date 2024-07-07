@@ -9,7 +9,7 @@ export interface BookmarkFeedReturn {
 	items: HydratedBookmarkItem[];
 }
 
-export const createBookmarkFeedQuery = (tagId: () => number | undefined) => {
+export const createBookmarkFeedQuery = (tagId: () => string) => {
 	const bookmarks = useBookmarks();
 	const { rpc } = useAgent();
 
@@ -31,7 +31,7 @@ export const createBookmarkFeedQuery = (tagId: () => number | undefined) => {
 					const bookmarksStore = tx.objectStore('bookmarks');
 
 					let iterator: AsyncIterable<{ readonly value: BookmarkItem }>;
-					if ($tagId === undefined) {
+					if ($tagId === 'all') {
 						const query = pageParam !== undefined ? IDBKeyRange.upperBound(pageParam, true) : undefined;
 
 						iterator = bookmarksStore.index('bookmarked_at').iterate(query, 'prev');
