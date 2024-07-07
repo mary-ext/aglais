@@ -1,7 +1,9 @@
+import { createBookmarkFeedQuery } from '~/api/queries/bookmark-feed';
+
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
+import VirtualItem from '~/components/virtual-item';
 
-import { createBookmarkFeedQuery } from '~/api/queries/bookmark-feed';
 import BookmarkFeedItem from '~/components/bookmarks/bookmark-feed-item';
 
 const BookmarksPage = () => {
@@ -21,7 +23,11 @@ const BookmarksPage = () => {
 				data={listing.data?.pages.map((page) => page.items)}
 				error={listing.error}
 				render={(item) => {
-					return <BookmarkFeedItem item={item} />;
+					return (
+						<VirtualItem estimateHeight={99}>
+							<BookmarkFeedItem item={item} />
+						</VirtualItem>
+					);
 				}}
 				hasNextPage={listing.hasNextPage}
 				isFetchingNextPage={listing.isFetchingNextPage || listing.isLoading}
