@@ -13,7 +13,6 @@ export const createBookmarkMetaQuery = () => {
 	const query = createQuery(() => {
 		return {
 			queryKey: ['bookmark-meta'],
-			staleTime: 30_000,
 			async queryFn() {
 				const db = await bookmarks.open();
 				const tx = db.transaction(['tags', 'bookmarks'], 'readonly');
