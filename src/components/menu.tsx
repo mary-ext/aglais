@@ -108,6 +108,7 @@ export { MenuContainer as Container };
 export interface MenuItemProps {
 	icon?: Component;
 	label: string;
+	variant?: 'default' | 'danger';
 	disabled?: boolean;
 	checked?: boolean;
 	onClick?: () => void;
@@ -138,13 +139,25 @@ const MenuItem = (props: MenuItemProps) => {
 		</button>
 	);
 };
-const menuItemClasses = ({ disabled }: MenuItemProps) => {
-	let cn = `flex gap-3 px-4 py-3 text-left text-contrast`;
+const menuItemClasses = ({ variant = 'default', disabled }: MenuItemProps) => {
+	let cn = `flex gap-3 px-4 py-3 text-left `;
 
-	if (!disabled) {
-		cn += ` hover:bg-contrast/sm active:bg-contrast/sm-pressed`;
-	} else {
+	if (disabled) {
 		cn += ` opacity-50`;
+	}
+
+	if (variant === 'default') {
+		cn += ` text-contrast`;
+
+		if (!disabled) {
+			cn += ` hover:bg-contrast/sm active:bg-contrast/sm-pressed`;
+		}
+	} else if (variant === 'danger') {
+		cn += ` text-p-red-600`;
+
+		if (!disabled) {
+			cn += ` hover:bg-contrast/sm active:bg-contrast/sm-pressed`;
+		}
 	}
 
 	return cn;
