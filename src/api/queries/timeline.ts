@@ -256,13 +256,7 @@ export const useTimelineQuery = (_params: () => TimelineParams) => {
 			if (params.type === 'following' || (params.type === 'profile' && params.actor === currentAccount.did)) {
 				onCleanup(
 					globalEvents.on('postpublished', () => {
-						// @todo: not sure about refetching the entire timeline yet, let's
-						// just limit it to if there's one page.
-						if (timeline.data?.pages.length === 1) {
-							timeline.refetch();
-						} else {
-							latest.refetch();
-						}
+						latest.refetch();
 					}),
 				);
 			}
