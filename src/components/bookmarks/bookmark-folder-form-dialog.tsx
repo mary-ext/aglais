@@ -29,6 +29,7 @@ const rawIconOptions: { icon: keyof typeof BOOKMARK_ICONS | undefined; label: st
 	{ icon: undefined, label: `Default` },
 	{ icon: 'art', label: `Art` },
 	{ icon: 'education', label: `Education` },
+	{ icon: 'fire', label: `Fire` },
 	{ icon: 'gaming', label: `Gaming` },
 	{ icon: 'music', label: `Music` },
 	{ icon: 'shopping', label: `Shopping` },

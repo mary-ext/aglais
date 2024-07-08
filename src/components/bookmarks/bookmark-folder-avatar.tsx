@@ -6,11 +6,13 @@ import BasketSolidIcon from '../icons-central/basket-solid';
 import BookmarkSolidIcon from '../icons-central/bookmark-solid';
 import BrushSolidIcon from '../icons-central/brush-solid';
 import DirectionalPadSolidIcon from '../icons-central/directional-pad-solid';
+import FireSolidIcon from '../icons-central/fire-solid';
 import GraduationCapSolidIcon from '../icons-central/graduation-cap-solid';
 
 export const BOOKMARK_ICONS = {
 	art: BrushSolidIcon,
 	education: GraduationCapSolidIcon,
+	fire: FireSolidIcon,
 	gaming: DirectionalPadSolidIcon,
 	music: AudioSolidIcon,
 	shopping: BasketSolidIcon,
