@@ -1,4 +1,4 @@
-import type { Component } from 'solid-js';
+import type { Component, JSX } from 'solid-js';
 import { useFieldset } from './fieldset';
 
 export interface IconButtonProps {
@@ -6,7 +6,7 @@ export interface IconButtonProps {
 	title: string;
 	// href?: string;
 	disabled?: boolean;
-	onClick?: (ev: MouseEvent) => void;
+	onClick?: JSX.EventHandler<HTMLButtonElement, MouseEvent>;
 
 	variant?: 'ghost' | 'outline' | 'accent' | 'black';
 	size?: 'md' | 'sm';
