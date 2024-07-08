@@ -112,7 +112,7 @@ const BookmarkFolderFormDialog = ({ folder, onSave }: BookmarkFolderFormDialogPr
 							<Dialog.Close />
 						</Dialog.HeaderAccessory>
 
-						<Dialog.Heading title={!folder ? `Create a bookmark folder` : `Edit bookmark folder`} />
+						<Dialog.Heading title={!folder ? `Create a Bookmark Folder` : `Edit Bookmark Folder`} />
 
 						<Dialog.HeaderAccessory>
 							<Button type="submit" disabled={!isValid()} variant="primary">
