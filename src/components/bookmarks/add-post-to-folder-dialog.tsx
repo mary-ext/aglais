@@ -46,9 +46,13 @@ const AddPostToFolderDialog = ({ post, onSave }: AddPostToFolderDialogProps) => 
 		const db = await bookmarks.open();
 		const existing = entry.data;
 
+		// Prune folders that we don't recognize
+		const availableFolderIds = new Set(meta.data!.tags.map((tag) => tag.id));
+		const intersect = new Set(folderIds()).intersection(availableFolderIds);
+
 		await db.put('bookmarks', {
 			view: post,
-			tags: folderIds(),
+			tags: Array.from(intersect),
 			bookmarked_at: existing ? existing.bookmarked_at : Date.now(),
 		});
 
