@@ -55,6 +55,7 @@ const AddPostToFolderDialog = ({ post, onSave }: AddPostToFolderDialogProps) => 
 		onSave?.();
 		close();
 
+		queryClient.invalidateQueries({ queryKey: ['bookmark-meta'], exact: true });
 		queryClient.invalidateQueries({ queryKey: ['bookmark-entry', post.uri], exact: true });
 	};
 
