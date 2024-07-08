@@ -69,3 +69,19 @@ export const requestIdle = typeof requestIdleCallback === 'function' ? requestId
 export const uniq = <T>(items: T[]): T[] => {
 	return Array.from(new Set(items));
 };
+
+export const isSetEqual = <T>(a: Set<T>, b: Set<T>): boolean => {
+	if (a.size !== b.size) {
+		return false;
+	}
+
+	if (a.size !== 0) {
+		for (const val of a) {
+			if (!b.has(val)) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+};
