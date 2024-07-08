@@ -1,6 +1,7 @@
 import { createMemo, createSignal } from 'solid-js';
 
 import * as TID from '@mary/atproto-tid';
+import { useQueryClient } from '@mary/solid-query';
 
 import { useModalContext } from '~/globals/modals';
 
@@ -59,8 +60,10 @@ const BookmarkFolderFormDialog = ({ folder, onSave }: BookmarkFolderFormDialogPr
 		};
 	});
 
-	const bookmarks = useBookmarks();
 	const { close } = useModalContext();
+
+	const bookmarks = useBookmarks();
+	const queryClient = useQueryClient();
 
 	const [name, setName] = createSignal<string>('');
 	const [color, setColor] = createSignal<string>();
@@ -100,6 +103,8 @@ const BookmarkFolderFormDialog = ({ folder, onSave }: BookmarkFolderFormDialogPr
 
 		onSave?.();
 		close();
+
+		queryClient.invalidateQueries({ queryKey: ['bookmark-meta'], exact: true });
 	};
 
 	return (
