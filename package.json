@@ -14,7 +14,7 @@
 		"@mary/atproto-cid": "npm:@jsr/mary__atproto-cid@^0.1.4",
 		"@mary/atproto-tid": "npm:@jsr/mary__atproto-tid@^0.1.1",
 		"@mary/base32": "npm:@jsr/mary__base32@^0.1.0",
-		"@mary/bluesky-client": "npm:@jsr/mary__bluesky-client@^0.5.24",
+		"@mary/bluesky-client": "npm:@jsr/mary__bluesky-client@^0.5.25",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
 		"@mary/exif-rm": "npm:@jsr/mary__exif-rm@^0.2.1",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
@@ -35,10 +35,10 @@
 		"tailwindcss": "^3.4.4",
 		"terser": "^5.31.1",
 		"typescript": "^5.5.3",
-		"vite": "^5.3.2",
+		"vite": "^5.3.3",
 		"vite-plugin-pwa": "0.17.4",
 		"vite-plugin-solid": "^2.10.2",
-		"wrangler": "^3.62.0"
+		"wrangler": "^3.63.1"
 	},
 	"pnpm": {
 		"patchedDependencies": {
@@ -47,7 +47,7 @@
 			"solid-js@1.8.18": "patches/solid-js@1.8.18.patch",
 			"solid-textarea-autosize@0.0.5": "patches/solid-textarea-autosize@0.0.5.patch",
 			"vite-plugin-pwa@0.17.4": "patches/vite-plugin-pwa@0.17.4.patch",
-			"vite@5.3.2": "patches/vite@5.3.2.patch",
+			"vite@5.3.3": "patches/vite@5.3.3.patch",
 			"workbox-precaching@7.1.0": "patches/workbox-precaching@7.1.0.patch"
 		}
 	}
