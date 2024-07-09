@@ -38,6 +38,7 @@ export function keyArray<T, U, K>(
 
 	const signalOptions: SignalOptions<T> = { equals };
 
+	const hasIndex = mapFn.length > 1;
 	const prev = new Map<K | typeof FALLBACK, Save>();
 	onCleanup(() => dispose(prev.values()));
 
@@ -94,7 +95,10 @@ export function keyArray<T, U, K>(
 
 					// @ts-expect-error
 					lookup.v(typeof item === 'function' ? () => item : item);
-					lookup.i?.(i);
+
+					if (hasIndex) {
+						lookup.i!(i);
+					}
 				} else {
 					addNewItem(result, item, i, key);
 				}
@@ -114,7 +118,7 @@ export function keyArray<T, U, K>(
 			const [getItem, setItem] = createSignal(item, signalOptions);
 			const save = { v: setItem, d: dispose } as Save;
 
-			if (mapFn.length > 1) {
+			if (hasIndex) {
 				const [index, setIndex] = createSignal(i);
 				save.i = setIndex;
 				save.r = mapFn(getItem, index);
