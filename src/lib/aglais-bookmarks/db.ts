@@ -15,7 +15,6 @@ export interface BookmarkDBSchema extends DBSchema {
 		value: BookmarkItem;
 		indexes: {
 			bookmarked_at: number;
-			'tags,bookmarked_at': [tag: string, bookmarked_at: number];
 			tags: string;
 		};
 	};

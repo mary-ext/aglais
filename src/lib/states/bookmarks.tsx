@@ -40,12 +40,7 @@ export const BookmarksProvider = (props: ParentProps) => {
 							tagsStore.createIndex('created_at', 'created_at');
 
 							bookmarksStore.createIndex('bookmarked_at', 'bookmarked_at');
-							bookmarksStore.createIndex('tags', 'tags', {
-								multiEntry: true,
-							});
-							bookmarksStore.createIndex('tags,bookmarked_at', ['tags', 'bookmarked_at'], {
-								multiEntry: true,
-							});
+							bookmarksStore.createIndex('tags', 'tags', { multiEntry: true });
 						}
 					},
 				});

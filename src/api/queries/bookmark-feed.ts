@@ -1,6 +1,7 @@
 import { createInfiniteQuery, createQuery } from '@mary/solid-query';
 
 import type { BookmarkItem, HydratedBookmarkItem } from '~/lib/aglais-bookmarks/db';
+import { filter, map, take, toArray } from '~/lib/async-iterators';
 import { useAgent } from '~/lib/states/agent';
 import { useBookmarks } from '~/lib/states/bookmarks';
 
@@ -47,38 +48,28 @@ export const createBookmarkFeedQuery = (tagId: () => string) => {
 				const pageParam = ctx.pageParam;
 
 				const db = await bookmarks.open();
-				const raws: BookmarkItem[] = [];
+
+				let raws: BookmarkItem[];
+				let last: BookmarkItem | undefined;
 
 				// Retrieve bookmarks from store
 				{
 					const tx = db.transaction('bookmarks', 'readonly');
 					const bookmarksStore = tx.objectStore('bookmarks');
 
-					let iterator: AsyncIterable<{ readonly value: BookmarkItem }>;
-					if ($tagId === 'all') {
-						const query = pageParam !== undefined ? IDBKeyRange.upperBound(pageParam, true) : undefined;
+					const query = pageParam !== undefined ? IDBKeyRange.upperBound(pageParam, true) : undefined;
+					const curs = bookmarksStore.index('bookmarked_at').iterate(query, 'prev');
 
-						iterator = bookmarksStore.index('bookmarked_at').iterate(query, 'prev');
-					} else {
-						if (pageParam === undefined) {
-							iterator = bookmarksStore.index('tags').iterate($tagId, 'prev');
-						} else {
-							const query = IDBKeyRange.bound([$tagId, undefined], [$tagId, pageParam], false, true);
+					let iterator = map(curs, (c) => (last = c.value));
 
-							iterator = bookmarksStore.index('tags,bookmarked_at').iterate(query, 'prev');
-						}
+					if ($tagId !== 'all') {
+						iterator = filter(iterator, (entry) => entry.tags.includes($tagId));
 					}
 
-					for await (const cursor of iterator) {
-						raws.push(cursor.value);
-
-						if (raws.length >= limit) {
-							break;
-						}
-					}
+					raws = await toArray(take(iterator, limit));
 				}
 
-				const hydrated: HydratedBookmarkItem[] = [];
+				let hydrated: HydratedBookmarkItem[] = [];
 
 				// Retrieve live view
 				if (raws.length) {
@@ -90,22 +81,19 @@ export const createBookmarkFeedQuery = (tagId: () => string) => {
 					});
 
 					const postMap = new Map(data.posts.map((view) => [view.uri, view]));
-
-					for (const item of raws) {
+					hydrated = raws.map((item) => {
 						const hydratedView = postMap.get(item.view.uri);
 
-						hydrated.push({
+						return {
 							post: hydratedView ?? item.view,
 							stale: !hydratedView,
 							bookmarkedAt: item.bookmarked_at,
-						});
-					}
+						};
+					});
 				}
 
-				const last = hydrated.length >= limit ? hydrated[hydrated.length - 1] : undefined;
-
 				return {
-					cursor: last ? last.bookmarkedAt : undefined,
+					cursor: raws.length >= limit ? last?.bookmarked_at : undefined,
 					items: hydrated,
 				};
 			},
