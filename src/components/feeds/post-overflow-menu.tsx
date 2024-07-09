@@ -1,6 +1,7 @@
 import { createMemo } from 'solid-js';
 
 import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
+import { useQueryClient } from '@mary/solid-query';
 
 import { createBookmarkEntryQuery } from '~/api/queries/bookmark-entry';
 
@@ -23,7 +24,9 @@ export interface PostOverflowMenuProps {
 
 const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 	const { close } = useModalContext();
+
 	const bookmarks = useBookmarks();
+	const queryClient = useQueryClient();
 
 	const post = props.post;
 
@@ -42,14 +45,16 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 					const db = await bookmarks.open();
 
 					if (isBookmarked()) {
-						db.delete('bookmarks', post.uri);
+						await db.delete('bookmarks', post.uri);
 					} else {
-						db.add('bookmarks', {
+						await db.add('bookmarks', {
 							view: post,
 							bookmarked_at: Date.now(),
 							tags: [],
 						});
 					}
+
+					queryClient.invalidateQueries({ queryKey: ['bookmark-entry', post.uri], exact: true });
 				}}
 			/>
 
