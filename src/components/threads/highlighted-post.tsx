@@ -28,6 +28,7 @@ import RichText from '../rich-text';
 
 import ComposerDialogLazy from '../composer/composer-dialog-lazy';
 import Embed from '../embeds/embed';
+import PostOverflowMenu from '../feeds/post-overflow-menu';
 import RepostMenu from '../feeds/repost-menu';
 import ContentHider from '../moderation/content-hider';
 
@@ -101,7 +102,14 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 				</a>
 
 				<div class="flex shrink-0 items-center gap-4">
-					<button class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed">
+					<button
+						onClick={(ev) => {
+							const anchor = ev.currentTarget;
+							const $post = post();
+							openModal(() => <PostOverflowMenu anchor={anchor} post={$post} />);
+						}}
+						class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed"
+					>
 						<MoreHorizOutlinedIcon />
 					</button>
 				</div>
