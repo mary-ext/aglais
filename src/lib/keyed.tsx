@@ -11,8 +11,6 @@ import {
 	type SignalOptions,
 } from 'solid-js';
 
-const FALLBACK = Symbol('fallback');
-
 function dispose(list: Iterable<{ d: VoidFunction }>) {
 	for (const o of list) o.d();
 }
@@ -36,10 +34,12 @@ export function keyArray<T, U, K>(
 		d: () => void;
 	};
 
+	let fallbackDispose: (() => void) | undefined;
+
 	const signalOptions: SignalOptions<T> = { equals };
 
 	const hasIndex = mapFn.length > 1;
-	const prev = new Map<K | typeof FALLBACK, Save>();
+	const prev = new Map<K, Save>();
 	onCleanup(() => dispose(prev.values()));
 
 	return () => {
@@ -47,35 +47,40 @@ export function keyArray<T, U, K>(
 		(list as any)[$TRACK]; // top level store tracking
 
 		return untrack(() => {
-			// fast path for empty arrays
-			if (!list.length) {
-				dispose(prev.values());
-				prev.clear();
+			const len = list.length;
 
-				if (!fallback) {
-					return [];
+			// Removal fast-path
+			if (len === 0) {
+				if (prev.size !== 0) {
+					dispose(prev.values());
+					prev.clear();
 				}
 
-				const fb = createRoot((dispose) => {
-					prev.set(FALLBACK, { d: dispose } as Save);
-					return fallback!();
-				});
+				if (fallback !== undefined) {
+					const fb = createRoot((dispose) => {
+						fallbackDispose = dispose;
+						return fallback!();
+					});
 
-				return [fb];
+					return [fb];
+				}
+
+				return [];
 			}
 
-			const result = new Array<U>(list.length);
+			const result = new Array<U>(len);
 
-			// fast path for new create or after fallback
-			const fb = prev.get(FALLBACK);
-			if (!prev.size || fb) {
-				fb?.d();
-				prev.delete(FALLBACK);
+			// Insertion fast-path
+			if (prev.size === 0) {
+				if (fallback !== undefined) {
+					fallbackDispose!();
+					fallbackDispose = undefined;
+				}
 
-				for (let i = 0; i < list.length; i++) {
-					const item = list[i]!;
-					const key = keyFn(item, i);
-					addNewItem(result, item, i, key);
+				for (let idx = 0; idx < len; idx++) {
+					const item = list[idx]!;
+					const key = keyFn(item, idx);
+					addNewItem(result, item, idx, key);
 				}
 
 				return result;
@@ -83,24 +88,24 @@ export function keyArray<T, U, K>(
 
 			const prevKeys = new Set(prev.keys());
 
-			for (let i = 0; i < list.length; i++) {
-				const item = list[i]!;
-				const key = keyFn(item, i);
+			for (let idx = 0; idx < len; idx++) {
+				const item = list[idx]!;
+				const key = keyFn(item, idx);
 				const lookup = prev.get(key);
 
 				prevKeys.delete(key);
 
 				if (lookup) {
-					result[i] = lookup.r;
+					result[idx] = lookup.r;
 
 					// @ts-expect-error
 					lookup.v(typeof item === 'function' ? () => item : item);
 
 					if (hasIndex) {
-						lookup.i!(i);
+						lookup.i!(idx);
 					}
 				} else {
-					addNewItem(result, item, i, key);
+					addNewItem(result, item, idx, key);
 				}
 			}
 
