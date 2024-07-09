@@ -34,6 +34,11 @@ export const createBookmarkMetaQuery = () => {
 					};
 				});
 
+				{
+					const collator = new Intl.Collator('en-US');
+					hydrated.sort((a, b) => collator.compare(a.name, b.name));
+				}
+
 				return { totalCount, tags: hydrated };
 			},
 		};
