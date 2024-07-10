@@ -415,7 +415,7 @@ const SignInDialog = () => {
 						</Dialog.Body>
 
 						<Dialog.Actions>
-							<Button type="submit" variant="primary" size="md">
+							<Button type="submit" variant="primary" size="lg">
 								{(() => {
 									const $view = view();
 									if ($view.type === 'handle_initial' || $view.type === 'otp') {

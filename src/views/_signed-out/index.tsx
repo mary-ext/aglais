@@ -16,11 +16,11 @@ const SignedOutPage = () => {
 						openModal(() => <SignInDialogLazy />);
 					}}
 					variant="primary"
-					size="md"
+					size="lg"
 				>
 					Sign in
 				</Button>
-				<Button size="md" disabled>
+				<Button size="lg" disabled>
 					Create account
 				</Button>
 			</div>

@@ -11,7 +11,7 @@ export interface ButtonProps {
 
 	children: JSX.Element;
 
-	size?: 'sm' | 'md';
+	size?: 'sm' | 'md' | 'lg';
 	variant?: 'outline' | 'primary' | 'danger' | 'ghost';
 	class?: string;
 }
@@ -61,6 +61,8 @@ const buttonClassNames = (
 	if (size === 'sm') {
 		cn += ` h-8 px-4`;
 	} else if (size === 'md') {
+		cn += ` h-9 px-4`;
+	} else if (size === 'lg') {
 		cn += ` h-10 px-4`;
 	}
 

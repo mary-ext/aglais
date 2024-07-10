@@ -94,7 +94,7 @@ const PromptAction = (props: PromptActionProps) => {
 	const handleClick = onClick ? () => (close(), onClick()) : close;
 
 	return (
-		<Button variant={props.variant} size="md" onClick={handleClick}>
+		<Button variant={props.variant} size="lg" onClick={handleClick}>
 			{props.children}
 		</Button>
 	);
