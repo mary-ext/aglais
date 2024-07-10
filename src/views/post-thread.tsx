@@ -22,6 +22,7 @@ import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
 
 import CircularProgress from '~/components/circular-progress';
+import CircularProgressView from '~/components/circular-progress-view';
 import Divider from '~/components/divider';
 import ErrorView from '~/components/error-view';
 import Keyed from '~/components/keyed';
@@ -129,9 +130,7 @@ const PostThreadPage = () => {
 				</Match>
 
 				<Match when>
-					<div class="grid h-13 shrink-0 place-items-center">
-						<CircularProgress />
-					</div>
+					<CircularProgressView />
 				</Match>
 			</Switch>
 		</>
