@@ -1,6 +1,7 @@
 import { For, Match, Switch, createEffect, createMemo } from 'solid-js';
 
 import type { AppBskyFeedDefs, AppBskyFeedPost, At, Brand } from '@mary/bluesky-client/lexicons';
+import { XRPCError } from '@mary/bluesky-client/xrpc';
 import { useQueryClient } from '@mary/solid-query';
 
 import {
@@ -12,6 +13,8 @@ import { usePostThreadQuery } from '~/api/queries/post-thread';
 import { dequal } from '~/api/utils/dequal';
 import { isDid } from '~/api/utils/strings';
 
+import { history } from '~/globals/navigation';
+
 import { createEventListener } from '~/lib/hooks/event-listener';
 import { Key } from '~/lib/keyed';
 import { useParams } from '~/lib/navigation/router';
@@ -20,6 +23,7 @@ import { useSession } from '~/lib/states/session';
 
 import CircularProgress from '~/components/circular-progress';
 import Divider from '~/components/divider';
+import ErrorView from '~/components/error-view';
 import Keyed from '~/components/keyed';
 import * as Page from '~/components/page';
 import VirtualItem from '~/components/virtual-item';
@@ -28,7 +32,6 @@ import HighlightedPost from '~/components/threads/highlighted-post';
 import OverflowThreadItem from '~/components/threads/overflow-thread-item';
 import PostThreadItem from '~/components/threads/post-thread-item';
 import ThreadLines from '~/components/threads/thread-lines';
-import { history } from '~/globals/navigation';
 
 const PostThreadPage = () => {
 	const { didOrHandle, rkey } = useParams();
@@ -47,6 +50,24 @@ const PostThreadPage = () => {
 			</Page.Header>
 
 			<Switch>
+				<Match when={query.error} keyed>
+					{(error) => {
+						if (error instanceof XRPCError) {
+							if (error.kind === 'NotFound') {
+								return (
+									<div class="px-4 py-3">
+										<div class="rounded-md border border-outline p-3">
+											<p class="text-sm text-contrast-muted">This post is unavailable</p>
+										</div>
+									</div>
+								);
+							}
+						}
+
+						return <ErrorView error={error} onRetry={() => query.refetch()} />;
+					}}
+				</Match>
+
 				<Match when={query.data}>
 					{(accessor) => (
 						<Switch>
