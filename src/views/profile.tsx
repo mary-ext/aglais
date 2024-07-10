@@ -45,11 +45,17 @@ const ProfilePage = () => {
 							<>
 								<Page.Heading
 									title={data().displayName}
-									subtitle={`${formatCompact(data().postsCount ?? 0)} posts`}
+									subtitle={
+										!profile.isPlaceholderData ? `${formatCompact(data().postsCount ?? 0)} posts` : ``
+									}
 								/>
 
 								<Page.HeaderAccessory>
-									<IconButton icon={MoreHorizOutlinedIcon} title="Actions" />
+									<IconButton
+										icon={MoreHorizOutlinedIcon}
+										title="Actions"
+										disabled={profile.isPlaceholderData}
+									/>
 								</Page.HeaderAccessory>
 							</>
 						)}
@@ -97,7 +103,7 @@ const ProfileView = (props: { data: ProfileData; isPlaceholderData?: boolean }) 
 	return (
 		<>
 			<ProfileViewHeader {...props} />
-			<Divider />
+			{!props.isPlaceholderData ? <Divider /> : <CircularProgressView />}
 		</>
 	);
 };
@@ -191,9 +197,11 @@ const ProfileViewHeader = (props: { data: ProfileData; isPlaceholderData?: boole
 					</p>
 				</div>
 
-				<div class="whitespace-pre-wrap break-words text-sm empty:hidden">{data().description?.trim()}</div>
+				<div hidden={props.isPlaceholderData} class="whitespace-pre-wrap break-words text-sm empty:hidden">
+					{data().description?.trim()}
+				</div>
 
-				<div class="flex min-w-0 flex-wrap gap-5 text-sm">
+				<div hidden={props.isPlaceholderData} class="flex min-w-0 flex-wrap gap-5 text-sm">
 					<a href={`/${data().did}/following`} onClick={close} class="hover:underline">
 						<span class="font-bold">{formatCompact(data().followsCount ?? 0)}</span>
 						<span class="text-contrast-muted"> Following</span>
