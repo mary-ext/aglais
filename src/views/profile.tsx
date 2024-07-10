@@ -45,9 +45,11 @@ const ProfilePage = () => {
 							<>
 								<Page.Heading
 									title={data().displayName}
-									subtitle={
-										!profile.isPlaceholderData ? `${formatCompact(data().postsCount ?? 0)} posts` : ``
-									}
+									subtitle={(() => {
+										if (!profile.isPlaceholderData) {
+											return `${formatCompact(data().postsCount ?? 0)} posts`;
+										}
+									})()}
 								/>
 
 								<Page.HeaderAccessory>
