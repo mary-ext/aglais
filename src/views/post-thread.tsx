@@ -1,6 +1,7 @@
 import { For, Match, Switch, createEffect, createMemo } from 'solid-js';
 
-import type { AppBskyFeedDefs, AppBskyFeedPost, Brand } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedPost, At, Brand } from '@mary/bluesky-client/lexicons';
+import { useQueryClient } from '@mary/solid-query';
 
 import {
 	createThreadData,
@@ -9,6 +10,7 @@ import {
 } from '~/api/models/post-thread';
 import { usePostThreadQuery } from '~/api/queries/post-thread';
 import { dequal } from '~/api/utils/dequal';
+import { isDid } from '~/api/utils/strings';
 
 import { createEventListener } from '~/lib/hooks/event-listener';
 import { Key } from '~/lib/keyed';
@@ -26,10 +28,12 @@ import HighlightedPost from '~/components/threads/highlighted-post';
 import OverflowThreadItem from '~/components/threads/overflow-thread-item';
 import PostThreadItem from '~/components/threads/post-thread-item';
 import ThreadLines from '~/components/threads/thread-lines';
+import { history } from '~/globals/navigation';
 
 const PostThreadPage = () => {
 	const { didOrHandle, rkey } = useParams();
 
+	const queryClient = useQueryClient();
 	const query = usePostThreadQuery(() => `at://${didOrHandle}/app.bsky.feed.post/${rkey}`);
 
 	return (
@@ -46,6 +50,38 @@ const PostThreadPage = () => {
 				<Match when={query.data}>
 					{(accessor) => (
 						<Switch>
+							<Match
+								when={(() => {
+									// Redirect to DID URIs when possible
+									if (!isDid(didOrHandle)) {
+										const data = accessor();
+										const type = data.$type;
+
+										let did: At.DID | undefined;
+
+										if (type === 'app.bsky.feed.defs#threadViewPost') {
+											did = data.post.author.did;
+										} else if (type === 'app.bsky.feed.defs#blockedPost') {
+											did = data.author.did;
+										}
+
+										if (did !== undefined) {
+											return { data, did };
+										}
+									}
+								})()}
+								keyed
+							>
+								{({ data, did }) => {
+									const atUri = `at://${did}/app.bsky.feed.post/${rkey}`;
+									const redirectUri = `/${did}/${rkey}`;
+
+									queryClient.setQueryData(['post-thread', atUri], data);
+									history.navigate(redirectUri, { replace: true });
+									return null;
+								}}
+							</Match>
+
 							<Match
 								when={(() => {
 									const data = accessor();
