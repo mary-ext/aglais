@@ -61,18 +61,15 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 				<img
 					src={thumb}
 					title={alt}
-					class={
-						`h-full w-full object-cover text-[0px]` +
-						(interactive ? ` cursor-pointer` : ``) +
-						// prettier-ignore
-						(props.blur ? ` scale-110` + (!borderless ? ` blur` : ` blur-lg`) : ``)
-					}
+					class={`h-full w-full object-cover text-[0px]` + (interactive ? ` cursor-pointer` : ``)}
 				/>
+
+				<div hidden={!props.blur} class="absolute inset-0 backdrop-blur"></div>
 
 				{/* @once */ mode === RenderMode.STANDALONE_RATIO && <div class="h-screen w-screen"></div>}
 
 				{interactive && alt && (
-					<div class="absolute bottom-0 left-0 p-2">
+					<div class="absolute bottom-0 left-0 z-1 p-2">
 						<AltButton title="Show image description" />
 					</div>
 				)}
