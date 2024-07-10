@@ -94,11 +94,8 @@ const PostThreadPage = () => {
 								keyed
 							>
 								{({ data, did }) => {
-									const atUri = `at://${did}/app.bsky.feed.post/${rkey}`;
-									const redirectUri = `/${did}/${rkey}`;
-
-									queryClient.setQueryData(['post-thread', atUri], data);
-									history.navigate(redirectUri, { replace: true });
+									queryClient.setQueryData(['post-thread', `at://${did}/app.bsky.feed.post/${rkey}`], data);
+									history.navigate(`/${did}/${rkey}`, { replace: true });
 									return null;
 								}}
 							</Match>
