@@ -5,6 +5,7 @@ import { getQueryErrorInfo } from '~/api/utils/query';
 import { ifIntersect } from '~/lib/element-refs';
 
 import CircularProgress from './circular-progress';
+import EndOfListView from './end-of-list-view';
 import ErrorView from './error-view';
 
 export interface PagedListProps<T> {
@@ -104,9 +105,7 @@ const PagedList = <T,>(props: PagedListProps<T>) => {
 				</Match>
 
 				<Match when={props.data}>
-					<div class="grid h-13 shrink-0 place-items-center">
-						<p class="text-sm text-contrast-muted">End of list</p>
-					</div>
+					<EndOfListView />
 				</Match>
 			</Switch>
 		</div>

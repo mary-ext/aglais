@@ -9,6 +9,7 @@ import { mapDefined } from '~/lib/misc';
 
 import Button from '../../button';
 import * as Dialog from '../../dialog';
+import EndOfListView from '../../end-of-list-view';
 import CheckOutlinedIcon from '../../icons-central/check-outline';
 import SearchInput from '../../search-input';
 
@@ -127,9 +128,7 @@ const LanguageSelectDialog = (props: LanguageSelectDialogProps) => {
 						</For>
 					</div>
 
-					<div class="grid h-13 shrink-0 place-items-center">
-						<p class="text-sm text-contrast-muted">End of list</p>
-					</div>
+					<EndOfListView />
 				</Dialog.Body>
 			</Dialog.Container>
 		</>

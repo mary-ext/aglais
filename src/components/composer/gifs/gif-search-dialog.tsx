@@ -10,6 +10,7 @@ import { createDebouncedValue } from '~/lib/hooks/debounced-value';
 
 import CircularProgress from '../../circular-progress';
 import * as Dialog from '../../dialog';
+import EndOfListView from '../../end-of-list-view';
 import ErrorView from '../../error-view';
 import SearchInput from '../../search-input';
 import VirtualItem from '../../virtual-item';
@@ -96,9 +97,7 @@ const GifSearchDialog = (props: GifSearchDialogProps) => {
 						</Match>
 
 						<Match when>
-							<div class="grid h-13 shrink-0 place-items-center">
-								<p class="text-sm text-contrast-muted">End of list</p>
-							</div>
+							<EndOfListView />
 						</Match>
 					</Switch>
 				</Dialog.Body>
