@@ -30,15 +30,15 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 
 	const post = props.post;
 
-	const entry = createBookmarkEntryQuery(() => post.uri);
-	const isBookmarked = createMemo(() => entry.data !== undefined);
+	const query = createBookmarkEntryQuery(() => post.uri);
+	const isBookmarked = createMemo(() => query.data.item !== undefined);
 
 	return (
 		<Menu.Container anchor={props.anchor} placement="bottom-end" cover>
 			<Menu.Item
 				icon={!isBookmarked() ? BookmarkOutlinedIcon : BookmarkCheckOutlinedIcon}
 				label={!isBookmarked() ? `Bookmark` : `Remove bookmark`}
-				disabled={entry.isLoading}
+				disabled={query.isLoading}
 				onClick={async () => {
 					close();
 

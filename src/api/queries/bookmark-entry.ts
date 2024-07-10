@@ -12,13 +12,12 @@ export const createBookmarkEntryQuery = (postUri: () => string) => {
 			queryKey: ['bookmark-entry', $postUri],
 			async queryFn() {
 				const db = await bookmarks.open();
-				const entry = db.get('bookmarks', $postUri);
+				const item = await db.get('bookmarks', $postUri);
 
-				if (!entry) {
-					throw new Error(`Bookmark not found`);
-				}
-
-				return entry;
+				return { item };
+			},
+			initialData: {
+				item: undefined,
 			},
 		};
 	});

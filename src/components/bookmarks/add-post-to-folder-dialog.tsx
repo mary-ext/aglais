@@ -35,7 +35,7 @@ const AddPostToFolderDialog = ({ post, onSave }: AddPostToFolderDialogProps) => 
 	const entry = createBookmarkEntryQuery(() => post.uri);
 
 	const prevFolderIds = createMemo(() => {
-		const $entry = entry.data;
+		const $entry = entry.data.item;
 		return $entry ? $entry.tags : [];
 	});
 
@@ -44,7 +44,7 @@ const AddPostToFolderDialog = ({ post, onSave }: AddPostToFolderDialogProps) => 
 
 	const handleSave = async () => {
 		const db = await bookmarks.open();
-		const existing = entry.data;
+		const existing = entry.data.item;
 
 		// Prune folders that we don't recognize
 		const availableFolderIds = new Set(meta.data!.tags.map((tag) => tag.id));
