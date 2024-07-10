@@ -18,6 +18,10 @@
 	.a-dialog-desktop {
 		max-height: min(100dvh - 88px, 652px);
 	}
+
+	[hidden] {
+		display: none !important;
+	}
 }
 
 @layer base {
