@@ -1,12 +1,14 @@
 import { createMemo } from 'solid-js';
 
 import type { AppBskyFeedPost, At } from '@mary/bluesky-client/lexicons';
+import { useQueryClient } from '@mary/solid-query';
 
 import { usePostShadow } from '~/api/cache/post-shadow';
 import { useProfileShadow } from '~/api/cache/profile-shadow';
 import type { UiTimelineItem } from '~/api/models/timeline';
 import { ContextContentList, getModerationUI } from '~/api/moderation';
 import { moderatePost } from '~/api/moderation/entities/post';
+import { precacheProfile } from '~/api/queries-cache/profile-precache';
 import { parseAtUri } from '~/api/utils/strings';
 
 import { history } from '~/globals/navigation';
@@ -31,6 +33,7 @@ export interface PostFeedItemProps {
 }
 
 const PostFeedItem = ({ item, timelineDid }: PostFeedItemProps) => {
+	const queryClient = useQueryClient();
 	const moderationOptions = useModerationOptions();
 
 	const { post, reason, next, prev } = item;
@@ -84,6 +87,7 @@ const PostFeedItem = ({ item, timelineDid }: PostFeedItemProps) => {
 						src={/* @once */ author.avatar}
 						href={authorHref}
 						moderation={moderation()}
+						onClick={() => precacheProfile(queryClient, author)}
 					/>
 
 					{next && <div class="mt-1 grow border-l-2 border-outline-md" />}

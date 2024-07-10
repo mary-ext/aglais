@@ -1,4 +1,7 @@
 import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
+import { useQueryClient } from '@mary/solid-query';
+
+import { precacheProfile } from '~/api/queries-cache/profile-precache';
 
 import { openModal } from '~/globals/modals';
 
@@ -17,6 +20,8 @@ export interface PostMetaProps {
 }
 
 const PostMeta = ({ post, authorHref, href, compact, gutterBottom }: PostMetaProps) => {
+	const queryClient = useQueryClient();
+
 	const author = post.author;
 
 	const displayName = author.displayName;
@@ -30,6 +35,7 @@ const PostMeta = ({ post, authorHref, href, compact, gutterBottom }: PostMetaPro
 			<div class="flex items-center overflow-hidden text-sm">
 				<a
 					href={authorHref}
+					onClick={() => precacheProfile(queryClient, author)}
 					class="flex max-w-full gap-1 overflow-hidden text-ellipsis whitespace-nowrap text-left"
 				>
 					{displayName && (
