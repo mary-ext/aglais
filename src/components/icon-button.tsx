@@ -37,10 +37,10 @@ const iconButtonClasses = (
 	isDisabled: () => boolean,
 	{ variant = 'ghost', size = 'md', class: className }: IconButtonProps,
 ) => {
-	var cn = `grid place-items-center rounded-full`;
+	var cn = `grid place-items-center`;
 
 	if (variant === 'ghost') {
-		cn += ` text-contrast`;
+		cn += ` rounded-full text-contrast`;
 
 		if (!isDisabled()) {
 			cn += ` hover:bg-contrast-hinted/md active:bg-contrast-hinted/md-pressed`;
@@ -48,7 +48,7 @@ const iconButtonClasses = (
 			cn += ` opacity-50`;
 		}
 	} else if (variant === 'outline') {
-		cn += ` border border-outline-lg text-contrast`;
+		cn += ` rounded border border-outline text-contrast`;
 
 		if (!isDisabled()) {
 			cn += ` hover:bg-contrast-hinted/md active:bg-contrast-hinted/md-pressed`;
@@ -56,7 +56,7 @@ const iconButtonClasses = (
 			cn += ` opacity-50`;
 		}
 	} else if (variant === 'accent') {
-		cn += ` text-accent`;
+		cn += ` rounded-full text-accent`;
 
 		if (!isDisabled()) {
 			cn += ` hover:bg-accent/md active:bg-accent/md-pressed`;
@@ -64,7 +64,7 @@ const iconButtonClasses = (
 			cn += ` opacity-50`;
 		}
 	} else if (variant === 'black') {
-		cn += ` bg-p-neutral-950/75 text-white`;
+		cn += ` rounded-full bg-p-neutral-950/75 text-white`;
 
 		if (!isDisabled()) {
 			cn += ` hover:bg-p-neutral-800/75 active:bg-p-neutral-700/75`;
