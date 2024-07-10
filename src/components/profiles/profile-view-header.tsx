@@ -73,14 +73,14 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 					<div class="flex items-center gap-3">
 						<Switch>
 							<Match when={data().did === currentAccount?.did}>
-								<Button variant="outline" size="md">
+								<Button variant="outline" size="md" disabled>
 									Edit profile
 								</Button>
 							</Match>
 
 							<Match when>
-								<IconButton icon={MailOutlinedIcon} title="Message this user" variant="outline" />
-								<Button variant="primary" size="md">
+								<IconButton icon={MailOutlinedIcon} title="Message this user" disabled variant="outline" />
+								<Button variant="primary" size="md" disabled>
 									Follow
 								</Button>
 							</Match>
