@@ -48,7 +48,7 @@ const iconButtonClasses = (
 			cn += ` opacity-50`;
 		}
 	} else if (variant === 'outline') {
-		cn += ` rounded border border-outline text-contrast`;
+		cn += ` rounded border border-outline-lg text-contrast`;
 
 		if (!isDisabled()) {
 			cn += ` hover:bg-contrast-hinted/md active:bg-contrast-hinted/md-pressed`;
