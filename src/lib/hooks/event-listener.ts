@@ -9,7 +9,7 @@ type InferEventType<TTarget> = TTarget extends {
 	// we can ignore the second one as it's usually just a fallback that allows bare `string` here
 	// we use `infer P2` over `any` as we really don't care about this type value
 	// and we don't want to accidentally fail a type assignability check, remember that `any` isn't assignable to `never`
-	addEventListener(type: infer P2, ...args: any): void;
+	addEventListener(type: infer _P2, ...args: any): void;
 }
 	? P & string
 	: never;

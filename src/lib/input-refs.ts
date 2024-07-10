@@ -42,7 +42,7 @@ export const modelText = (node: TextInput, getter: () => string, setter: (next: 
 		}
 	});
 
-	node.addEventListener('input', (ev) => {
+	node.addEventListener('input', (_ev) => {
 		setter((current = node.value));
 	});
 };
