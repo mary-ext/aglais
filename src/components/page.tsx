@@ -39,6 +39,10 @@ const PageHeading = (props: PageHeadingProps) => {
 			<p class="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold leading-5">
 				{props.title}
 			</p>
+
+			<p class="overflow-hidden text-ellipsis whitespace-nowrap text-xs text-contrast-muted empty:hidden">
+				{props.subtitle}
+			</p>
 		</div>
 	);
 };
