@@ -15,7 +15,7 @@ import type { AppBskyActorDefs, AppBskyFeedPost } from '@mary/bluesky-client/lex
 import { useQueryClient, type CreateQueryResult } from '@mary/solid-query';
 
 import { GLOBAL_LABELS, getLocalizedLabel } from '~/api/moderation';
-import { useProfileQuery } from '~/api/queries/profile';
+import { createProfileQuery } from '~/api/queries/profile';
 import { formatQueryError } from '~/api/utils/error';
 import { parseAtUri } from '~/api/utils/strings';
 
@@ -119,7 +119,7 @@ const resolveDefaultLanguage = (lang: 'none' | 'system' | (string & {})) => {
 const ComposerDialog = (props: ComposerDialogProps) => {
 	const { close } = useModalContext();
 	const { currentAccount } = useSession();
-	const profile = useProfileQuery(() => currentAccount!.did);
+	const profile = createProfileQuery(() => currentAccount!.did);
 
 	const queryClient = useQueryClient();
 	const agent = useAgent();

@@ -1,6 +1,6 @@
 import { For, Match, Switch, createMemo } from 'solid-js';
 
-import { useProfileQuery } from '~/api/queries/profile';
+import { createProfileQuery } from '~/api/queries/profile';
 
 import { openModal, useModalContext } from '~/globals/modals';
 
@@ -55,7 +55,7 @@ const AuthenticatedHeader = () => {
 	const { close } = useModalContext();
 
 	const { currentAccount, getAccounts, resumeSession } = useSession();
-	const query = useProfileQuery(() => currentAccount!.did);
+	const query = createProfileQuery(() => currentAccount!.did);
 
 	const otherAccounts = createMemo(() => {
 		return getAccounts()
@@ -88,7 +88,7 @@ const AuthenticatedHeader = () => {
 									<div class="flex gap-2">
 										<For each={otherAccounts()}>
 											{(account) => {
-												const profile = useProfileQuery(() => account.did);
+												const profile = createProfileQuery(() => account.did);
 												const handleClick = () => {
 													resumeSession(account);
 													close();

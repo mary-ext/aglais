@@ -1,25 +1,24 @@
-import type { AppBskyActorDefs, At } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 import { createQuery, type QueryPersister } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
-export const useProfileQuery = (did: () => At.DID, persister?: QueryPersister) => {
+export const createProfileQuery = (didOrHandle: () => string, persister?: QueryPersister) => {
 	const { rpc } = useAgent();
 	const { currentAccount } = useSession();
 
 	return createQuery((queryClient) => {
-		const $did = did();
+		const $didOrHandle = didOrHandle();
 
 		return {
-			queryKey: ['profile', $did],
-			// enabled: $did !== undefined,
+			queryKey: ['profile', $didOrHandle],
 			persister: persister as any,
 			async queryFn(ctx): Promise<AppBskyActorDefs.ProfileViewDetailed> {
 				const { data } = await rpc.get('app.bsky.actor.getProfile', {
 					signal: ctx.signal,
 					params: {
-						actor: $did!,
+						actor: $didOrHandle!,
 					},
 				});
 
@@ -31,11 +30,7 @@ export const useProfileQuery = (did: () => At.DID, persister?: QueryPersister) =
 				return data;
 			},
 			placeholderData() {
-				if (!$did) {
-					return;
-				}
-
-				return queryClient.getQueryData(['profile-precache', $did]);
+				return queryClient.getQueryData(['profile-precache', $didOrHandle]);
 			},
 		};
 	});

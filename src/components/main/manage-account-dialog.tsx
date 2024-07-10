@@ -1,6 +1,6 @@
 import { For } from 'solid-js';
 
-import { useProfileQuery } from '~/api/queries/profile';
+import { createProfileQuery } from '~/api/queries/profile';
 
 import { closeAllModals, openModal } from '~/globals/modals';
 
@@ -67,7 +67,7 @@ export default ManageAccountDialog;
 
 const CurrentAccountItem = () => {
 	const { currentAccount } = useSession();
-	const profile = useProfileQuery(() => currentAccount!.did);
+	const profile = createProfileQuery(() => currentAccount!.did);
 
 	return (
 		<div class="flex gap-4 px-4 py-3">
@@ -90,7 +90,7 @@ const CurrentAccountItem = () => {
 };
 
 const AccountItem = ({ account, onClick }: { account: AccountData; onClick?: () => void }) => {
-	const profile = useProfileQuery(() => account.did);
+	const profile = createProfileQuery(() => account.did);
 
 	return (
 		<button

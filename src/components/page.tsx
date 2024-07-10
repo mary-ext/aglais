@@ -1,6 +1,6 @@
 import type { ParentProps } from 'solid-js';
 
-import { useProfileQuery } from '~/api/queries/profile';
+import { createProfileQuery } from '~/api/queries/profile';
 
 import { openModal } from '~/globals/modals';
 import { history, logger } from '~/globals/navigation';
@@ -64,7 +64,7 @@ const PageMainMenu = ({}: PageMainMenuProps) => {
 			title="Open main menu"
 			icon={() => {
 				if (currentAccount) {
-					const profile = useProfileQuery(() => currentAccount.did, persister);
+					const profile = createProfileQuery(() => currentAccount.did, persister);
 					return <Avatar type="user" src={profile.data?.avatar} size="sm" />;
 				}
 
