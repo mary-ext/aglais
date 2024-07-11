@@ -53,7 +53,12 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 			}
 		>
 			<div class="mx-3 mt-3 flex min-w-0 text-sm text-contrast-muted">
-				<Avatar type="user" src={/* @once */ author.avatar} size="xs" class="mr-2" />
+				<Avatar
+					type={/* @once */ author.associated?.labeler ? 'labeler' : 'user'}
+					src={/* @once */ author.avatar}
+					size="xs"
+					class="mr-2"
+				/>
 
 				<span class="flex max-w-full gap-1 overflow-hidden text-ellipsis whitespace-nowrap text-left">
 					<bdi class="overflow-hidden text-ellipsis">

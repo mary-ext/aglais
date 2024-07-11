@@ -87,7 +87,11 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 				<div class="relative flex shrink-0 flex-col items-center pt-3">
 					{!treeView && prev && <div class="absolute top-0 h-2 border-l-2 border-outline-md"></div>}
 
-					<Avatar type="user" src={author().avatar} size={!treeView ? 'md' : 'xs'} />
+					<Avatar
+						type={/* @once */ author().associated?.labeler ? 'labeler' : 'user'}
+						src={author().avatar}
+						size={!treeView ? 'md' : 'xs'}
+					/>
 
 					{next && (
 						<div class={`grow border-l-2 border-outline-md` + (!treeView ? ` mt-1` : ` mt-0.5`)}></div>
