@@ -37,13 +37,14 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 		<div class="flex flex-col">
 			<Show when={data().banner} fallback={<div class="aspect-banner bg-outline-md"></div>}>
 				{(uri) => (
-					<button class="group relative aspect-banner bg-background">
+					<button class="group relative aspect-banner overflow-hidden bg-background">
 						<img
 							src={uri()}
-							class="h-full w-full object-cover group-hover:opacity-75 group-active:opacity-75"
+							class={
+								`h-full w-full object-cover group-hover:opacity-75 group-active:opacity-75` +
+								(shouldBlurMedia() ? ` scale-125 blur` : ``)
+							}
 						/>
-
-						<div hidden={!shouldBlurMedia()} class="absolute inset-0 backdrop-blur"></div>
 					</button>
 				)}
 			</Show>
@@ -62,10 +63,11 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 							<button class="group relative -mt-11 h-20 w-20 shrink-0 overflow-hidden rounded-full bg-background outline-2 outline-background outline focus-visible:outline-accent">
 								<img
 									src={uri()}
-									class="h-full w-full object-cover group-hover:opacity-75 group-active:opacity-75"
+									class={
+										`h-full w-full object-cover group-hover:opacity-75 group-active:opacity-75` +
+										(shouldBlurMedia() ? ` scale-125 blur` : ``)
+									}
 								/>
-
-								<div hidden={!shouldBlurMedia()} class="absolute inset-0 backdrop-blur"></div>
 							</button>
 						)}
 					</Show>
