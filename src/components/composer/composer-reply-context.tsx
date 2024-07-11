@@ -15,11 +15,13 @@ import TimeAgo from '../time-ago';
 export interface ComposerReplyContextProps {
 	/** Expected to be static */
 	post: AppBskyFeedDefs.PostView;
+	pending?: boolean;
 }
 
-const ComposerReplyContext = ({ post }: ComposerReplyContextProps) => {
+const ComposerReplyContext = (props: ComposerReplyContextProps) => {
 	const moderationOptions = useModerationOptions();
 
+	const post = props.post;
 	const author = post.author;
 	const record = post.record as AppBskyFeedPost.Record;
 
@@ -39,12 +41,13 @@ const ComposerReplyContext = ({ post }: ComposerReplyContextProps) => {
 					type={/* @once */ author.associated?.labeler ? 'labeler' : 'user'}
 					src={/* @once */ author.avatar}
 					moderation={moderation()}
+					class={props.pending ? `opacity-50` : ``}
 				/>
 
 				<div class="mt-1 grow border-l-2 border-outline-md" />
 			</div>
 
-			<div class="min-w-0 grow pb-3">
+			<div class={`min-w-0 grow pb-3` + (props.pending ? ` opacity-50` : ``)}>
 				<div class="mb-0.5 flex items-center justify-between gap-4 text-contrast-muted">
 					<div class="flex items-center overflow-hidden text-sm">
 						<span class="flex max-w-full gap-1 overflow-hidden text-ellipsis whitespace-nowrap text-left">

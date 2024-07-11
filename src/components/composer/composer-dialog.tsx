@@ -278,7 +278,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 								return;
 							}
 
-							return <ComposerReplyContext post={reply} />;
+							return <ComposerReplyContext post={reply} pending={pending()} />;
 						}}
 					</Keyed>
 
