@@ -51,24 +51,28 @@ const PostFeedItem = ({ item, timelineDid }: PostFeedItemProps) => {
 
 	const moderation = createMemo(() => moderatePost(post, authorShadow(), moderationOptions()));
 
+	const handleClick = (ev: MouseEvent | KeyboardEvent) => {
+		if (!isElementClicked(ev)) {
+			return;
+		}
+
+		ev.preventDefault();
+
+		if (isElementAltClicked(ev)) {
+			window.open(href, '_blank');
+		} else {
+			history.navigate(href);
+		}
+	};
+
 	return (
 		<div
 			tabindex={0}
 			hidden={shadow().deleted}
+			onClick={handleClick}
+			onAuxClick={handleClick}
+			onKeyDown={handleClick}
 			class={`relative border-outline px-4 hover:bg-contrast/sm` + (!next ? ` border-b` : ``)}
-			onClick={(ev) => {
-				if (!isElementClicked(ev)) {
-					return;
-				}
-
-				ev.preventDefault();
-
-				if (isElementAltClicked(ev)) {
-					window.open(href, '_blank');
-				} else {
-					history.navigate(href);
-				}
-			}}
 		>
 			<div class="relative flex flex-col pb-1 pt-2">
 				{prev && (
