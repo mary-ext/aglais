@@ -1,5 +1,14 @@
 import { useFloating } from 'solid-floating-ui';
-import { For, Match, Switch, createEffect, createMemo, createResource, createSignal } from 'solid-js';
+import {
+	For,
+	Match,
+	Switch,
+	createEffect,
+	createMemo,
+	createResource,
+	createSignal,
+	type JSX,
+} from 'solid-js';
 import TextareaAutosize from 'solid-textarea-autosize';
 
 import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
