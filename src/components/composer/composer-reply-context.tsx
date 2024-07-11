@@ -64,7 +64,7 @@ const ComposerReplyContext = (props: ComposerReplyContextProps) => {
 
 						<TimeAgo value={/* @once */ post.indexedAt}>
 							{(relative, absolute) => (
-								<span title={absolute()} class="whitespace-nowrap hover:underline">
+								<span title={absolute()} class="whitespace-nowrap">
 									{relative()}
 								</span>
 							)}
