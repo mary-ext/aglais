@@ -8,7 +8,10 @@ import { ContextContentList, getModerationUI } from '~/api/moderation';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { parseAtUri } from '~/api/utils/strings';
 
+import { history } from '~/globals/navigation';
+
 import type { HydratedBookmarkItem } from '~/lib/aglais-bookmarks/db';
+import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
 import { useModerationOptions } from '~/lib/states/moderation';
 
 import Avatar from '../avatar';
@@ -42,8 +45,29 @@ const BookmarkFeedItem = ({ item }: BookmarkFeedItemProps) => {
 
 	const moderation = createMemo(() => moderatePost(post, authorShadow(), moderationOptions()));
 
+	const handleClick = (ev: MouseEvent | KeyboardEvent) => {
+		if (!isElementClicked(ev)) {
+			return;
+		}
+
+		ev.preventDefault();
+
+		if (isElementAltClicked(ev)) {
+			window.open(href, '_blank');
+		} else {
+			history.navigate(href);
+		}
+	};
+
 	return (
-		<div class="relative flex gap-3 border-b border-outline px-4 pt-3">
+		<div
+			tabindex={0}
+			hidden={shadow().deleted}
+			onClick={handleClick}
+			onAuxClick={handleClick}
+			onKeyDown={handleClick}
+			class="relative flex gap-3 border-b border-outline px-4 pt-3"
+		>
 			<div class="flex shrink-0 flex-col items-center">
 				<Avatar
 					type={/* @once */ author.associated?.labeler ? 'labeler' : 'user'}
