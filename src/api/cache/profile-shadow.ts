@@ -7,6 +7,7 @@ import type { QueryClient } from '@mary/solid-query';
 import { findAllProfiles as findAllProfilesInBookmarkFeedQueryData } from '../queries-cache/bookmark-feed';
 import { findAllProfiles as findAllProfilesInPostThreadQueryData } from '../queries-cache/post-thread';
 import { findAllProfiles as findAllProfilesInProfileQueryData } from '../queries-cache/profile';
+import { findAllProfiles as findAllProfilesInProfileFollowersQueryData } from '../queries-cache/profile-followers';
 import { findAllProfiles as findAllProfilesInProfileFollowingQueryData } from '../queries-cache/profile-following';
 import { findAllProfiles as findAllProfilesInTimelineQueryData } from '../queries-cache/timeline';
 import { EQUALS_DEQUAL } from '../utils/dequal';
@@ -78,5 +79,6 @@ export function findProfilesInCache(queryClient: QueryClient, did: At.DID): Gene
 		findAllProfilesInPostThreadQueryData(did),
 		findAllProfilesInBookmarkFeedQueryData(did),
 		findAllProfilesInProfileFollowingQueryData(did),
+		findAllProfilesInProfileFollowersQueryData(did),
 	]);
 }
