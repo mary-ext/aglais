@@ -102,6 +102,8 @@ const MAX_POSTS = 25;
 const MAX_IMAGES = 4;
 const MAX_TEXT_LENGTH = 300;
 
+const SUPPORTED_IMAGE_FORMATS = ['image/png', 'image/jpeg', 'image/webp', 'image/avif', 'image/gif'];
+
 const IS_UA_MOBILE = /Mobile/.test(navigator.userAgent);
 
 const resolveDefaultLanguage = (lang: 'none' | 'system' | (string & {})) => {
@@ -643,6 +645,42 @@ const PostAction = (props: {
 		return getAvailableEmbed(props.post.embed);
 	});
 
+	const addImages = (blobs: Blob[]) => {
+		if (!(canEmbed() & EmbedKind.IMAGE)) {
+			return;
+		}
+
+		const filtered = blobs.filter((blob) => SUPPORTED_IMAGE_FORMATS.includes(blob.type));
+		if (filtered.length === 0) {
+			return;
+		}
+
+		const post = props.post;
+
+		const prev = post.embed;
+		let next: PostEmbed = {
+			type: EmbedKind.IMAGE,
+			images: filtered.slice(0, MAX_IMAGES).map((blob) => ({ blob: blob, alt: '' })),
+			labels: [],
+		};
+
+		if (prev) {
+			if (prev.type === EmbedKind.IMAGE) {
+				prev.images = prev.images.concat(next.images.slice(0, MAX_IMAGES - prev.images.length));
+				return;
+			} else if (prev.type & EmbedKind.RECORD) {
+				next = {
+					type: EmbedKind.RECORD_WITH_MEDIA,
+					record: prev as PostRecordEmbed,
+					media: next,
+				};
+			}
+		}
+
+		post.embed = next;
+		return;
+	};
+
 	return (
 		<>
 			<Divider class="opacity-70" />
@@ -658,38 +696,8 @@ const PostAction = (props: {
 
 							input.type = 'file';
 							input.multiple = true;
-							input.accept = `image/png,image/jpeg,image/webp,image/avif,image/gif`;
-
-							input.oninput = () => {
-								if (!(canEmbed() & EmbedKind.IMAGE)) {
-									return;
-								}
-
-								const blobs = Array.from(input.files!).slice(0, MAX_IMAGES);
-								const post = props.post;
-
-								const prev = post.embed;
-								let next: PostEmbed = {
-									type: EmbedKind.IMAGE,
-									images: blobs.map((blob) => ({ blob: blob, alt: '' })),
-									labels: [],
-								};
-
-								if (prev) {
-									if (prev.type === EmbedKind.IMAGE) {
-										prev.images = prev.images.concat(next.images.slice(0, MAX_IMAGES - prev.images.length));
-										return;
-									} else if (prev.type & EmbedKind.RECORD) {
-										next = {
-											type: EmbedKind.RECORD_WITH_MEDIA,
-											record: prev as PostRecordEmbed,
-											media: next,
-										};
-									}
-								}
-
-								post.embed = next;
-							};
+							input.accept = SUPPORTED_IMAGE_FORMATS.join(',');
+							input.oninput = () => addImages(Array.from(input.files!));
 
 							input.click();
 						}}
@@ -793,8 +801,67 @@ const PostAction = (props: {
 					)}
 				</div>
 			</div>
+
+			{(canEmbed() & EmbedKind.IMAGE) !== 0 && <ImageDnd onAddImages={addImages} />}
 		</>
 	);
+};
+
+const ImageDnd = (props: { onAddImages: (blobs: Blob[]) => void }) => {
+	const onAddImages = props.onAddImages;
+	const [dropping, setDropping] = createSignal(false);
+
+	createEventListener(document, 'paste', (ev) => {
+		const clipboardData = ev.clipboardData;
+		if (!clipboardData) {
+			return;
+		}
+
+		if (clipboardData.types.includes('Files')) {
+			ev.preventDefault();
+			onAddImages(Array.from(clipboardData.files));
+		}
+	});
+
+	createEventListener(document, 'drop', (ev) => {
+		const dataTransfer = ev.dataTransfer;
+		if (!dataTransfer) {
+			return;
+		}
+
+		ev.preventDefault();
+		setDropping(false);
+
+		if (dataTransfer.types.includes('Files')) {
+			onAddImages(Array.from(dataTransfer.files));
+		}
+	});
+
+	createEventListener(document, 'dragover', (ev) => {
+		ev.preventDefault();
+	});
+
+	createEventListener(document, 'dragenter', (ev) => {
+		setDropping(true);
+	});
+
+	createEventListener(document, 'dragleave', () => {
+		setDropping(false);
+	});
+
+	return on(dropping, ($dropping) => {
+		if (!$dropping) {
+			return;
+		}
+
+		return (
+			<div class="pointer-events-none fixed inset-0 z-1 flex items-center justify-center bg-contrast-overlay/40">
+				<div class="rounded-lg bg-background p-2">
+					<p class="rounded border-2 border-dashed border-outline px-9 py-11">Drop to add images</p>
+				</div>
+			</div>
+		);
+	}) as unknown as JSX.Element;
 };
 
 const PostEmbeds = (props: BaseEmbedProps) => {
