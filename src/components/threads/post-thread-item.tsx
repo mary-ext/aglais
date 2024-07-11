@@ -54,27 +54,32 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 
 	const moderation = createMemo(() => moderatePost(post(), authorShadow(), moderationOptions()));
 
+	const handleClick = (ev: MouseEvent | KeyboardEvent) => {
+		if (!isElementClicked(ev)) {
+			return;
+		}
+
+		ev.preventDefault();
+
+		if (isElementAltClicked(ev)) {
+			window.open(href, '_blank');
+		} else {
+			history.navigate(href);
+		}
+	};
+
 	return (
 		<div
 			tabindex={0}
+			hidden={shadow().deleted}
+			onClick={handleClick}
+			onAuxClick={handleClick}
+			onKeyDown={handleClick}
 			class={
 				`flex border-outline hover:bg-contrast/sm` +
 				// prettier-ignore
 				(!treeView ? ` px-4` + (!next ? ` border-b` : ``) : ` px-3`)
 			}
-			onClick={(ev) => {
-				if (!isElementClicked(ev)) {
-					return;
-				}
-
-				ev.preventDefault();
-
-				if (isElementAltClicked(ev)) {
-					window.open(href, '_blank');
-				} else {
-					history.navigate(href);
-				}
-			}}
 		>
 			<ThreadLines lines={item().lines} />
 
