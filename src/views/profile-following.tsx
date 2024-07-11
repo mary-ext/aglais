@@ -6,6 +6,8 @@ import { useParams } from '~/lib/navigation/router';
 
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
+import ProfileItem from '~/components/profiles/profile-item';
+import VirtualItem from '~/components/virtual-item';
 
 const ProfileFollowingPage = () => {
 	const { didOrHandle } = useParams();
@@ -35,7 +37,11 @@ const ProfileFollowingPage = () => {
 				data={following.data?.pages.map((page) => page.follows)}
 				error={following.error}
 				render={(item) => {
-					return <div>{item.handle}</div>;
+					return (
+						<VirtualItem estimateHeight={88}>
+							<ProfileItem item={item} />
+						</VirtualItem>
+					);
 				}}
 				hasNextPage={following.hasNextPage}
 				isFetchingNextPage={following.isFetching}
