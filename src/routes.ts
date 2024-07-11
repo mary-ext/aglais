@@ -80,6 +80,13 @@ const routes: RouteDefinition[] = [
 		},
 	},
 	{
+		path: '/:didOrHandle/following',
+		component: lazy(() => import('./views/profile-following')),
+		validate(params) {
+			return isValidDidOrHandle(params.didOrHandle);
+		},
+	},
+	{
 		path: '/:didOrHandle/:rkey',
 		component: lazy(() => import('./views/post-thread')),
 		validate(params) {
