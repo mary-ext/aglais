@@ -841,7 +841,7 @@ const ImageDnd = (props: { onAddImages: (blobs: Blob[]) => void }) => {
 		ev.preventDefault();
 	});
 
-	createEventListener(document, 'dragenter', (ev) => {
+	createEventListener(document, 'dragenter', () => {
 		setDropping(true);
 	});
 
