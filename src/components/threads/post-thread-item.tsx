@@ -1,12 +1,14 @@
 import { createMemo } from 'solid-js';
 
 import type { AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
+import { useQueryClient } from '@mary/solid-query';
 
 import { usePostShadow } from '~/api/cache/post-shadow';
 import { useProfileShadow } from '~/api/cache/profile-shadow';
 import type { PostAncestorItem, PostDescendantItem } from '~/api/models/post-thread';
 import { ContextContentList, getModerationUI } from '~/api/moderation';
 import { moderatePost } from '~/api/moderation/entities/post';
+import { precacheProfile } from '~/api/queries-cache/profile-precache';
 import { parseAtUri } from '~/api/utils/strings';
 
 import { history } from '~/globals/navigation';
@@ -35,6 +37,7 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 	const treeView = props.treeView;
 	const item = () => props.item;
 
+	const queryClient = useQueryClient();
 	const moderationOptions = useModerationOptions();
 
 	const post = () => item().post;
@@ -90,6 +93,8 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 					<Avatar
 						type={/* @once */ author().associated?.labeler ? 'labeler' : 'user'}
 						src={author().avatar}
+						href={authorHref}
+						onClick={() => precacheProfile(queryClient, author())}
 						size={!treeView ? 'md' : 'xs'}
 					/>
 
