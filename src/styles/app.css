@@ -37,7 +37,7 @@
 	.accent-scarlet {
 		--p-accent: 201 0 37;
 		--p-accent-hover: 191 0 35;
-		--p-accent-hover: 181 0 32;
+		--p-accent-active: 181 0 32;
 		--p-accent-fg: 255 255 255;
 	}
 
