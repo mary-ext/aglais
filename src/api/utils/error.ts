@@ -11,13 +11,14 @@ export const formatQueryError = (err: unknown) => {
 		const message = err.message;
 
 		if (kind === 'InvalidToken' || kind === 'ExpiredToken') {
+			if (message === 'Bad token scope') {
+				return `This functionality is unavailable when using app passwords, please sign in with your main password`;
+			}
+
 			return `Account session invalid, please sign in again`;
 		}
 		if (kind === 'UpstreamFailure') {
 			return `Server appears to be experiencing issues, please try again later`;
-		}
-		if (message.includes('Bad token scope')) {
-			return `This functionality is unavailable when using app passwords, please sign in with your main password`;
 		}
 
 		return formatXRPCError(err);
