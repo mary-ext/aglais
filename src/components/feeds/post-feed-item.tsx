@@ -15,6 +15,7 @@ import { history } from '~/globals/navigation';
 
 import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
 import { useModerationOptions } from '~/lib/states/moderation';
+import { useSession } from '~/lib/states/session';
 
 import Avatar from '../avatar';
 import RepeatOutlinedIcon from '../icons-central/repeat-outline';
@@ -23,6 +24,7 @@ import RichText from '../rich-text';
 import Embed from '../embeds/embed';
 import ContentHider from '../moderation/content-hider';
 import PostActions from './post-actions';
+import PostDeletedGate from './post-deleted-gate';
 import PostMeta from './post-meta';
 import PostReplyContext from './post-reply-context';
 
@@ -35,6 +37,7 @@ export interface PostFeedItemProps {
 const PostFeedItem = ({ item, timelineDid }: PostFeedItemProps) => {
 	const queryClient = useQueryClient();
 	const moderationOptions = useModerationOptions();
+	const { currentAccount } = useSession();
 
 	const { post, reason, next, prev } = item;
 
@@ -49,10 +52,12 @@ const PostFeedItem = ({ item, timelineDid }: PostFeedItemProps) => {
 	const authorHref = `/${author.did}`;
 	const href = `/${author.did}/${uri.rkey}`;
 
+	const isOurPost = currentAccount && author.did === currentAccount.did;
+
 	const moderation = createMemo(() => moderatePost(post, authorShadow(), moderationOptions()));
 
 	const handleClick = (ev: MouseEvent | KeyboardEvent) => {
-		if (!isElementClicked(ev)) {
+		if (!isElementClicked(ev) || shadow().deleted) {
 			return;
 		}
 
@@ -68,7 +73,6 @@ const PostFeedItem = ({ item, timelineDid }: PostFeedItemProps) => {
 	return (
 		<div
 			tabindex={0}
-			hidden={shadow().deleted}
 			onClick={handleClick}
 			onAuxClick={handleClick}
 			onKeyDown={handleClick}
@@ -97,22 +101,24 @@ const PostFeedItem = ({ item, timelineDid }: PostFeedItemProps) => {
 					{next && <div class="mt-1 grow border-l-2 border-outline-md" />}
 				</div>
 
-				<div class="min-w-0 grow pb-3">
-					<PostMeta post={post} href={href} authorHref={authorHref} gutterBottom />
-					<PostReplyContext item={item} />
+				<PostDeletedGate bypass={!isOurPost} deleted={shadow().deleted}>
+					<div class="min-w-0 grow pb-3">
+						<PostMeta post={post} href={href} authorHref={authorHref} gutterBottom />
+						<PostReplyContext item={item} />
 
-					<ContentHider
-						ui={getModerationUI(moderation(), ContextContentList)}
-						ignoreMute={/* @once */ timelineDid === author.did}
-						containerClass="mt-2"
-						innerClass="mt-2"
-					>
-						<RichText text={/* @once */ record.text} facets={/* @once */ record.facets} clipped />
-						{embed && <Embed embed={embed} moderation={moderation()} gutterTop />}
-					</ContentHider>
+						<ContentHider
+							ui={getModerationUI(moderation(), ContextContentList)}
+							ignoreMute={/* @once */ timelineDid === author.did}
+							containerClass="mt-2"
+							innerClass="mt-2"
+						>
+							<RichText text={/* @once */ record.text} facets={/* @once */ record.facets} clipped />
+							{embed && <Embed embed={embed} moderation={moderation()} gutterTop />}
+						</ContentHider>
 
-					<PostActions post={post} shadow={shadow()} />
-				</div>
+						<PostActions post={post} shadow={shadow()} />
+					</div>
+				</PostDeletedGate>
 			</div>
 		</div>
 	);

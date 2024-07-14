@@ -1,4 +1,4 @@
-import { createMemo } from 'solid-js';
+import { createMemo, type JSX, Show } from 'solid-js';
 
 import type { AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
@@ -15,6 +15,7 @@ import { history } from '~/globals/navigation';
 
 import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
 import { useModerationOptions } from '~/lib/states/moderation';
+import { useSession } from '~/lib/states/session';
 
 import Avatar from '../avatar';
 import RichText from '../rich-text';
@@ -40,6 +41,7 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 
 	const queryClient = useQueryClient();
 	const moderationOptions = useModerationOptions();
+	const { currentAccount } = useSession();
 
 	const post = () => item().post;
 
@@ -54,10 +56,12 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 	const authorHref = `/${author().did}`;
 	const href = `/${author().did}/${uri.rkey}`;
 
+	const isOurPost = currentAccount && currentAccount.did === author().did;
+
 	const moderation = createMemo(() => moderatePost(post(), authorShadow(), moderationOptions()));
 
 	const handleClick = (ev: MouseEvent | KeyboardEvent) => {
-		if (!isElementClicked(ev)) {
+		if (!isElementClicked(ev) || shadow().deleted) {
 			return;
 		}
 
@@ -73,7 +77,6 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 	return (
 		<div
 			tabindex={0}
-			hidden={shadow().deleted}
 			onClick={handleClick}
 			onAuxClick={handleClick}
 			onKeyDown={handleClick}
@@ -102,28 +105,54 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 					)}
 				</div>
 
-				<div class="min-w-0 grow py-3">
-					<PostMeta post={post()} href={href} authorHref={authorHref} compact={treeView} gutterBottom />
+				<DeletedGate bypass={!isOurPost} deleted={shadow().deleted} treeView={treeView}>
+					<div class="min-w-0 grow py-3">
+						<PostMeta post={post()} href={href} authorHref={authorHref} compact={treeView} gutterBottom />
 
-					<ContentHider
-						ui={getModerationUI(moderation(), ContextContentList)}
-						containerClass="mt-2"
-						innerClass="mt-2"
-					>
-						<RichText text={/* @once */ record.text} facets={/* @once */ record.facets} clipped />
-						{embed && <Embed embed={embed} moderation={moderation()} gutterTop />}
-					</ContentHider>
+						<ContentHider
+							ui={getModerationUI(moderation(), ContextContentList)}
+							containerClass="mt-2"
+							innerClass="mt-2"
+						>
+							<RichText text={/* @once */ record.text} facets={/* @once */ record.facets} clipped />
+							{embed && <Embed embed={embed} moderation={moderation()} gutterTop />}
+						</ContentHider>
 
-					<PostActions
-						post={post()}
-						shadow={shadow()}
-						compact={treeView}
-						onReplyPublish={/* @once */ props.onReplyPublish}
-					/>
-				</div>
+						<PostActions
+							post={post()}
+							shadow={shadow()}
+							compact={treeView}
+							onReplyPublish={/* @once */ props.onReplyPublish}
+						/>
+					</div>
+				</DeletedGate>
 			</div>
 		</div>
 	);
 };
 
 export default PostThreadItem;
+
+export interface DeletedGateProps {
+	deleted: boolean;
+	bypass: boolean;
+	treeView: boolean;
+	children: JSX.Element;
+}
+
+const DeletedGate = (props: DeletedGateProps) => {
+	if (props.bypass) {
+		return props.children;
+	}
+
+	const treeView = props.treeView;
+	return (
+		<Show when={props.deleted} fallback={props.children}>
+			<div class="min-w-0 grow py-3">
+				<div class={'flex items-center' + (!treeView ? ` h-9 text-sm` : ` text-de`)}>
+					<p class="text-contrast-muted">Post deleted</p>
+				</div>
+			</div>
+		</Show>
+	);
+};
