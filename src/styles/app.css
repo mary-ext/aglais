@@ -32,7 +32,6 @@
 		--p-accent-fg: 255 255 255;
 		--p-repost: 19 195 113;
 		--p-like: 246 60 103;
-		--p-error: 244 33 46;
 	}
 
 	.accent-scarlet {
@@ -51,6 +50,7 @@
 		--p-outline: 243 243 243;
 		--p-outline-md: 217 217 217;
 		--p-outline-lg: 217 217 217;
+		--p-error: 220 38 38; /* red-600 */
 	}
 
 	.theme-dark {
@@ -62,5 +62,6 @@
 		--p-outline: 54 54 54;
 		--p-outline-md: 57 57 57;
 		--p-outline-lg: 113 113 113;
+		--p-error: 248 113 113; /* red-400 */
 	}
 }
