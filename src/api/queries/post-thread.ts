@@ -1,10 +1,10 @@
-import type { AppBskyFeedDefs, AppBskyFeedGetPostThread, Brand } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedDefs, Brand } from '@mary/bluesky-client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
-import { findPostsInCache } from '../cache/post-shadow';
 import { XRPCError } from '@mary/bluesky-client/xrpc';
+import { findPostsInCache } from '../cache/post-shadow';
 
 const MAX_HEIGHT = 10;
 const MAX_DEPTH = 4;
