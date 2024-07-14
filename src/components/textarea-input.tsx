@@ -66,7 +66,7 @@ export const CharCounter = (props: { value: number; max: number }) => {
 	const isOver = createMemo(() => props.value > props.max);
 
 	return (
-		<span class={`text-de` + (!isOver() ? ` text-contrast-muted` : ` text-p-red-500`)}>
+		<span class={`text-de` + (!isOver() ? ` text-contrast-muted` : ` text-error`)}>
 			{formatLong(props.value)}/{formatLong(props.max)}
 		</span>
 	);

@@ -83,11 +83,11 @@ const AccountSettingsPage = () => {
 						</a>
 
 						<button class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed">
-							<span class="text-sm font-medium text-p-red-500">Deactivate account</span>
+							<span class="text-sm font-medium text-error">Deactivate account</span>
 						</button>
 
 						<button class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed">
-							<span class="text-sm font-medium text-p-red-500">Delete account</span>
+							<span class="text-sm font-medium text-error">Delete account</span>
 						</button>
 					</div>
 				</div>

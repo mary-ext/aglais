@@ -153,7 +153,7 @@ const menuItemClasses = ({ variant = 'default', disabled }: MenuItemProps) => {
 			cn += ` hover:bg-contrast/sm active:bg-contrast/sm-pressed`;
 		}
 	} else if (variant === 'danger') {
-		cn += ` text-p-red-600`;
+		cn += ` text-error`;
 
 		if (!disabled) {
 			cn += ` hover:bg-contrast/sm active:bg-contrast/sm-pressed`;

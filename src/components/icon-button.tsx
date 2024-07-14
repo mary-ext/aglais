@@ -72,10 +72,10 @@ const iconButtonClasses = (
 			cn += ` opacity-50`;
 		}
 	} else if (variant === 'danger') {
-		cn += ` rounded-full text-p-red-600`;
+		cn += ` rounded-full text-error`;
 
 		if (!isDisabled()) {
-			cn += ` hover:bg-p-red-800/md active:bg-p-red-700/md-pressed`;
+			cn += ` hover:bg-error/md active:bg-error/md-pressed`;
 		} else {
 			cn += ` opacity-50`;
 		}
