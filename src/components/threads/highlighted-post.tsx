@@ -36,6 +36,7 @@ export interface HighlightedPostProps {
 	post: AppBskyFeedDefs.PostView;
 	/** Expected to be static */
 	prev?: boolean;
+	onPostDelete?: () => void;
 	onReplyPublish?: () => void;
 }
 
@@ -107,7 +108,9 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 						onClick={(ev) => {
 							const anchor = ev.currentTarget;
 							const $post = post();
-							openModal(() => <PostOverflowMenu anchor={anchor} post={$post} />);
+							const onPostDelete = props.onPostDelete;
+
+							openModal(() => <PostOverflowMenu anchor={anchor} post={$post} onPostDelete={onPostDelete} />);
 						}}
 						class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed"
 					>

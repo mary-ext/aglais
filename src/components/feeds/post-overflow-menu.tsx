@@ -3,38 +3,86 @@ import { createMemo } from 'solid-js';
 import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
+import { updatePostShadow } from '~/api/cache/post-shadow';
 import { createBookmarkEntryQuery } from '~/api/queries/bookmark-entry';
+import { deleteRecord } from '~/api/utils/mutation';
+import { parseAtUri } from '~/api/utils/strings';
 
 import { openModal, useModalContext } from '~/globals/modals';
 
 import { useBookmarks } from '~/lib/states/bookmarks';
+import { useSession } from '~/lib/states/session';
 
 import BookmarkCheckOutlinedIcon from '../icons-central/bookmark-check-outline';
 import BookmarkOutlinedIcon from '../icons-central/bookmark-outline';
 import FolderAddOutlinedIcon from '../icons-central/folder-add-outline';
+import TrashOutlinedIcon from '../icons-central/trash-outline';
 import * as Menu from '../menu';
+import * as Prompt from '../prompt';
 
+import { useAgent } from '~/lib/states/agent';
 import AddPostToFolderDialogLazy from '../bookmarks/add-post-to-folder-dialog-lazy';
 
 export interface PostOverflowMenuProps {
 	anchor: HTMLElement;
 	/** Expected to be static */
 	post: AppBskyFeedDefs.PostView;
+	onPostDelete?: () => void;
 }
 
 const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 	const { close } = useModalContext();
+	const { currentAccount } = useSession();
+	const { rpc } = useAgent();
 
 	const bookmarks = useBookmarks();
 	const queryClient = useQueryClient();
 
 	const post = props.post;
+	const isOurPost = currentAccount && currentAccount.did === post.author.did;
 
 	const query = createBookmarkEntryQuery(() => post.uri);
 	const isBookmarked = createMemo(() => query.data.item !== undefined);
 
 	return (
 		<Menu.Container anchor={props.anchor} placement="bottom-end" cover>
+			{isOurPost && (
+				<>
+					<Menu.Item
+						icon={TrashOutlinedIcon}
+						label="Delete"
+						variant="danger"
+						onClick={() => {
+							close();
+							openModal(() => (
+								<Prompt.Confirm
+									title="Delete this post?"
+									description="This can't be undone, the post will be removed from your profile, timeline of your followers, and search results."
+									danger
+									confirmLabel="Delete"
+									onConfirm={() => {
+										const onPostDelete = props.onPostDelete;
+
+										const uri = parseAtUri(post.uri);
+										const promise = deleteRecord(rpc, {
+											repo: currentAccount!.did,
+											collection: 'app.bsky.feed.post',
+											rkey: uri.rkey,
+										});
+
+										updatePostShadow(queryClient, post.uri, { deleted: true });
+
+										if (onPostDelete) {
+											promise.then(onPostDelete);
+										}
+									}}
+								/>
+							));
+						}}
+					/>
+				</>
+			)}
+
 			<Menu.Item
 				icon={!isBookmarked() ? BookmarkOutlinedIcon : BookmarkCheckOutlinedIcon}
 				label={!isBookmarked() ? `Bookmark` : `Remove bookmark`}

@@ -126,6 +126,12 @@ const PostThreadPage = () => {
 										data={result()}
 										isPlaceholderData={query.isPlaceholderData}
 										onReplyPublish={() => query.refetch()}
+										onPostDelete={() => {
+											queryClient.resetQueries({
+												exact: true,
+												queryKey: ['post-thread', result().post.uri],
+											});
+										}}
 									/>
 								)}
 							</Match>
@@ -149,6 +155,7 @@ const ThreadView = (props: {
 	data: Brand.Union<AppBskyFeedDefs.ThreadViewPost>;
 	isPlaceholderData: boolean;
 	onReplyPublish?: () => void;
+	onPostDelete?: () => void;
 }) => {
 	const { currentAccount } = useSession();
 	const moderationOptions = useModerationOptions();
@@ -258,6 +265,7 @@ const ThreadView = (props: {
 						post={thread().post}
 						prev={thread().ancestors.length !== 0 || isLoadingAncestor()}
 						onReplyPublish={/* @once */ props.onReplyPublish}
+						onPostDelete={/* @once */ props.onPostDelete}
 					/>
 				</VirtualItem>
 
