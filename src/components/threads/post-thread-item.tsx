@@ -42,8 +42,6 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 	const moderationOptions = useModerationOptions();
 
 	const post = () => item().post;
-	const prev = item().prev;
-	const next = item().next;
 
 	const author = () => post().author;
 	const record = post().record as AppBskyFeedPost.Record;
@@ -82,14 +80,14 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 			class={
 				`flex border-outline hover:bg-contrast/sm` +
 				// prettier-ignore
-				(!treeView ? ` px-4` + (!next ? ` border-b` : ``) : ` px-3`)
+				(!treeView ? ` px-4` + (!item().next ? ` border-b` : ``) : ` px-3`)
 			}
 		>
 			<ThreadLines lines={item().lines} />
 
 			<div class={`flex min-w-0 grow` + (!treeView ? ` gap-3` : ` gap-2`)}>
 				<div class="relative flex shrink-0 flex-col items-center pt-3">
-					{!treeView && prev && <div class="absolute top-0 h-2 border-l-2 border-outline-md"></div>}
+					{!treeView && item().prev && <div class="absolute top-0 h-2 border-l-2 border-outline-md"></div>}
 
 					<Avatar
 						type={/* @once */ author().associated?.labeler ? 'labeler' : 'user'}
@@ -99,7 +97,7 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 						size={!treeView ? 'md' : 'xs'}
 					/>
 
-					{next && (
+					{item().next && (
 						<div class={`grow border-l-2 border-outline-md` + (!treeView ? ` mt-1` : ` mt-0.5`)}></div>
 					)}
 				</div>
