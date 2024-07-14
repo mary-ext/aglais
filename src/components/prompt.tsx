@@ -25,7 +25,7 @@ const PromptContainer = (props: PromptContainerProps) => {
 			return (
 				<>
 					<Backdrop />
-					<div ref={containerRef} class="z-1 my-auto w-80 rounded-xl bg-background p-6">
+					<div ref={containerRef} class="z-1 my-auto flex w-80 flex-col rounded-xl bg-background p-6">
 						{props.children}
 					</div>
 				</>
@@ -65,7 +65,7 @@ export interface PromptDescriptionProps {
 }
 
 const PromptDescription = (props: PromptDescriptionProps) => {
-	return <p class="text-sm text-contrast-muted">{props.children}</p>;
+	return <p class="text-pretty text-sm text-contrast-muted">{props.children}</p>;
 };
 
 export { PromptDescription as Description };
