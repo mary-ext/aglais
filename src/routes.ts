@@ -61,6 +61,24 @@ const routes: RouteDefinition[] = [
 	},
 
 	{
+		path: '/moderation',
+		component: lazy(() => import('./views/moderation')),
+	},
+
+	{
+		path: '/settings',
+		component: lazy(() => import('./views/settings')),
+	},
+	{
+		path: '/settings/account',
+		component: lazy(() => import('./views/settings-account')),
+	},
+	{
+		path: '/settings/app-passwords',
+		component: lazy(() => import('./views/settings-app-passwords')),
+	},
+
+	{
 		path: '/bookmarks',
 		component: lazy(() => import('./views/bookmarks')),
 	},

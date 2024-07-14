@@ -24,7 +24,7 @@ export interface AvatarProps {
 	onClick?: () => void;
 
 	class?: string;
-	size?: 'xs' | 'sm' | 'md' | 'lg';
+	size?: 'xs' | 'sm' | 'in' | 'md' | 'lg';
 }
 
 const Avatar = (props: AvatarProps) => {
@@ -96,6 +96,8 @@ const avatarClassNames = (
 		cn += ` h-5 w-5`;
 	} else if (size === 'lg') {
 		cn += ` h-10 w-10`;
+	} else if (size === 'in') {
+		cn += ` h-8 w-8`;
 	}
 
 	if (className) {

@@ -20,6 +20,7 @@ export interface TextInputProps {
 	disabled?: boolean;
 	placeholder?: string;
 	error?: string | null | undefined | false;
+	description?: string;
 	value?: string;
 	onInput?: (ev: InputEvent) => void;
 }
@@ -51,6 +52,8 @@ const TextInput = (props: TextInputProps) => {
 			/>
 
 			{props.error && <p class="text-de text-error">{props.error}</p>}
+
+			<p class="text-pretty text-de text-contrast-muted empty:hidden">{props.description}</p>
 		</div>
 	);
 };

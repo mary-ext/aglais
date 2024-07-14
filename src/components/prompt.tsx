@@ -7,8 +7,11 @@ import { on } from '~/lib/misc';
 
 import Button from './button';
 import { Backdrop } from './dialog';
+import { Fieldset } from './fieldset';
 
 export interface PromptContainerProps {
+	disabled?: boolean;
+	maxWidth?: 'sm' | 'md';
 	children: JSX.Element;
 }
 
@@ -16,35 +19,51 @@ const PromptContainer = (props: PromptContainerProps) => {
 	const { close, isActive } = useModalContext();
 	const isDesktop = useMediaQuery('(width >= 688px) and (height >= 500px)');
 
+	const isDisabled = () => !!props.disabled;
+
 	const containerRef = (node: HTMLElement): void => {
-		useModalClose(node, close, isActive);
+		useModalClose(node, close, () => isActive() && !isDisabled());
 	};
 
 	return on(isDesktop, ($isDesktop) => {
 		if ($isDesktop) {
 			return (
-				<>
+				<Fieldset standalone disabled={isDisabled()}>
 					<Backdrop />
-					<div ref={containerRef} class="z-1 my-auto flex w-80 flex-col rounded-xl bg-background p-6">
-						{props.children}
-					</div>
-				</>
-			);
-		} else {
-			return (
-				<div class="flex grow flex-col self-stretch overflow-y-auto bg-contrast-overlay/40">
-					<div class="h-[40dvh] shrink-0"></div>
 					<div
 						ref={containerRef}
-						role="menu"
-						class="mt-auto flex flex-col rounded-t-xl bg-background p-4 pb-5"
+						class="z-1 my-auto flex flex-col rounded-xl bg-background p-6"
+						style={{ width: getPromptDesktopWidth(props) }}
 					>
 						{props.children}
 					</div>
-				</div>
+				</Fieldset>
+			);
+		} else {
+			return (
+				<Fieldset standalone disabled={isDisabled()}>
+					<div class="flex grow flex-col self-stretch overflow-y-auto bg-contrast-overlay/40">
+						<div class="h-[40dvh] shrink-0"></div>
+						<div
+							ref={containerRef}
+							role="menu"
+							class="mt-auto flex flex-col rounded-t-xl bg-background p-4 pb-5"
+						>
+							{props.children}
+						</div>
+					</div>
+				</Fieldset>
 			);
 		}
 	}) as unknown as JSX.Element;
+};
+
+const getPromptDesktopWidth = ({ maxWidth = 'sm' }: PromptContainerProps) => {
+	if (maxWidth === 'sm') {
+		return `320px`;
+	} else if (maxWidth === 'md') {
+		return `414px`;
+	}
 };
 
 export { PromptContainer as Container };
@@ -83,6 +102,8 @@ export { PromptActions as Actions };
 
 export interface PromptActionProps {
 	variant?: 'outline' | 'primary' | 'danger';
+	noClose?: boolean;
+	disabled?: boolean;
 	onClick?: () => void;
 	children: JSX.Element;
 }
@@ -90,11 +111,12 @@ export interface PromptActionProps {
 const PromptAction = (props: PromptActionProps) => {
 	const { close } = useModalContext();
 
+	const noClose = props.noClose;
 	const onClick = props.onClick;
-	const handleClick = onClick ? () => (close(), onClick()) : close;
+	const handleClick = !noClose ? (onClick ? () => (close(), onClick()) : close) : onClick;
 
 	return (
-		<Button variant={props.variant} size="lg" onClick={handleClick}>
+		<Button disabled={props.disabled} onClick={handleClick} variant={props.variant} size="lg">
 			{props.children}
 		</Button>
 	);

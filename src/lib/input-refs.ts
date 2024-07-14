@@ -46,3 +46,21 @@ export const modelText = (node: TextInput, getter: () => string, setter: (next: 
 		setter((current = node.value));
 	});
 };
+
+export const modelChecked = (
+	node: HTMLInputElement,
+	getter: () => boolean,
+	setter: (next: boolean) => void,
+) => {
+	let current: boolean | undefined;
+
+	createEffect(() => {
+		if (current !== (current = getter())) {
+			node.checked = current;
+		}
+	});
+
+	node.addEventListener('input', (_ev) => {
+		setter((current = node.checked));
+	});
+};

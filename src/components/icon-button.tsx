@@ -8,7 +8,7 @@ export interface IconButtonProps {
 	disabled?: boolean;
 	onClick?: JSX.EventHandler<HTMLButtonElement, MouseEvent>;
 
-	variant?: 'ghost' | 'outline' | 'accent' | 'black';
+	variant?: 'ghost' | 'outline' | 'accent' | 'danger' | 'black';
 	size?: 'md' | 'sm';
 	class?: string;
 }
@@ -37,7 +37,7 @@ const iconButtonClasses = (
 	isDisabled: () => boolean,
 	{ variant = 'ghost', size = 'md', class: className }: IconButtonProps,
 ) => {
-	var cn = `grid place-items-center`;
+	var cn = `grid shrink-0 place-items-center`;
 
 	if (variant === 'ghost') {
 		cn += ` rounded-full text-contrast`;
@@ -68,6 +68,14 @@ const iconButtonClasses = (
 
 		if (!isDisabled()) {
 			cn += ` hover:bg-p-neutral-800/75 active:bg-p-neutral-700/75`;
+		} else {
+			cn += ` opacity-50`;
+		}
+	} else if (variant === 'danger') {
+		cn += ` rounded-full text-p-red-600`;
+
+		if (!isDisabled()) {
+			cn += ` hover:bg-p-red-800/md active:bg-p-red-700/md-pressed`;
 		} else {
 			cn += ` opacity-50`;
 		}
