@@ -121,7 +121,13 @@ const PostThreadPage = () => {
 									}
 								})()}
 							>
-								{(result) => <ThreadView isPlaceholderData={query.isPlaceholderData} data={result()} />}
+								{(result) => (
+									<ThreadView
+										data={result()}
+										isPlaceholderData={query.isPlaceholderData}
+										onReplyPublish={() => query.refetch()}
+									/>
+								)}
 							</Match>
 
 							<Match when>{null}</Match>
@@ -140,8 +146,9 @@ const PostThreadPage = () => {
 export default PostThreadPage;
 
 const ThreadView = (props: {
-	isPlaceholderData: boolean;
 	data: Brand.Union<AppBskyFeedDefs.ThreadViewPost>;
+	isPlaceholderData: boolean;
+	onReplyPublish?: () => void;
 }) => {
 	const { currentAccount } = useSession();
 	const moderationOptions = useModerationOptions();
@@ -194,7 +201,11 @@ const ThreadView = (props: {
 
 						return (
 							<VirtualItem estimateHeight={!end ? 98 : undefined}>
-								<PostThreadItem item={item} treeView={false} />
+								<PostThreadItem
+									item={item}
+									treeView={false}
+									onReplyPublish={/* @once */ props.onReplyPublish}
+								/>
 							</VirtualItem>
 						);
 					}
@@ -246,6 +257,7 @@ const ThreadView = (props: {
 					<HighlightedPost
 						post={thread().post}
 						prev={thread().ancestors.length !== 0 || isLoadingAncestor()}
+						onReplyPublish={/* @once */ props.onReplyPublish}
 					/>
 				</VirtualItem>
 
@@ -260,7 +272,11 @@ const ThreadView = (props: {
 									if (type === 'post') {
 										return (
 											<VirtualItem estimateHeight={98}>
-												<PostThreadItem item={item() as PostDescendantItem} treeView={treeView} />
+												<PostThreadItem
+													item={item() as PostDescendantItem}
+													treeView={treeView}
+													onReplyPublish={/* @once */ props.onReplyPublish}
+												/>
 											</VirtualItem>
 										);
 									}

@@ -31,6 +31,7 @@ export interface PostThreadItemProps {
 	item: PostAncestorItem | PostDescendantItem;
 	/** Expected to be static */
 	treeView: boolean;
+	onReplyPublish?: () => void;
 }
 
 const PostThreadItem = (props: PostThreadItemProps) => {
@@ -115,7 +116,12 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 						{embed && <Embed embed={embed} moderation={moderation()} gutterTop />}
 					</ContentHider>
 
-					<PostActions post={post()} shadow={shadow()} compact={treeView} />
+					<PostActions
+						post={post()}
+						shadow={shadow()}
+						compact={treeView}
+						onReplyPublish={/* @once */ props.onReplyPublish}
+					/>
 				</div>
 			</div>
 		</div>

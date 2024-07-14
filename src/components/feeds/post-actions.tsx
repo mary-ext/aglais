@@ -23,6 +23,7 @@ export interface PostActionsProps {
 	disabled?: boolean;
 	/** Expected to be static */
 	compact?: boolean;
+	onReplyPublish?: () => void;
 }
 
 const PostActions = (props: PostActionsProps) => {
@@ -62,7 +63,8 @@ const PostActions = (props: PostActionsProps) => {
 						}
 
 						const $post = post();
-						openModal(() => <ComposerDialogLazy params={{ reply: $post }} />);
+						const onReplyPublish = props.onReplyPublish;
+						openModal(() => <ComposerDialogLazy params={{ reply: $post }} onPublish={onReplyPublish} />);
 					}}
 					class={`group flex max-w-full grow basis-0 items-end gap-2.5 hover:text-accent`}
 				>

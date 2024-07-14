@@ -36,6 +36,7 @@ export interface HighlightedPostProps {
 	post: AppBskyFeedDefs.PostView;
 	/** Expected to be static */
 	prev?: boolean;
+	onReplyPublish?: () => void;
 }
 
 const HighlightedPost = (props: HighlightedPostProps) => {
@@ -151,7 +152,8 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 						}
 
 						const $post = post();
-						openModal(() => <ComposerDialogLazy params={{ reply: $post }} />);
+						const onPublishReply = props.onReplyPublish;
+						openModal(() => <ComposerDialogLazy params={{ reply: $post }} onPublish={onPublishReply} />);
 					}}
 					class={`flex h-9 w-9 items-center justify-center rounded-full text-xl hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed`}
 				>
