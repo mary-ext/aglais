@@ -28,7 +28,8 @@ export const on = <T, R>(accessor: () => T, callback: (value: T) => R): (() => R
 	return createMemo(_on(accessor, callback));
 };
 
-export const reconcile = <T extends { id: string | number }>(prev: T[] | undefined, next: T[]): T[] => {
+type ReconcilableProperties<T> = { [K in keyof T]: T[K] extends string | number ? K : never }[keyof T];
+export const reconcile = <T = any>(prev: T[] | undefined, next: T[], key: ReconcilableProperties<T>): T[] => {
 	if (prev === undefined) {
 		return next;
 	}
@@ -41,13 +42,15 @@ export const reconcile = <T extends { id: string | number }>(prev: T[] | undefin
 
 	for (let idx = 0; idx < prevLen; idx++) {
 		const item = prev[idx];
-		map.set(item.id, item);
+		// @ts-expect-error
+		map.set(item[key], item);
 	}
 
 	const array: T[] = Array.from({ length: next.length });
 	for (let idx = 0; idx < nextLen; idx++) {
 		const nextItem = next[idx];
-		const prevItem = map.get(nextItem.id);
+		// @ts-expect-error
+		const prevItem = map.get(nextItem[key]);
 
 		if (prevItem !== undefined) {
 			const replaced = replaceEqualDeep(prevItem, nextItem);
