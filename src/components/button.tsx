@@ -7,6 +7,7 @@ export interface ButtonProps {
 	href?: string;
 	disabled?: boolean;
 	type?: 'button' | 'submit' | 'reset';
+	role?: JSX.AriaAttributes['role'];
 	onClick?: (ev: MouseEvent) => void;
 
 	children: JSX.Element;
@@ -23,6 +24,7 @@ const Button = (props: ButtonProps) => {
 	if ('href' in props) {
 		return (
 			<a
+				role={props.role}
 				href={!isDisabled() ? props.href : undefined}
 				title={props.title}
 				onClick={props.onClick}
@@ -35,6 +37,7 @@ const Button = (props: ButtonProps) => {
 
 	return (
 		<button
+			role={props.role}
 			type={props.type || 'button'}
 			disabled={isDisabled()}
 			title={props.title}

@@ -26,6 +26,12 @@ const MenuContainer = (props: MenuContainerProps) => {
 
 	const containerRef = (node: HTMLElement): void => {
 		useModalClose(node, close, isActive);
+
+		requestAnimationFrame(() => {
+			const found = node.querySelector('[role^=menuitem]');
+			// @ts-expect-error
+			found?.focus();
+		});
 	};
 
 	return on(isDesktop, ($isDesktop) => {
@@ -78,6 +84,7 @@ const MenuContainer = (props: MenuContainerProps) => {
 				<div
 					ref={ref}
 					role="menu"
+					onKeyDown={onKeyDown}
 					style={{ top: `${position.y ?? 0}px`, left: `${position.x ?? 0}px` }}
 					class="absolute flex max-w-sm flex-col overflow-hidden overflow-y-auto rounded-md border border-outline bg-background"
 				>
@@ -88,11 +95,16 @@ const MenuContainer = (props: MenuContainerProps) => {
 			return (
 				<div class="flex grow flex-col self-stretch overflow-y-auto bg-contrast-overlay/40">
 					<div class="h-[40dvh] shrink-0"></div>
-					<div ref={containerRef} role="menu" class="mt-auto flex flex-col bg-background">
+					<div
+						ref={containerRef}
+						role="menu"
+						onKeyDown={onKeyDown}
+						class="mt-auto flex flex-col bg-background"
+					>
 						<div class="flex flex-col pt-1">{props.children}</div>
 
 						<div class="flex flex-col px-4 pb-4 pt-3">
-							<Button onClick={close} size="lg">
+							<Button role="menuitem" onClick={close} size="lg">
 								Cancel
 							</Button>
 						</div>
@@ -101,6 +113,36 @@ const MenuContainer = (props: MenuContainerProps) => {
 			);
 		}
 	}) as unknown as JSX.Element;
+};
+
+const onKeyDown: JSX.EventHandler<HTMLElement, KeyboardEvent> = (ev) => {
+	const key = ev.key;
+	const node = ev.currentTarget;
+
+	if (key === 'ArrowDown') {
+		const found = getSibling(node, true);
+
+		ev.preventDefault();
+		found?.focus();
+	} else if (key === 'ArrowUp') {
+		const found = getSibling(node, false);
+
+		ev.preventDefault();
+		found?.focus();
+	}
+};
+
+const getSibling = (node: Element, next: boolean): HTMLElement | null => {
+	const options = Array.from(
+		node.querySelectorAll<HTMLElement>('[role^="menuitem"]:not([hidden]):not([disabled])'),
+	);
+
+	const selected = document.activeElement;
+	const index = selected instanceof HTMLElement ? options.indexOf(selected) : -1;
+
+	return (
+		(next ? options[index + 1] : options[index - 1]) || (next ? options[0] : options[options.length - 1])
+	);
 };
 
 export { MenuContainer as Container };
