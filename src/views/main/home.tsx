@@ -1,25 +1,12 @@
-import { useTimelineQuery } from '~/api/queries/timeline';
-
 import IconButton from '~/components/icon-button';
 import ChevronRightOutlinedIcon from '~/components/icons-central/chevron-right-outline';
 import GearOutlinedIcon from '~/components/icons-central/gear-outline';
 import * as Page from '~/components/page';
-import PagedList from '~/components/paged-list';
-import VirtualItem from '~/components/virtual-item';
 
 import ComposeFAB from '~/components/composer/compose-fab';
-import PostFeedItem from '~/components/feeds/post-feed-item';
+import TimelineList from '~/components/feeds/timeline-list';
 
 const HomePage = () => {
-	const { timeline, isStale, reset } = useTimelineQuery(() => {
-		return {
-			type: 'following',
-			showQuotes: true,
-			showReplies: 'follows',
-			showReposts: true,
-		};
-	});
-
 	return (
 		<>
 			<Page.Header>
@@ -43,22 +30,13 @@ const HomePage = () => {
 
 			<ComposeFAB />
 
-			<PagedList
-				data={timeline.data?.pages.map((page) => page.items)}
-				error={timeline.error}
-				render={(item) => {
-					return (
-						<VirtualItem estimateHeight={99}>
-							<PostFeedItem item={item} />
-						</VirtualItem>
-					);
+			<TimelineList
+				params={{
+					type: 'following',
+					showQuotes: true,
+					showReplies: 'follows',
+					showReposts: true,
 				}}
-				hasNewData={isStale()}
-				hasNextPage={timeline.hasNextPage}
-				isFetchingNextPage={timeline.isFetchingNextPage || timeline.isLoading}
-				isRefreshing={timeline.isRefetching}
-				onEndReached={() => timeline.fetchNextPage()}
-				onRefresh={reset}
 			/>
 		</>
 	);

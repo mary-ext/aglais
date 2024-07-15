@@ -1,4 +1,4 @@
-import { Match, Switch } from 'solid-js';
+import { createSignal, Match, Switch } from 'solid-js';
 
 import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
@@ -13,10 +13,12 @@ import { useParams } from '~/lib/navigation/router';
 
 import CircularProgressView from '~/components/circular-progress-view';
 import Divider from '~/components/divider';
+import FilterBar from '~/components/filter-bar';
 import IconButton from '~/components/icon-button';
 import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
 import * as Page from '~/components/page';
 
+import TimelineList from '~/components/feeds/timeline-list';
 import ProfileViewHeader from '~/components/profiles/profile-view-header';
 
 const ProfilePage = () => {
@@ -94,11 +96,48 @@ export default ProfilePage;
 
 type ProfileData = AppBskyActorDefs.ProfileViewDetailed;
 
+const enum PostFilter {
+	POSTS = 'posts',
+	POSTS_WITH_REPLIES = 'replies',
+	MEDIA = 'media',
+}
+
 const ProfileView = (props: { data: ProfileData; isPlaceholderData?: boolean }) => {
+	const [filter, setFilter] = createSignal(PostFilter.POSTS);
+
 	return (
 		<>
 			<ProfileViewHeader {...props} />
 			{!props.isPlaceholderData ? <Divider /> : <CircularProgressView />}
+
+			<div hidden={props.isPlaceholderData}>
+				<FilterBar
+					value={filter()}
+					onChange={setFilter}
+					options={[
+						{
+							value: PostFilter.POSTS,
+							label: `Posts`,
+						},
+						{
+							value: PostFilter.POSTS_WITH_REPLIES,
+							label: `Posts and replies`,
+						},
+						{
+							value: PostFilter.MEDIA,
+							label: `Media`,
+						},
+					]}
+				/>
+
+				<TimelineList
+					params={{
+						type: 'profile',
+						actor: props.data.did,
+						tab: filter(),
+					}}
+				/>
+			</div>
 		</>
 	);
 };
