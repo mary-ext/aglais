@@ -5,6 +5,7 @@ import { useModalContext } from '~/globals/modals';
 import { createDerivedSignal } from '~/lib/hooks/derived-signal';
 import { createEventListener } from '~/lib/hooks/event-listener';
 import { useMediaQuery } from '~/lib/hooks/media-query';
+import { useModalClose } from '~/lib/hooks/modal-close';
 
 import IconButton from '../icon-button';
 import ArrowLeftOutlinedIcon from '../icons-central/arrow-left-outline';
@@ -30,7 +31,7 @@ const enum GalleryNav {
 const ImageViewerModal = (props: ImageViewerModalProps) => {
 	let scrollRef: HTMLDivElement;
 
-	const { close } = useModalContext();
+	const { close, isActive } = useModalContext();
 
 	const images = props.images;
 	const initialActive = props.active ?? 0;
@@ -116,7 +117,12 @@ const ImageViewerModal = (props: ImageViewerModalProps) => {
 	});
 
 	return (
-		<div class="h-full w-full overflow-hidden bg-black/80">
+		<div
+			ref={(node) => {
+				useModalClose(node, close, isActive);
+			}}
+			class="h-full w-full overflow-hidden bg-black/80"
+		>
 			{loading() > 0 && (
 				<div class="pointer-events-none absolute top-0 h-1 w-full">
 					<div class="h-full w-1/4 animate-indeterminate bg-accent" />
