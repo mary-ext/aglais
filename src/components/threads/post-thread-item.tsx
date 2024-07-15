@@ -94,7 +94,7 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 
 					<Avatar
 						type={/* @once */ author().associated?.labeler ? 'labeler' : 'user'}
-						src={author().avatar}
+						src={/* @once */ author().avatar}
 						href={authorHref}
 						onClick={() => precacheProfile(queryClient, author())}
 						size={!treeView ? 'md' : 'xs'}

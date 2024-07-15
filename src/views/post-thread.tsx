@@ -10,7 +10,6 @@ import {
 	type PostDescendantItem,
 } from '~/api/models/post-thread';
 import { usePostThreadQuery } from '~/api/queries/post-thread';
-import { dequal } from '~/api/utils/dequal';
 import { isDid } from '~/api/utils/strings';
 
 import { history } from '~/globals/navigation';
@@ -273,7 +272,7 @@ const ThreadView = (props: {
 					{(treeView) => (
 						<>
 							<Divider gutterBottom={treeView && `sm`} />
-							<Key each={thread().descendants} by={(item) => item.id} equals={dequal}>
+							<Key each={thread().descendants} by={(item) => item.id}>
 								{(item) => {
 									const type = item().type;
 
