@@ -19,6 +19,7 @@ import MailOutlinedIcon from '../icons-central/mail-outline';
 import ImageViewerModalLazy from '../images/image-viewer-modal-lazy';
 
 import DefaultUserAvatar from '~/assets/default-user-avatar.svg?url';
+import DefaultLabelerAvatar from '~/assets/default-labeler-avatar.svg?url';
 
 export interface ProfileViewHeader {
 	data: AppBskyActorDefs.ProfileViewDetailed;
@@ -31,6 +32,7 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 
 	const data = () => props.data;
 	const viewer = () => data().viewer;
+	const isLabeler = !!data().associated?.labeler;
 
 	const shadow = useProfileShadow(data);
 	const moderation = createMemo(() => moderateProfile(data(), shadow(), moderationOptions()));
@@ -65,7 +67,10 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 						when={data().avatar}
 						fallback={
 							<div class="-mt-11 h-20 w-20 shrink-0 overflow-hidden rounded-full outline-2 outline-background outline">
-								<img src={DefaultUserAvatar} class="h-full w-full object-cover" />
+								<img
+									src={!isLabeler ? DefaultUserAvatar : DefaultLabelerAvatar}
+									class="h-full w-full object-cover"
+								/>
 							</div>
 						}
 					>
@@ -75,7 +80,10 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 									const $uri = uri();
 									openModal(() => <ImageViewerModalLazy images={[{ fullsize: $uri }]} />);
 								}}
-								class="group relative -mt-11 h-20 w-20 shrink-0 overflow-hidden rounded-full bg-background outline-2 outline-background outline focus-visible:outline-accent"
+								class={
+									`group relative -mt-11 h-20 w-20 shrink-0 overflow-hidden bg-background outline-2 outline-background outline focus-visible:outline-accent` +
+									(!isLabeler ? ` rounded-full` : ` rounded-lg`)
+								}
 							>
 								<img
 									src={uri()}
