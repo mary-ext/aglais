@@ -811,6 +811,8 @@ const ImageDnd = (props: { onAddImages: (blobs: Blob[]) => void }) => {
 	const onAddImages = props.onAddImages;
 	const [dropping, setDropping] = createSignal(false);
 
+	let tracked: any;
+
 	createEventListener(document, 'paste', (ev) => {
 		const clipboardData = ev.clipboardData;
 		if (!clipboardData) {
@@ -832,6 +834,8 @@ const ImageDnd = (props: { onAddImages: (blobs: Blob[]) => void }) => {
 		ev.preventDefault();
 		setDropping(false);
 
+		tracked = undefined;
+
 		if (dataTransfer.types.includes('Files')) {
 			onAddImages(Array.from(dataTransfer.files));
 		}
@@ -841,12 +845,16 @@ const ImageDnd = (props: { onAddImages: (blobs: Blob[]) => void }) => {
 		ev.preventDefault();
 	});
 
-	createEventListener(document, 'dragenter', () => {
+	createEventListener(document, 'dragenter', (ev) => {
 		setDropping(true);
+		tracked = ev.target;
 	});
 
-	createEventListener(document, 'dragleave', () => {
-		setDropping(false);
+	createEventListener(document, 'dragleave', (ev) => {
+		if (tracked === ev.target) {
+			setDropping(false);
+			tracked = undefined;
+		}
 	});
 
 	return on(dropping, ($dropping) => {
