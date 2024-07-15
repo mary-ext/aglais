@@ -6,6 +6,8 @@ import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { ContextProfileMedia, getModerationUI } from '~/api/moderation';
 import { moderateProfile } from '~/api/moderation/entities/profile';
 
+import { openModal } from '~/globals/modals';
+
 import { formatCompact } from '~/lib/intl/number';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
@@ -13,6 +15,8 @@ import { useSession } from '~/lib/states/session';
 import Button from '../button';
 import IconButton from '../icon-button';
 import MailOutlinedIcon from '../icons-central/mail-outline';
+
+import ImageViewerModalLazy from '../images/image-viewer-modal-lazy';
 
 import DefaultUserAvatar from '~/assets/default-user-avatar.svg?url';
 
@@ -37,7 +41,13 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 		<div class="flex flex-col">
 			<Show when={data().banner} fallback={<div class="aspect-banner bg-outline-md"></div>}>
 				{(uri) => (
-					<button class="group relative aspect-banner overflow-hidden bg-background">
+					<button
+						onClick={() => {
+							const $uri = uri();
+							openModal(() => <ImageViewerModalLazy images={[{ fullsize: $uri }]} />);
+						}}
+						class="group relative aspect-banner overflow-hidden bg-background"
+					>
 						<img
 							src={uri()}
 							class={
@@ -60,7 +70,13 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 						}
 					>
 						{(uri) => (
-							<button class="group relative -mt-11 h-20 w-20 shrink-0 overflow-hidden rounded-full bg-background outline-2 outline-background outline focus-visible:outline-accent">
+							<button
+								onClick={() => {
+									const $uri = uri();
+									openModal(() => <ImageViewerModalLazy images={[{ fullsize: $uri }]} />);
+								}}
+								class="group relative -mt-11 h-20 w-20 shrink-0 overflow-hidden rounded-full bg-background outline-2 outline-background outline focus-visible:outline-accent"
+							>
 								<img
 									src={uri()}
 									class={

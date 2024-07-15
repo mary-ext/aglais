@@ -1,5 +1,9 @@
 import type { AppBskyEmbedImages } from '@mary/bluesky-client/lexicons';
+
+import { openModal } from '~/globals/modals';
+
 import AltButton from '../alt-button';
+import ImageViewerModalLazy from '../images/image-viewer-modal-lazy';
 
 export interface ImageEmbedProps {
 	/** Expected to be static */
@@ -26,8 +30,8 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 
 	const hasStandaloneImage = interactive ? length === 1 && images[0].aspectRatio !== undefined : false;
 
-	const render = (image: AppBskyEmbedImages.ViewImage, mode: RenderMode) => {
-		const { alt, thumb, aspectRatio } = image;
+	const render = (index: number, mode: RenderMode) => {
+		const { alt, thumb, aspectRatio } = images[index];
 
 		// FIXME: with STANDALONE_RATIO, we are resizing the image to make it fit
 		// the container with our given constraints, but this doesn't work when the
@@ -67,6 +71,11 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 						// prettier-ignore
 						(props.blur ? ` scale-125` + (!borderless ? ` blur` : ` blur-lg`) : ``)
 					}
+					onClick={() => {
+						if (interactive) {
+							openModal(() => <ImageViewerModalLazy active={index} images={images} />);
+						}
+					}}
 				/>
 
 				{/* @once */ mode === RenderMode.STANDALONE_RATIO && <div class="h-screen w-screen"></div>}
@@ -91,39 +100,35 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 			{length === 4 ? (
 				<div class="flex gap-0.5">
 					<div class="flex grow basis-0 flex-col gap-0.5">
-						{/* @once */ render(images[0], RenderMode.MULTIPLE_SQUARE)}
-						{/* @once */ render(images[2], RenderMode.MULTIPLE_SQUARE)}
+						{/* @once */ render(0, RenderMode.MULTIPLE_SQUARE)}
+						{/* @once */ render(2, RenderMode.MULTIPLE_SQUARE)}
 					</div>
 
 					<div class="flex grow basis-0 flex-col gap-0.5">
-						{/* @once */ render(images[1], RenderMode.MULTIPLE_SQUARE)}
-						{/* @once */ render(images[3], RenderMode.MULTIPLE_SQUARE)}
+						{/* @once */ render(1, RenderMode.MULTIPLE_SQUARE)}
+						{/* @once */ render(3, RenderMode.MULTIPLE_SQUARE)}
 					</div>
 				</div>
 			) : length === 3 ? (
 				<div class="flex gap-0.5">
 					<div class="flex aspect-square grow-2 basis-0 flex-col gap-0.5">
-						{/* @once */ render(images[0], RenderMode.MULTIPLE)}
+						{/* @once */ render(0, RenderMode.MULTIPLE)}
 					</div>
 
 					<div class="flex grow basis-0 flex-col gap-0.5">
-						{/* @once */ render(images[1], RenderMode.MULTIPLE_SQUARE)}
-						{/* @once */ render(images[2], RenderMode.MULTIPLE_SQUARE)}
+						{/* @once */ render(1, RenderMode.MULTIPLE_SQUARE)}
+						{/* @once */ render(2, RenderMode.MULTIPLE_SQUARE)}
 					</div>
 				</div>
 			) : length === 2 ? (
 				<div class="flex aspect-video gap-0.5">
-					<div class="flex grow basis-0 flex-col gap-0.5">
-						{/* @once */ render(images[0], RenderMode.MULTIPLE)}
-					</div>
-					<div class="flex grow basis-0 flex-col gap-0.5">
-						{/* @once */ render(images[1], RenderMode.MULTIPLE)}
-					</div>
+					<div class="flex grow basis-0 flex-col gap-0.5">{/* @once */ render(0, RenderMode.MULTIPLE)}</div>
+					<div class="flex grow basis-0 flex-col gap-0.5">{/* @once */ render(1, RenderMode.MULTIPLE)}</div>
 				</div>
 			) : hasStandaloneImage ? (
-				<>{/* @once */ render(images[0], RenderMode.STANDALONE_RATIO)}</>
+				<>{/* @once */ render(0, RenderMode.STANDALONE_RATIO)}</>
 			) : length === 1 ? (
-				<>{/* @once */ render(images[0], RenderMode.STANDALONE)}</>
+				<>{/* @once */ render(0, RenderMode.STANDALONE)}</>
 			) : null}
 		</div>
 	);
