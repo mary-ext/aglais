@@ -107,7 +107,13 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 
 				<DeletedGate bypass={!isOurPost} deleted={shadow().deleted} treeView={treeView}>
 					<div class="min-w-0 grow py-3">
-						<PostMeta post={post()} href={href} authorHref={authorHref} compact={treeView} gutterBottom />
+						<PostMeta
+							post={/* @once */ post()}
+							href={href}
+							authorHref={authorHref}
+							compact={treeView}
+							gutterBottom
+						/>
 
 						<ContentHider
 							ui={getModerationUI(moderation(), ContextContentList)}
