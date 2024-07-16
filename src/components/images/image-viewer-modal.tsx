@@ -199,7 +199,7 @@ const ImageViewerModal = (props: ImageViewerModalProps) => {
 			})()}
 
 			<div
-				class="pointer-events-none fixed inset-x-0 top-0 z-20 flex h-13 items-center gap-2 px-2 transition-opacity"
+				class="pointer-events-none fixed inset-x-0 top-0 z-20 flex h-13 items-center gap-2 px-2.5 transition-opacity"
 				classList={{ [`opacity-0`]: hidden() }}
 			>
 				<IconButton
