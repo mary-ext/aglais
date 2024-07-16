@@ -218,7 +218,7 @@ const BoxedSelectItem = <T,>(props: BoxedSelectItemProps<T>) => {
 	});
 
 	return (
-		<button class="flex flex-col px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed">
+		<button class="flex flex-col items-stretch px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed">
 			<div class="flex justify-between">
 				<p class="min-w-0 whitespace-nowrap text-sm font-medium">{props.label}</p>
 
