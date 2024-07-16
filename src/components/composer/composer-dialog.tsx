@@ -150,12 +150,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 		close();
 	};
 
-	const state = createMutable(
-		createComposerState({
-			...props.params,
-			languages: resolveDefaultLanguage(currentAccount!.preferences.language.defaultPostLanguage),
-		}),
-	);
+	const state = createMutable(createComposerState(props.params, currentAccount!.preferences.composer));
 
 	const showAddPostButton = () => {
 		var reply = state.reply;

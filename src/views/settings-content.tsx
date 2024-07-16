@@ -1,7 +1,21 @@
+import { primarySystemLanguage } from '~/globals/locales';
+
+import { getEnglishLanguageName, LANGUAGE_CODES } from '~/lib/intl/languages';
+import { useSession } from '~/lib/states/session';
+import { mapDefined } from '~/lib/misc';
+
 import * as Boxed from '~/components/boxed';
 import * as Page from '~/components/page';
 
 const ContentSettingsPage = () => {
+	const { currentAccount } = useSession();
+
+	const preferences = currentAccount!.preferences;
+	const composerPrefs = preferences.composer;
+	const translationPrefs = preferences.translation;
+
+	const languageOptions = getLanguageOptions();
+
 	return (
 		<>
 			<Page.Header>
@@ -19,37 +33,19 @@ const ContentSettingsPage = () => {
 					<Boxed.List>
 						<Boxed.SelectItem
 							label="Post language"
-							value={'system'}
-							onChange={(next) => {
-								//
-							}}
-							options={[
-								{
-									value: 'system',
-									label: 'System default (English)',
-								},
-							]}
+							value={composerPrefs.defaultPostLanguage}
+							onChange={(next) => (composerPrefs.defaultPostLanguage = next)}
+							options={languageOptions}
 						/>
 
 						<Boxed.SelectItem
 							label="Who can reply to my posts"
-							value={'everyone'}
-							onChange={(next) => {
-								//
-							}}
+							value={composerPrefs.defaultReplyGate}
+							onChange={(next) => (composerPrefs.defaultReplyGate = next)}
 							options={[
-								{
-									value: 'everyone',
-									label: `Everyone`,
-								},
-								{
-									value: 'mentioned',
-									label: `Mentioned users`,
-								},
-								{
-									value: 'followed',
-									label: `Followed users`,
-								},
+								{ value: 'everyone', label: `Everyone` },
+								{ value: 'follows', label: `Followed users` },
+								{ value: 'mentions', label: `Mentioned users` },
 							]}
 						/>
 					</Boxed.List>
@@ -63,45 +59,40 @@ const ContentSettingsPage = () => {
 					<Boxed.List>
 						<Boxed.ToggleItem
 							label="Use Google Translate"
-							enabled={false}
-							onChange={(next) => {
-								//
-							}}
+							enabled={translationPrefs.enabled}
+							onChange={(next) => (translationPrefs.enabled = next)}
 						/>
 
-						<Boxed.SelectItem
-							label="Translate into"
-							value={'system'}
-							onChange={(next) => {
-								//
-							}}
-							options={[
-								{
-									value: 'system',
-									label: `System default (English)`,
-								},
-							]}
-						/>
+						{translationPrefs.enabled && (
+							<>
+								<Boxed.SelectItem
+									label="Translate into"
+									value={translationPrefs.to}
+									onChange={(next) => (translationPrefs.to = next)}
+									options={languageOptions}
+								/>
 
-						<Boxed.ButtonItem
-							label="Exclude languages from translation"
-							description="0 languages excluded"
-							onClick={() => {
-								//
-							}}
-						/>
+								<Boxed.ButtonItem
+									label="Exclude languages from translation"
+									description={`${translationPrefs.exclusions.length} languages excluded`}
+									onClick={() => {
+										//
+									}}
+								/>
+							</>
+						)}
 					</Boxed.List>
 
-					<Boxed.List>
-						<Boxed.ToggleItem
-							label="Proxy translation requests"
-							description="Send translations through a proxy service and not directly from device. Availability might be limited"
-							enabled={true}
-							onChange={(next) => {
-								//
-							}}
-						/>
-					</Boxed.List>
+					{translationPrefs.enabled && (
+						<Boxed.List>
+							<Boxed.ToggleItem
+								label="Proxy translation requests"
+								description="Send translations through a proxy service rather than directly. Availability might be limited"
+								enabled={translationPrefs.proxy}
+								onChange={(next) => (translationPrefs.proxy = next)}
+							/>
+						</Boxed.List>
+					)}
 				</Boxed.Group>
 			</Boxed.Container>
 		</>
@@ -109,3 +100,25 @@ const ContentSettingsPage = () => {
 };
 
 export default ContentSettingsPage;
+
+const getLanguageOptions = (): Boxed.SelectItemOption<string>[] => {
+	const systemLanguage = getEnglishLanguageName(primarySystemLanguage);
+
+	return [
+		{
+			value: 'system',
+			label: `System default (${systemLanguage})`,
+		},
+		...mapDefined(LANGUAGE_CODES, (code): Boxed.SelectItemOption<string> | undefined => {
+			const eng = getEnglishLanguageName(code);
+			if (!eng) {
+				return;
+			}
+
+			return {
+				value: code,
+				label: eng,
+			};
+		}),
+	];
+};

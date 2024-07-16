@@ -5,9 +5,10 @@ import type { ModerationLabeler, ModerationPreferences } from '~/api/moderation'
 export interface PerAccountPreferenceSchema {
 	$version: 1;
 	feeds: SavedFeed[];
-	language: LanguagePreferences;
-	moderation: ModerationPreferences;
+	composer: ComposerPreferences;
+	translation: ContentTranslationPreferences;
 	threadView: ThreadViewPreferences;
+	moderation: ModerationPreferences;
 }
 
 export interface ThreadViewPreferences {
@@ -39,7 +40,20 @@ export interface SavedFeedInfo {
 	indexedAt?: string;
 }
 
-export interface LanguagePreferences {
+export interface ComposerPreferences {
 	/** Default language to use when composing a new post */
 	defaultPostLanguage: 'none' | 'system' | (string & {});
+	/** Default reply gate when creating a new thread */
+	defaultReplyGate: 'everyone' | 'follows' | 'mentions';
+}
+
+export interface ContentTranslationPreferences {
+	/** Whether translations are enabled */
+	enabled: boolean;
+	/** Whether translations should be proxied */
+	proxy: boolean;
+	/** Translate content to this language */
+	to: 'system' | (string & {});
+	/** Don't offer to translate on these languages */
+	exclusions: string[];
 }

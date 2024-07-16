@@ -232,8 +232,15 @@ const createAccountPreferences = (did: At.DID) => {
 			const obj: PerAccountPreferenceSchema = {
 				$version: 1,
 				feeds: [],
-				language: {
+				composer: {
 					defaultPostLanguage: 'system',
+					defaultReplyGate: 'everyone',
+				},
+				translation: {
+					enabled: false,
+					proxy: true,
+					to: 'system',
+					exclusions: [],
 				},
 				moderation: {
 					hideReposts: [],

@@ -4,7 +4,10 @@ import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@mary/bluesky-clien
 
 import { parseRt, type PreliminaryRichText } from '~/api/richtext/parser/parse';
 
+import { primarySystemLanguage } from '~/globals/locales';
+
 import { assert } from '~/lib/invariant';
+import type { ComposerPreferences } from '~/lib/preferences/account';
 
 import type { GifMedia } from '../gifs/gif-search-dialog';
 
@@ -270,12 +273,10 @@ export interface ComposerState {
 	threadgate: AppBskyFeedThreadgate.Record['allow'];
 }
 
-export function createComposerState({
-	reply,
-	text,
-	quote,
-	languages,
-}: CreateComposerStateOptions = {}): ComposerState {
+export function createComposerState(
+	{ reply, text, quote }: CreateComposerStateOptions = {},
+	{ defaultPostLanguage, defaultReplyGate }: ComposerPreferences,
+): ComposerState {
 	return {
 		active: 0,
 		reply: reply,
@@ -289,12 +290,38 @@ export function createComposerState({
 							origin: true,
 						}
 					: undefined,
-				languages,
+				languages: resolveDefaultLanguage(defaultPostLanguage),
 			}),
 		],
-		threadgate: undefined,
+		threadgate: resolveDefaultThreadgate(defaultReplyGate),
 	};
 }
+
+const resolveDefaultLanguage = (lang: 'none' | 'system' | (string & {})) => {
+	if (lang === 'none') {
+		return [];
+	}
+
+	if (lang === 'system') {
+		return [primarySystemLanguage];
+	}
+
+	return [lang];
+};
+
+const resolveDefaultThreadgate = (
+	value: ComposerPreferences['defaultReplyGate'],
+): AppBskyFeedThreadgate.Record['allow'] => {
+	if (value === 'follows') {
+		return [{ $type: 'app.bsky.feed.threadgate#followingRule' }];
+	}
+
+	if (value === 'mentions') {
+		return [{ $type: 'app.bsky.feed.threadgate#mentionRule' }];
+	}
+
+	return undefined;
+};
 
 export const enum ThreadgateKnownValue {
 	EVERYONE,
