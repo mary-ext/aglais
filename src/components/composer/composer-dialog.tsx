@@ -20,7 +20,6 @@ import { formatQueryError } from '~/api/utils/error';
 import { parseAtUri } from '~/api/utils/strings';
 
 import { globalEvents } from '~/globals/events';
-import { primarySystemLanguage } from '~/globals/locales';
 import { openModal, useModalContext } from '~/globals/modals';
 
 import { createEventListener } from '~/lib/hooks/event-listener';
@@ -105,18 +104,6 @@ const MAX_TEXT_LENGTH = 300;
 const SUPPORTED_IMAGE_FORMATS = ['image/png', 'image/jpeg', 'image/webp', 'image/avif', 'image/gif'];
 
 const IS_UA_MOBILE = /Mobile/.test(navigator.userAgent);
-
-const resolveDefaultLanguage = (lang: 'none' | 'system' | (string & {})) => {
-	if (lang === 'none') {
-		return [];
-	}
-
-	if (lang === 'system') {
-		return [primarySystemLanguage];
-	}
-
-	return [lang];
-};
 
 const ComposerDialog = (props: ComposerDialogProps) => {
 	const { close } = useModalContext();
