@@ -62,13 +62,7 @@ const AppPasswordsSettingsPage = () => {
 						title="Create new app password"
 						disabled={isLimited}
 						onClick={() => {
-							openModal(() => (
-								<AddAppPasswordPrompt
-									onSuccess={() => {
-										passwords.refetch();
-									}}
-								/>
-							));
+							openModal(() => <AddAppPasswordPrompt />);
 						}}
 					/>
 				</Page.HeaderAccessory>
