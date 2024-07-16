@@ -2,7 +2,7 @@ import { safeUrlParse } from '../utils/strings';
 
 const TRIM_HOST_RE = /^www\./;
 const TRIM_URLTEXT_RE = /^\s*(https?:\/\/)?(?:www\.)?/;
-const PATH_MAX_LENGTH = 18;
+const PATH_MAX_LENGTH = 16;
 
 export const toShortUrl = (uri: string): string => {
 	const url = safeUrlParse(uri);
