@@ -162,7 +162,7 @@ const NavItem = (props: NavItemProps) => {
 				const active = props.active;
 
 				const Icon = active && ActiveIcon ? ActiveIcon : InactiveIcon;
-				return <Icon class={`text-2xl` + (active && !ActiveIcon ? ` stroke-3 stroke-contrast` : ``)} />;
+				return <Icon class={`text-2xl` + (active && !ActiveIcon ? ` stroke-contrast *:stroke-[3]` : ``)} />;
 			})()}
 		</button>
 	);
