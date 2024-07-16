@@ -16,6 +16,7 @@ import CircularProgressView from '~/components/circular-progress-view';
 import ErrorView from '~/components/error-view';
 import IconButton from '~/components/icon-button';
 import AddOutlinedIcon from '~/components/icons-central/add-outline';
+import CircleInfoOutlinedIcon from '~/components/icons-central/circle-info-outline';
 import TrashOutlinedIcon from '~/components/icons-central/trash-outline';
 import * as Page from '~/components/page';
 import * as Prompt from '~/components/prompt';
@@ -115,6 +116,8 @@ interface PasswordEntryProps {
 const PasswordEntry = ({ item }: PasswordEntryProps) => {
 	const { rpc } = useAgent();
 
+	const isPrivileged = item.privileged;
+
 	const mutation = createMutation((queryClient) => {
 		return {
 			async mutationFn() {
@@ -137,6 +140,13 @@ const PasswordEntry = ({ item }: PasswordEntryProps) => {
 				<p class="min-w-0 break-words text-de text-contrast-muted">
 					{/* @once */ `Created at ${formatAbsDateTime(item.createdAt)}`}
 				</p>
+
+				{isPrivileged && (
+					<p class="mt-1 flex min-w-0 items-center gap-2 text-contrast-muted">
+						<CircleInfoOutlinedIcon class="text-sm" />
+						<span class="text-de">Privileged access</span>
+					</p>
+				)}
 			</div>
 
 			<IconButton
