@@ -103,7 +103,7 @@ const MenuContainer = (props: MenuContainerProps) => {
 					>
 						<div class="flex flex-col pt-1">{props.children}</div>
 
-						<div class="flex flex-col px-4 pb-4 pt-3">
+						<div class="sticky bottom-0 mt-3 flex flex-col bg-background px-4 pb-4">
 							<Button role="menuitem" onClick={close} size="lg">
 								Cancel
 							</Button>
