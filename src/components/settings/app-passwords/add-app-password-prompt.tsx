@@ -125,7 +125,7 @@ const AddAppPasswordPrompt = ({}: AddAppPasswordPromptProps) => {
 							noClose
 							variant="primary"
 						>
-							Add
+							Create
 						</Prompt.Action>
 						<Prompt.Action>Cancel</Prompt.Action>
 					</Prompt.Actions>
