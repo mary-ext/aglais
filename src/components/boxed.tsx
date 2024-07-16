@@ -1,6 +1,9 @@
 import { createMemo, type Component, type ComponentProps, type JSX } from 'solid-js';
 
+import { openModal, useModalContext } from '~/globals/modals';
+
 import ChevronRightOutlinedIcon from './icons-central/chevron-right-outline';
+import * as Menu from './menu';
 
 export interface BoxedContainerProps {
 	children: JSX.Element;
@@ -208,7 +211,9 @@ export interface BoxedSelectItemProps<T> {
 	onChange: (next: T) => void;
 }
 
-const BoxedSelectItem = <T,>(props: BoxedSelectItemProps<T>) => {
+const BoxedSelectItem = <T extends string | number>(props: BoxedSelectItemProps<T>) => {
+	const onChange = props.onChange;
+
 	const options = createMemo(() => props.options);
 	const selected = createMemo(() => {
 		const $options = options();
@@ -218,7 +223,31 @@ const BoxedSelectItem = <T,>(props: BoxedSelectItemProps<T>) => {
 	});
 
 	return (
-		<button class="flex flex-col items-stretch px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed">
+		<button
+			onClick={(ev) => {
+				const anchor = ev.currentTarget;
+
+				openModal(() => {
+					const { close } = useModalContext();
+
+					return (
+						<Menu.Container anchor={anchor}>
+							{options().map((item) => (
+								<Menu.Item
+									label={item.label}
+									checked={item === selected()}
+									onClick={() => {
+										close();
+										onChange(item.value);
+									}}
+								/>
+							))}
+						</Menu.Container>
+					);
+				});
+			}}
+			class="flex flex-col items-stretch px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
+		>
 			<div class="flex justify-between gap-4">
 				<p class="min-w-0 break-words text-sm font-medium">{props.label}</p>
 
