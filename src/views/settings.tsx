@@ -1,4 +1,4 @@
-import ChevronRightOutlinedIcon from '~/components/icons-central/chevron-right-outline';
+import * as Boxed from '~/components/boxed';
 import CircleInfoOutlinedIcon from '~/components/icons-central/circle-info-outline';
 import ColorPaletteOutlinedIcon from '~/components/icons-central/color-palette-outline';
 import GlobeOutlinedIcon from '~/components/icons-central/globe-outline';
@@ -17,79 +17,26 @@ const SettingsPage = () => {
 				<Page.Heading title="Settings" />
 			</Page.Header>
 
-			<div class="flex flex-col gap-6 py-4">
-				<div class="flex flex-col gap-2">
-					<p class="px-4 text-sm font-medium text-contrast-muted">Account settings</p>
+			<Boxed.Container>
+				<Boxed.Group>
+					<Boxed.GroupHeader>Account settings</Boxed.GroupHeader>
 
-					<div class="flex flex-col divide-y divide-outline/50 overflow-hidden rounded-lg bg-contrast/5">
-						<a
-							href="/settings/account"
-							class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
-						>
-							<div class="flex items-center gap-4">
-								<PersonOutlinedIcon class="text-lg text-contrast-muted" />
-								<span class="whitespace-nowrap text-sm font-medium">My account</span>
-							</div>
+					<Boxed.List>
+						<Boxed.LinkItem to="/settings/account" label="My account" icon={PersonOutlinedIcon} />
+						<Boxed.LinkItem to="/moderation" label="Moderation" icon={ShieldOutlinedIcon} />
+					</Boxed.List>
+				</Boxed.Group>
 
-							<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted" />
-						</a>
+				<Boxed.Group>
+					<Boxed.GroupHeader>Application settings</Boxed.GroupHeader>
 
-						<a
-							href="/moderation"
-							class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
-						>
-							<div class="flex items-center gap-4">
-								<ShieldOutlinedIcon class="text-lg text-contrast-muted" />
-								<span class="whitespace-nowrap text-sm font-medium">Moderation</span>
-							</div>
-
-							<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted" />
-						</a>
-
-						<a
-							href="/settings/content"
-							class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
-						>
-							<div class="flex items-center gap-4">
-								<GlobeOutlinedIcon class="text-lg text-contrast-muted" />
-								<span class="whitespace-nowrap text-sm font-medium">Content</span>
-							</div>
-
-							<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted" />
-						</a>
-					</div>
-				</div>
-
-				<div class="flex flex-col gap-2">
-					<p class="px-4 text-sm font-medium text-contrast-muted">Application settings</p>
-
-					<div class="flex flex-col divide-y divide-outline/50 overflow-hidden rounded-lg bg-contrast/5">
-						<a
-							href="/settings/appearance"
-							class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
-						>
-							<div class="flex items-center gap-4">
-								<ColorPaletteOutlinedIcon class="text-lg text-contrast-muted" />
-								<span class="whitespace-nowrap text-sm font-medium">Appearance</span>
-							</div>
-
-							<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted" />
-						</a>
-
-						<a
-							href="/settings/about"
-							class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
-						>
-							<div class="flex items-center gap-4">
-								<CircleInfoOutlinedIcon class="text-lg text-contrast-muted" />
-								<span class="whitespace-nowrap text-sm font-medium">About</span>
-							</div>
-
-							<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted" />
-						</a>
-					</div>
-				</div>
-			</div>
+					<Boxed.List>
+						<Boxed.LinkItem to="/settings/content" label="Content" icon={GlobeOutlinedIcon} />
+						<Boxed.LinkItem to="/settings/appearance" label="Appearance" icon={ColorPaletteOutlinedIcon} />
+						<Boxed.LinkItem to="/settings/about" label="About" icon={CircleInfoOutlinedIcon} />
+					</Boxed.List>
+				</Boxed.Group>
+			</Boxed.Container>
 		</>
 	);
 };

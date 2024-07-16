@@ -77,6 +77,14 @@ const routes: RouteDefinition[] = [
 		path: '/settings/app-passwords',
 		component: lazy(() => import('./views/settings-app-passwords')),
 	},
+	{
+		path: '/settings/appearance',
+		component: lazy(() => import('./views/settings-appearance')),
+	},
+	{
+		path: '/settings/content',
+		component: lazy(() => import('./views/settings-content')),
+	},
 
 	{
 		path: '/bookmarks',

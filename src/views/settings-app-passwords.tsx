@@ -11,6 +11,7 @@ import { reconcile } from '~/lib/misc';
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
+import * as Boxed from '~/components/boxed';
 import CircularProgressView from '~/components/circular-progress-view';
 import ErrorView from '~/components/error-view';
 import IconButton from '~/components/icon-button';
@@ -68,35 +69,39 @@ const AppPasswordsSettingsPage = () => {
 				</Page.HeaderAccessory>
 			</Page.Header>
 
-			<div class="flex flex-col gap-2 py-4">
-				<p class="text-pretty px-4 text-de text-contrast-muted">
-					Use app passwords to sign in to Bluesky clients and other services without giving full access to
-					your account or password.
-				</p>
+			<Boxed.Container>
+				<Boxed.Group>
+					<Boxed.GroupBlurb>
+						Use app passwords to sign in to Bluesky clients and other services without giving full access to
+						your account or password.
+					</Boxed.GroupBlurb>
 
-				<Switch>
-					<Match when={passwords.data}>
-						{(entries) => (
-							<Show
-								when={entries().length > 0}
-								fallback={<p class="py-6 text-center text-base font-medium">No app passwords set up yet.</p>}
-							>
-								<div class="flex flex-col divide-y divide-outline/50 overflow-hidden rounded-lg bg-contrast/5">
-									<For each={entries()}>{(item) => <PasswordEntry item={item} />}</For>
-								</div>
-							</Show>
-						)}
-					</Match>
+					<Switch>
+						<Match when={passwords.data}>
+							{(entries) => (
+								<Show
+									when={entries().length > 0}
+									fallback={
+										<p class="py-6 text-center text-base font-medium">No app passwords set up yet.</p>
+									}
+								>
+									<Boxed.List>
+										<For each={entries()}>{(item) => <PasswordEntry item={item} />}</For>
+									</Boxed.List>
+								</Show>
+							)}
+						</Match>
 
-					<Match when={passwords.error}>
-						{(err) => <ErrorView error={err()} onRetry={() => passwords.refetch()} />}
-					</Match>
+						<Match when={passwords.error}>
+							{(err) => <ErrorView error={err()} onRetry={() => passwords.refetch()} />}
+						</Match>
 
-					<Match when>
-						<CircularProgressView />
-					</Match>
-				</Switch>
-			</div>
+						<Match when>
+							<CircularProgressView />
+						</Match>
+					</Switch>
+				</Boxed.Group>
+			</Boxed.Container>
 		</>
 	);
 };

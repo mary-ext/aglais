@@ -1,4 +1,5 @@
 import Avatar from '~/components/avatar';
+import * as Boxed from '~/components/boxed';
 import AddOutlinedIcon from '~/components/icons-central/add-outline';
 import BlockOutlinedIcon from '~/components/icons-central/block-outline';
 import ChevronRightOutlinedIcon from '~/components/icons-central/chevron-right-outline';
@@ -20,153 +21,101 @@ const ModerationPage = () => {
 				<Page.Heading title="Moderation" />
 			</Page.Header>
 
-			<div class="flex flex-col gap-6 py-4">
-				<div class="flex flex-col gap-2">
-					<p class="px-4 text-sm font-medium text-contrast-muted">Account moderation</p>
+			<Boxed.Container>
+				<Boxed.Group>
+					<Boxed.GroupHeader>Account moderation</Boxed.GroupHeader>
 
-					<div class="flex flex-col divide-y divide-outline/50 overflow-hidden rounded-lg bg-contrast/5">
-						<a
-							href="/moderation/lists"
-							class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
-						>
-							<div class="flex items-center gap-4">
-								<PeopleOutlinedIcon class="text-lg text-contrast-muted" />
-								<span class="whitespace-nowrap text-sm font-medium">Moderation lists</span>
-							</div>
+					<Boxed.List>
+						<Boxed.LinkItem to="/moderation/lists" label="Moderation lists" icon={PeopleOutlinedIcon} />
+						<Boxed.LinkItem to="/moderation/muted" label="Muted users" icon={MuteOutlinedIcon} />
+						<Boxed.LinkItem to="/moderation/blocked" label="Blocked users" icon={BlockOutlinedIcon} />
+					</Boxed.List>
+				</Boxed.Group>
 
-							<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted" />
-						</a>
+				<Boxed.Group>
+					<Boxed.GroupHeader>Additional moderation tools</Boxed.GroupHeader>
 
-						<a
-							href="/moderation/muted"
-							class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
-						>
-							<div class="flex items-center gap-4">
-								<MuteOutlinedIcon class="text-lg text-contrast-muted" />
-								<span class="whitespace-nowrap text-sm font-medium">Muted users</span>
-							</div>
+					<Boxed.List>
+						<Boxed.LinkItem
+							to="/moderation/keyword-filters"
+							label="Keyword filters"
+							icon={FilterOutlinedIcon}
+						/>
+						<Boxed.LinkItem to="/moderation/silcened" label="Silenced users" icon={EyeSlashOutlinedIcon} />
+						<Boxed.LinkItem
+							to="/moderation/hidden-reposters"
+							label="Hidden reposters"
+							icon={RepeatOffOutlinedIcon}
+						/>
+					</Boxed.List>
+				</Boxed.Group>
 
-							<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted" />
-						</a>
+				<Boxed.Group>
+					<Boxed.GroupHeader>Content filters</Boxed.GroupHeader>
 
-						<a
-							href="/settings/blocked"
-							class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
-						>
-							<div class="flex items-center gap-4">
-								<BlockOutlinedIcon class="text-lg text-contrast-muted" />
-								<span class="whitespace-nowrap text-sm font-medium">Blocked users</span>
-							</div>
+					<Boxed.List>
+						<Boxed.SelectItem
+							label="Adult content"
+							description="Erotic nudity or explicit sexual activity"
+							value={'warn'}
+							onChange={(next) => {
+								//
+							}}
+							options={[
+								{ value: 'off', label: 'Warn' },
+								{ value: 'warn', label: 'Warn' },
+								{ value: 'hide', label: 'Hide' },
+							]}
+						/>
 
-							<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted" />
-						</a>
-					</div>
-				</div>
+						<Boxed.SelectItem
+							label="Sexually suggestive"
+							description="Not pornographic but sexual in nature"
+							value={'warn'}
+							onChange={(next) => {
+								//
+							}}
+							options={[
+								{ value: 'off', label: 'Warn' },
+								{ value: 'warn', label: 'Warn' },
+								{ value: 'hide', label: 'Hide' },
+							]}
+						/>
 
-				<div class="flex flex-col gap-2">
-					<p class="px-4 text-sm font-medium text-contrast-muted">Additional moderation tools</p>
+						<Boxed.SelectItem
+							label="Graphic media"
+							description="Disturbing content"
+							value={'warn'}
+							onChange={(next) => {
+								//
+							}}
+							options={[
+								{ value: 'off', label: 'Warn' },
+								{ value: 'warn', label: 'Warn' },
+								{ value: 'hide', label: 'Hide' },
+							]}
+						/>
 
-					<div class="flex flex-col divide-y divide-outline/50 overflow-hidden rounded-lg bg-contrast/5">
-						<a
-							href="/moderation/keyword-filters"
-							class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
-						>
-							<div class="flex items-center gap-4">
-								<FilterOutlinedIcon class="text-lg text-contrast-muted" />
-								<span class="whitespace-nowrap text-sm font-medium">Keyword filters</span>
-							</div>
+						<Boxed.SelectItem
+							label="Nudity"
+							description="Artistic or non-erotic nudity"
+							value={'warn'}
+							onChange={(next) => {
+								//
+							}}
+							options={[
+								{ value: 'off', label: 'Warn' },
+								{ value: 'warn', label: 'Warn' },
+								{ value: 'hide', label: 'Hide' },
+							]}
+						/>
+					</Boxed.List>
+				</Boxed.Group>
 
-							<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted" />
-						</a>
+				<Boxed.Group>
+					<Boxed.GroupHeader>Label providers</Boxed.GroupHeader>
 
-						<a
-							href="/moderation/silenced"
-							class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
-						>
-							<div class="flex items-center gap-4">
-								<EyeSlashOutlinedIcon class="text-lg text-contrast-muted" />
-								<span class="whitespace-nowrap text-sm font-medium">Silenced users</span>
-							</div>
-
-							<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted" />
-						</a>
-
-						<a
-							href="/settings/hidden-reposters"
-							class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
-						>
-							<div class="flex items-center gap-4">
-								<RepeatOffOutlinedIcon class="text-lg text-contrast-muted" />
-								<span class="whitespace-nowrap text-sm font-medium">Hidden reposters</span>
-							</div>
-
-							<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted" />
-						</a>
-					</div>
-				</div>
-
-				<div class="flex flex-col gap-2">
-					<p class="px-4 text-sm font-medium text-contrast-muted">Content filters</p>
-
-					<div class="flex flex-col divide-y divide-outline/50 overflow-hidden rounded-lg bg-contrast/5">
-						<button class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed">
-							<div class="flex min-w-0 flex-col">
-								<p class="whitespace-nowrap text-sm font-medium">Adult content</p>
-								<p class="min-w-0 break-words text-de text-contrast-muted">
-									Erotic nudity or explicit sexual activity
-								</p>
-							</div>
-
-							<span class="flex min-w-0 gap-1">
-								<span class="min-w-0 break-words text-de text-contrast-muted">Warn</span>
-								<ChevronRightOutlinedIcon class="-mr-1.5 mt-px shrink-0 rotate-90 text-lg text-contrast-muted" />
-							</span>
-						</button>
-
-						<button class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed">
-							<div class="flex min-w-0 flex-col">
-								<p class="whitespace-nowrap text-sm font-medium">Sexually suggestive</p>
-								<p class="min-w-0 break-words text-de text-contrast-muted">
-									Not pornographic but sexual in nature
-								</p>
-							</div>
-
-							<span class="flex min-w-0 gap-1">
-								<span class="min-w-0 break-words text-de text-contrast-muted">Warn</span>
-								<ChevronRightOutlinedIcon class="-mr-1.5 mt-px shrink-0 rotate-90 text-lg text-contrast-muted" />
-							</span>
-						</button>
-
-						<button class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed">
-							<div class="flex min-w-0 flex-col">
-								<p class="whitespace-nowrap text-sm font-medium">Graphic media</p>
-								<p class="min-w-0 break-words text-de text-contrast-muted">Disturbing content</p>
-							</div>
-
-							<span class="flex min-w-0 gap-1">
-								<span class="min-w-0 break-words text-de text-contrast-muted">Warn</span>
-								<ChevronRightOutlinedIcon class="-mr-1.5 mt-px shrink-0 rotate-90 text-lg text-contrast-muted" />
-							</span>
-						</button>
-
-						<button class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed">
-							<div class="flex min-w-0 flex-col">
-								<p class="whitespace-nowrap text-sm font-medium">Nudity</p>
-								<p class="min-w-0 break-words text-de text-contrast-muted">Artistic or non-erotic nudity</p>
-							</div>
-
-							<span class="flex min-w-0 gap-1">
-								<span class="min-w-0 break-words text-de text-contrast-muted">Warn</span>
-								<ChevronRightOutlinedIcon class="-mr-1.5 mt-px shrink-0 rotate-90 text-lg text-contrast-muted" />
-							</span>
-						</button>
-					</div>
-				</div>
-
-				<div class="flex flex-col gap-2">
-					<p class="px-4 text-sm font-medium text-contrast-muted">Label providers</p>
-
-					<div class="flex flex-col divide-y divide-outline/50 overflow-hidden rounded-lg bg-contrast/5">
+					<Boxed.List>
 						<a class="flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed">
 							<Avatar type="labeler" size="in" />
 
@@ -191,14 +140,14 @@ const ModerationPage = () => {
 								<span class="whitespace-nowrap text-sm font-medium">Explore new providers</span>
 							</div>
 						</a>
-					</div>
+					</Boxed.List>
 
-					<p class="text-pretty px-4 text-de text-contrast-muted">
+					<Boxed.GroupBlurb>
 						Label providers are entities aiming to provide curated social experiences by annotating the
 						content that you see on Bluesky.
-					</p>
-				</div>
-			</div>
+					</Boxed.GroupBlurb>
+				</Boxed.Group>
+			</Boxed.Container>
 		</>
 	);
 };
