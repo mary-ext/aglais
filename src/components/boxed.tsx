@@ -95,7 +95,7 @@ const BoxedLinkItem = (props: BoxedLinkItemProps) => {
 			})()}
 
 			<div class="flex min-w-0 grow flex-col">
-				<p class="whitespace-nowrap text-sm font-medium">{props.label}</p>
+				<p class="min-w-0 break-words text-sm font-medium">{props.label}</p>
 				<p class="text-pretty break-words text-de text-contrast-muted empty:hidden">{props.description}</p>
 			</div>
 
@@ -121,7 +121,7 @@ const BoxedButtonItem = (props: BoxedButtonItemProps) => {
 	return (
 		<button
 			onClick={props.onClick}
-			class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
+			class="flex justify-between gap-4 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
 		>
 			<div class="flex min-w-0 grow flex-col">
 				<p class={buttonItemLabelProps(props)}>{props.label}</p>
@@ -137,7 +137,7 @@ const BoxedButtonItem = (props: BoxedButtonItemProps) => {
 };
 
 const buttonItemLabelProps = ({ variant = 'default' }: BoxedButtonItemProps) => {
-	let cn = `whitespace-nowrap text-sm font-medium`;
+	let cn = `min-w-0 break-words text-sm font-medium`;
 
 	if (variant === 'default') {
 		cn += ` text-contrast`;
@@ -164,10 +164,10 @@ const BoxedToggleItem = (props: BoxedToggleItemProps) => {
 	return (
 		<button
 			onClick={() => onChange(!enabled())}
-			class="flex justify-between gap-2 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
+			class="flex justify-between gap-4 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
 		>
 			<div class="flex min-w-0 grow flex-col">
-				<p class="whitespace-nowrap text-sm font-medium">{props.label}</p>
+				<p class="min-w-0 break-words text-sm font-medium">{props.label}</p>
 				<p class="text-pretty break-words text-de text-contrast-muted empty:hidden">{props.description}</p>
 			</div>
 
@@ -219,11 +219,11 @@ const BoxedSelectItem = <T,>(props: BoxedSelectItemProps<T>) => {
 
 	return (
 		<button class="flex flex-col items-stretch px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed">
-			<div class="flex justify-between">
-				<p class="min-w-0 whitespace-nowrap text-sm font-medium">{props.label}</p>
+			<div class="flex justify-between gap-4">
+				<p class="min-w-0 break-words text-sm font-medium">{props.label}</p>
 
 				<span class="flex min-w-0 gap-1">
-					<span class="min-w-0 break-words text-de text-contrast-muted">
+					<span class="min-w-0 break-words text-right text-de text-contrast-muted">
 						{(() => {
 							const $selected = selected();
 							if ($selected) {
