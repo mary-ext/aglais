@@ -23,8 +23,7 @@
 		"idb": "^8.0.0",
 		"nanoid": "^5.0.7",
 		"solid-floating-ui": "~0.2.1",
-		"solid-js": "^1.8.18",
-		"solid-textarea-autosize": "^0.0.5"
+		"solid-js": "^1.8.18"
 	},
 	"devDependencies": {
 		"@types/dom-close-watcher": "^1.0.0",
@@ -45,7 +44,6 @@
 			"@tanstack/query-core@5.17.19": "patches/@tanstack__query-core@5.17.19.patch",
 			"cborg@4.0.7": "patches/cborg@4.0.7.patch",
 			"solid-js@1.8.18": "patches/solid-js@1.8.18.patch",
-			"solid-textarea-autosize@0.0.5": "patches/solid-textarea-autosize@0.0.5.patch",
 			"vite-plugin-pwa@0.17.4": "patches/vite-plugin-pwa@0.17.4.patch",
 			"vite@5.3.3": "patches/vite@5.3.3.patch",
 			"workbox-precaching@7.1.0": "patches/workbox-precaching@7.1.0.patch"

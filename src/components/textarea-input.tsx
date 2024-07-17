@@ -1,8 +1,8 @@
 import { createMemo, type JSX } from 'solid-js';
-import TextareaAutosize from 'solid-textarea-autosize';
 
 import { createId } from '~/lib/hooks/id';
 import { formatLong } from '~/lib/intl/number';
+import { useTextareaAutosize } from '~/lib/textarea-autosize';
 
 import { useFieldset } from './fieldset';
 
@@ -42,16 +42,22 @@ const TextareaInput = (props: TextareaInputProps) => {
 				</div>
 			)}
 
-			<TextareaAutosize
-				ref={props.ref}
+			<textarea
+				ref={(node) => {
+					props.ref?.(node);
+
+					const getter = hasValue ? () => props.value : undefined;
+					useTextareaAutosize(node, getter, {
+						maxRows: props.maxRows,
+						minRows: props.minRows,
+					});
+				}}
 				id={id}
 				required={props.required}
 				disabled={isDisabled()}
 				value={hasValue ? props.value : ''}
 				onInput={props.onInput}
 				placeholder={props.placeholder}
-				maxRows={props.maxRows}
-				minRows={props.minRows}
 				class="resize-none rounded border border-outline-md bg-background px-3 py-2 text-sm leading-6 text-contrast outline-2 -outline-offset-2 outline-accent placeholder:text-contrast-muted focus:outline"
 			/>
 

@@ -5,11 +5,11 @@ import {
 	Switch,
 	createEffect,
 	createMemo,
+	createRenderEffect,
 	createResource,
 	createSignal,
 	type JSX,
 } from 'solid-js';
-import TextareaAutosize from 'solid-textarea-autosize';
 
 import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 
@@ -22,6 +22,7 @@ import { createEventListener } from '~/lib/hooks/event-listener';
 import { isCtrlKeyPressed } from '~/lib/interaction';
 import { assert } from '~/lib/invariant';
 import { useAgent } from '~/lib/states/agent';
+import { useTextareaAutosize } from '~/lib/textarea-autosize';
 
 import Avatar from '../avatar';
 import CircularProgress from '../circular-progress';
@@ -213,15 +214,20 @@ const ComposerInput = (props: ComposerInputProps) => {
 				class={`absolute inset-0 z-0 whitespace-pre-wrap break-words` + ` py-1.5`}
 			></div>
 
-			<TextareaAutosize
+			<textarea
 				ref={(node) => {
 					textarea = node;
 
 					props.ref?.(node);
+
+					createRenderEffect(() => {
+						useTextareaAutosize(node, () => props.value, {
+							minRows: props.minRows,
+						});
+					});
 				}}
 				value={props.value}
 				placeholder={props.placeholder}
-				minRows={props.minRows}
 				class={
 					`relative z-10 block w-full resize-none overflow-hidden bg-transparent text-transparent caret-contrast outline-none placeholder:text-contrast-muted` +
 					` py-1.5`
