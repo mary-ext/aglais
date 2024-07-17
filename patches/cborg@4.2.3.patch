@@ -1,5 +1,5 @@
 diff --git a/cborg.js b/cborg.js
-index 90bde204e5f14e14d6a98a95413bb64fb8c807c2..b1bfe5bd9054c362a8c9b7216403b10d6f7d901b 100644
+index 40c159ebc30998a52395abadc744c4736b5cfc32..c8c964f03069a68e5ca533b0fc4f1ef5bd228476 100644
 --- a/cborg.js
 +++ b/cborg.js
 @@ -4,11 +4,11 @@ import { Token, Type } from './lib/token.js'
@@ -57,7 +57,7 @@ index acd7bac1f580d27e8c0052c493e891136d0e8c47..3ae4185291dea9885d5a769f6e481889
  
  /** @type {EncodeOptions} */
 diff --git a/types/cborg.d.ts b/types/cborg.d.ts
-index 1f8711ab5dcc7cf16f3682c538544379094841dd..0b53251a245b295cff0daf02d025df8a9abf411a 100644
+index 93b8775a86ba5420211ef2f55b474abca0f5256e..8b521fc2b55fd13403d9ebef079b50e47f4aeb84 100644
 --- a/types/cborg.d.ts
 +++ b/types/cborg.d.ts
 @@ -1,19 +1,19 @@
@@ -83,7 +83,7 @@ index 1f8711ab5dcc7cf16f3682c538544379094841dd..0b53251a245b295cff0daf02d025df8a
 +export type EncodeOptions = import('./interface.js').EncodeOptions;
  import { decode } from './lib/decode.js';
  import { decodeFirst } from './lib/decode.js';
- import { encode } from './lib/encode.js';
+ import { Tokeniser } from './lib/decode.js';
 diff --git a/types/interface.d.ts b/types/interface.d.ts
 index 40b734f397df16956bd5e99c396f31027fbb2231..6692903b3fb3390c92b534258e421fc977697136 100644
 --- a/types/interface.d.ts
