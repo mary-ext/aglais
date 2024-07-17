@@ -94,7 +94,7 @@ export const SessionProvider = (props: ParentProps) => {
 			onExpired() {
 				globalEvents.emit('sessionexpired');
 			},
-			onRefresh(session) {
+			onSessionUpdate(session) {
 				const did = session.did;
 				const existing = sessions.accounts.find((acc) => acc.did === did);
 
