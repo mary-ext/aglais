@@ -96,7 +96,10 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 						)}
 					</Show>
 
-					<div class="flex items-center gap-3">
+					<div
+						hidden={props.isPlaceholderData && data().did !== currentAccount?.did}
+						class="flex items-center gap-3"
+					>
 						<Switch>
 							<Match when={data().did === currentAccount?.did}>
 								<Button variant="outline" size="md" disabled>
