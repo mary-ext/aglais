@@ -10,7 +10,8 @@ import { autofocusNode, modelText } from '~/lib/input-refs';
 import Button from '../../button';
 import * as Dialog from '../../dialog';
 import Divider from '../../divider';
-import TextareaInput, { CharCounter } from '../../textarea-input';
+import CharCounterAccessory from '../../input/char-counter-accessory';
+import TextareaInput from '../../textarea-input';
 
 import type { GifMedia } from '../gifs/gif-search-dialog';
 
@@ -74,7 +75,7 @@ const GifAltDialog = (props: GifAltDialogProps) => {
 							placeholder={props.gif.alt}
 							minRows={2}
 							maxRows={6}
-							headerAccessory={<CharCounter value={length()} max={1_000} />}
+							headerAccessory={<CharCounterAccessory value={length()} max={1_000} />}
 						/>
 					</div>
 				</Dialog.Body>

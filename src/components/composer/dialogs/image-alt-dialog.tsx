@@ -10,7 +10,8 @@ import { autofocusNode, modelText } from '~/lib/input-refs';
 import Button from '../../button';
 import * as Dialog from '../../dialog';
 import Divider from '../../divider';
-import TextareaInput, { CharCounter } from '../../textarea-input';
+import CharCounterAccessory from '../../input/char-counter-accessory';
+import TextareaInput from '../../textarea-input';
 
 export interface ImageAltDialogProps {
 	image: Blob;
@@ -76,7 +77,7 @@ const ImageAltDialog = (props: ImageAltDialogProps) => {
 							label="Description"
 							minRows={2}
 							maxRows={6}
-							headerAccessory={<CharCounter value={length()} max={5_000} />}
+							headerAccessory={<CharCounterAccessory value={length()} max={5_000} />}
 						/>
 					</div>
 				</Dialog.Body>
