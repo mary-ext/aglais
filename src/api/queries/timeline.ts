@@ -3,6 +3,7 @@ import { createEffect, createMemo, createRenderEffect, onCleanup, untrack } from
 import type { BskyXRPC } from '@mary/bluesky-client';
 import type {
 	AppBskyEmbedRecord,
+	AppBskyFeedDefs,
 	AppBskyFeedGetTimeline,
 	AppBskyFeedPost,
 	At,
@@ -139,6 +140,7 @@ export const useTimelineQuery = (_params: () => TimelineParams) => {
 						!params.showQuotes && createHideQuotesFilter(),
 						!params.showReposts && createHideRepostsFilter(),
 
+						createHideQuotesFromMutedFilter(),
 						createInvalidReplyFilter(),
 						createLabelPostFilter(moderation),
 						createTempMutePostFilter(uid, moderation),
@@ -523,6 +525,19 @@ const createHideQuotesFilter = (): PostFilter => {
 	};
 };
 
+const createHideQuotesFromMutedFilter = (): PostFilter => {
+	return (item) => {
+		const post = item.post;
+		const record = getRecordEmbedView(post.embed);
+
+		return (
+			record === undefined ||
+			record.$type !== 'app.bsky.embed.record#viewRecord' ||
+			!record.author.viewer?.muted
+		);
+	};
+};
+
 //// Slice filters
 const createFeedSliceFilter = (): SliceFilter | undefined => {
 	return (slice) => {
@@ -647,6 +662,18 @@ const getRecordEmbed = (embed: PostRecord['embed']): AppBskyEmbedRecord.Main | u
 
 		if (embed.$type === 'app.bsky.embed.recordWithMedia') {
 			return embed.record;
+		}
+	}
+};
+
+const getRecordEmbedView = (embed: AppBskyFeedDefs.PostView['embed']) => {
+	if (embed) {
+		if (embed.$type === 'app.bsky.embed.record#view') {
+			return embed.record;
+		}
+
+		if (embed.$type === 'app.bsky.embed.recordWithMedia#view') {
+			return embed.record.record;
 		}
 	}
 };
