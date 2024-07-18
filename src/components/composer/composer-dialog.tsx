@@ -28,6 +28,7 @@ import { assert } from '~/lib/invariant';
 import { on } from '~/lib/misc';
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
+import { SUPPORTED_IMAGE_FORMATS, openImagePicker } from '~/lib/utils/blob';
 
 import Button from '../button';
 import * as Dialog from '../dialog';
@@ -100,8 +101,6 @@ export interface ComposerDialogProps {
 const MAX_POSTS = 25;
 const MAX_IMAGES = 4;
 const MAX_TEXT_LENGTH = 300;
-
-const SUPPORTED_IMAGE_FORMATS = ['image/png', 'image/jpeg', 'image/webp', 'image/avif', 'image/gif'];
 
 const IS_UA_MOBILE = /Mobile/.test(navigator.userAgent);
 
@@ -674,14 +673,7 @@ const PostAction = (props: {
 						title="Attach image..."
 						disabled={!(canEmbed() & EmbedKind.IMAGE)}
 						onClick={() => {
-							const input = document.createElement('input');
-
-							input.type = 'file';
-							input.multiple = true;
-							input.accept = SUPPORTED_IMAGE_FORMATS.join(',');
-							input.oninput = () => addImages(Array.from(input.files!));
-
-							input.click();
+							openImagePicker(addImages, true);
 						}}
 						variant="accent"
 					/>
