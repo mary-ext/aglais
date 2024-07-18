@@ -136,9 +136,7 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 					</p>
 				</div>
 
-				<div hidden={props.isPlaceholderData} class="whitespace-pre-wrap break-words text-sm empty:hidden">
-					{data().description?.trim()}
-				</div>
+				<div class="whitespace-pre-wrap break-words text-sm empty:hidden">{data().description?.trim()}</div>
 
 				<div hidden={props.isPlaceholderData} class="flex min-w-0 flex-wrap gap-5 text-sm">
 					<a href={`/${data().did}/following`} onClick={close} class="hover:underline">
