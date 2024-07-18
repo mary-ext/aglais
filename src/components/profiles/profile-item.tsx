@@ -59,6 +59,8 @@ const ProfileItem = (props: ProfileItemProps) => {
 				<Avatar
 					type={/* @once */ profile.associated?.labeler ? 'labeler' : 'user'}
 					src={/* @once */ profile.avatar}
+					href={href}
+					onClick={() => precacheProfile(queryClient, profile)}
 					moderation={moderation()}
 					size="lg"
 				/>
