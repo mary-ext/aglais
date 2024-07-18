@@ -80,9 +80,7 @@ const ProfileItem = (props: ProfileItemProps) => {
 					<div class="empty:hidden">{/* @once */ props.AsideComponent}</div>
 				</div>
 
-				<div class="line-clamp-3 whitespace-pre-wrap break-words text-sm empty:hidden">
-					{/* @once */ profile.description}
-				</div>
+				<div class="line-clamp-3 break-words text-sm empty:hidden">{/* @once */ profile.description}</div>
 
 				{/* @once */ props.FooterComponent}
 			</div>
