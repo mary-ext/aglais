@@ -76,7 +76,7 @@ const avatarClassNames = (
 	{ type, size = 'md', class: className }: AvatarProps,
 	interactive: boolean,
 ): string => {
-	let cn = `shrink-0 overflow-hidden bg-outline-md`;
+	let cn = `inline-block shrink-0 overflow-hidden bg-outline-md`;
 
 	if (type === 'user') {
 		cn += ` rounded-full`;
