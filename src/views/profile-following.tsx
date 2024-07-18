@@ -6,8 +6,10 @@ import { useParams } from '~/lib/navigation/router';
 
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
-import ProfileItem from '~/components/profiles/profile-item';
 import VirtualItem from '~/components/virtual-item';
+
+import ProfileFollowButton from '~/components/profiles/profile-follow-button';
+import ProfileItem from '~/components/profiles/profile-item';
 
 const ProfileFollowingPage = () => {
 	const { didOrHandle } = useParams();
@@ -39,7 +41,7 @@ const ProfileFollowingPage = () => {
 				render={(item) => {
 					return (
 						<VirtualItem estimateHeight={88}>
-							<ProfileItem item={item} />
+							<ProfileItem item={item} AsideComponent={<ProfileFollowButton profile={item} />} />
 						</VirtualItem>
 					);
 				}}

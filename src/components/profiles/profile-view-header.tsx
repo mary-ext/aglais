@@ -17,9 +17,10 @@ import IconButton from '../icon-button';
 import MailOutlinedIcon from '../icons-central/mail-outline';
 
 import ImageViewerModalLazy from '../images/image-viewer-modal-lazy';
+import ProfileFollowButton from './profile-follow-button';
 
-import DefaultUserAvatar from '~/assets/default-user-avatar.svg?url';
 import DefaultLabelerAvatar from '~/assets/default-labeler-avatar.svg?url';
+import DefaultUserAvatar from '~/assets/default-user-avatar.svg?url';
 
 export interface ProfileViewHeader {
 	data: AppBskyActorDefs.ProfileViewDetailed;
@@ -107,11 +108,9 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 								</Button>
 							</Match>
 
-							<Match when>
+							<Match when={!data().viewer?.blockedBy}>
 								<IconButton icon={MailOutlinedIcon} title="Message this user" disabled variant="outline" />
-								<Button variant="primary" size="md" disabled>
-									Follow
-								</Button>
+								<ProfileFollowButton profile={data()} />
 							</Match>
 						</Switch>
 					</div>
