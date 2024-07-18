@@ -17,6 +17,8 @@ import IconButton from '../icon-button';
 import MailOutlinedIcon from '../icons-central/mail-outline';
 
 import ImageViewerModalLazy from '../images/image-viewer-modal-lazy';
+
+import EditProfileDialogLazy from './edit-profile-dialog-lazy';
 import ProfileFollowButton from './profile-follow-button';
 
 import DefaultLabelerAvatar from '~/assets/default-labeler-avatar.svg?url';
@@ -97,13 +99,16 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 						)}
 					</Show>
 
-					<div
-						hidden={props.isPlaceholderData && data().did !== currentAccount?.did}
-						class="flex items-center gap-3"
-					>
+					<div hidden={props.isPlaceholderData} class="flex items-center gap-3">
 						<Switch>
 							<Match when={data().did === currentAccount?.did}>
-								<Button variant="outline" size="md" disabled>
+								<Button
+									onClick={() => {
+										openModal(() => <EditProfileDialogLazy profile={data()} />);
+									}}
+									variant="outline"
+									size="md"
+								>
 									Edit profile
 								</Button>
 							</Match>
