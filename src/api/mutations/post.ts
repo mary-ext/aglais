@@ -26,6 +26,10 @@ export const createPostLikeMutation = (
 		},
 		async mutate(prevLikeUri, shouldLike) {
 			if (shouldLike) {
+				if (prevLikeUri) {
+					return prevLikeUri;
+				}
+
 				const result = await createRecord(rpc, {
 					repo: currentAccount!.did,
 					collection: 'app.bsky.feed.like',
@@ -80,6 +84,10 @@ export const createPostRepostMutation = (
 		},
 		async mutate(prevRepostUri, shouldRepost) {
 			if (shouldRepost) {
+				if (prevRepostUri) {
+					return prevRepostUri;
+				}
+
 				const result = await createRecord(rpc, {
 					repo: currentAccount!.did,
 					collection: 'app.bsky.feed.repost',
