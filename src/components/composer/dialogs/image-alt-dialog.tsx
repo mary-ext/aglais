@@ -22,10 +22,9 @@ const ImageAltDialog = (props: ImageAltDialogProps) => {
 	const { close } = useModalContext();
 
 	const [text, setText] = createSignal(props.value);
-	const normalizedText = createMemo(() => text().replace(PLAIN_WS_RE, ''));
 
-	const length = createMemo(() => graphemeLen(normalizedText()));
-	const isEqual = () => normalizedText() === props.value;
+	const length = createMemo(() => graphemeLen(text()));
+	const isEqual = () => text() === props.value;
 
 	const blobUrl = createMemo(() => {
 		const blob = props.image;
@@ -51,7 +50,7 @@ const ImageAltDialog = (props: ImageAltDialogProps) => {
 							disabled={isEqual() || length() > 5_000}
 							onClick={() => {
 								close();
-								props.onChange(normalizedText());
+								props.onChange(text().replace(PLAIN_WS_RE, ''));
 							}}
 							variant="primary"
 							size="sm"

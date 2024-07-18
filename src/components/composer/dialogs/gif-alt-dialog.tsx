@@ -24,10 +24,9 @@ const GifAltDialog = (props: GifAltDialogProps) => {
 	const { close } = useModalContext();
 
 	const [text, setText] = createSignal(props.value ?? '');
-	const normalizedText = createMemo(() => text().replace(PLAIN_WS_RE, ''));
 
-	const length = createMemo(() => graphemeLen(normalizedText()));
-	const isEqual = () => normalizedText() === (props.value ?? '');
+	const length = createMemo(() => graphemeLen(text()));
+	const isEqual = () => text() === (props.value ?? '');
 
 	return (
 		<>
@@ -45,7 +44,7 @@ const GifAltDialog = (props: GifAltDialogProps) => {
 							disabled={isEqual() || length() > 1_000}
 							onClick={() => {
 								close();
-								props.onChange(normalizedText() || undefined);
+								props.onChange(text().replace(PLAIN_WS_RE, '') || undefined);
 							}}
 							variant="primary"
 							size="sm"
