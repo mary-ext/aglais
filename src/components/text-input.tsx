@@ -1,3 +1,5 @@
+import type { JSX } from 'solid-js';
+
 import { createId } from '~/lib/hooks/id';
 
 import { useFieldset } from './fieldset';
@@ -22,6 +24,7 @@ export interface TextInputProps {
 	error?: string | null | undefined | false;
 	description?: string;
 	value?: string;
+	headerAccessory?: JSX.Element;
 	onInput?: (ev: InputEvent) => void;
 }
 
@@ -32,11 +35,21 @@ const TextInput = (props: TextInputProps) => {
 	const hasValue = 'value' in props;
 	const isDisabled = () => fieldset.disabled || !!props.disabled;
 
+	const hasLabel = 'label' in props;
+	const hasHeaderAccessory = 'headerAccessory' in props;
+
 	return (
 		<div class={`flex flex-col gap-2` + (isDisabled() ? ` opacity-50` : ``)}>
-			<label for={id} class="text-sm font-medium text-contrast empty:hidden">
-				{props.label}
-			</label>
+			{(hasLabel || hasHeaderAccessory) && (
+				<div class="flex justify-between gap-2">
+					<label for={id} class="overflow-hidden break-words text-sm font-medium text-contrast">
+						{props.label}
+					</label>
+
+					{props.headerAccessory}
+				</div>
+			)}
+
 			<input
 				ref={props.ref}
 				id={id}
