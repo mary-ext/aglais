@@ -4,6 +4,7 @@
 import { createRenderEffect, onCleanup, onMount } from 'solid-js';
 
 import { createEventListener } from './hooks/event-listener';
+import { useResizeObserver } from './hooks/resize-observer';
 
 // src/getSizingData.ts#L4
 const SIZING_STYLES = [
@@ -135,11 +136,4 @@ export const useTextareaAutosize = (
 			});
 		}
 	});
-};
-
-const useResizeObserver = (node: HTMLElement, callback: () => void) => {
-	const observer = new ResizeObserver(callback);
-
-	onCleanup(() => observer.disconnect());
-	observer.observe(node);
 };
