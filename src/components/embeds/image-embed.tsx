@@ -2,7 +2,6 @@ import type { AppBskyEmbedImages } from '@mary/bluesky-client/lexicons';
 
 import { openModal } from '~/globals/modals';
 
-import AltButton from '../alt-button';
 import ImageViewerModalLazy from '../images/image-viewer-modal-lazy';
 
 export interface ImageEmbedProps {
@@ -81,8 +80,10 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 				{/* @once */ mode === RenderMode.STANDALONE_RATIO && <div class="h-screen w-screen"></div>}
 
 				{interactive && alt && (
-					<div class="absolute bottom-0 left-0 p-2">
-						<AltButton title="Show image description" />
+					<div class="pointer-events-none absolute bottom-0 right-0 p-2">
+						<div class="flex h-4 items-center rounded bg-p-neutral-950/75 px-1 text-[10px] font-bold tracking-wider text-white">
+							ALT
+						</div>
 					</div>
 				)}
 			</div>
