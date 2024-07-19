@@ -1,6 +1,7 @@
 import { createSignal, Match, Switch } from 'solid-js';
 
 import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
+import { XRPCError } from '@mary/bluesky-client/xrpc';
 import { useQueryClient } from '@mary/solid-query';
 
 import { createProfileQuery } from '~/api/queries/profile';
@@ -13,6 +14,7 @@ import { useParams } from '~/lib/navigation/router';
 
 import CircularProgressView from '~/components/circular-progress-view';
 import Divider from '~/components/divider';
+import ErrorView from '~/components/error-view';
 import FilterBar from '~/components/filter-bar';
 import IconButton from '~/components/icon-button';
 import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
@@ -65,6 +67,43 @@ const ProfilePage = () => {
 			</Page.Header>
 
 			<Switch>
+				<Match when={profile.error} keyed>
+					{(err) => {
+						if (
+							err instanceof XRPCError &&
+							(err.kind === 'InvalidRequest' ||
+								err.kind === 'AccountTakedown' ||
+								err.kind === 'AccountDeactivated')
+						) {
+							const text =
+								err.kind === 'AccountTakedown'
+									? `This account is taken down`
+									: err.kind === 'AccountDeactivated'
+										? `This account has deactivated`
+										: `This account doesn't exist`;
+
+							return (
+								<div class="contents">
+									<div class="aspect-banner bg-outline-md"></div>
+									<div class="flex flex-col gap-3 p-4">
+										<div class="-mt-11 h-20 w-20 shrink-0 overflow-hidden rounded-full bg-outline-md outline-2 outline-background outline"></div>
+										<p dir="auto" class="overflow-hidden break-words text-xl font-bold text-contrast-muted">
+											{didOrHandle}
+										</p>
+									</div>
+
+									<div class="mx-auto my-8 w-full max-w-80 p-4">
+										<p class="text-xl font-bold">{text}</p>
+										<p class="mt-2 text-sm text-contrast-muted">Try searching for another.</p>
+									</div>
+								</div>
+							);
+						}
+
+						return <ErrorView error={err} onRetry={() => profile.refetch()} />;
+					}}
+				</Match>
+
 				<Match
 					when={(() => {
 						if (!isDid(didOrHandle)) {
