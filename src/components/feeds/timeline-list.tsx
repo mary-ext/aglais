@@ -27,6 +27,7 @@ const TimelineList = (props: TimelineListProps) => {
 			isRefreshing={timeline.isRefetching}
 			onEndReached={() => timeline.fetchNextPage()}
 			onRefresh={reset}
+			extraBottomGutter
 		/>
 	);
 };

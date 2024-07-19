@@ -20,16 +20,18 @@ export interface PagedListProps<T> {
 	isFetchingNextPage?: boolean;
 	onEndReached?: () => void;
 	onRefresh?: () => void;
+	extraBottomGutter?: boolean;
 }
 
 const PagedList = <T,>(props: PagedListProps<T>) => {
 	const render = props.render;
+	const extraBottomGutter = props.extraBottomGutter;
 
 	const onEndReached = props.onEndReached;
 	const onRefresh = props.onRefresh;
 
 	return (
-		<div class="flex flex-col">
+		<div class={'flex flex-col' + (extraBottomGutter ? ` pb-4` : ``)}>
 			<Switch>
 				<Match when={props.isRefreshing}>
 					<div class="grid h-13 shrink-0 place-items-center border-b border-outline">
