@@ -65,7 +65,7 @@ const ExternalEmbed = ({ embed, interactive }: ExternalEmbedProps) => {
 						href={uri}
 						target="_blank"
 						rel="noopener noreferrer nofollow"
-						class="flex min-w-0 flex-col justify-center gap-0.5 p-3 text-sm hover:bg-contrast/sm active:bg-contrast/sm-pressed"
+						class="flex min-w-0 grow flex-col justify-center gap-0.5 p-3 text-sm hover:bg-contrast/sm active:bg-contrast/sm-pressed"
 					>
 						<p class="overflow-hidden text-ellipsis text-contrast-muted empty:hidden">{domain}</p>
 						<p class="line-clamp-2 break-words font-medium empty:hidden">{title}</p>
