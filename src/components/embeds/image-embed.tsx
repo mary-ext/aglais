@@ -81,7 +81,7 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 
 				{interactive && alt && (
 					<div class="pointer-events-none absolute bottom-0 right-0 p-2">
-						<div class="flex h-4 items-center rounded bg-p-neutral-950/75 px-1 text-[10px] font-bold tracking-wider text-white">
+						<div class="flex h-4 items-center rounded bg-p-neutral-950/75 px-1 text-[9px] font-bold tracking-wider text-white">
 							ALT
 						</div>
 					</div>
