@@ -1,5 +1,9 @@
 import type { AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
+
 import type { UiTimelineItem } from '~/api/models/timeline';
+import { parseAtUri } from '~/api/utils/strings';
+
+import { useSession } from '~/lib/states/session';
 
 export interface PostReplyContextProps {
 	/** Expected to be static */
@@ -8,6 +12,7 @@ export interface PostReplyContextProps {
 
 const PostReplyContext = (props: PostReplyContextProps) => {
 	const { post, reply, prev } = props.item;
+	const { currentAccount } = useSession();
 
 	if (!prev) {
 		const parent = reply?.parent;
@@ -15,6 +20,10 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 			const author = parent.author;
 			const did = author.did;
 			const handle = author.handle;
+
+			if (did === currentAccount?.did) {
+				return <div class="mb-0.5 flex text-sm text-contrast-muted">Replying to you</div>;
+			}
 
 			return (
 				<div class="mb-0.5 flex text-sm text-contrast-muted">
@@ -30,8 +39,13 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 			);
 		}
 
-		const record = post.record as AppBskyFeedPost.Record;
-		if (record.reply) {
+		const raw = (post.record as AppBskyFeedPost.Record).reply?.parent;
+		if (raw) {
+			const did = parseAtUri(raw.uri).repo;
+			if (did === currentAccount?.did) {
+				return <div class="mb-0.5 flex text-sm text-contrast-muted">Replying to you</div>;
+			}
+
 			return <div class="mb-0.5 text-sm text-contrast-muted">Replying to unknown</div>;
 		}
 	}
