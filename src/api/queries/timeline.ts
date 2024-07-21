@@ -437,11 +437,12 @@ const createLabelPostFilter = (opts: ModerationOptions): PostFilter | undefined 
 		const isFollowing = !!author.viewer?.following;
 		const text = record.text + unwrapPostEmbedText(record.embed);
 
-		record.embed;
-
 		const accu: ModerationCause[] = [];
 		decideLabelModeration(accu, TargetContent, post.labels, post.author.did, opts);
 		decideMutedKeywordModeration(accu, text, isFollowing, PreferenceHide, opts);
+
+		// decideMutedTemporaryModeration is not called here because we only want
+		// temporarily muted users to be hidden from timeline.
 
 		const decision = getModerationUI(accu, ContextContentList);
 
