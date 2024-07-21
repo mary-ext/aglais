@@ -3,7 +3,6 @@ import { createMemo, type JSX } from 'solid-js';
 import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
-import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { moderateProfile } from '~/api/moderation/entities/profile';
 import { precacheProfile } from '~/api/queries-cache/profile-precache';
 
@@ -26,11 +25,10 @@ const ProfileItem = (props: ProfileItemProps) => {
 	const moderationOptions = useModerationOptions();
 
 	const profile = props.item;
-	const shadow = useProfileShadow(profile);
 
 	const href = `/${profile.did}`;
 
-	const moderation = createMemo(() => moderateProfile(profile, shadow(), moderationOptions()));
+	const moderation = createMemo(() => moderateProfile(profile, moderationOptions()));
 
 	const handleClick = (ev: MouseEvent | KeyboardEvent) => {
 		if (!isElementClicked(ev)) {

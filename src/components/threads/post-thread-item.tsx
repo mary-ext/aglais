@@ -4,7 +4,6 @@ import type { AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { usePostShadow } from '~/api/cache/post-shadow';
-import { useProfileShadow } from '~/api/cache/profile-shadow';
 import type { PostAncestorItem, PostDescendantItem } from '~/api/models/post-thread';
 import { ContextContentList, getModerationUI } from '~/api/moderation';
 import { moderatePost } from '~/api/moderation/entities/post';
@@ -50,7 +49,6 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 	const embed = post().embed;
 
 	const shadow = usePostShadow(post);
-	const authorShadow = useProfileShadow(author);
 
 	const uri = parseAtUri(post().uri);
 	const authorHref = `/${author().did}`;
@@ -58,7 +56,7 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 
 	const isOurPost = currentAccount && currentAccount.did === author().did;
 
-	const moderation = createMemo(() => moderatePost(post(), authorShadow(), moderationOptions()));
+	const moderation = createMemo(() => moderatePost(post(), moderationOptions()));
 
 	const handleClick = (ev: MouseEvent | KeyboardEvent) => {
 		if (!isElementClicked(ev) || shadow().deleted) {

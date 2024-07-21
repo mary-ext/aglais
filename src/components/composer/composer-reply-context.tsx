@@ -2,7 +2,6 @@ import { createMemo } from 'solid-js';
 
 import type { AppBskyEmbedImages, AppBskyFeedDefs, AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
 
-import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { ContextContentMedia, getModerationUI } from '~/api/moderation';
 import { moderatePost } from '~/api/moderation/entities/post';
 
@@ -25,9 +24,7 @@ const ComposerReplyContext = (props: ComposerReplyContextProps) => {
 	const author = post.author;
 	const record = post.record as AppBskyFeedPost.Record;
 
-	const authorShadow = useProfileShadow(author);
-
-	const moderation = createMemo(() => moderatePost(post, authorShadow(), moderationOptions()));
+	const moderation = createMemo(() => moderatePost(post, moderationOptions()));
 	const shouldBlurImage = () => getModerationUI(moderation(), ContextContentMedia).b.length !== 0;
 
 	const displayName = author.displayName;

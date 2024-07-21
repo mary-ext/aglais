@@ -1,7 +1,5 @@
 import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 
-import { type ProfileShadowView } from '~/api/cache/profile-shadow';
-
 import {
 	TargetAccount,
 	TargetProfile,
@@ -17,11 +15,7 @@ type AllProfileView =
 	| AppBskyActorDefs.ProfileViewBasic
 	| AppBskyActorDefs.ProfileViewDetailed;
 
-export const moderateProfile = (
-	profile: AllProfileView,
-	shadow: ProfileShadowView,
-	opts: ModerationOptions,
-) => {
+export const moderateProfile = (profile: AllProfileView, opts: ModerationOptions) => {
 	const accu: ModerationCause[] = [];
 	const did = profile.did;
 
@@ -31,7 +25,7 @@ export const moderateProfile = (
 
 	decideLabelModeration(accu, TargetProfile, profileLabels, did, opts);
 	decideLabelModeration(accu, TargetAccount, accountLabels, did, opts);
-	decideMutedPermanentModeration(accu, shadow.muted);
+	decideMutedPermanentModeration(accu, profile.viewer?.muted);
 	decideMutedTemporaryModeration(accu, did, opts);
 
 	return accu;

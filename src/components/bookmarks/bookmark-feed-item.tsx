@@ -3,7 +3,6 @@ import { createMemo } from 'solid-js';
 import type { AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
 
 import { usePostShadow } from '~/api/cache/post-shadow';
-import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { ContextContentList, getModerationUI } from '~/api/moderation';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { parseAtUri } from '~/api/utils/strings';
@@ -37,13 +36,12 @@ const BookmarkFeedItem = ({ item }: BookmarkFeedItemProps) => {
 	const embed = post.embed;
 
 	const shadow = usePostShadow(post);
-	const authorShadow = useProfileShadow(author);
 
 	const uri = parseAtUri(post.uri);
 	const authorHref = `/${author.did}`;
 	const href = `/${author.did}/${uri.rkey}`;
 
-	const moderation = createMemo(() => moderatePost(post, authorShadow(), moderationOptions()));
+	const moderation = createMemo(() => moderatePost(post, moderationOptions()));
 
 	const handleClick = (ev: MouseEvent | KeyboardEvent) => {
 		if (!isElementClicked(ev)) {

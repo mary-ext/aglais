@@ -7,8 +7,6 @@ import type {
 
 import type { ThreadViewPreferences } from '~/lib/preferences/account';
 
-import { getProfileShadow } from '../cache/profile-shadow';
-
 import {
 	ContextContentList,
 	getModerationUI,
@@ -104,7 +102,7 @@ export const fillModerationCache = (
 			fillModerationCache(cache, parent, options);
 		}
 
-		cache.set(post, moderatePost(post, getProfileShadow(post.author), options));
+		cache.set(post, moderatePost(post, options));
 
 		if (replies?.length) {
 			for (let idx = 0, len = replies.length; idx < len; idx++) {

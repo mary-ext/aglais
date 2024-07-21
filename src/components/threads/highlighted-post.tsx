@@ -3,7 +3,6 @@ import { createMemo } from 'solid-js';
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
 
 import { usePostShadow } from '~/api/cache/post-shadow';
-import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { ContextContentView, getModerationUI } from '~/api/moderation';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { createPostLikeMutation, createPostRepostMutation } from '~/api/mutations/post';
@@ -50,7 +49,6 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 	const embed = () => post().embed;
 
 	const shadow = usePostShadow(post);
-	const authorShadow = useProfileShadow(author);
 
 	const links = createMemo(() => {
 		const uri = parseAtUri(post().uri);
@@ -62,7 +60,7 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 		return { authorHref, href };
 	}, EQUALS_DEQUAL);
 
-	const moderation = createMemo(() => moderatePost(post(), authorShadow(), moderationOptions()));
+	const moderation = createMemo(() => moderatePost(post(), moderationOptions()));
 
 	const mutateLike = createPostLikeMutation(post, shadow);
 	const mutateRepost = createPostRepostMutation(post, shadow);

@@ -2,7 +2,6 @@ import { createMemo, Match, Show, Switch } from 'solid-js';
 
 import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 
-import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { ContextProfileMedia, getModerationUI } from '~/api/moderation';
 import { moderateProfile } from '~/api/moderation/entities/profile';
 
@@ -37,8 +36,7 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 	const viewer = () => data().viewer;
 	const isLabeler = !!data().associated?.labeler;
 
-	const shadow = useProfileShadow(data);
-	const moderation = createMemo(() => moderateProfile(data(), shadow(), moderationOptions()));
+	const moderation = createMemo(() => moderateProfile(data(), moderationOptions()));
 
 	const shouldBlurMedia = createMemo(() => getModerationUI(moderation(), ContextProfileMedia).b.length !== 0);
 

@@ -7,7 +7,6 @@ import type {
 	AppBskyFeedPost,
 } from '@mary/bluesky-client/lexicons';
 
-import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { ContextContentMedia, getModerationUI } from '~/api/moderation';
 import { moderateQuote } from '~/api/moderation/entities/quote';
 import { parseAtUri } from '~/api/utils/strings';
@@ -30,7 +29,6 @@ export interface QuoteEmbedProps {
 const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 	const record = quote.value as AppBskyFeedPost.Record;
 	const author = quote.author;
-	const authorShadow = useProfileShadow(author);
 
 	const uri = parseAtUri(quote.uri);
 	const href = `/${author.did}/${uri.rkey}`;
@@ -39,7 +37,7 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 	const image = getPostImage(quote.embeds?.[0]);
 
 	const moderationOptions = useModerationOptions();
-	const moderation = createMemo(() => moderateQuote(quote, authorShadow(), moderationOptions()));
+	const moderation = createMemo(() => moderateQuote(quote, moderationOptions()));
 
 	const showLargeImages = image && (large || !text);
 	const shouldBlurImage = () => getModerationUI(moderation(), ContextContentMedia).b.length !== 0;
