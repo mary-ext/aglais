@@ -1,11 +1,8 @@
-import { createRenderEffect, createSignal, type Accessor, type Signal } from 'solid-js';
+import { createMemo, createSignal, type Accessor, type Signal } from 'solid-js';
 
 export const createDerivedSignal = <T>(accessor: Accessor<T>): Signal<T> => {
-	const [state, setState] = createSignal<T>();
+	const computable = createMemo(() => createSignal(accessor()));
 
-	createRenderEffect(() => {
-		setState(accessor);
-	});
-
-	return [state, setState] as Signal<T>;
+	// @ts-expect-error
+	return [() => computable()[0](), (next) => computable()[1](next)] as Signal<T>;
 };
