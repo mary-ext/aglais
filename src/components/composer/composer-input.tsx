@@ -16,6 +16,7 @@ import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 import { autoPlacement, autoUpdate, offset, shift, size } from '@floating-ui/dom';
 
 import { type PreliminaryRichText } from '~/api/richtext/parser/parse';
+import { safeUrlParse } from '~/api/utils/strings';
 
 import { createDebouncedValue } from '~/lib/hooks/debounced-value';
 import { createEventListener } from '~/lib/hooks/event-listener';
@@ -287,6 +288,25 @@ const ComposerInput = (props: ComposerInputProps) => {
 						onSubmit();
 
 						return;
+					}
+				}}
+				onPaste={(ev) => {
+					const start = textarea!.selectionStart;
+					const end = textarea!.selectionEnd;
+
+					const clipboardData = ev.clipboardData;
+					if (!clipboardData || start === end) {
+						return;
+					}
+
+					const plain = clipboardData.getData('text/plain');
+					const url = plain ? safeUrlParse(plain) : null;
+
+					if (url) {
+						const slice = props.value.slice(start, end);
+
+						ev.preventDefault();
+						document.execCommand('insertText', false, `[${slice}](${plain})`);
 					}
 				}}
 			/>
