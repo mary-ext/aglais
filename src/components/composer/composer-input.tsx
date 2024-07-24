@@ -57,6 +57,7 @@ const TRIM_MENTION_RE = /[.]+$/;
 const ComposerInput = (props: ComposerInputProps) => {
 	let textarea: HTMLTextAreaElement | undefined;
 	let renderer: HTMLDivElement | undefined;
+	let shiftKeyHeld = false;
 
 	const onChange = props.onChange;
 	const onSubmit = props.onSubmit;
@@ -279,6 +280,10 @@ const ComposerInput = (props: ComposerInputProps) => {
 						return;
 					}
 
+					if (ev.shiftKey) {
+						shiftKeyHeld = true;
+					}
+
 					if (key === 'Backspace') {
 						setTimeout(handleInputSelection, 0);
 					}
@@ -290,12 +295,17 @@ const ComposerInput = (props: ComposerInputProps) => {
 						return;
 					}
 				}}
+				onKeyUp={(ev) => {
+					if (!ev.shiftKey) {
+						shiftKeyHeld = false;
+					}
+				}}
 				onPaste={(ev) => {
 					const start = textarea!.selectionStart;
 					const end = textarea!.selectionEnd;
 
 					const clipboardData = ev.clipboardData;
-					if (!clipboardData || start === end) {
+					if (!clipboardData || shiftKeyHeld || start === end) {
 						return;
 					}
 
