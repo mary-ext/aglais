@@ -66,7 +66,9 @@ export default Avatar;
 const renderAvatar = (type: keyof typeof AVATARS, src: string | undefined, shouldBlur?: () => boolean) => {
 	return (
 		<img
-			src={/* @once */ src ?? AVATARS[type]}
+			src={
+				/* @once */ src ? src.replace('/img/avatar/plain/', '/img/avatar_thumbnail/plain/') : AVATARS[type]
+			}
 			class={`h-full w-full` + (src && shouldBlur?.() ? ` scale-125 blur` : ``)}
 		/>
 	);
