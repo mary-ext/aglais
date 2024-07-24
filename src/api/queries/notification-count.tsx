@@ -19,7 +19,7 @@ export const createNotificationCountQuery = () => {
 
 			if (count !== undefined) {
 				if (count >= 30) {
-					return false;
+					return 90_000;
 				}
 
 				if (count > 0 && Math.random() >= 0.5) {
