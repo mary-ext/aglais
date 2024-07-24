@@ -1,5 +1,7 @@
 import { Suspense, lazy, type Accessor, type Component, type ComponentProps } from 'solid-js';
 
+import { createNotificationCountQuery } from './api/queries/notification-count';
+
 import { globalEvents } from './globals/events';
 import { hasModals } from './globals/modals';
 import { history } from './globals/navigation';
@@ -71,6 +73,8 @@ const MainTabsRoutes = {
 };
 
 const NavBar = ({ route }: { route: Accessor<MatchedRouteState> }) => {
+	const unread = createNotificationCountQuery();
+
 	const active = () => route().def.meta?.name;
 
 	const bindClick = (to: MainTabs) => {
@@ -119,6 +123,7 @@ const NavBar = ({ route }: { route: Accessor<MatchedRouteState> }) => {
 				/>
 				<NavItem
 					label="Notifications"
+					badge={getUnreadCountLabel(unread.data?.count)}
 					active={active() === MainTabs.NOTIFICATIONS}
 					onClick={bindClick(MainTabs.NOTIFICATIONS)}
 					icon={BellOutlinedIcon}
@@ -142,11 +147,16 @@ const NavBar = ({ route }: { route: Accessor<MatchedRouteState> }) => {
 	);
 };
 
+const getUnreadCountLabel = (count: number = 0) => {
+	return count > 0 ? (count > 30 ? `${count}+` : `${count}`) : ``;
+};
+
 type IconComponent = Component<ComponentProps<'svg'>>;
 
 interface NavItemProps {
 	active?: boolean;
 	label: string;
+	badge?: string;
 	icon: IconComponent;
 	iconActive?: IconComponent;
 	onClick?: () => void;
@@ -157,13 +167,19 @@ const NavItem = (props: NavItemProps) => {
 	const ActiveIcon = props.iconActive;
 
 	return (
-		<button title={props.label} onClick={props.onClick} class="grid grow basis-0 place-items-center">
+		<button title={props.label} onClick={props.onClick} class="relative grid grow basis-0 place-items-center">
 			{(() => {
 				const active = props.active;
 
 				const Icon = active && ActiveIcon ? ActiveIcon : InactiveIcon;
 				return <Icon class={`text-2xl` + (active && !ActiveIcon ? ` stroke-contrast *:stroke-[3]` : ``)} />;
 			})()}
+
+			{props.badge && (
+				<div class="absolute -mr-4 -mt-4 flex items-center justify-center rounded-md bg-accent px-1 py-px text-xs font-bold">
+					{props.badge}
+				</div>
+			)}
 		</button>
 	);
 };
