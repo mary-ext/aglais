@@ -184,7 +184,7 @@ const NavItem = (props: NavItemProps) => {
 			})()}
 
 			{props.badge && (
-				<div class="absolute -mr-4 -mt-4 flex items-center justify-center rounded-md bg-accent px-1 py-0.5 text-xs font-bold leading-none outline-2 outline-background outline">
+				<div class="absolute -mr-4 -mt-4 flex items-center justify-center rounded-md bg-accent px-1 py-0.5 text-xs font-medium leading-none outline-2 outline-background outline">
 					{props.badge}
 				</div>
 			)}
