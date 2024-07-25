@@ -1,5 +1,8 @@
 import { Suspense, lazy, type Accessor, type Component, type ComponentProps } from 'solid-js';
 
+import type { AppBskyNotificationGetUnreadCount } from '@mary/bluesky-client/lexicons';
+import type { CreateQueryResult } from '@mary/solid-query';
+
 import { createNotificationCountQuery } from './api/queries/notification-count';
 
 import { globalEvents } from './globals/events';
@@ -25,13 +28,14 @@ const Shell = () => {
 
 	// Will always match because we've set a 404 handler.
 	const route = useMatchedRoute() as Accessor<MatchedRouteState>;
+	const unread = createNotificationCountQuery();
 
 	return (
 		<div
 			inert={hasModals()}
 			class="relative z-0 mx-auto flex min-h-[100dvh] max-w-md flex-col-reverse border-outline sm:border-x"
 		>
-			{!!(currentAccount && route().def.meta?.main) && <NavBar route={route} />}
+			{!!(currentAccount && route().def.meta?.main) && <NavBar route={route} unread={unread} />}
 
 			<div class="z-0 flex min-h-0 grow flex-col overflow-clip">
 				<RouterView
@@ -72,9 +76,13 @@ const MainTabsRoutes = {
 	[MainTabs.FEEDS]: '/feeds',
 };
 
-const NavBar = ({ route }: { route: Accessor<MatchedRouteState> }) => {
-	const unread = createNotificationCountQuery();
-
+const NavBar = ({
+	route,
+	unread,
+}: {
+	route: Accessor<MatchedRouteState>;
+	unread: CreateQueryResult<AppBskyNotificationGetUnreadCount.Output>;
+}) => {
 	const active = () => route().def.meta?.name;
 
 	const bindClick = (to: MainTabs) => {
