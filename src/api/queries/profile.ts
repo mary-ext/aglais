@@ -4,7 +4,13 @@ import { createQuery, type QueryPersister } from '@mary/solid-query';
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
-export const createProfileQuery = (didOrHandle: () => string, persister?: QueryPersister) => {
+export interface ProfileQueryOptions {
+	persister?: QueryPersister;
+	staleTime?: number;
+	gcTime?: number;
+}
+
+export const createProfileQuery = (didOrHandle: () => string, opts: ProfileQueryOptions = {}) => {
 	const { rpc } = useAgent();
 	const { currentAccount } = useSession();
 
@@ -13,7 +19,9 @@ export const createProfileQuery = (didOrHandle: () => string, persister?: QueryP
 
 		return {
 			queryKey: ['profile', $didOrHandle],
-			persister: persister as any,
+			persister: opts.persister as any,
+			staleTime: opts.staleTime,
+			gcTime: opts.gcTime,
 			async queryFn(ctx): Promise<AppBskyActorDefs.ProfileViewDetailed> {
 				const { data } = await rpc.get('app.bsky.actor.getProfile', {
 					signal: ctx.signal,

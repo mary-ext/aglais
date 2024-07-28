@@ -68,7 +68,7 @@ const PageMainMenu = ({}: PageMainMenuProps) => {
 			title="Open main menu"
 			icon={() => {
 				if (currentAccount) {
-					const profile = createProfileQuery(() => currentAccount.did, persister);
+					const profile = createProfileQuery(() => currentAccount.did, { persister });
 					return <Avatar type="user" src={profile.data?.avatar} size="sm" />;
 				}
 
