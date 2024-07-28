@@ -1,6 +1,11 @@
 import { createMemo, type Component, type ComponentProps, type JSX } from 'solid-js';
 
-import type { AppBskyFeedPost, AppBskyNotificationListNotifications } from '@mary/bluesky-client/lexicons';
+import type {
+	AppBskyEmbedImages,
+	AppBskyFeedDefs,
+	AppBskyFeedPost,
+	AppBskyNotificationListNotifications,
+} from '@mary/bluesky-client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { moderateProfile } from '~/api/moderation/entities/profile';
@@ -15,7 +20,7 @@ import { parseAtUri } from '~/api/utils/strings';
 
 import { history } from '~/globals/navigation';
 
-import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
+import { INTERACTION_TAGS, isElementAltClicked, isElementClicked } from '~/lib/interaction';
 import { assert } from '~/lib/invariant';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
@@ -65,7 +70,7 @@ const NotificationItem = ({ item }: NotificationItemProps) => {
 		}
 
 		const handleClick = (ev: MouseEvent | KeyboardEvent) => {
-			if (!isElementClicked(ev)) {
+			if (!isElementClicked(ev, INTERACTION_TAGS)) {
 				return;
 			}
 
@@ -212,13 +217,43 @@ const renderAccessory = (data: FollowNotificationSlice | LikeNotificationSlice |
 	const type = data.type;
 
 	if (type === 'like' || type === 'repost') {
-		const view = data.view;
-		const record = view.record as AppBskyFeedPost.Record;
+		const post = data.view;
+		const record = post.record as AppBskyFeedPost.Record;
+
+		const imageEmbed = getImageEmbed(post.embed);
 
 		return (
 			<>
-				<p class="whitespace-pre-wrap break-words text-sm text-contrast-muted">{/* @once */ record.text}</p>
+				<p class="whitespace-pre-wrap break-words text-sm text-contrast-muted empty:hidden">
+					{/* @once */ record.text}
+				</p>
+
+				{imageEmbed && <ImageAccessory images={/* @once */ imageEmbed.images} />}
 			</>
 		);
+	}
+};
+
+const ImageAccessory = ({ images }: { images: AppBskyEmbedImages.ViewImage[] }) => {
+	const nodes = [...images, ...images, ...images, ...images].map((img) => {
+		return (
+			<div class="shrink-0 overflow-hidden rounded bg-background">
+				<img src={/* @once */ img.fullsize} class="h-32 w-32 object-cover opacity-50" />
+			</div>
+		);
+	});
+
+	return <div class="-ml-16 -mr-4 flex gap-2 overflow-x-auto pl-16 pr-4 scrollbar-hide">{nodes}</div>;
+};
+
+const getImageEmbed = (embed: AppBskyFeedDefs.PostView['embed']) => {
+	if (embed) {
+		if (embed.$type === 'app.bsky.embed.recordWithMedia#view') {
+			return getImageEmbed(embed.media);
+		}
+
+		if (embed.$type === 'app.bsky.embed.images#view') {
+			return embed;
+		}
 	}
 };
