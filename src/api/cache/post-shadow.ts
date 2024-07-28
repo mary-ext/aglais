@@ -5,6 +5,7 @@ import { EventEmitter } from '@mary/events';
 import type { QueryClient } from '@mary/solid-query';
 
 import { findAllPosts as findAllPostsInBookmarkFeed } from '../queries-cache/bookmark-feed';
+import { findAllPosts as findAllPostsInNotificationFeed } from '../queries-cache/notification-feed';
 import { findAllPosts as findAllPostsInPostThread } from '../queries-cache/post-thread';
 import { findAllPosts as findAllPostsInTimeline } from '../queries-cache/timeline';
 import { EQUALS_DEQUAL } from '../utils/dequal';
@@ -109,5 +110,6 @@ export function findPostsInCache(
 		findAllPostsInTimeline(uri, includeQuote),
 		findAllPostsInPostThread(uri, includeQuote),
 		findAllPostsInBookmarkFeed(uri, includeQuote),
+		findAllPostsInNotificationFeed(uri, includeQuote),
 	]);
 }

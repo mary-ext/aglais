@@ -5,6 +5,7 @@ import { EventEmitter } from '@mary/events';
 import type { QueryClient } from '@mary/solid-query';
 
 import { findAllProfiles as findAllProfilesInBookmarkFeedQueryData } from '../queries-cache/bookmark-feed';
+import { findAllProfiles as findAllProfilesInNotificationFeedQueryData } from '../queries-cache/notification-feed';
 import { findAllProfiles as findAllProfilesInPostThreadQueryData } from '../queries-cache/post-thread';
 import { findAllProfiles as findAllProfilesInProfileQueryData } from '../queries-cache/profile';
 import { findAllProfiles as findAllProfilesInProfileFollowersQueryData } from '../queries-cache/profile-followers';
@@ -80,5 +81,6 @@ export function findProfilesInCache(queryClient: QueryClient, did: At.DID): Gene
 		findAllProfilesInBookmarkFeedQueryData(did),
 		findAllProfilesInProfileFollowingQueryData(did),
 		findAllProfilesInProfileFollowersQueryData(did),
+		findAllProfilesInNotificationFeedQueryData(did),
 	]);
 }

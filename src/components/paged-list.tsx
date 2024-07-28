@@ -33,6 +33,8 @@ const PagedList = <T,>(props: PagedListProps<T>) => {
 	return (
 		<div class={'flex flex-col' + (extraBottomGutter ? ` pb-4` : ``)}>
 			<Switch>
+				<Match when={props.isFetchingNextPage}>{null}</Match>
+
 				<Match when={props.isRefreshing}>
 					<div class="grid h-13 shrink-0 place-items-center border-b border-outline">
 						<CircularProgress />
