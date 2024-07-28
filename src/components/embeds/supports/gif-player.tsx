@@ -40,6 +40,7 @@ export const GifPlayer = (props: GifPlayerProps) => {
 				poster={/* @once */ snippet.thumb}
 				src={/* @once */ snippet.url}
 				loop
+				muted
 				onWaiting={() => {
 					clearTimeout(_stallTimeout);
 					_stallTimeout = setTimeout(() => setStalling(true), 50);
