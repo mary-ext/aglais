@@ -1,6 +1,7 @@
 import type { AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
 
 import type { UiTimelineItem } from '~/api/models/timeline';
+import { createProfileQuery } from '~/api/queries/profile';
 import { parseAtUri } from '~/api/utils/strings';
 
 import { useSession } from '~/lib/states/session';
@@ -46,7 +47,27 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 				return <div class="mb-0.5 flex text-sm text-contrast-muted">Replying to you</div>;
 			}
 
-			return <div class="mb-0.5 text-sm text-contrast-muted">Replying to unknown</div>;
+			const profile = createProfileQuery(() => did, {
+				staleTime: Infinity,
+				gcTime: 60_000 * 5,
+			});
+
+			return (
+				<div class="mb-0.5 flex text-sm text-contrast-muted">
+					<span class="shrink-0 whitespace-pre">Replying to </span>
+					{profile.data ? (
+						<a
+							dir="auto"
+							href={`/${did}`}
+							class="overflow-hidden text-ellipsis whitespace-nowrap text-accent hover:underline"
+						>
+							@{profile.data.handle}
+						</a>
+					) : (
+						'...'
+					)}
+				</div>
+			);
 		}
 	}
 };
