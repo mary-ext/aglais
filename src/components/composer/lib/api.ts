@@ -212,7 +212,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 				{
 					log?.(`Retrieving GIF thumbnail`);
-					const response = await fetch(gif.gifUrl);
+					const response = await fetch(gif.thumbUrl);
 					if (!response.ok) {
 						throw new Error(`NetworkError`);
 					}
