@@ -132,7 +132,7 @@ index 0e93a35b45cfc2d53fc17120c741a91ec8a8c533..82b51475e4e12860552f4a0f5f3af23f
 -  return true;
 +
 +  const proto = Object.getPrototypeOf(o);
-+  return (proto === null || proto === Object) && Object.isExtensible(o);
++  return (proto === null || proto === Object.prototype) && Object.isExtensible(o);
  }
  function hasObjectPrototype(o) {
    return Object.prototype.toString.call(o) === "[object Object]";

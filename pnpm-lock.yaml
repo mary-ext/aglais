@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@tanstack/query-core@5.17.19':
-    hash: lyk2jm4nvtib6lstvyqzhwwxbi
+    hash: mh34qchsf4y2z6x2owv2ljabky
     path: patches/@tanstack__query-core@5.17.19.patch
   cborg@4.2.3:
     hash: xp5eyjlfdngupbia63w3vt7fta
@@ -3726,7 +3726,7 @@ snapshots:
 
   '@externdefs/solid-query@0.1.5(solid-js@1.8.18(patch_hash=6j63gd3j67s6dva5rxdovmpmiu))':
     dependencies:
-      '@tanstack/query-core': 5.17.19(patch_hash=lyk2jm4nvtib6lstvyqzhwwxbi)
+      '@tanstack/query-core': 5.17.19(patch_hash=mh34qchsf4y2z6x2owv2ljabky)
       solid-js: 1.8.18(patch_hash=6j63gd3j67s6dva5rxdovmpmiu)
 
   '@fastify/busboy@2.1.1': {}
@@ -3916,7 +3916,7 @@ snapshots:
       magic-string: 0.25.9
       string.prototype.matchall: 4.0.11
 
-  '@tanstack/query-core@5.17.19(patch_hash=lyk2jm4nvtib6lstvyqzhwwxbi)': {}
+  '@tanstack/query-core@5.17.19(patch_hash=mh34qchsf4y2z6x2owv2ljabky)': {}
 
   '@types/babel__core@7.20.5':
     dependencies:
