@@ -20,6 +20,7 @@ const routes: RouteDefinition[] = [
 	{
 		path: '/',
 		component: lazy(() => import('./views/main/home')),
+		single: true,
 		meta: {
 			name: 'Home',
 			main: true,
@@ -29,6 +30,7 @@ const routes: RouteDefinition[] = [
 	{
 		path: '/search',
 		component: lazy(() => import('./views/main/search')),
+		single: true,
 		meta: {
 			name: 'Search',
 			main: true,
@@ -38,6 +40,7 @@ const routes: RouteDefinition[] = [
 	{
 		path: '/notifications',
 		component: lazy(() => import('./views/main/notifications')),
+		single: true,
 		meta: {
 			name: 'Notifications',
 			main: true,
@@ -46,6 +49,7 @@ const routes: RouteDefinition[] = [
 	{
 		path: '/messages',
 		component: lazy(() => import('./views/main/messages')),
+		single: true,
 		meta: {
 			name: 'Messages',
 			main: true,
@@ -54,6 +58,7 @@ const routes: RouteDefinition[] = [
 	{
 		path: '/feeds',
 		component: lazy(() => import('./views/main/feeds')),
+		single: true,
 		meta: {
 			name: 'Feeds',
 			main: true,
