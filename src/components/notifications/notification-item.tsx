@@ -79,7 +79,7 @@ const NotificationItem = ({ item }: NotificationItemProps) => {
 					href = `/${profile.did}`;
 					precacheProfile(queryClient, profile);
 				} else {
-					href = `/${currentAccount!.did}/following`;
+					href = `/${currentAccount!.did}/followers`;
 				}
 			} else {
 				const post = item.view;
