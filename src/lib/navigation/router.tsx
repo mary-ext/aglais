@@ -299,7 +299,7 @@ export const RouterView = (props: RouterViewProps) => {
 					if (!next) {
 						storedHeight = document.documentElement.scrollTop;
 					} else {
-						window.scrollTo({ top: storedHeight, behavior: 'instant' });
+						queueMicrotask(() => window.scrollTo({ top: storedHeight, behavior: 'instant' }));
 					}
 				}
 
