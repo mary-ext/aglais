@@ -235,7 +235,7 @@ const renderAccessory = (data: FollowNotificationSlice | LikeNotificationSlice |
 };
 
 const ImageAccessory = ({ images }: { images: AppBskyEmbedImages.ViewImage[] }) => {
-	const nodes = [...images, ...images, ...images, ...images].map((img) => {
+	const nodes = images.map((img) => {
 		return (
 			<div class="shrink-0 overflow-hidden rounded bg-background">
 				<img src={/* @once */ img.fullsize} class="h-32 w-32 object-cover opacity-50" />
