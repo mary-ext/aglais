@@ -4,13 +4,13 @@ import type { AppBskyActorDefs, At } from '@mary/bluesky-client/lexicons';
 import { EventEmitter } from '@mary/events';
 import type { QueryClient } from '@mary/solid-query';
 
-import { findAllProfiles as findAllProfilesInBookmarkFeedQueryData } from '../queries-cache/bookmark-feed';
-import { findAllProfiles as findAllProfilesInNotificationFeedQueryData } from '../queries-cache/notification-feed';
-import { findAllProfiles as findAllProfilesInPostThreadQueryData } from '../queries-cache/post-thread';
-import { findAllProfiles as findAllProfilesInProfileQueryData } from '../queries-cache/profile';
-import { findAllProfiles as findAllProfilesInProfileFollowersQueryData } from '../queries-cache/profile-followers';
-import { findAllProfiles as findAllProfilesInProfileFollowingQueryData } from '../queries-cache/profile-following';
-import { findAllProfiles as findAllProfilesInTimelineQueryData } from '../queries-cache/timeline';
+import { findAllProfiles as findAllProfilesInBookmarkFeed } from '../queries-cache/bookmark-feed';
+import { findAllProfiles as findAllProfilesInNotificationFeed } from '../queries-cache/notification-feed';
+import { findAllProfiles as findAllProfilesInPostThread } from '../queries-cache/post-thread';
+import { findAllProfiles as findAllProfilesInProfile } from '../queries-cache/profile';
+import { findAllProfiles as findAllProfilesInProfileFollowers } from '../queries-cache/profile-followers';
+import { findAllProfiles as findAllProfilesInProfileFollowing } from '../queries-cache/profile-following';
+import { findAllProfiles as findAllProfilesInTimeline } from '../queries-cache/timeline';
 import { EQUALS_DEQUAL } from '../utils/dequal';
 import type { AccessorMaybe } from '../utils/types';
 import { iterateQueryCache } from './utils';
@@ -75,12 +75,12 @@ export const updateProfileShadow = (queryClient: QueryClient, did: At.DID, value
 
 export function findProfilesInCache(queryClient: QueryClient, did: At.DID): Generator<AllProfileView> {
 	return iterateQueryCache<AllProfileView>(queryClient, [
-		findAllProfilesInProfileQueryData(did),
-		findAllProfilesInTimelineQueryData(did),
-		findAllProfilesInPostThreadQueryData(did),
-		findAllProfilesInBookmarkFeedQueryData(did),
-		findAllProfilesInProfileFollowingQueryData(did),
-		findAllProfilesInProfileFollowersQueryData(did),
-		findAllProfilesInNotificationFeedQueryData(did),
+		findAllProfilesInProfile(did),
+		findAllProfilesInTimeline(did),
+		findAllProfilesInPostThread(did),
+		findAllProfilesInBookmarkFeed(did),
+		findAllProfilesInProfileFollowing(did),
+		findAllProfilesInProfileFollowers(did),
+		findAllProfilesInNotificationFeed(did),
 	]);
 }
