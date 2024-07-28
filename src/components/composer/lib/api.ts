@@ -208,8 +208,23 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				const gif = embed.gif;
 				const alt = embed.alt;
 
-				// fetch gif... compress... upload...
 				let thumbBlob: At.Blob<any> | undefined;
+
+				{
+					log?.(`Retrieving GIF thumbnail`);
+					const response = await fetch(gif.gifUrl);
+					if (!response.ok) {
+						throw new Error(`NetworkError`);
+					}
+
+					const gifBlob = await response.blob();
+
+					log?.(`Uploading GIF thumbnail`);
+					const compressed = await compressPostImage(gifBlob);
+					const blob = await uploadBlob(rpc, compressed.blob);
+
+					thumbBlob = blob;
+				}
 
 				return {
 					$type: 'app.bsky.embed.external',
