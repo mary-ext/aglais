@@ -25,6 +25,7 @@ import type { AccountData } from '../preferences/sessions';
 import { createReactiveLocalStorage, isExternalWriting } from '../signals/storage';
 
 import { assert } from '../invariant';
+import { mapDefined } from '../misc';
 
 interface LoginOptions {
 	service: string;
@@ -72,9 +73,53 @@ export const SessionProvider = (props: ParentProps) => {
 			const preferences = createAccountPreferences(account.did);
 			const mod = new BskyMod(rpc);
 
+			const [abortable] = makeAbortable();
+
 			createEffect(() => {
 				const entries = Object.entries(preferences.moderation.labelers);
 				mod.labelers = entries.map(([did, info]) => ({ did: did as At.DID, redact: info.redact }));
+			});
+
+			createEffect(() => {
+				const signal = abortable();
+
+				const mutes = preferences.moderation.tempMutes;
+				const filters = preferences.moderation.keywords;
+
+				const times = [
+					...mapDefined(Object.values(mutes), (x) => x ?? 0),
+					...mapDefined(filters, (filter) => filter.expires),
+				];
+
+				const nextAt = times.reduce((time, x) => (x < time ? x : time), Infinity);
+				if (nextAt === Infinity) {
+					return;
+				}
+
+				const delta = nextAt - Date.now();
+
+				sleep(delta, signal).then(() => {
+					batch(() => {
+						const now = Date.now();
+
+						for (const key in mutes) {
+							const value = mutes[key as At.DID];
+
+							if (value === undefined || value <= now) {
+								delete mutes[key as At.DID];
+							}
+						}
+
+						for (const filter of filters) {
+							const expires = filter.expires;
+
+							if (expires !== undefined && expires <= now) {
+								filter.pref = 1;
+								filter.expires = undefined;
+							}
+						}
+					});
+				});
 			});
 
 			return {
@@ -266,5 +311,26 @@ const createAccountPreferences = (did: At.DID) => {
 		}
 
 		return prev;
+	});
+};
+
+const sleep = (ms: number, signal?: AbortSignal): Promise<void> => {
+	return new Promise((resolve) => {
+		if (signal?.aborted) {
+			return;
+		}
+
+		if (ms < 1) {
+			return resolve();
+		}
+
+		const c = () => clearTimeout(timeout);
+
+		const timeout = setTimeout(() => {
+			signal?.removeEventListener('abort', c);
+			resolve();
+		}, ms);
+
+		signal?.addEventListener('abort', c, { once: true });
 	});
 };
