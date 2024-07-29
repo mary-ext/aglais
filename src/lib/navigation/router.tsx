@@ -4,7 +4,6 @@ import {
 	For,
 	createContext,
 	createMemo,
-	createRenderEffect,
 	createRoot,
 	createSignal,
 	getOwner,
@@ -16,6 +15,7 @@ import {
 } from 'solid-js';
 import { delegateEvents } from 'solid-js/web';
 
+import { EventEmitter } from '@mary/events';
 import { Freeze } from '@mary/solid-freeze';
 
 import { createEventListener } from '../hooks/event-listener';
@@ -65,7 +65,6 @@ interface RouterState {
 }
 
 interface ViewContextObject {
-	active(): boolean;
 	owner: Owner | null;
 	route: MatchedRouteState;
 }
@@ -80,6 +79,10 @@ const [state, setState] = createSignal<RouterState>({
 	views: {},
 	singles: {},
 });
+
+const globalEvents = new EventEmitter<{ [key: string]: (active: boolean) => void }>();
+
+export { globalEvents as UNSAFE_routerEvents };
 
 export const configureRouter = ({ history, logger: log, routes }: RouterOptions) => {
 	_cleanup?.();
@@ -128,6 +131,7 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 
 					let views = current.views;
 					let singles = current.singles;
+					let isNew = false;
 
 					const nextId = matched.id || nextEntry.key;
 					const matchedState: MatchedRouteState = { ...matched, id: nextId };
@@ -159,6 +163,7 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 								nextViews[nextId] = matchedState;
 							} else {
 								nextViews = { ...views, [nextId]: matchedState };
+								isNew = true;
 							}
 						}
 
@@ -169,10 +174,16 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 						// Add this view, if it's already present, set `shouldCall` to true
 						if (!(nextId in singles)) {
 							singles = { ...singles, [nextId]: matchedState };
+							isNew = true;
 						}
 					}
 
+					globalEvents.emit(current.active, false);
 					setState({ active: nextId, views: views, singles: singles });
+
+					if (!isNew) {
+						globalEvents.emit(nextId, true);
+					}
 
 					// Scroll to top if we're pushing or replacing, it's a new page.
 					if (!matched.id && (action === 'push' || action === 'replace')) {
@@ -239,35 +250,14 @@ export const useMatchedRoute = () => {
 	return createMemo(getMatchedRoute);
 };
 
-export const UNSAFE_useViewContext = () => {
+const useViewContext = () => {
 	return useContext(ViewContext)!;
 };
 
+export { useViewContext as UNSAFE_useViewContext };
+
 export const useParams = <T extends Record<string, string>>() => {
-	return UNSAFE_useViewContext().route.params as T;
-};
-
-export const createFocusRoot = (fn: () => void) => {
-	const { active } = UNSAFE_useViewContext();
-
-	let destroy: (() => void) | undefined;
-
-	const cleanup = () => {
-		if (destroy) {
-			destroy();
-			destroy = undefined;
-		}
-	};
-
-	createRenderEffect(() => {
-		if (active()) {
-			onCleanup(cleanup);
-			createRoot((_destroy) => {
-				destroy = _destroy;
-				fn();
-			});
-		}
-	});
+	return useViewContext().route.params as T;
 };
 
 export interface RouterViewProps {
@@ -285,26 +275,21 @@ export const RouterView = (props: RouterViewProps) => {
 
 		const context: ViewContextObject = {
 			owner: getOwner(),
-			active: active,
 			route: matched,
 		};
 
 		if (def.single) {
 			let storedHeight: number | undefined;
 
-			createRenderEffect((inited: boolean) => {
-				const next = active();
-
-				if (inited) {
-					if (!next) {
+			onCleanup(
+				globalEvents.on(id, (active) => {
+					if (!active) {
 						storedHeight = document.documentElement.scrollTop;
-					} else {
-						queueMicrotask(() => window.scrollTo({ top: storedHeight, behavior: 'instant' }));
+					} else if (storedHeight !== undefined) {
+						window.scrollTo({ top: storedHeight, behavior: 'instant' });
 					}
-				}
-
-				return true;
-			}, false);
+				}),
+			);
 		}
 
 		return (

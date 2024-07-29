@@ -1,27 +1,16 @@
-import { createEffect, createRenderEffect, createSignal, onCleanup, runWithOwner, type JSX } from 'solid-js';
+import { createSignal, onCleanup, runWithOwner, type JSX } from 'solid-js';
 
 import { requestIdle } from '~/lib/misc';
-import { UNSAFE_useViewContext } from '~/lib/navigation/router';
+import { UNSAFE_routerEvents, UNSAFE_useViewContext } from '~/lib/navigation/router';
 import { intersectionCallback } from '~/lib/observer';
 
 const intersectionObserver = new IntersectionObserver(intersectionCallback, { rootMargin: `106.25% 0%` });
 
 const createVirtualStore = (ctx: ReturnType<typeof UNSAFE_useViewContext>) => {
 	return runWithOwner(ctx.owner, () => {
-		const active = ctx.active;
 		let disabled = false;
 
-		createRenderEffect(() => {
-			if (!active()) {
-				disabled = true;
-			}
-		});
-
-		createEffect(() => {
-			if (active()) {
-				disabled = false;
-			}
-		});
+		onCleanup(UNSAFE_routerEvents.on(ctx.route.id, (active) => (disabled = !active)));
 
 		return {
 			get disabled() {
