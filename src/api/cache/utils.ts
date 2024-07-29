@@ -7,6 +7,7 @@ export interface CacheMatcher<T> {
 
 export function* iterateQueryCache<T>(queryClient: QueryClient, matchers: CacheMatcher<T>[]): Generator<T> {
 	const queries = queryClient.getQueryCache().getAll();
+	queries.sort((a, b) => b.state.dataUpdatedAt - a.state.dataUpdatedAt);
 
 	for (let i = 0, ilen = queries.length; i < ilen; i++) {
 		const query = queries[i];
