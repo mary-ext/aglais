@@ -92,16 +92,28 @@ export const SessionProvider = (props: ParentProps) => {
 				];
 
 				const nextAt = times.reduce((time, x) => (x < time ? x : time), Infinity);
+
 				if (nextAt === Infinity) {
 					return;
 				}
 
-				const delta = nextAt - Date.now();
+				const getDelta = (now: number) => {
+					// 2 ** 31 - 1 miliseconds, or ~24.8 days, is the maximum delay value,
+					// anything beyond that will wrap around and makes the sleep callback
+					// run immediately.
+					return Math.min(nextAt - now, 2 ** 31 - 1);
+				};
 
-				sleep(delta, signal).then(() => {
+				const run = () => {
+					const now = Date.now();
+
+					// Check if we've not yet reached the desired timeout
+					if (now < nextAt) {
+						sleep(getDelta(now), signal).then(run);
+						return;
+					}
+
 					batch(() => {
-						const now = Date.now();
-
 						for (const key in mutes) {
 							const value = mutes[key as At.DID];
 
@@ -119,7 +131,9 @@ export const SessionProvider = (props: ParentProps) => {
 							}
 						}
 					});
-				});
+				};
+
+				sleep(getDelta(Date.now()), signal).then(run);
 			});
 
 			return {
