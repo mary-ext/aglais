@@ -97,19 +97,13 @@ export const SessionProvider = (props: ParentProps) => {
 					return;
 				}
 
-				const getDelta = (now: number) => {
-					// 2 ** 31 - 1 miliseconds, or ~24.8 days, is the maximum delay value,
-					// anything beyond that will wrap around and makes the sleep callback
-					// run immediately.
-					return Math.min(nextAt - now, 2 ** 31 - 1);
-				};
-
 				const run = () => {
 					const now = Date.now();
 
-					// Check if we've not yet reached the desired timeout
+					// Check if we've not yet reached the desired timeout,
+					// see the note on sleep function for why
 					if (now < nextAt) {
-						sleep(getDelta(now), signal).then(run);
+						sleep(nextAt - now, signal).then(run);
 						return;
 					}
 
@@ -133,7 +127,7 @@ export const SessionProvider = (props: ParentProps) => {
 					});
 				};
 
-				sleep(getDelta(Date.now()), signal).then(run);
+				sleep(nextAt - Date.now(), signal).then(run);
 			});
 
 			return {
@@ -338,12 +332,16 @@ const sleep = (ms: number, signal?: AbortSignal): Promise<void> => {
 			return resolve();
 		}
 
+		// 2 ** 31 - 1 miliseconds, or ~24.8 days, is the maximum delay value,
+		// anything beyond that will wrap around and makes the sleep callback
+		// run immediately.
+		const clamped = Math.min(ms, 2 ** 31 - 1);
 		const c = () => clearTimeout(timeout);
 
 		const timeout = setTimeout(() => {
 			signal?.removeEventListener('abort', c);
 			resolve();
-		}, ms);
+		}, clamped);
 
 		signal?.addEventListener('abort', c, { once: true });
 	});
