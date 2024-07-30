@@ -21,7 +21,9 @@ import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline
 import * as Page from '~/components/page';
 
 import TimelineList from '~/components/feeds/timeline-list';
+import ProfileOverflowMenu from '~/components/profiles/profile-overflow-menu';
 import ProfileViewHeader from '~/components/profiles/profile-view-header';
+import { openModal } from '~/globals/modals';
 
 const ProfilePage = () => {
 	const { didOrHandle } = useParams();
@@ -54,6 +56,10 @@ const ProfilePage = () => {
 										icon={MoreHorizOutlinedIcon}
 										title="Actions"
 										disabled={profile.isPlaceholderData}
+										onClick={(ev) => {
+											const anchor = ev.currentTarget;
+											openModal(() => <ProfileOverflowMenu anchor={anchor} profile={data()} />);
+										}}
 									/>
 								</Page.HeaderAccessory>
 							</>
