@@ -30,10 +30,11 @@ import PostReplyContext from './post-reply-context';
 export interface PostFeedItemProps {
 	/** Expected to be static */
 	item: UiTimelineItem;
+	highlighted?: boolean;
 	timelineDid?: At.DID;
 }
 
-const PostFeedItem = ({ item, timelineDid }: PostFeedItemProps) => {
+const PostFeedItem = ({ item, highlighted, timelineDid }: PostFeedItemProps) => {
 	const queryClient = useQueryClient();
 	const moderationOptions = useModerationOptions();
 	const { currentAccount } = useSession();
@@ -74,7 +75,11 @@ const PostFeedItem = ({ item, timelineDid }: PostFeedItemProps) => {
 			onClick={handleClick}
 			onAuxClick={handleClick}
 			onKeyDown={handleClick}
-			class={`relative border-outline px-4 hover:bg-contrast/sm` + (!next ? ` border-b` : ``)}
+			class={
+				`relative border-outline px-4` +
+				(!highlighted ? ` hover:bg-contrast/sm` : ` bg-accent/15 hover:bg-accent/md`) +
+				(!next ? ` border-b` : ``)
+			}
 		>
 			<div class="relative flex flex-col pb-1 pt-2">
 				{prev && (

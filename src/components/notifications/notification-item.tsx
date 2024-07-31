@@ -51,6 +51,7 @@ const NotificationItem = ({ item }: NotificationItemProps) => {
 	const { currentAccount } = useSession();
 
 	const type = item.type;
+	const read = item.read;
 
 	if (type === 'follow' || type === 'like' || type === 'repost') {
 		let Icon: Component<ComponentProps<'svg'>>;
@@ -105,7 +106,10 @@ const NotificationItem = ({ item }: NotificationItemProps) => {
 				onClick={handleClick}
 				onAuxClick={handleClick}
 				onKeyDown={handleClick}
-				class="relative flex gap-3 border-b border-outline px-4 py-3 hover:bg-contrast/sm"
+				class={
+					`relative flex gap-3 border-b border-outline px-4 py-3` +
+					(read ? ` hover:bg-contrast/sm` : ` bg-accent/15 hover:bg-accent/md`)
+				}
 			>
 				<div class="flex w-9 shrink-0 flex-col items-end">
 					<div class="grid h-8 w-8 place-items-center">
@@ -126,6 +130,7 @@ const NotificationItem = ({ item }: NotificationItemProps) => {
 
 		return (
 			<PostFeedItem
+				highlighted={!read}
 				item={{
 					post: view,
 					reply: undefined,
