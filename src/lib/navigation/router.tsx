@@ -297,8 +297,8 @@ export const RouterView = (props: RouterViewProps) => {
 			let storedHeight: number | undefined;
 
 			onCleanup(
-				routerEvents.on(id, (active) => {
-					if (!active) {
+				routerEvents.on(id, (ev) => {
+					if (!ev.focus) {
 						storedHeight = document.documentElement.scrollTop;
 					} else if (storedHeight !== undefined) {
 						window.scrollTo({ top: storedHeight, behavior: 'instant' });
