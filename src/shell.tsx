@@ -1,7 +1,7 @@
 import { Suspense, lazy, type Accessor, type Component, type ComponentProps } from 'solid-js';
 
 import type { AppBskyNotificationGetUnreadCount } from '@mary/bluesky-client/lexicons';
-import type { CreateQueryResult } from '@mary/solid-query';
+import type { DefinedCreateQueryResult } from '@mary/solid-query';
 
 import { createNotificationCountQuery } from './api/queries/notification-count';
 
@@ -81,7 +81,7 @@ const NavBar = ({
 	unread,
 }: {
 	route: Accessor<MatchedRouteState>;
-	unread: CreateQueryResult<AppBskyNotificationGetUnreadCount.Output>;
+	unread: DefinedCreateQueryResult<AppBskyNotificationGetUnreadCount.Output>;
 }) => {
 	const active = () => route().def.meta?.name;
 
@@ -131,7 +131,7 @@ const NavBar = ({
 				/>
 				<NavItem
 					label="Notifications"
-					badge={getUnreadCountLabel(unread.data?.count)}
+					badge={getUnreadCountLabel(unread.data.count)}
 					active={active() === MainTabs.NOTIFICATIONS}
 					onClick={bindClick(MainTabs.NOTIFICATIONS)}
 					icon={BellOutlinedIcon}

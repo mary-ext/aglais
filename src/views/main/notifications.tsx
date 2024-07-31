@@ -22,7 +22,7 @@ const NotificationsPage = () => {
 
 	const isStale = () => {
 		if (unread.dataUpdatedAt > firstFetchedAt()) {
-			return !!unread.data?.count;
+			return unread.data.count > 0;
 		}
 
 		return false;
@@ -72,7 +72,7 @@ const NotificationsPage = () => {
 				// Only show refreshing if:
 				// - User is explicitly refreshing
 				// - We're doing an automatic refresh with an unread count
-				isRefreshing={isRefetching() || (feed.isRefetching && !!unread.data?.count)}
+				isRefreshing={isRefetching() || (feed.isRefetching && unread.data.count > 0)}
 				onEndReached={() => feed.fetchNextPage()}
 				onRefresh={refetch}
 				extraBottomGutter
