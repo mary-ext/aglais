@@ -1,5 +1,9 @@
+import { createSignal } from 'solid-js';
+
 import { createNotificationCountQuery } from '~/api/queries/notification-count';
 import { createNotificationFeedQuery } from '~/api/queries/notification-feed';
+
+import { onRouteEnter } from '~/lib/navigation/router';
 
 import ComposeFAB from '~/components/composer/compose-fab';
 import * as Page from '~/components/page';
@@ -9,18 +13,36 @@ import VirtualItem from '~/components/virtual-item';
 import NotificationItem from '~/components/notifications/notification-item';
 
 const NotificationsPage = () => {
-	const { feed, reset } = createNotificationFeedQuery();
+	const { feed, reset, firstFetchedAt } = createNotificationFeedQuery();
 	const unread = createNotificationCountQuery();
 
-	const isStale = () => {
-		const first = feed.data?.pages[0];
+	// We want to differentiate a refetch done by the user and one that's done
+	// by us from the route enter callback.
+	const [isRefetching, setIsRefetching] = createSignal(false);
 
-		if (first && unread.dataUpdatedAt > first.fetchedAt) {
+	const isStale = () => {
+		if (unread.dataUpdatedAt > firstFetchedAt()) {
 			return !!unread.data?.count;
 		}
 
 		return false;
 	};
+
+	const refetch = async () => {
+		try {
+			setIsRefetching(true);
+			await reset();
+		} finally {
+			setIsRefetching(false);
+		}
+	};
+
+	onRouteEnter(() => {
+		// If the user is still roughly at the top, refetch notifications directly
+		if (window.scrollY <= 53 * 2 && !feed.isFetching) {
+			reset();
+		}
+	});
 
 	return (
 		<>
@@ -44,12 +66,15 @@ const NotificationsPage = () => {
 						</VirtualItem>
 					);
 				}}
-				hasNewData={isStale()}
+				hasNewData={isStale() && !feed.isRefetching}
 				hasNextPage={feed.hasNextPage}
 				isFetchingNextPage={feed.isFetchingNextPage || feed.isLoading}
-				isRefreshing={feed.isRefetching}
+				// Only show refreshing if:
+				// - User is explicitly refreshing
+				// - We're doing an automatic refresh with an unread count
+				isRefreshing={isRefetching() || (feed.isRefetching && !!unread.data?.count)}
 				onEndReached={() => feed.fetchNextPage()}
-				onRefresh={reset}
+				onRefresh={refetch}
 				extraBottomGutter
 			/>
 		</>

@@ -1,9 +1,12 @@
+import { createSignal } from 'solid-js';
+
 import type { AppBskyFeedDefs, AppBskyNotificationListNotifications } from '@mary/bluesky-client/lexicons';
 import { createInfiniteQuery, useQueryClient } from '@mary/solid-query';
 
 import { mapDefined } from '~/lib/misc';
 import { useAgent } from '~/lib/states/agent';
 
+import { dequal } from '../utils/dequal';
 import { resetInfiniteData } from '../utils/query';
 import { parseAtUri } from '../utils/strings';
 import { chunked } from '../utils/utils';
@@ -70,7 +73,6 @@ export type NotificationSlice =
 export interface NotificationFeedReturn {
 	cursor: string | undefined;
 	slices: NotificationSlice[];
-	fetchedAt: number;
 }
 
 const MAX_MERGE_TIME = 6 * 60 * 60 * 1_000;
@@ -78,6 +80,8 @@ const MAX_MERGE_TIME = 6 * 60 * 60 * 1_000;
 export const createNotificationFeedQuery = () => {
 	const { rpc } = useAgent();
 	const queryClient = useQueryClient();
+
+	const [firstFetchedAt, setFirstFetchedAt] = createSignal(0);
 
 	const feed = createInfiniteQuery(() => ({
 		queryKey: ['notification', 'feed'],
@@ -133,13 +137,19 @@ export const createNotificationFeedQuery = () => {
 
 			// Group these notifications into slices
 			const slices: NotificationSlice[] = [];
+			let hasUnread = false;
 			let slen = 0;
+
 			loop: for (let i = notifs.length - 1; i >= 0; i--) {
 				const item = notifs[i];
 
 				const reason = item.reason as 'like' | 'repost' | 'follow' | 'mention' | 'reply' | 'quote';
 				const date = new Date(item.indexedAt).getTime();
 				const read = item.isRead;
+
+				if (!read) {
+					hasUnread = true;
+				}
 
 				if (reason === 'follow') {
 					for (let j = 0; j < slen; j++) {
@@ -205,38 +215,51 @@ export const createNotificationFeedQuery = () => {
 			}
 
 			if (pageParam === undefined) {
-				const indexedAt = new Date(notifs[0]?.indexedAt ?? 0).getTime();
 				const now = Date.now();
 
-				const seenAt = now > indexedAt ? now : indexedAt;
+				setFirstFetchedAt(now);
 
-				const promise = rpc.call('app.bsky.notification.updateSeen', {
-					data: {
-						seenAt: new Date(seenAt).toISOString(),
-					},
-				});
+				if (hasUnread) {
+					const indexedAt = new Date(notifs[0]?.indexedAt ?? 0).getTime();
+					const seenAt = now > indexedAt ? now : indexedAt;
 
-				promise.finally(() => {
-					queryClient.setQueryData(['notification', 'count'], { count: 0 });
-				});
+					const promise = rpc.call('app.bsky.notification.updateSeen', {
+						data: {
+							seenAt: new Date(seenAt).toISOString(),
+						},
+					});
+
+					promise.finally(() => {
+						queryClient.setQueryData(['notification', 'count'], { count: 0 });
+					});
+				}
 			}
 
 			return {
 				cursor: data.cursor,
 				slices: slices,
-				fetchedAt: Date.now(),
 			};
 		},
 		initialPageParam: undefined as string | undefined,
 		getNextPageParam: (last) => last.cursor,
 		staleTime: Infinity,
-		structuralSharing: false,
+		structuralSharing(a: any, b: any) {
+			if (!a) {
+				return b;
+			}
+
+			if (!dequal(a.pages, b.pages)) {
+				return b;
+			}
+
+			return a;
+		},
 	}));
 
-	const reset = () => {
+	const reset = async () => {
 		resetInfiniteData(queryClient, ['notification', 'feed']);
-		feed.refetch();
+		await feed.refetch();
 	};
 
-	return { feed, reset };
+	return { feed, reset, firstFetchedAt };
 };
