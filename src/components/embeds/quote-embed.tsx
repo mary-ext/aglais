@@ -54,6 +54,7 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 				<Avatar
 					type={/* @once */ author.associated?.labeler ? 'labeler' : 'user'}
 					src={/* @once */ author.avatar}
+					moderation={moderation()}
 					size="xs"
 					class="mr-2"
 				/>
