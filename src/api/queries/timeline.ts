@@ -173,10 +173,12 @@ export const useTimelineQuery = (_params: () => TimelineParams) => {
 				const timeline = await fetchPage(rpc, params, limit, cursor, ctx.signal);
 
 				const feed = timeline.feed;
+				const newCursor = timeline.cursor;
 				const result = createJoinedItems(feed, sliceFilter, postFilter);
 
 				const page: TimelinePage = {
-					cursor: timeline.cursor,
+					// Prevent overfetching, check if the cursor returned is the same
+					cursor: newCursor !== cursor ? newCursor : undefined,
 					cid: feed.length > 0 ? feed[0].post.cid : undefined,
 					items: result,
 				};
