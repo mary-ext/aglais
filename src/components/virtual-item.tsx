@@ -10,7 +10,11 @@ const createVirtualStore = (ctx: ReturnType<typeof UNSAFE_useViewContext>) => {
 	return runWithOwner(ctx.owner, () => {
 		let disabled = false;
 
-		onCleanup(UNSAFE_routerEvents.on(ctx.route.id, (active) => (disabled = !active)));
+		onCleanup(
+			UNSAFE_routerEvents.on(ctx.route.id, (event) => {
+				disabled = !event.focus;
+			}),
+		);
 
 		return {
 			get disabled() {

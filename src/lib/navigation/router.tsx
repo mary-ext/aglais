@@ -80,9 +80,14 @@ const [state, setState] = createSignal<RouterState>({
 	singles: {},
 });
 
-const globalEvents = new EventEmitter<{ [key: string]: (active: boolean) => void }>();
+interface RouteEvent {
+	focus: boolean;
+	enter: boolean;
+}
 
-export { globalEvents as UNSAFE_routerEvents };
+const routerEvents = new EventEmitter<{ [key: string]: (event: RouteEvent) => void }>();
+
+export { routerEvents as UNSAFE_routerEvents };
 
 export const configureRouter = ({ history, logger: log, routes }: RouterOptions) => {
 	_cleanup?.();
@@ -178,11 +183,14 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 						}
 					}
 
-					globalEvents.emit(current.active, false);
+					routerEvents.emit(current.active, { focus: false, enter: false });
 					setState({ active: nextId, views: views, singles: singles });
 
 					if (!isNew) {
-						globalEvents.emit(nextId, true);
+						routerEvents.emit(nextId, {
+							focus: true,
+							enter: action !== 'traverse' || nextEntry.index > currentEntry.index,
+						});
 					}
 
 					// Scroll to top if we're pushing or replacing, it's a new page.
@@ -260,6 +268,13 @@ export const useParams = <T extends Record<string, string>>() => {
 	return useViewContext().route.params as T;
 };
 
+export const onRouteEnter = (cb: () => void) => {
+	const { route } = useViewContext();
+
+	cb();
+	onCleanup(routerEvents.on(route.id, (e) => e.enter && cb()));
+};
+
 export interface RouterViewProps {
 	render: (matched: MatchedRouteState) => JSX.Element;
 }
@@ -282,7 +297,7 @@ export const RouterView = (props: RouterViewProps) => {
 			let storedHeight: number | undefined;
 
 			onCleanup(
-				globalEvents.on(id, (active) => {
+				routerEvents.on(id, (active) => {
 					if (!active) {
 						storedHeight = document.documentElement.scrollTop;
 					} else if (storedHeight !== undefined) {
