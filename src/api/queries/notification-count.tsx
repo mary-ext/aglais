@@ -29,6 +29,9 @@ export const createNotificationCountQuery = () => {
 
 			return 30_000;
 		},
+		staleTime: 30_000,
+		refetchOnReconnect: true,
+		refetchOnWindowFocus: true,
 	}));
 
 	return query;
