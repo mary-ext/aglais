@@ -130,6 +130,13 @@ const routes: RouteDefinition[] = [
 		},
 	},
 	{
+		path: '/:didOrHandle/known-followers',
+		component: lazy(() => import('./views/profile-known-followers')),
+		validate(params) {
+			return isValidDidOrHandle(params.didOrHandle);
+		},
+	},
+	{
 		path: '/:didOrHandle/:rkey',
 		component: lazy(() => import('./views/post-thread')),
 		validate(params) {

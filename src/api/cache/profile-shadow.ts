@@ -10,6 +10,7 @@ import { findAllProfiles as findAllProfilesInPostThread } from '../queries-cache
 import { findAllProfiles as findAllProfilesInProfile } from '../queries-cache/profile';
 import { findAllProfiles as findAllProfilesInProfileFollowers } from '../queries-cache/profile-followers';
 import { findAllProfiles as findAllProfilesInProfileFollowing } from '../queries-cache/profile-following';
+import { findAllProfiles as findAllProfilesInProfileKnownFollowers } from '../queries-cache/profile-known-followers';
 import { findAllProfiles as findAllProfilesInTimeline } from '../queries-cache/timeline';
 import { EQUALS_DEQUAL } from '../utils/dequal';
 import type { AccessorMaybe } from '../utils/types';
@@ -81,6 +82,7 @@ export function findProfilesInCache(queryClient: QueryClient, did: At.DID): Gene
 		findAllProfilesInBookmarkFeed(did),
 		findAllProfilesInProfileFollowing(did),
 		findAllProfilesInProfileFollowers(did),
+		findAllProfilesInProfileKnownFollowers(did),
 		findAllProfilesInNotificationFeed(did),
 	]);
 }
