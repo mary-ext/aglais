@@ -5,7 +5,6 @@ import {
 	TargetProfile,
 	decideLabelModeration,
 	decideMutedPermanentModeration,
-	decideMutedTemporaryModeration,
 	type ModerationCause,
 	type ModerationOptions,
 } from '..';
@@ -26,7 +25,6 @@ export const moderateProfile = (profile: AllProfileView, opts: ModerationOptions
 	decideLabelModeration(accu, TargetProfile, profileLabels, did, opts);
 	decideLabelModeration(accu, TargetAccount, accountLabels, did, opts);
 	decideMutedPermanentModeration(accu, profile.viewer?.muted);
-	decideMutedTemporaryModeration(accu, did, opts);
 
 	return accu;
 };

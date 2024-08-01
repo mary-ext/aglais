@@ -28,7 +28,6 @@ const DEFAULT_MODERATION_PREFERENCES: ModerationPreferences = {
 		},
 	},
 	labels: {},
-	tempMutes: {},
 };
 
 const Context = createContext<() => ModerationOptions>();

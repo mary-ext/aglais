@@ -3,7 +3,6 @@ import * as Boxed from '~/components/boxed';
 import AddOutlinedIcon from '~/components/icons-central/add-outline';
 import BlockOutlinedIcon from '~/components/icons-central/block-outline';
 import ChevronRightOutlinedIcon from '~/components/icons-central/chevron-right-outline';
-import EyeSlashOutlinedIcon from '~/components/icons-central/eye-slash-outline';
 import FilterOutlinedIcon from '~/components/icons-central/filter-outline';
 import MuteOutlinedIcon from '~/components/icons-central/mute-outline';
 import PeopleOutlinedIcon from '~/components/icons-central/people-outline';
@@ -41,7 +40,6 @@ const ModerationPage = () => {
 							label="Keyword filters"
 							icon={FilterOutlinedIcon}
 						/>
-						<Boxed.LinkItem to="/moderation/silcened" label="Silenced users" icon={EyeSlashOutlinedIcon} />
 						<Boxed.LinkItem
 							to="/moderation/hidden-reposters"
 							label="Hidden reposters"

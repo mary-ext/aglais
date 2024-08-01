@@ -343,8 +343,6 @@ export interface ModerationPreferences {
 
 	/** List of users to hide reposts from */
 	hideReposts: At.DID[];
-	/** Mapping of users and how long they should be temporarily muted for */
-	tempMutes: Record<At.DID, number | undefined>;
 }
 
 export interface ModerationOptions {
@@ -449,18 +447,6 @@ export const decideLabelModeration = (
 export const decideMutedPermanentModeration = (accu: ModerationCause[], muted: boolean | undefined) => {
 	if (muted) {
 		accu.push({ t: CauseMutedPermanent, p: 6 });
-	}
-};
-
-export const decideMutedTemporaryModeration = (
-	accu: ModerationCause[],
-	userDid: At.DID,
-	opts: ModerationOptions,
-) => {
-	const duration = isProfileTempMuted(opts, userDid);
-
-	if (duration != null) {
-		accu.push({ t: CauseMutedTemporary, p: 6, d: duration });
 	}
 };
 
@@ -612,9 +598,4 @@ export const getModerationUI = (causes: ModerationCause[] = [], context: Moderat
 
 const sortByPriority = (a: ModerationCause, b: ModerationCause) => {
 	return a.p - b.p;
-};
-
-export const isProfileTempMuted = (opts: ModerationOptions, actor: At.DID): number | null => {
-	const date = opts.preferences.tempMutes[actor];
-	return date !== undefined && Date.now() < date ? date : null;
 };

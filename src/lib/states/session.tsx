@@ -83,13 +83,9 @@ export const SessionProvider = (props: ParentProps) => {
 			createEffect(() => {
 				const signal = abortable();
 
-				const mutes = preferences.moderation.tempMutes;
 				const filters = preferences.moderation.keywords;
 
-				const times = [
-					...mapDefined(Object.values(mutes), (x) => x ?? 0),
-					...mapDefined(filters, (filter) => filter.expires),
-				];
+				const times = [...mapDefined(filters, (filter) => filter.expires)];
 
 				const nextAt = times.reduce((time, x) => (x < time ? x : time), Infinity);
 
@@ -108,14 +104,6 @@ export const SessionProvider = (props: ParentProps) => {
 					}
 
 					batch(() => {
-						for (const key in mutes) {
-							const value = mutes[key as At.DID];
-
-							if (value === undefined || value <= now) {
-								delete mutes[key as At.DID];
-							}
-						}
-
 						for (const filter of filters) {
 							const expires = filter.expires;
 
@@ -306,7 +294,6 @@ const createAccountPreferences = (did: At.DID) => {
 						},
 					},
 					labels: {},
-					tempMutes: {},
 				},
 				threadView: {
 					followsFirst: true,

@@ -143,7 +143,6 @@ export const useTimelineQuery = (_params: () => TimelineParams) => {
 						createHideQuotesFromMutedFilter(),
 						createInvalidReplyFilter(),
 						createLabelPostFilter(moderation),
-						createTempMutePostFilter(uid, moderation),
 					]);
 				} else if (type === 'feed' || type === 'list') {
 					sliceFilter = createFeedSliceFilter();
@@ -157,7 +156,6 @@ export const useTimelineQuery = (_params: () => TimelineParams) => {
 						type === 'feed' && !params.showReposts && createHideRepostsFilter(),
 
 						createLabelPostFilter(moderation),
-						uid && createTempMutePostFilter(uid, moderation),
 					]);
 				} else if (type === 'profile') {
 					postFilter = createLabelPostFilter(moderation);
@@ -443,9 +441,6 @@ const createLabelPostFilter = (opts: ModerationOptions): PostFilter | undefined 
 		decideLabelModeration(accu, TargetContent, post.labels, post.author.did, opts);
 		decideMutedKeywordModeration(accu, text, isFollowing, PreferenceHide, opts);
 
-		// decideMutedTemporaryModeration is not called here because we only want
-		// temporarily muted users to be hidden from timeline.
-
 		const decision = getModerationUI(accu, ContextContentList);
 
 		return decision.f.length === 0;
@@ -463,37 +458,6 @@ const createHiddenRepostFilter = (opts: ModerationOptions): PostFilter | undefin
 		const reason = item.reason;
 
 		return !reason || reason.$type !== 'app.bsky.feed.defs#reasonRepost' || !hidden.includes(reason.by.did);
-	};
-};
-
-const createTempMutePostFilter = (uid: At.DID, opts: ModerationOptions): PostFilter | undefined => {
-	// We won't be checking if any of the temporary mutes are stale, those should
-	// be handled within the UI.
-	const mutes = opts.preferences.tempMutes;
-	const hasMutes = Object.keys(mutes).length !== 0;
-
-	if (!hasMutes) {
-		return;
-	}
-
-	return (item) => {
-		const reason = item.reason;
-
-		if (reason) {
-			const did = reason.by.did;
-
-			if (did !== uid && did in mutes) {
-				return false;
-			}
-		}
-
-		const did = item.post.author.did;
-
-		if (did !== uid && did in mutes) {
-			return false;
-		}
-
-		return true;
 	};
 };
 
