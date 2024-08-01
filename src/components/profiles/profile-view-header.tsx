@@ -2,6 +2,7 @@ import { createMemo, Match, Show, Switch } from 'solid-js';
 
 import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 
+import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { ContextProfileMedia, getModerationUI } from '~/api/moderation';
 import { moderateProfile } from '~/api/moderation/entities/profile';
 
@@ -11,6 +12,7 @@ import { formatCompact } from '~/lib/intl/number';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
 
+import Avatar, { getUserAvatarType } from '../avatar';
 import Button from '../button';
 import IconButton from '../icon-button';
 import MailOutlinedIcon from '../icons-central/mail-outline';
@@ -22,7 +24,6 @@ import ProfileFollowButton from './profile-follow-button';
 
 import DefaultLabelerAvatar from '~/assets/default-labeler-avatar.svg?url';
 import DefaultUserAvatar from '~/assets/default-user-avatar.svg?url';
-import Avatar, { getUserAvatarType } from '../avatar';
 
 export interface ProfileViewHeader {
 	/** Expects DID to be static */
@@ -42,6 +43,8 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 
 	const data = () => props.data;
 	const viewer = () => data().viewer;
+
+	const shadow = useProfileShadow(data);
 
 	const did = data().did;
 	const isLabeler = !!data().associated?.labeler;
@@ -217,6 +220,13 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 							);
 						}}
 					</Show>
+				)}
+
+				{shadow().muted && (
+					<p class="text-sm text-contrast-muted">
+						You have muted posts from this account.{' '}
+						<button class="text-accent hover:underline">Unmute</button>
+					</p>
 				)}
 			</div>
 		</div>
