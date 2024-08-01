@@ -104,6 +104,11 @@ const routes: RouteDefinition[] = [
 	},
 
 	{
+		path: '/likes',
+		component: lazy(() => import('./views/likes')),
+	},
+
+	{
 		path: '/:didOrHandle',
 		component: lazy(() => import('./views/profile')),
 		validate(params) {
