@@ -16,7 +16,7 @@ import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
 
-import Avatar from '../avatar';
+import Avatar, { getUserAvatarType } from '../avatar';
 import RichText from '../rich-text';
 
 import Embed from '../embeds/embed';
@@ -91,7 +91,7 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 					{!treeView && item().prev && <div class="absolute top-0 h-2 border-l-2 border-outline-md"></div>}
 
 					<Avatar
-						type={/* @once */ author().associated?.labeler ? 'labeler' : 'user'}
+						type={/* @once */ getUserAvatarType(author())}
 						src={/* @once */ author().avatar}
 						moderation={moderation()}
 						href={authorHref}

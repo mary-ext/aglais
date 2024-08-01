@@ -25,7 +25,7 @@ import { assert } from '~/lib/invariant';
 import { useAgent } from '~/lib/states/agent';
 import { useTextareaAutosize } from '~/lib/textarea-autosize';
 
-import Avatar from '../avatar';
+import Avatar, { getUserAvatarType } from '../avatar';
 import CircularProgress from '../circular-progress';
 
 export interface ComposerInputProps {
@@ -356,7 +356,7 @@ const ComposerInput = (props: ComposerInputProps) => {
 
 											node = (
 												<div class="contents">
-													<Avatar type="user" src={/* @once */ user.avatar} />
+													<Avatar type={/* @once */ getUserAvatarType(user)} src={/* @once */ user.avatar} />
 
 													<div class="flex grow flex-col">
 														<span class="line-clamp-1 break-all text-sm font-bold">

@@ -15,7 +15,7 @@ import { formatCompact } from '~/lib/intl/number';
 import { formatAbsDateTime } from '~/lib/intl/time';
 import { useModerationOptions } from '~/lib/states/moderation';
 
-import Avatar from '../avatar';
+import Avatar, { getUserAvatarType } from '../avatar';
 import Divider from '../divider';
 import HeartOutlinedIcon from '../icons-central/heart-outline';
 import HeartSolidIcon from '../icons-central/heart-solid';
@@ -88,7 +88,7 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 
 				<a href={links().authorHref} class="inline-flex min-w-0 max-w-full items-center gap-3">
 					<Avatar
-						type={author().associated?.labeler ? 'labeler' : 'user'}
+						type={/* @once */ getUserAvatarType(author())}
 						src={author().avatar}
 						moderation={moderation()}
 					/>

@@ -22,7 +22,7 @@ import ProfileFollowButton from './profile-follow-button';
 
 import DefaultLabelerAvatar from '~/assets/default-labeler-avatar.svg?url';
 import DefaultUserAvatar from '~/assets/default-user-avatar.svg?url';
-import Avatar from '../avatar';
+import Avatar, { getUserAvatarType } from '../avatar';
 
 export interface ProfileViewHeader {
 	/** Expects DID to be static */
@@ -183,7 +183,7 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 
 												return (
 													<Avatar
-														type="user"
+														type={/* @once */ getUserAvatarType(profile)}
 														src={/* @once */ profile.avatar}
 														moderation={moderation()}
 														size="xs"

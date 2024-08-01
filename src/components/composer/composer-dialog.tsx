@@ -35,7 +35,7 @@ import * as Dialog from '../dialog';
 import IconButton from '../icon-button';
 import * as Prompt from '../prompt';
 
-import Avatar from '../avatar';
+import Avatar, { getUserAvatarType } from '../avatar';
 import CircularProgress from '../circular-progress';
 import Divider from '../divider';
 import { useFieldset } from '../fieldset';
@@ -359,7 +359,11 @@ const Post = ({
 					<div class="absolute top-0 h-2 border-l-2 border-outline-md"></div>
 				)}
 
-				<Avatar type="user" src={profile.data?.avatar} class={!isActive() ? `opacity-50` : ``} />
+				<Avatar
+					type={getUserAvatarType(profile.data)}
+					src={profile.data?.avatar}
+					class={!isActive() ? `opacity-50` : ``}
+				/>
 
 				{hasNext() && <div class="mt-1 grow border-l-2 border-outline-md"></div>}
 			</div>

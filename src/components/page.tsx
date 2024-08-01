@@ -8,7 +8,7 @@ import { history, logger } from '~/globals/navigation';
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
-import Avatar from './avatar';
+import Avatar, { getUserAvatarType } from './avatar';
 import IconButton from './icon-button';
 import ArrowLeftOutlinedIcon from './icons-central/arrow-left-outline';
 import MenuOutlinedIcon from './icons-central/menu-outline';
@@ -69,7 +69,7 @@ const PageMainMenu = ({}: PageMainMenuProps) => {
 			icon={() => {
 				if (currentAccount) {
 					const profile = createProfileQuery(() => currentAccount.did, { persister });
-					return <Avatar type="user" src={profile.data?.avatar} size="sm" />;
+					return <Avatar type={getUserAvatarType(profile.data)} src={profile.data?.avatar} size="sm" />;
 				}
 
 				return <MenuOutlinedIcon />;

@@ -25,7 +25,7 @@ import { assert } from '~/lib/invariant';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
 
-import Avatar from '../avatar';
+import Avatar, { getUserAvatarType } from '../avatar';
 import HeartSolidIcon from '../icons-central/heart-solid';
 import PersonSolidIcon from '../icons-central/person-solid';
 import RepeatOutlinedIcon from '../icons-central/repeat-outline';
@@ -157,7 +157,7 @@ const renderAvatars = (notifs: AppBskyNotificationListNotifications.Notification
 
 		return (
 			<Avatar
-				type="user"
+				type={/* @once */ getUserAvatarType(author)}
 				title={displayName ? `${displayName} (@${handle})` : `@${handle}`}
 				src={avatar}
 				href={`/${did}`}

@@ -1,3 +1,4 @@
+import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 import { Match, Switch } from 'solid-js';
 
 import { ContextProfileMedia, getModerationUI, type ModerationCause } from '~/api/moderation';
@@ -26,6 +27,16 @@ export interface AvatarProps {
 	class?: string;
 	size?: 'xs' | 'sm' | 'in' | 'md' | 'lg';
 }
+
+export const getUserAvatarType = (
+	profile:
+		| AppBskyActorDefs.ProfileViewBasic
+		| AppBskyActorDefs.ProfileView
+		| AppBskyActorDefs.ProfileViewDetailed
+		| undefined,
+): AvatarProps['type'] => {
+	return profile?.associated?.labeler ? 'labeler' : 'user';
+};
 
 const Avatar = (props: AvatarProps) => {
 	const hasModeration = 'moderation' in props;

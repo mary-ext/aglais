@@ -13,7 +13,7 @@ import type { HydratedBookmarkItem } from '~/lib/aglais-bookmarks/db';
 import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
 import { useModerationOptions } from '~/lib/states/moderation';
 
-import Avatar from '../avatar';
+import Avatar, { getUserAvatarType } from '../avatar';
 import Embed from '../embeds/embed';
 import PostActions from '../feeds/post-actions';
 import PostMeta from '../feeds/post-meta';
@@ -68,7 +68,7 @@ const BookmarkFeedItem = ({ item }: BookmarkFeedItemProps) => {
 		>
 			<div class="flex shrink-0 flex-col items-center">
 				<Avatar
-					type={/* @once */ author.associated?.labeler ? 'labeler' : 'user'}
+					type={/* @once */ getUserAvatarType(author)}
 					src={/* @once */ author.avatar}
 					moderation={moderation()}
 				/>

@@ -7,7 +7,7 @@ import { openModal, useModalContext } from '~/globals/modals';
 import { formatCompact } from '~/lib/intl/number';
 import { useSession } from '~/lib/states/session';
 
-import Avatar from '../avatar';
+import Avatar, { getUserAvatarType } from '../avatar';
 import IconButton from '../icon-button';
 import AddOutlinedIcon from '../icons-central/add-outline';
 import BookmarkOutlinedIcon from '../icons-central/bookmark-outline';
@@ -74,7 +74,7 @@ const AuthenticatedHeader = () => {
 					return (
 						<div class="flex flex-col p-4">
 							<div class="flex justify-between">
-								<Avatar type="user" src={profile().avatar} size="lg" />
+								<Avatar type={/* @once */ getUserAvatarType(profile())} src={profile().avatar} size="lg" />
 
 								{otherAccounts().length === 0 ? (
 									<IconButton
@@ -99,7 +99,13 @@ const AuthenticatedHeader = () => {
 												return (
 													<IconButton
 														icon={() => {
-															return <Avatar type="user" src={profile.data?.avatar} size="sm" />;
+															return (
+																<Avatar
+																	type={getUserAvatarType(profile.data)}
+																	src={profile.data?.avatar}
+																	size="sm"
+																/>
+															);
 														}}
 														title={`@${profile.data?.handle ?? account.session.handle}`}
 														size="sm"

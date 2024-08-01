@@ -7,7 +7,7 @@ import { moderatePost } from '~/api/moderation/entities/post';
 
 import { useModerationOptions } from '~/lib/states/moderation';
 
-import Avatar from '../avatar';
+import Avatar, { getUserAvatarType } from '../avatar';
 import ImageEmbed from '../embeds/image-embed';
 import TimeAgo from '../time-ago';
 
@@ -35,7 +35,7 @@ const ComposerReplyContext = (props: ComposerReplyContextProps) => {
 		<div class="relative flex gap-3 px-4 pt-3">
 			<div class="flex shrink-0 flex-col items-center">
 				<Avatar
-					type={/* @once */ author.associated?.labeler ? 'labeler' : 'user'}
+					type={/* @once */ getUserAvatarType(author)}
 					src={/* @once */ author.avatar}
 					moderation={moderation()}
 					class={props.pending ? `opacity-50` : ``}

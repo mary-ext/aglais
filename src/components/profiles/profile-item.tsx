@@ -11,7 +11,7 @@ import { history } from '~/globals/navigation';
 import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
 import { useModerationOptions } from '~/lib/states/moderation';
 
-import Avatar from '../avatar';
+import Avatar, { getUserAvatarType } from '../avatar';
 
 export interface ProfileItemProps {
 	/** Expected to be static */
@@ -55,7 +55,7 @@ const ProfileItem = (props: ProfileItemProps) => {
 		>
 			<div class="shrink-0">
 				<Avatar
-					type={/* @once */ profile.associated?.labeler ? 'labeler' : 'user'}
+					type={/* @once */ getUserAvatarType(profile)}
 					src={/* @once */ profile.avatar}
 					href={href}
 					onClick={() => precacheProfile(queryClient, profile)}

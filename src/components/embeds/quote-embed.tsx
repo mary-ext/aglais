@@ -13,7 +13,7 @@ import { parseAtUri } from '~/api/utils/strings';
 
 import { useModerationOptions } from '~/lib/states/moderation';
 
-import Avatar from '../avatar';
+import Avatar, { getUserAvatarType } from '../avatar';
 import TimeAgo from '../time-ago';
 import ImageEmbed from './image-embed';
 
@@ -52,7 +52,7 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 		>
 			<div class="mx-3 mt-3 flex min-w-0 text-sm text-contrast-muted">
 				<Avatar
-					type={/* @once */ author.associated?.labeler ? 'labeler' : 'user'}
+					type={/* @once */ getUserAvatarType(author)}
 					src={/* @once */ author.avatar}
 					moderation={moderation()}
 					size="xs"

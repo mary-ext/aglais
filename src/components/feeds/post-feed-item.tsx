@@ -16,7 +16,7 @@ import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
 
-import Avatar from '../avatar';
+import Avatar, { getUserAvatarType } from '../avatar';
 import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 import RichText from '../rich-text';
 
@@ -94,7 +94,7 @@ const PostFeedItem = ({ item, highlighted, timelineDid }: PostFeedItemProps) => 
 			<div class="flex gap-3">
 				<div class="flex shrink-0 flex-col items-center">
 					<Avatar
-						type={/* @once */ author.associated?.labeler ? 'labeler' : 'user'}
+						type={/* @once */ getUserAvatarType(author)}
 						src={/* @once */ author.avatar}
 						href={authorHref}
 						moderation={moderation()}
