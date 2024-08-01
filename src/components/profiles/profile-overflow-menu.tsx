@@ -4,7 +4,7 @@ import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 
 import { useProfileShadow } from '~/api/cache/profile-shadow';
 
-import { useModalContext } from '~/globals/modals';
+import { openModal, useModalContext } from '~/globals/modals';
 import { history } from '~/globals/navigation';
 
 import { useSession } from '~/lib/states/session';
@@ -22,6 +22,9 @@ import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 import ShareOutlinedIcon from '../icons-central/share-outline';
 import VolumeFullOutlinedIcon from '../icons-central/volume-full-outlined';
 import * as Menu from '../menu';
+
+import BlockAccountPromptLazy from '../moderation/block-account-prompt-lazy';
+import MuteAccountPromptLazy from '../moderation/mute-account-prompt-lazy';
 
 export interface ProfileOverflowMenuProps {
 	anchor: HTMLElement;
@@ -128,6 +131,7 @@ const ProfileOverflowMenu = (props: ProfileOverflowMenuProps) => {
 						label={!isMuted() ? `Mute account` : `Unmute account`}
 						onClick={() => {
 							close();
+							openModal(() => <MuteAccountPromptLazy profile={profile} />);
 						}}
 					/>
 
@@ -136,6 +140,7 @@ const ProfileOverflowMenu = (props: ProfileOverflowMenuProps) => {
 						label={!isBlocked() ? `Block account` : `Unblock account`}
 						onClick={() => {
 							close();
+							openModal(() => <BlockAccountPromptLazy profile={profile} />);
 						}}
 					/>
 
