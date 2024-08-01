@@ -29,9 +29,8 @@ export const createNotificationCountQuery = () => {
 
 			return 30_000;
 		},
-		initialData: {
-			count: 0,
-		},
+		initialData: { count: 0 },
+		initialDataUpdatedAt: 0,
 		staleTime: 30_000,
 		refetchOnReconnect: true,
 		refetchOnWindowFocus: true,
