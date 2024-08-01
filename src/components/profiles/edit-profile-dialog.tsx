@@ -117,7 +117,7 @@ const EditProfileDialog = ({ profile }: EditProfileDialogProps) => {
 			close();
 
 			setTimeout(() => {
-				queryClient.resetQueries({
+				queryClient.refetchQueries({
 					queryKey: ['profile', currentAccount!.did],
 					exact: true,
 				});
@@ -129,7 +129,7 @@ const EditProfileDialog = ({ profile }: EditProfileDialogProps) => {
 						return params.type === 'profile' && params.actor === currentAccount!.did;
 					},
 				});
-			}, 1_250);
+			}, 1_500);
 		},
 	}));
 
