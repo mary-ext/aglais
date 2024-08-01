@@ -172,6 +172,8 @@ const renderAvatars = (notifs: AppBskyNotificationListNotifications.Notification
 };
 
 const renderText = (data: FollowNotificationSlice | LikeNotificationSlice | RepostNotificationSlice) => {
+	const queryClient = useQueryClient();
+
 	const items = data.items;
 	const sliced = Math.min(items.length, items.length > MAX_NAMES ? MAX_NAMES_AFTER_TRUNCATION : MAX_NAMES);
 	const remaining = items.length - sliced;
@@ -196,6 +198,7 @@ const renderText = (data: FollowNotificationSlice | LikeNotificationSlice | Repo
 			<a
 				dir="auto"
 				href={/* @once */ `/${author.did}`}
+				onClick={() => precacheProfile(queryClient, author)}
 				class="inline-block overflow-hidden align-top font-bold hover:underline"
 			>
 				{/* @once */ author.displayName?.trim() || `@${author.handle}`}
