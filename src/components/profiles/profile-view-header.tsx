@@ -22,11 +22,19 @@ import ProfileFollowButton from './profile-follow-button';
 
 import DefaultLabelerAvatar from '~/assets/default-labeler-avatar.svg?url';
 import DefaultUserAvatar from '~/assets/default-user-avatar.svg?url';
+import Avatar from '../avatar';
 
 export interface ProfileViewHeader {
+	/** Expects DID to be static */
 	data: AppBskyActorDefs.ProfileViewDetailed;
 	isPlaceholderData?: boolean;
 }
+
+const canShowKnownFollowers = (knownFollowers: AppBskyActorDefs.KnownFollowers | undefined) => {
+	if (knownFollowers !== undefined && knownFollowers.followers.length > 0) {
+		return knownFollowers;
+	}
+};
 
 const ProfileViewHeader = (props: ProfileViewHeader) => {
 	const moderationOptions = useModerationOptions();
@@ -34,7 +42,10 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 
 	const data = () => props.data;
 	const viewer = () => data().viewer;
+
+	const did = data().did;
 	const isLabeler = !!data().associated?.labeler;
+	const isSelf = currentAccount?.did === data().did;
 
 	const moderation = createMemo(() => moderateProfile(data(), moderationOptions()));
 
@@ -99,7 +110,7 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 
 					<div hidden={props.isPlaceholderData} class="flex items-center gap-3">
 						<Switch>
-							<Match when={data().did === currentAccount?.did}>
+							<Match when={isSelf}>
 								<Button
 									onClick={() => {
 										openModal(() => <EditProfileDialogLazy profile={data()} />);
@@ -144,16 +155,69 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 				<div class="whitespace-pre-wrap break-words text-sm empty:hidden">{data().description?.trim()}</div>
 
 				<div hidden={props.isPlaceholderData} class="flex min-w-0 flex-wrap gap-5 text-sm">
-					<a href={`/${data().did}/following`} onClick={close} class="hover:underline">
+					<a href={`/${did}/following`} onClick={close} class="hover:underline">
 						<span class="font-bold">{formatCompact(data().followsCount ?? 0)}</span>
 						<span class="text-contrast-muted"> Following</span>
 					</a>
 
-					<a href={`/${data().did}/followers`} onClick={close} class="hover:underline">
+					<a href={`/${did}/followers`} onClick={close} class="hover:underline">
 						<span class="font-bold">{formatCompact(data().followersCount ?? 0)}</span>
 						<span class="text-contrast-muted"> Followers</span>
 					</a>
 				</div>
+
+				{!isSelf && !props.isPlaceholderData && (
+					<Show
+						when={canShowKnownFollowers(viewer()?.knownFollowers)}
+						fallback={<p class="text-de text-contrast-muted">Not followed by anyone you're following</p>}
+					>
+						{(known) => {
+							return (
+								<a href={`/${did}/known-followers`} class="group flex items-start gap-3">
+									<div class="z-0 flex shrink-0 flex-row-reverse">
+										{known()
+											.followers.slice(0, 3)
+											.reverse()
+											.map((profile, index) => {
+												const moderation = createMemo(() => moderateProfile(profile, moderationOptions()));
+
+												return (
+													<Avatar
+														type="user"
+														src={/* @once */ profile.avatar}
+														moderation={moderation()}
+														size="xs"
+														class={
+															'-m-0.5 box-content border-2 border-background' + (index !== 0 ? ` -mr-2` : ``)
+														}
+													/>
+												);
+											})}
+									</div>
+
+									<span class="text-pretty text-de text-contrast-muted group-hover:underline">
+										{(() => {
+											const followers = known().followers.slice(0, 2);
+											const rest = known().count - followers.length;
+
+											let array: string[] = [];
+
+											for (const profile of followers) {
+												array.push(profile.displayName || profile.handle);
+											}
+
+											if (rest > 0) {
+												array.push(`${rest} others you follow`);
+											}
+
+											return `Followed by ` + new Intl.ListFormat('en-US').format(array);
+										})()}
+									</span>
+								</a>
+							);
+						}}
+					</Show>
+				)}
 			</div>
 		</div>
 	);
