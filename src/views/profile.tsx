@@ -176,6 +176,7 @@ const ProfileView = (props: { data: ProfileData; isPlaceholderData?: boolean }) 
 				/>
 
 				<TimelineList
+					timelineDid={/* @once */ props.data.did}
 					params={{
 						type: 'profile',
 						actor: props.data.did,

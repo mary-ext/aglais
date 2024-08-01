@@ -1,14 +1,19 @@
+import type { At } from '@mary/bluesky-client/lexicons';
+
 import { useTimelineQuery, type TimelineParams } from '~/api/queries/timeline';
+
 import PagedList from '../paged-list';
 import VirtualItem from '../virtual-item';
 import PostFeedItem from './post-feed-item';
 
 export interface TimelineListProps {
 	params: TimelineParams;
+	timelineDid?: At.DID;
 }
 
 const TimelineList = (props: TimelineListProps) => {
 	const { timeline, isStale, reset } = useTimelineQuery(() => props.params);
+	const timelineDid = props.timelineDid;
 
 	return (
 		<PagedList
@@ -17,7 +22,7 @@ const TimelineList = (props: TimelineListProps) => {
 			render={(item) => {
 				return (
 					<VirtualItem estimateHeight={99}>
-						<PostFeedItem item={item} />
+						<PostFeedItem item={item} timelineDid={timelineDid} />
 					</VirtualItem>
 				);
 			}}
