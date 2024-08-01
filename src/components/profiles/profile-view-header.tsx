@@ -5,6 +5,7 @@ import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { ContextProfileMedia, getModerationUI } from '~/api/moderation';
 import { moderateProfile } from '~/api/moderation/entities/profile';
+import { parseAtUri } from '~/api/utils/strings';
 
 import { openModal } from '~/globals/modals';
 
@@ -16,6 +17,7 @@ import Avatar, { getUserAvatarType } from '../avatar';
 import Button from '../button';
 import IconButton from '../icon-button';
 import MailOutlinedIcon from '../icons-central/mail-outline';
+import MuteOutlinedIcon from '../icons-central/mute-outline';
 
 import ImageViewerModalLazy from '../images/image-viewer-modal-lazy';
 
@@ -222,12 +224,37 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 					</Show>
 				)}
 
-				{shadow().muted && (
-					<p class="text-sm text-contrast-muted">
-						You have muted posts from this account.{' '}
-						<button class="text-accent hover:underline">Unmute</button>
-					</p>
-				)}
+				<Switch>
+					<Match when={viewer()?.mutedByList}>
+						{(list) => {
+							const href = () => {
+								const uri = parseAtUri(list().uri);
+								return `/${uri.repo}/lists/${uri.rkey}`;
+							};
+
+							return (
+								<div class="flex gap-3">
+									<MuteOutlinedIcon class="text-base text-contrast-muted" />
+
+									<p class="text-sm text-contrast-muted">
+										Account is muted by{' '}
+										<a href={href()} class="text-accent hover:underline">
+											{list().name}
+										</a>{' '}
+										list
+									</p>
+								</div>
+							);
+						}}
+					</Match>
+
+					<Match when={shadow().muted}>
+						<p class="text-sm text-contrast-muted">
+							You have muted posts from this account.{' '}
+							<button class="text-accent hover:underline">Unmute</button>
+						</p>
+					</Match>
+				</Switch>
 			</div>
 		</div>
 	);
