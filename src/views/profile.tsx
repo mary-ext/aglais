@@ -7,6 +7,7 @@ import { useQueryClient } from '@mary/solid-query';
 import { createProfileQuery } from '~/api/queries/profile';
 import { isDid } from '~/api/utils/strings';
 
+import { openModal } from '~/globals/modals';
 import { history } from '~/globals/navigation';
 
 import { formatCompact } from '~/lib/intl/number';
@@ -19,11 +20,11 @@ import FilterBar from '~/components/filter-bar';
 import IconButton from '~/components/icon-button';
 import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
 import * as Page from '~/components/page';
+import VirtualItem from '~/components/virtual-item';
 
 import TimelineList from '~/components/feeds/timeline-list';
 import ProfileOverflowMenu from '~/components/profiles/profile-overflow-menu';
 import ProfileViewHeader from '~/components/profiles/profile-view-header';
-import { openModal } from '~/globals/modals';
 
 const ProfilePage = () => {
 	const { didOrHandle } = useParams();
@@ -152,7 +153,9 @@ const ProfileView = (props: { data: ProfileData; isPlaceholderData?: boolean }) 
 
 	return (
 		<>
-			<ProfileViewHeader {...props} />
+			<VirtualItem>
+				<ProfileViewHeader {...props} />
+			</VirtualItem>
 			{!props.isPlaceholderData ? <Divider /> : <CircularProgressView />}
 
 			<div hidden={props.isPlaceholderData}>
