@@ -2,6 +2,7 @@ import type {
 	AppBskyFeedDefs,
 	AppBskyFeedGetPostThread,
 	AppBskyFeedPost,
+	At,
 	Brand,
 } from '@mary/bluesky-client/lexicons';
 
@@ -117,10 +118,12 @@ export const createThreadData = ({
 	thread,
 	preferences,
 	moderationOptions,
+	selfDid,
 }: {
 	thread: Brand.Union<AppBskyFeedDefs.ThreadViewPost>;
 	preferences: ThreadViewPreferences;
 	moderationOptions: ModerationOptions;
+	selfDid?: At.DID;
 }): ThreadData => {
 	const { followsFirst, sort, treeView } = preferences;
 
@@ -243,6 +246,21 @@ export const createThreadData = ({
 					} else if (aIsByOp) {
 						return -1;
 					} else if (bIsByOp) {
+						return 1;
+					}
+				}
+
+				// Prioritize own replies
+				if (selfDid) {
+					const aIsMe = aAuthor.did === selfDid;
+					const bIsMe = bAuthor.did === selfDid;
+
+					if (aIsMe && bIsMe) {
+						// Prioritize oldest first for own reply
+						return aIndexed - bIndexed;
+					} else if (aIsMe) {
+						return -1;
+					} else if (bIsMe) {
 						return 1;
 					}
 				}
