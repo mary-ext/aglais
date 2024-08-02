@@ -4,12 +4,15 @@ import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 import { createMutation } from '@mary/solid-query';
 
 import { updateProfileShadow, useProfileShadow } from '~/api/cache/profile-shadow';
+import { createListMetaQuery } from '~/api/queries/list';
 
 import { useModalContext } from '~/globals/modals';
 
 import { useAgent } from '~/lib/states/agent';
 
+import CircularProgress from '../circular-progress';
 import CircularProgressView from '../circular-progress-view';
+import ListEmbed from '../embeds/list-embed';
 import EyeOpenOutlinedIcon from '../icons-central/eye-open-outline';
 import MegaphoneOutlinedIcon from '../icons-central/megaphone-outline';
 import ReplyOutlinedIcon from '../icons-central/reply-outline';
@@ -20,17 +23,22 @@ export interface MuteAccountPromptProps {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }
 
-const MuteAccountPrompt = ({ profile }: MuteAccountPromptProps) => {
-	const shadow = useProfileShadow(profile);
+const MuteAccountPrompt = (props: MuteAccountPromptProps) => {
+	const profile = props.profile;
+	const shadow = useProfileShadow(props.profile);
 
 	return (
 		<Switch>
+			<Match when={/* @once */ profile.viewer?.mutedByList}>
+				<MutedByListPrompt {...props} />
+			</Match>
+
 			<Match when={shadow().muted}>
-				<UnmutePrompt profile={profile} />
+				<UnmutePrompt {...props} />
 			</Match>
 
 			<Match when>
-				<MutePrompt profile={profile} />
+				<MutePrompt {...props} />
 			</Match>
 		</Switch>
 	);
@@ -133,6 +141,40 @@ const UnmutePrompt = ({ profile }: MuteAccountPromptProps) => {
 	return (
 		<Prompt.Container disabled={mutation.isPending}>
 			<CircularProgressView />
+		</Prompt.Container>
+	);
+};
+
+const MutedByListPrompt = ({ profile }: MuteAccountPromptProps) => {
+	const { close } = useModalContext();
+
+	const listBasic = profile.viewer!.mutedByList!;
+	const query = createListMetaQuery(() => listBasic.uri);
+
+	return (
+		<Prompt.Container>
+			<Prompt.Title>{/* @once */ `Can't unmute @${profile.handle}`}</Prompt.Title>
+			<Prompt.Description>
+				You've currently opted to mute all accounts that are in this moderation list:
+			</Prompt.Description>
+
+			<div class="mt-3">
+				<Switch>
+					<Match when={query.data} keyed>
+						{(list) => <ListEmbed list={list} interactive onClick={close} />}
+					</Match>
+
+					<Match when>
+						<div class="grid place-items-center" style="height:66px">
+							<CircularProgress />
+						</div>
+					</Match>
+				</Switch>
+			</div>
+
+			<Prompt.Actions>
+				<Prompt.Action>Okay</Prompt.Action>
+			</Prompt.Actions>
 		</Prompt.Container>
 	);
 };

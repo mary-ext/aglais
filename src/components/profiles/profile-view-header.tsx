@@ -1,4 +1,4 @@
-import { createMemo, Match, Show, Switch } from 'solid-js';
+import { type Component, type ComponentProps, createMemo, type JSX, Match, Show, Switch } from 'solid-js';
 
 import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 
@@ -159,21 +159,21 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 
 				<div class="whitespace-pre-wrap break-words text-sm empty:hidden">{data().description?.trim()}</div>
 
-				<div hidden={props.isPlaceholderData} class="flex min-w-0 flex-wrap gap-5 text-sm">
-					<a href={`/${did}/following`} onClick={close} class="hover:underline">
-						<span class="font-bold">{formatCompact(data().followsCount ?? 0)}</span>
-						<span class="text-contrast-muted"> Following</span>
-					</a>
+				<Show when={!props.isPlaceholderData}>
+					<div class="flex min-w-0 flex-wrap gap-5 text-sm">
+						<a href={`/${did}/following`} onClick={close} class="hover:underline">
+							<span class="font-bold">{formatCompact(data().followsCount ?? 0)}</span>
+							<span class="text-contrast-muted"> Following</span>
+						</a>
 
-					<a href={`/${did}/followers`} onClick={close} class="hover:underline">
-						<span class="font-bold">{formatCompact(data().followersCount ?? 0)}</span>
-						<span class="text-contrast-muted"> Followers</span>
-					</a>
-				</div>
+						<a href={`/${did}/followers`} onClick={close} class="hover:underline">
+							<span class="font-bold">{formatCompact(data().followersCount ?? 0)}</span>
+							<span class="text-contrast-muted"> Followers</span>
+						</a>
+					</div>
 
-				{!isSelf && !props.isPlaceholderData && (
 					<Show
-						when={canShowKnownFollowers(viewer()?.knownFollowers)}
+						when={!isSelf && canShowKnownFollowers(viewer()?.knownFollowers)}
 						fallback={<p class="text-de text-contrast-muted">Not followed by anyone you're following</p>}
 					>
 						{(known) => {
@@ -222,42 +222,50 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 							);
 						}}
 					</Show>
-				)}
 
-				<Switch>
-					<Match when={viewer()?.mutedByList}>
-						{(list) => {
-							const href = () => {
-								const uri = parseAtUri(list().uri);
-								return `/${uri.repo}/lists/${uri.rkey}`;
-							};
+					<Switch>
+						<Match when={viewer()?.mutedByList}>
+							{(list) => {
+								const href = () => {
+									const uri = parseAtUri(list().uri);
+									return `/${uri.repo}/lists/${uri.rkey}`;
+								};
 
-							return (
-								<div class="flex gap-3">
-									<MuteOutlinedIcon class="text-base text-contrast-muted" />
-
-									<p class="text-sm text-contrast-muted">
+								return (
+									<ModerationBanner Icon={MuteOutlinedIcon}>
 										Account is muted by{' '}
 										<a href={href()} class="text-accent hover:underline">
 											{list().name}
 										</a>{' '}
 										list
-									</p>
-								</div>
-							);
-						}}
-					</Match>
+									</ModerationBanner>
+								);
+							}}
+						</Match>
 
-					<Match when={shadow().muted}>
-						<p class="text-sm text-contrast-muted">
-							You have muted posts from this account.{' '}
-							<button class="text-accent hover:underline">Unmute</button>
-						</p>
-					</Match>
-				</Switch>
+						<Match when={shadow().muted}>
+							<ModerationBanner Icon={MuteOutlinedIcon}>
+								You're currently muting this account.{' '}
+								<button class="text-accent hover:underline">Unmute</button>
+							</ModerationBanner>
+						</Match>
+					</Switch>
+				</Show>
 			</div>
 		</div>
 	);
 };
 
 export default ProfileViewHeader;
+
+const ModerationBanner = (props: { Icon: Component<ComponentProps<'svg'>>; children: JSX.Element }) => {
+	return (
+		<div class="mt-1 flex gap-3">
+			<div class="grid h-5 w-5 shrink-0 place-items-center">
+				<props.Icon class="text-lg text-contrast-muted" />
+			</div>
+
+			<p class="text-sm text-contrast-muted">{props.children}</p>
+		</div>
+	);
+};

@@ -14,9 +14,10 @@ export interface ListEmbedProps {
 	list: AppBskyGraphDefs.ListView;
 	/** Expected to be static */
 	interactive?: boolean;
+	onClick?: () => void;
 }
 
-const ListEmbed = ({ list, interactive }: ListEmbedProps) => {
+const ListEmbed = ({ list, interactive, onClick }: ListEmbedProps) => {
 	const moderationOptions = useModerationOptions();
 	const moderation = createMemo(() => moderateGeneric(list, list.creator.did, moderationOptions()));
 
@@ -30,6 +31,7 @@ const ListEmbed = ({ list, interactive }: ListEmbedProps) => {
 				`flex gap-3 overflow-hidden rounded-md border border-outline p-3` +
 				(interactive ? ` hover:bg-contrast/sm active:bg-contrast/sm-pressed` : ``)
 			}
+			onClick={onClick}
 		>
 			<Avatar type="list" src={list.avatar} moderation={moderation()} class="mt-0.5" />
 
