@@ -42,7 +42,7 @@ const BlockAccountPrompt = ({ profile }: BlockAccountPromptProps) => {
 						<ReplyOutlinedIcon class="text-xl text-contrast-muted" />
 					</div>
 
-					<p class="mt-1.5">They can't reply to your posts</p>
+					<p class="mt-1.5">They can't mention you or reply to your posts</p>
 				</div>
 			</div>
 
