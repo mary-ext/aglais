@@ -207,11 +207,7 @@ const ThreadView = (props: {
 
 						return (
 							<VirtualItem estimateHeight={!end ? 98 : undefined}>
-								<PostThreadItem
-									item={item}
-									treeView={false}
-									onReplyPublish={/* @once */ props.onReplyPublish}
-								/>
+								<PostThreadItem item={item} treeView={false} />
 							</VirtualItem>
 						);
 					}
@@ -279,11 +275,7 @@ const ThreadView = (props: {
 									if (type === 'post') {
 										return (
 											<VirtualItem estimateHeight={98}>
-												<PostThreadItem
-													item={item() as PostDescendantItem}
-													treeView={treeView}
-													onReplyPublish={/* @once */ props.onReplyPublish}
-												/>
+												<PostThreadItem item={item() as PostDescendantItem} treeView={treeView} />
 											</VirtualItem>
 										);
 									}
