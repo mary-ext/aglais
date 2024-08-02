@@ -172,56 +172,59 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 						</a>
 					</div>
 
-					<Show
-						when={!isSelf && canShowKnownFollowers(viewer()?.knownFollowers)}
-						fallback={<p class="text-de text-contrast-muted">Not followed by anyone you're following</p>}
-					>
-						{(known) => {
-							return (
-								<a href={`/${did}/known-followers`} class="group flex items-start gap-3">
-									<div class="z-0 flex shrink-0 flex-row-reverse">
-										{known()
-											.followers.slice(0, 3)
-											.reverse()
-											.map((profile, index) => {
-												const moderation = createMemo(() => moderateProfile(profile, moderationOptions()));
+					{!isSelf && (
+						<Show
+							when={canShowKnownFollowers(viewer()?.knownFollowers)}
+							fallback={<p class="text-de text-contrast-muted">Not followed by anyone you're following</p>}
+						>
+							{(known) => {
+								return (
+									<a href={`/${did}/known-followers`} class="group flex items-start gap-3">
+										<div class="z-0 flex shrink-0 flex-row-reverse">
+											{known()
+												.followers.slice(0, 3)
+												.reverse()
+												.map((profile, index) => {
+													const moderation = createMemo(() => moderateProfile(profile, moderationOptions()));
 
-												return (
-													<Avatar
-														type={/* @once */ getUserAvatarType(profile)}
-														src={/* @once */ profile.avatar}
-														moderation={moderation()}
-														size="xs"
-														class={
-															'-m-0.5 box-content border-2 border-background' + (index !== 0 ? ` -mr-2` : ``)
-														}
-													/>
-												);
-											})}
-									</div>
+													return (
+														<Avatar
+															type={/* @once */ getUserAvatarType(profile)}
+															src={/* @once */ profile.avatar}
+															moderation={moderation()}
+															size="xs"
+															class={
+																'-m-0.5 box-content border-2 border-background' +
+																(index !== 0 ? ` -mr-2` : ``)
+															}
+														/>
+													);
+												})}
+										</div>
 
-									<span class="text-pretty text-de text-contrast-muted group-hover:underline">
-										{(() => {
-											const followers = known().followers.slice(0, 2);
-											const rest = known().count - followers.length;
+										<span class="text-pretty text-de text-contrast-muted group-hover:underline">
+											{(() => {
+												const followers = known().followers.slice(0, 2);
+												const rest = known().count - followers.length;
 
-											let array: string[] = [];
+												let array: string[] = [];
 
-											for (const profile of followers) {
-												array.push(profile.displayName || profile.handle);
-											}
+												for (const profile of followers) {
+													array.push(profile.displayName || profile.handle);
+												}
 
-											if (rest > 0) {
-												array.push(`${rest} others you follow`);
-											}
+												if (rest > 0) {
+													array.push(`${rest} others you follow`);
+												}
 
-											return `Followed by ` + new Intl.ListFormat('en-US').format(array);
-										})()}
-									</span>
-								</a>
-							);
-						}}
-					</Show>
+												return `Followed by ` + new Intl.ListFormat('en-US').format(array);
+											})()}
+										</span>
+									</a>
+								);
+							}}
+						</Show>
+					)}
 
 					<Switch>
 						<Match when={viewer()?.mutedByList}>
