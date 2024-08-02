@@ -156,7 +156,7 @@ const NavBar = ({
 };
 
 const getUnreadCountLabel = (count: number = 0) => {
-	return count > 0 ? (count > 30 ? `${count}+` : `${count}`) : ``;
+	return count > 0 ? (count > 30 ? `30+` : `${count}`) : ``;
 };
 
 type IconComponent = Component<ComponentProps<'svg'>>;
