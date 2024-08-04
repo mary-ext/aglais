@@ -4,6 +4,7 @@ import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 import { XRPCError } from '@mary/bluesky-client/xrpc';
 import { useQueryClient } from '@mary/solid-query';
 
+import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { createProfileQuery } from '~/api/queries/profile';
 import { isDid } from '~/api/utils/strings';
 
@@ -151,41 +152,65 @@ const enum PostFilter {
 const ProfileView = (props: { data: ProfileData; isPlaceholderData?: boolean }) => {
 	const [filter, setFilter] = createSignal(PostFilter.POSTS);
 
+	const shadow = useProfileShadow(() => props.data);
+	const did = props.data.did;
+
 	return (
 		<>
 			<VirtualItem>
 				<ProfileViewHeader {...props} />
 			</VirtualItem>
-			{!props.isPlaceholderData ? <Divider /> : <CircularProgressView />}
+
+			{props.isPlaceholderData && <CircularProgressView />}
 
 			<div hidden={props.isPlaceholderData}>
-				<FilterBar
-					value={filter()}
-					onChange={setFilter}
-					options={[
-						{
-							value: PostFilter.POSTS,
-							label: `Posts`,
-						},
-						{
-							value: PostFilter.POSTS_WITH_REPLIES,
-							label: `Posts and replies`,
-						},
-						{
-							value: PostFilter.MEDIA,
-							label: `Media`,
-						},
-					]}
-				/>
+				<Switch>
+					<Match when={shadow().blockUri}>
+						<div class="mx-auto my-8 w-full max-w-80 p-4">
+							<p class="text-xl font-bold">You've blocked this account</p>
+							<p class="mt-2 text-sm text-contrast-muted">You can no longer view this account's posts</p>
+						</div>
+					</Match>
 
-				<TimelineList
-					timelineDid={/* @once */ props.data.did}
-					params={{
-						type: 'profile',
-						actor: props.data.did,
-						tab: filter(),
-					}}
-				/>
+					<Match when={props.data.viewer?.blockedBy}>
+						<div class="mx-auto my-8 w-full max-w-80 p-4">
+							<p class="text-xl font-bold">You've been blocked by this account</p>
+							<p class="mt-2 text-sm text-contrast-muted">You can no longer view this account's posts</p>
+						</div>
+					</Match>
+
+					<Match when>
+						<Divider />
+
+						<FilterBar
+							value={filter()}
+							onChange={setFilter}
+							options={[
+								{
+									value: PostFilter.POSTS,
+									label: `Posts`,
+								},
+								{
+									value: PostFilter.POSTS_WITH_REPLIES,
+									label: `Posts and replies`,
+								},
+								{
+									value: PostFilter.MEDIA,
+									label: `Media`,
+								},
+							]}
+						/>
+
+						<TimelineList
+							timelineDid={did}
+							params={{
+								type: 'profile',
+								actor: did,
+								tab: filter(),
+							}}
+						/>
+					</Match>
+				</Switch>
 			</div>
 		</>
 	);
