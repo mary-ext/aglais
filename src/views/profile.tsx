@@ -165,16 +165,16 @@ const ProfileView = (props: { data: ProfileData; isPlaceholderData?: boolean }) 
 
 			<div hidden={props.isPlaceholderData}>
 				<Switch>
-					<Match when={shadow().blockUri}>
+					<Match when={props.data.viewer?.blockedBy}>
 						<div class="mx-auto my-8 w-full max-w-80 p-4">
-							<p class="text-xl font-bold">You've blocked this account</p>
+							<p class="text-xl font-bold">You've been blocked by this account</p>
 							<p class="mt-2 text-sm text-contrast-muted">You can no longer view this account's posts</p>
 						</div>
 					</Match>
 
-					<Match when={props.data.viewer?.blockedBy}>
+					<Match when={shadow().blockUri}>
 						<div class="mx-auto my-8 w-full max-w-80 p-4">
-							<p class="text-xl font-bold">You've been blocked by this account</p>
+							<p class="text-xl font-bold">You've blocked this account</p>
 							<p class="mt-2 text-sm text-contrast-muted">You can no longer view this account's posts</p>
 						</div>
 					</Match>
