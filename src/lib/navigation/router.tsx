@@ -141,27 +141,27 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 					const nextId = matched.id || nextEntry.key;
 					const matchedState: MatchedRouteState = { ...matched, id: nextId };
 
-					if (!matched.id) {
-						let nextViews: typeof views | undefined;
+					let nextViews: typeof views | undefined;
 
-						// Recreate the views object to remove no longer reachable views if:
-						// - We're pushing a new page, or replacing the current page
-						// - We're traversing and the intended index is lower than current
-						if (action !== 'traverse' || nextEntry.index < currentEntry.index) {
-							const entries = log.entries;
+					// Recreate the views object to remove no longer reachable views if:
+					// - We're pushing a new page, or replacing the current page
+					// - We're traversing and the intended index is lower than current
+					if (action !== 'traverse' || nextEntry.index < currentEntry.index) {
+						const entries = log.entries;
 
-							nextViews = {};
+						nextViews = {};
 
-							for (let idx = 0, len = entries.length; idx < len; idx++) {
-								const entry = entries[idx];
-								const key = entry?.key;
+						for (let idx = 0, len = entries.length; idx < len; idx++) {
+							const entry = entries[idx];
+							const key = entry?.key;
 
-								if (key !== undefined && key in views) {
-									nextViews[key] = views[key];
-								}
+							if (key !== undefined && key in views) {
+								nextViews[key] = views[key];
 							}
 						}
+					}
 
+					if (!matched.id) {
 						// Add this view, if it's already present, set `shouldCall` to true
 						if (!(nextId in views)) {
 							if (nextViews) {
@@ -171,16 +171,16 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 								isNew = true;
 							}
 						}
-
-						if (nextViews) {
-							views = nextViews;
-						}
 					} else {
 						// Add this view, if it's already present, set `shouldCall` to true
 						if (!(nextId in singles)) {
 							singles = { ...singles, [nextId]: matchedState };
 							isNew = true;
 						}
+					}
+
+					if (nextViews) {
+						views = nextViews;
 					}
 
 					routerEvents.emit(current.active, { focus: false, enter: false });
