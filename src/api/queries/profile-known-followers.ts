@@ -1,5 +1,5 @@
 import type { AppBskyActorDefs, AppBskyGraphGetFollowers } from '@mary/bluesky-client/lexicons';
-import { createInfiniteQuery, type InfiniteData } from '@mary/solid-query';
+import { createInfiniteQuery, type InfiniteData, type QueryFunctionContext as QC } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
@@ -11,13 +11,12 @@ export const createProfileKnownFollowersQuery = (didOrHandle: () => string) => {
 
 		return {
 			queryKey: ['profile-known-followers', $didOrHandle],
-			async queryFn(ctx): Promise<AppBskyGraphGetFollowers.Output> {
+			async queryFn(ctx: QC<never, string | undefined>): Promise<AppBskyGraphGetFollowers.Output> {
 				const { data } = await rpc.get('app.bsky.graph.getKnownFollowers', {
 					signal: ctx.signal,
 					params: {
 						actor: $didOrHandle,
 						limit: 50,
-						// @ts-expect-error: not sure how pageParam ended up unknown
 						cursor: ctx.pageParam,
 					},
 				});
@@ -25,7 +24,7 @@ export const createProfileKnownFollowersQuery = (didOrHandle: () => string) => {
 				return data;
 			},
 			structuralSharing: false,
-			initialPageParam: undefined as string | undefined,
+			initialPageParam: undefined,
 			getNextPageParam: (last) => last.cursor,
 			placeholderData(): InfiniteData<AppBskyGraphGetFollowers.Output> | undefined {
 				const profileQueryKey = ['profile', $didOrHandle];

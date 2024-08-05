@@ -1,4 +1,4 @@
-import { createInfiniteQuery, type InfiniteData } from '@mary/solid-query';
+import { createInfiniteQuery, type InfiniteData, type QueryFunctionContext as QC } from '@mary/solid-query';
 
 const GIF_ENDPOINT = `https://gifs.bsky.app`;
 
@@ -12,7 +12,7 @@ export const createGifSearchQuery = (search: () => string) => {
 
 		return {
 			queryKey: ['search-gifs', $search],
-			queryFn({ pageParam, signal }) {
+			queryFn({ pageParam, signal }: QC<never, string | undefined>) {
 				if ($search === '') {
 					return fetchTenor({
 						uri: `${GIF_ENDPOINT}/tenor/v2/featured`,
@@ -27,7 +27,7 @@ export const createGifSearchQuery = (search: () => string) => {
 					});
 				}
 			},
-			initialPageParam: undefined as string | undefined,
+			initialPageParam: undefined,
 			getNextPageParam: (last) => last.next,
 			structuralSharing: false,
 			select: selectFn,

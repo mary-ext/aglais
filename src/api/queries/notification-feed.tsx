@@ -1,7 +1,7 @@
 import { createSignal } from 'solid-js';
 
 import type { AppBskyFeedDefs, AppBskyNotificationListNotifications } from '@mary/bluesky-client/lexicons';
-import { createInfiniteQuery, useQueryClient } from '@mary/solid-query';
+import { createInfiniteQuery, useQueryClient, type QueryFunctionContext as QC } from '@mary/solid-query';
 
 import { mapDefined } from '~/lib/misc';
 import { useAgent } from '~/lib/states/agent';
@@ -85,7 +85,7 @@ export const createNotificationFeedQuery = () => {
 
 	const feed = createInfiniteQuery(() => ({
 		queryKey: ['notification', 'feed'],
-		async queryFn({ signal, pageParam }): Promise<NotificationFeedReturn> {
+		async queryFn({ signal, pageParam }: QC<never, string | undefined>): Promise<NotificationFeedReturn> {
 			const { data } = await rpc.get('app.bsky.notification.listNotifications', {
 				signal: signal,
 				params: {
@@ -240,7 +240,7 @@ export const createNotificationFeedQuery = () => {
 				slices: slices,
 			};
 		},
-		initialPageParam: undefined as string | undefined,
+		initialPageParam: undefined,
 		getNextPageParam: (last) => last.cursor,
 		staleTime: Infinity,
 		structuralSharing(a: any, b: any) {
