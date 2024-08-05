@@ -1,11 +1,15 @@
 import { lazy } from 'solid-js';
 import type { RouteDefinition } from './lib/navigation/router';
 
+const DID_RE = /^did:[a-z]+:[a-zA-Z0-9._:%-]*[a-zA-Z0-9._-]$/;
 const DID_OR_HANDLE_RE =
 	/^(?:did:[a-z]+:[a-zA-Z0-9._:%-]*[a-zA-Z0-9._-]|[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,}))$/;
 
 const TID_RE = /^[234567abcdefghij][234567abcdefghijklmnopqrstuvwxyz]{12}$/;
 
+const isValidDid = (str: string | undefined): boolean => {
+	return str !== undefined && DID_RE.test(str);
+};
 const isValidDidOrHandle = (str: string | undefined): boolean => {
 	return str !== undefined && DID_OR_HANDLE_RE.test(str);
 };
@@ -141,6 +145,20 @@ const routes: RouteDefinition[] = [
 		component: lazy(() => import('./views/post-thread')),
 		validate(params) {
 			return isValidDidOrHandle(params.didOrHandle) && isValidTid(params.rkey);
+		},
+	},
+	{
+		path: '/:did/:rkey/likes',
+		component: lazy(() => import('./views/post-likes')),
+		validate(params) {
+			return isValidDid(params.did) && isValidTid(params.rkey);
+		},
+	},
+	{
+		path: '/:did/:rkey/reposts',
+		component: lazy(() => import('./views/post-reposts')),
+		validate(params) {
+			return isValidDid(params.did) && isValidTid(params.rkey);
 		},
 	},
 

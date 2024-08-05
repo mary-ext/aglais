@@ -50,15 +50,11 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 
 	const shadow = usePostShadow(post);
 
-	const links = createMemo(() => {
-		const uri = parseAtUri(post().uri);
-		const did = author().did;
+	const uri = parseAtUri(post().uri);
+	const did = author().did;
 
-		const authorHref = `/${did}`;
-		const href = `/${did}/${uri.rkey}`;
-
-		return { authorHref, href };
-	}, EQUALS_DEQUAL);
+	const authorHref = `/${did}`;
+	const href = `/${did}/${uri.rkey}`;
 
 	const moderation = createMemo(() => moderatePost(post(), moderationOptions()));
 
@@ -86,7 +82,7 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 					</div>
 				)}
 
-				<a href={links().authorHref} class="inline-flex min-w-0 max-w-full items-center gap-3">
+				<a href={authorHref} class="inline-flex min-w-0 max-w-full items-center gap-3">
 					<Avatar
 						type={/* @once */ getUserAvatarType(author())}
 						src={author().avatar}
@@ -132,12 +128,12 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 			<Divider gutterTop="md" />
 
 			<div class="flex flex-wrap gap-4 py-4 text-sm">
-				<a class="hover:underline">
+				<a href={`${href}/reposts`} class="hover:underline">
 					<span class="font-bold">{formatCompact(shadow().repostCount)}</span>
 					<span class="text-contrast-muted"> Reposts</span>
 				</a>
 
-				<a class="hover:underline">
+				<a href={`${href}/likes`} class="hover:underline">
 					<span class="font-bold">{formatCompact(shadow().likeCount)}</span>
 					<span class="text-contrast-muted"> Likes</span>
 				</a>
