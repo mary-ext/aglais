@@ -10,7 +10,7 @@ export const createProfileKnownFollowersQuery = (didOrHandle: () => string) => {
 		const $didOrHandle = didOrHandle();
 
 		return {
-			queryKey: ['profile-followers', $didOrHandle],
+			queryKey: ['profile-known-followers', $didOrHandle],
 			async queryFn(ctx): Promise<AppBskyGraphGetFollowers.Output> {
 				const { data } = await rpc.get('app.bsky.graph.getKnownFollowers', {
 					signal: ctx.signal,
