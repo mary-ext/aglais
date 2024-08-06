@@ -70,8 +70,13 @@ export type NotificationSlice =
 	| ReplyNotificationSlice
 	| RepostNotificationSlice;
 
+export interface NotifPageParam {
+	cursor: string;
+	seenAt: number;
+}
+
 export interface NotificationFeedReturn {
-	cursor: string | undefined;
+	param: NotifPageParam | undefined;
 	slices: NotificationSlice[];
 }
 
@@ -85,16 +90,20 @@ export const createNotificationFeedQuery = () => {
 
 	const feed = createInfiniteQuery(() => ({
 		queryKey: ['notification', 'feed'],
-		async queryFn({ signal, pageParam }: QC<never, string | undefined>): Promise<NotificationFeedReturn> {
+		async queryFn({
+			signal,
+			pageParam,
+		}: QC<never, NotifPageParam | undefined>): Promise<NotificationFeedReturn> {
 			const { data } = await rpc.get('app.bsky.notification.listNotifications', {
 				signal: signal,
 				params: {
 					limit: 40,
-					cursor: pageParam,
+					cursor: pageParam?.cursor,
 				},
 			});
 
 			const notifs = data.notifications;
+			const firstSeenAt = pageParam?.seenAt;
 
 			// Notifications query doesn't return a hydrated post view, we'll need to
 			// retrieve them here.
@@ -145,7 +154,7 @@ export const createNotificationFeedQuery = () => {
 
 				const reason = item.reason as 'like' | 'repost' | 'follow' | 'mention' | 'reply' | 'quote';
 				const date = new Date(item.indexedAt).getTime();
-				const read = item.isRead;
+				const read = firstSeenAt === undefined ? item.isRead : firstSeenAt > date;
 
 				if (!read) {
 					hasUnread = true;
@@ -236,12 +245,17 @@ export const createNotificationFeedQuery = () => {
 			}
 
 			return {
-				cursor: data.cursor,
+				param: data.cursor
+					? {
+							cursor: data.cursor,
+							seenAt: pageParam?.seenAt ?? (data.seenAt ? new Date(data.seenAt).getTime() : Date.now()),
+						}
+					: undefined,
 				slices: slices,
 			};
 		},
 		initialPageParam: undefined,
-		getNextPageParam: (last) => last.cursor,
+		getNextPageParam: (last) => last.param,
 		staleTime: Infinity,
 		structuralSharing(a: any, b: any) {
 			if (!a) {
