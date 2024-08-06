@@ -1,5 +1,5 @@
 import { BskyXRPC } from '@mary/bluesky-client';
-import type { At, Records, ComAtprotoRepoGetRecord } from '@mary/bluesky-client/lexicons';
+import type { At, ComAtprotoRepoGetRecord, Records } from '@mary/bluesky-client/lexicons';
 
 type RecordType = keyof Records;
 
