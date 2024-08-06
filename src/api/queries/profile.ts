@@ -4,6 +4,8 @@ import { createQuery, type QueryPersister } from '@mary/solid-query';
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
+import { dequal } from '../utils/dequal';
+
 export interface ProfileQueryOptions {
 	persister?: QueryPersister;
 	staleTime?: number;
@@ -40,6 +42,23 @@ export const createProfileQuery = (didOrHandle: () => string, opts: ProfileQuery
 			placeholderData() {
 				return queryClient.getQueryData(['profile-precache', $didOrHandle]);
 			},
+			structuralSharing: ((
+				oldData: AppBskyActorDefs.ProfileViewDetailed | undefined,
+				newData: AppBskyActorDefs.ProfileViewDetailed,
+			) => {
+				const newKnownFollowers = newData.viewer?.knownFollowers;
+
+				if (newKnownFollowers) {
+					const collator = new Intl.Collator('en');
+					newKnownFollowers.followers.sort((a, b) => collator.compare(a.did, b.did));
+				}
+
+				if (!oldData || !dequal(oldData, newData)) {
+					return newData;
+				}
+
+				return oldData;
+			}) as any,
 		};
 	});
 };
