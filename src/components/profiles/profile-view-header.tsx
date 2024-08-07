@@ -83,7 +83,12 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 					<Show
 						when={data().avatar}
 						fallback={
-							<div class="-mt-11 h-20 w-20 shrink-0 overflow-hidden rounded-full outline-2 outline-background outline">
+							<div
+								class={
+									`-mt-11 h-20 w-20 shrink-0 overflow-hidden outline-2 outline-background outline` +
+									(!isLabeler ? ` rounded-full` : ` rounded-lg`)
+								}
+							>
 								<img
 									src={!isLabeler ? DefaultUserAvatar : DefaultLabelerAvatar}
 									class="h-full w-full object-cover"
