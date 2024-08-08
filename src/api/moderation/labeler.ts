@@ -8,6 +8,7 @@ import {
 	BlurNone,
 	FlagsAdultOnly,
 	FlagsNone,
+	FlagsNoSelf,
 	PreferenceIgnore,
 	PreferenceWarn,
 	SeverityAlert,
@@ -46,7 +47,7 @@ export const interpretLabelerDefinition = (
 			d: convertPreferenceValue(def.defaultSetting),
 			b: convertBlurValue(def.blurs),
 			s: convertSeverityValue(def.severity),
-			f: def.adultOnly ? FlagsAdultOnly : FlagsNone,
+			f: (def.adultOnly ? FlagsAdultOnly : FlagsNone) | FlagsNoSelf,
 			l: mapDefined(def.locales, (locale) => {
 				try {
 					// Normalize locale codes
