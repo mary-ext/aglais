@@ -6,7 +6,6 @@ import { usePostShadow } from '~/api/cache/post-shadow';
 import { ContextContentView, getModerationUI } from '~/api/moderation';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { createPostLikeMutation, createPostRepostMutation } from '~/api/mutations/post';
-import { EQUALS_DEQUAL } from '~/api/utils/dequal';
 import { parseAtUri } from '~/api/utils/strings';
 
 import { openModal } from '~/globals/modals';

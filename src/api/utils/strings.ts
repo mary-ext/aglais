@@ -31,8 +31,7 @@ export const parseAtUri = (str: string): AtUri => {
 	};
 };
 
-// @ts-expect-error
-const _parse = URL.parse as (url: string | URL, base?: string) => URL | null;
+const _parse = URL.parse;
 
 // Check for the existence of URL.parse and use that if available, removes the
 // performance hit from try..catch blocks.
