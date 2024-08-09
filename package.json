@@ -9,12 +9,12 @@
 		"fmt": "prettier --cache --write ."
 	},
 	"dependencies": {
-		"@floating-ui/dom": "^1.6.7",
-		"@floating-ui/utils": "^0.2.4",
+		"@floating-ui/dom": "^1.6.10",
+		"@floating-ui/utils": "^0.2.7",
 		"@mary/atproto-cid": "npm:@jsr/mary__atproto-cid@^0.1.4",
 		"@mary/atproto-tid": "npm:@jsr/mary__atproto-tid@^0.1.1",
 		"@mary/base32": "npm:@jsr/mary__base32@^0.1.0",
-		"@mary/bluesky-client": "npm:@jsr/mary__bluesky-client@^0.5.26",
+		"@mary/bluesky-client": "npm:@jsr/mary__bluesky-client@^0.5.27",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
 		"@mary/exif-rm": "npm:@jsr/mary__exif-rm@^0.2.1",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
@@ -23,29 +23,29 @@
 		"idb": "^8.0.0",
 		"nanoid": "^5.0.7",
 		"solid-floating-ui": "~0.2.1",
-		"solid-js": "^1.8.18"
+		"solid-js": "^1.8.20"
 	},
 	"devDependencies": {
 		"@types/dom-close-watcher": "^1.0.0",
-		"autoprefixer": "^10.4.19",
+		"autoprefixer": "^10.4.20",
 		"babel-plugin-transform-typescript-const-enums": "^0.1.0",
 		"prettier": "^3.3.3",
 		"prettier-plugin-tailwindcss": "^0.6.5",
-		"tailwindcss": "^3.4.6",
-		"terser": "^5.31.3",
-		"typescript": "^5.5.3",
-		"vite": "^5.3.4",
+		"tailwindcss": "^3.4.9",
+		"terser": "^5.31.5",
+		"typescript": "5.6.0-beta",
+		"vite": "^5.4.0",
 		"vite-plugin-pwa": "0.17.4",
 		"vite-plugin-solid": "^2.10.2",
-		"wrangler": "^3.65.0"
+		"wrangler": "^3.69.1"
 	},
 	"pnpm": {
 		"patchedDependencies": {
 			"@tanstack/query-core@5.17.19": "patches/@tanstack__query-core@5.17.19.patch",
 			"cborg@4.2.3": "patches/cborg@4.2.3.patch",
-			"solid-js@1.8.18": "patches/solid-js@1.8.18.patch",
+			"solid-js@1.8.20": "patches/solid-js@1.8.20.patch",
 			"vite-plugin-pwa@0.17.4": "patches/vite-plugin-pwa@0.17.4.patch",
-			"vite@5.3.4": "patches/vite@5.3.4.patch",
+			"vite@5.4.0": "patches/vite@5.4.0.patch",
 			"workbox-precaching@7.1.0": "patches/workbox-precaching@7.1.0.patch"
 		}
 	}

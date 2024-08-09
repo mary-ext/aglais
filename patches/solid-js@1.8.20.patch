@@ -1,8 +1,8 @@
 diff --git a/dist/solid.js b/dist/solid.js
-index 4788ff31300dd5832f69682c9b34ca682eacb739..33ae3c563efc09e0f107fdac4abfc8f29c389055 100644
+index 330452ff2dea9deb039a3c13e111292633cced58..0b4497b63214196733b7a187e1f835e0241a7cfb 100644
 --- a/dist/solid.js
 +++ b/dist/solid.js
-@@ -1573,7 +1573,6 @@ function Show(props) {
+@@ -1578,7 +1578,6 @@ function Show(props) {
                  keyed
                    ? c
                    : () => {
@@ -10,7 +10,7 @@ index 4788ff31300dd5832f69682c9b34ca682eacb739..33ae3c563efc09e0f107fdac4abfc8f2
                        return props.when;
                      }
                )
-@@ -1620,7 +1619,6 @@ function Switch(props) {
+@@ -1625,7 +1624,6 @@ function Switch(props) {
                keyed
                  ? when
                  : () => {
