@@ -13,8 +13,8 @@ import {
 	type ModerationUI,
 } from '~/api/moderation';
 
+import CircleInfoOutlinedIcon from '../icons-central/circle-info-outline';
 import FilterOutlinedIcon from '../icons-central/filter-outline';
-import InfoOutlinedIcon from '../icons-central/info-outline';
 import PersonRemoveOutlinedIcon from '../icons-central/person-remove-outline';
 import ProblemOutlinedIcon from '../icons-central/problem-outline';
 
@@ -47,7 +47,7 @@ const ContentHider = (props: ContentHiderProps) => {
 			const def = blur.d;
 			const severity = def.s;
 
-			Icon = severity === SeverityAlert ? ProblemOutlinedIcon : InfoOutlinedIcon;
+			Icon = severity === SeverityAlert ? ProblemOutlinedIcon : CircleInfoOutlinedIcon;
 			title = getLocalizedLabel(def).n;
 			forced = !ui.o;
 		} else if (type === CauseMutedKeyword) {

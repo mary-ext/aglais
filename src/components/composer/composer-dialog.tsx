@@ -42,12 +42,12 @@ import { useFieldset } from '../fieldset';
 import AddOutlinedIcon from '../icons-central/add-outline';
 import AtOutlinedIcon from '../icons-central/at-outline';
 import BlockOutlinedIcon from '../icons-central/block-outline';
+import CircleInfoOutlinedIcon from '../icons-central/circle-info-outline';
 import CrossLargeOutlinedIcon from '../icons-central/cross-large-outline';
 import EarthOutlinedIcon from '../icons-central/earth-outline';
 import EmojiSmileOutlinedIcon from '../icons-central/emoji-smile-outline';
 import GifSquareOutlinedIcon from '../icons-central/gif-square-outline';
 import ImageOutlinedIcon from '../icons-central/image-outline';
-import InfoOutlinedIcon from '../icons-central/info-outline';
 import LinkOutlinedIcon from '../icons-central/link-outline';
 import PeopleOutlinedIcon from '../icons-central/people-outline';
 import PersonCheckOutlinedIcon from '../icons-central/person-check-outline';
@@ -503,7 +503,7 @@ const Post = ({
 
 				{(getPostEmbedFlags(post.embed) & (EmbedKind.GIF | EmbedKind.IMAGE)) !== 0 && (
 					<div class={`gap-2 text-contrast-muted` + (isActive() ? ` flex` : ` hidden`)}>
-						<InfoOutlinedIcon class="mt-0.5 shrink-0 text-base" />
+						<CircleInfoOutlinedIcon class="mt-0.5 shrink-0 text-base" />
 						<p class="text-de">
 							Alt text helps describe images for low-vision users and provide context for everyone.
 						</p>
