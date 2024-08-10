@@ -69,7 +69,7 @@ const MutePrompt = ({ profile }: MuteAccountPromptProps) => {
 	}));
 
 	return (
-		<Prompt.Container disabled={mutation.isPending}>
+		<Prompt.Container maxWidth="md" disabled={mutation.isPending}>
 			<Prompt.Title>{/* @once */ `Mute @${profile.handle}?`}</Prompt.Title>
 
 			<Prompt.Description>Here's what happens if you do:</Prompt.Description>
