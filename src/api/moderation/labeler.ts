@@ -9,6 +9,7 @@ import {
 	FlagsAdultOnly,
 	FlagsNone,
 	FlagsNoSelf,
+	PreferenceHide,
 	PreferenceIgnore,
 	PreferenceWarn,
 	SeverityAlert,
@@ -31,6 +32,8 @@ export const interpretLabelerDefinition = (
 
 	const supported = new Set(values);
 	const defs: LabelDefinitionMapping = {};
+
+	const indexedAt = new Date(service.indexedAt ?? NaN).getTime();
 
 	// Sort the definitions as per labelValues
 	for (const def of policies.labelValueDefinitions || []) {
@@ -69,14 +72,20 @@ export const interpretLabelerDefinition = (
 			handle: creator.handle,
 			avatar: creator.avatar,
 			displayName: creator.displayName,
+			description: creator.description,
 		},
 		provides: values,
 		definitions: defs,
+		indexedAt: !Number.isNaN(indexedAt) ? indexedAt : undefined,
 	};
 };
 
 const convertPreferenceValue = (value: string | undefined): LabelPreference => {
-	if (value === 'warn' || value === 'hide') {
+	if (value === 'hide') {
+		return PreferenceHide;
+	}
+
+	if (value === 'warn') {
 		return PreferenceWarn;
 	}
 

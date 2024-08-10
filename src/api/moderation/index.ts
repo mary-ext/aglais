@@ -317,11 +317,14 @@ export interface ModerationLabeler {
 		avatar?: string;
 		handle: string;
 		displayName?: string;
+		description?: string;
 	};
 	/** Labels that this service claims to provide */
 	provides: string[];
 	/** Labels defined by this service */
 	definitions: LabelDefinitionMapping;
+	/** Record indexed at */
+	indexedAt: number | undefined;
 }
 
 export interface ModerationLabelerPreferences {

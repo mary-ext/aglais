@@ -141,6 +141,13 @@ const routes: RouteDefinition[] = [
 		},
 	},
 	{
+		path: '/:did/labels',
+		component: lazy(() => import('./views/profile-labels')),
+		validate(params) {
+			return isValidDidOrHandle(params.did);
+		},
+	},
+	{
 		path: '/:didOrHandle/:rkey',
 		component: lazy(() => import('./views/post-thread')),
 		validate(params) {

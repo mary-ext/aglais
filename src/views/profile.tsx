@@ -1,4 +1,4 @@
-import { createSignal, Match, Switch } from 'solid-js';
+import { createSignal, Match, Show, Switch } from 'solid-js';
 
 import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 import { XRPCError } from '@mary/bluesky-client/xrpc';
@@ -20,6 +20,7 @@ import ErrorView from '~/components/error-view';
 import FilterBar from '~/components/filter-bar';
 import IconButton from '~/components/icon-button';
 import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
+import ShieldOutlinedIcon from '~/components/icons-central/shield-outline';
 import * as Page from '~/components/page';
 import VirtualItem from '~/components/virtual-item';
 
@@ -54,6 +55,17 @@ const ProfilePage = () => {
 								/>
 
 								<Page.HeaderAccessory>
+									<Show when={data().associated?.labeler}>
+										<IconButton
+											icon={ShieldOutlinedIcon}
+											title="Labeling"
+											disabled={profile.isPlaceholderData}
+											onClick={() => {
+												history.navigate(`/${data().did}/labels`);
+											}}
+										/>
+									</Show>
+
 									<IconButton
 										icon={MoreHorizOutlinedIcon}
 										title="Actions"

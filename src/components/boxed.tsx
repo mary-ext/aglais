@@ -20,7 +20,7 @@ export interface BoxedGroupProps {
 }
 
 const BoxedGroup = (props: BoxedGroupProps) => {
-	return <div class="flex flex-col gap-2">{props.children}</div>;
+	return <div class="flex flex-col gap-2 empty:hidden">{props.children}</div>;
 };
 
 export { BoxedGroup as Group };

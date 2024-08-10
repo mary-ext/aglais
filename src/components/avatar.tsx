@@ -25,7 +25,7 @@ export interface AvatarProps {
 	onClick?: () => void;
 
 	class?: string;
-	size?: 'xs' | 'sm' | 'in' | 'md' | 'lg';
+	size?: 'xs' | 'sm' | 'in' | 'md' | 'lg' | null;
 }
 
 export const getUserAvatarType = (
