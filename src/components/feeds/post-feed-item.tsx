@@ -22,6 +22,7 @@ import RichText from '../rich-text';
 
 import Embed from '../embeds/embed';
 import ContentHider from '../moderation/content-hider';
+import ModerationAlerts from '../moderation/moderation-alerts';
 import PostActions from './post-actions';
 import PostDeletedGate from './post-deleted-gate';
 import PostMeta from './post-meta';
@@ -54,6 +55,7 @@ const PostFeedItem = ({ item, highlighted, timelineDid }: PostFeedItemProps) => 
 	const isOurPost = currentAccount && author.did === currentAccount.did;
 
 	const moderation = createMemo(() => moderatePost(post, moderationOptions()));
+	const ui = createMemo(() => getModerationUI(moderation(), ContextContentList));
 
 	const handleClick = (ev: MouseEvent | KeyboardEvent) => {
 		if (!isElementClicked(ev) || shadow().deleted) {
@@ -109,8 +111,10 @@ const PostFeedItem = ({ item, highlighted, timelineDid }: PostFeedItemProps) => 
 						<PostMeta post={post} href={href} authorHref={authorHref} gutterBottom />
 						<PostReplyContext item={item} />
 
+						<ModerationAlerts ui={ui()} class="mb-1 mt-1" />
+
 						<ContentHider
-							ui={getModerationUI(moderation(), ContextContentList)}
+							ui={ui()}
 							ignoreMute={/* @once */ timelineDid === author.did}
 							containerClass="mt-2"
 							innerClass="mt-2"
