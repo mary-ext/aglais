@@ -30,6 +30,7 @@ import HeartSolidIcon from '../icons-central/heart-solid';
 import PersonSolidIcon from '../icons-central/person-solid';
 import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 
+import { detectSnippet, SnippetType, type BlueskyGifSnippet } from '../embeds/lib/snippet';
 import PostFeedItem from '../feeds/post-feed-item';
 
 export interface NotificationItemProps {
@@ -229,6 +230,7 @@ const renderAccessory = (data: FollowNotificationSlice | LikeNotificationSlice |
 		const record = post.record as AppBskyFeedPost.Record;
 
 		const imageEmbed = getImageEmbed(post.embed);
+		const gifEmbed = getGifEmbed(post.embed);
 
 		return (
 			<>
@@ -236,7 +238,11 @@ const renderAccessory = (data: FollowNotificationSlice | LikeNotificationSlice |
 					{/* @once */ record.text}
 				</p>
 
-				{imageEmbed && <ImageAccessory images={/* @once */ imageEmbed.images} />}
+				{imageEmbed ? (
+					<ImageAccessory images={/* @once */ imageEmbed.images} />
+				) : gifEmbed ? (
+					<GifAccessory snippet={gifEmbed} />
+				) : null}
 			</>
 		);
 	}
@@ -246,12 +252,28 @@ const ImageAccessory = ({ images }: { images: AppBskyEmbedImages.ViewImage[] }) 
 	const nodes = images.map((img) => {
 		return (
 			<div class="shrink-0 overflow-hidden rounded bg-background">
-				<img src={/* @once */ img.fullsize} class="h-32 w-32 object-cover opacity-50" />
+				<img src={/* @once */ img.fullsize} class="h-32 w-32 object-cover opacity-75" />
 			</div>
 		);
 	});
 
 	return <div class="-ml-16 -mr-4 flex gap-2 overflow-x-auto pl-16 pr-4 scrollbar-hide">{nodes}</div>;
+};
+
+const GifAccessory = ({ snippet }: { snippet: BlueskyGifSnippet }) => {
+	return (
+		<div class="relative w-max shrink-0 overflow-hidden rounded bg-background">
+			<div class="opacity-75">
+				<img src={/* @once */ snippet.thumb} class="h-32 w-32 object-cover" />
+
+				<div class="pointer-events-none absolute bottom-0 right-0 p-2">
+					<div class="flex h-4 items-center rounded bg-p-neutral-950/75 px-1 text-[9px] font-bold tracking-wider text-white">
+						GIF
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 const getImageEmbed = (embed: AppBskyFeedDefs.PostView['embed']) => {
@@ -262,6 +284,23 @@ const getImageEmbed = (embed: AppBskyFeedDefs.PostView['embed']) => {
 
 		if (embed.$type === 'app.bsky.embed.images#view') {
 			return embed;
+		}
+	}
+};
+
+const getGifEmbed = (embed: AppBskyFeedDefs.PostView['embed']): BlueskyGifSnippet | undefined => {
+	if (embed) {
+		if (embed.$type === 'app.bsky.embed.recordWithMedia#view') {
+			return getGifEmbed(embed.media);
+		}
+
+		if (embed.$type === 'app.bsky.embed.external#view') {
+			const snippet = detectSnippet(embed.external);
+			if (snippet.type !== SnippetType.BLUESKY_GIF) {
+				return;
+			}
+
+			return snippet;
 		}
 	}
 };
