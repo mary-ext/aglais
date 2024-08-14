@@ -238,6 +238,11 @@ export const createNotificationFeedQuery = () => {
 						},
 					});
 
+					queryClient.cancelQueries({
+						exact: true,
+						queryKey: ['notification', 'count'],
+					});
+
 					promise.finally(() => {
 						queryClient.setQueryData(['notification', 'count'], { count: 0 });
 					});
