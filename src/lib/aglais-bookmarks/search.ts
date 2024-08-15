@@ -62,9 +62,11 @@ export const createSearchPredicate = (tokens: string[]) => {
 		}
 	}
 
-	if (substrings.length !== 0) {
-		const re = new RegExp('\\b' + substrings.map(escape).join('|') + '\\b', 'i');
-		filters.push((post) => re.test((post.record as AppBskyFeedPost.Record).text));
+	if (from !== undefined) {
+		filters.push((post) => {
+			const author = post.author;
+			return author.handle === from || author.did === from;
+		});
 	}
 
 	if (before !== undefined || until !== undefined) {
@@ -79,11 +81,9 @@ export const createSearchPredicate = (tokens: string[]) => {
 		});
 	}
 
-	if (from !== undefined) {
-		filters.push((post) => {
-			const author = post.author;
-			return author.handle === from || author.did === from;
-		});
+	if (substrings.length !== 0) {
+		const re = new RegExp('\\b' + substrings.map(escape).join('|') + '\\b', 'i');
+		filters.push((post) => re.test((post.record as AppBskyFeedPost.Record).text));
 	}
 
 	return (post: AppBskyFeedDefs.PostView) => filters.every((fn) => fn(post));
