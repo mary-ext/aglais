@@ -1,3 +1,4 @@
+import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
 import { createInfiniteQuery, createQuery } from '@mary/solid-query';
 
 import type { BookmarkItem, HydratedBookmarkItem } from '~/lib/aglais-bookmarks/db';
@@ -80,17 +81,21 @@ export const createBookmarkFeedQuery = (tagId: () => string, search: () => strin
 
 				// Retrieve live view
 				if (raws.length) {
-					const { data } = await rpc.get('app.bsky.feed.getPosts', {
-						signal: ctx.signal,
-						params: {
-							uris: raws.map((item) => item.view.uri),
-						},
-					});
+					let map: Map<string, AppBskyFeedDefs.PostView>;
 
-					const postMap = new Map(data.posts.map((view) => [view.uri, view]));
+					try {
+						const { data } = await rpc.get('app.bsky.feed.getPosts', {
+							signal: ctx.signal,
+							params: {
+								uris: raws.map((item) => item.view.uri),
+							},
+						});
+
+						map = new Map(data.posts.map((view) => [view.uri, view]));
+					} catch {}
 
 					hydrated = raws.map((item) => {
-						const hydratedView = postMap.get(item.view.uri);
+						const hydratedView = map?.get(item.view.uri);
 
 						return {
 							post: hydratedView ?? item.view,
