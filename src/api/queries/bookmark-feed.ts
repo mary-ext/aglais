@@ -1,7 +1,9 @@
 import { createInfiniteQuery, createQuery } from '@mary/solid-query';
 
 import type { BookmarkItem, HydratedBookmarkItem } from '~/lib/aglais-bookmarks/db';
+import { createSearchPredicate } from '~/lib/aglais-bookmarks/search';
 import { filter, map, take, toArray } from '~/lib/async-iterators';
+import { tokenizeSearchQuery } from '~/lib/bsky/search';
 import { useAgent } from '~/lib/states/agent';
 import { useBookmarks } from '~/lib/states/bookmarks';
 
@@ -34,16 +36,17 @@ export interface BookmarkFeedReturn {
 	items: HydratedBookmarkItem[];
 }
 
-export const createBookmarkFeedQuery = (tagId: () => string) => {
+export const createBookmarkFeedQuery = (tagId: () => string, search: () => string) => {
 	const bookmarks = useBookmarks();
 	const { rpc } = useAgent();
 
 	const listing = createInfiniteQuery(() => {
 		const $tagId = tagId();
+		const $tokens = tokenizeSearchQuery(search());
 		const limit = 25;
 
 		return {
-			queryKey: ['bookmarks-feed', $tagId],
+			queryKey: ['bookmarks-feed', $tagId, $tokens],
 			async queryFn(ctx): Promise<BookmarkFeedReturn> {
 				const pageParam = ctx.pageParam;
 
@@ -65,6 +68,10 @@ export const createBookmarkFeedQuery = (tagId: () => string) => {
 					if ($tagId !== 'all') {
 						iterator = filter(iterator, (entry) => entry.tags.includes($tagId));
 					}
+					if ($tokens.length !== 0) {
+						const predicate = createSearchPredicate($tokens);
+						iterator = filter(iterator, (entry) => predicate(entry.view));
+					}
 
 					raws = await toArray(take(iterator, limit));
 				}
@@ -81,6 +88,7 @@ export const createBookmarkFeedQuery = (tagId: () => string) => {
 					});
 
 					const postMap = new Map(data.posts.map((view) => [view.uri, view]));
+
 					hydrated = raws.map((item) => {
 						const hydratedView = postMap.get(item.view.uri);
 
