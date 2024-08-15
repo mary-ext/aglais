@@ -33,6 +33,7 @@ import Avatar from '~/components/avatar';
 import * as Boxed from '~/components/boxed';
 import Button from '~/components/button';
 import CircularProgressView from '~/components/circular-progress-view';
+import ErrorView from '~/components/error-view';
 import IconButton from '~/components/icon-button';
 import ChevronRightOutlinedIcon from '~/components/icons-central/chevron-right-outline';
 import CircleInfoOutlinedIcon from '~/components/icons-central/circle-info-outline';
@@ -144,6 +145,10 @@ const ProfileLabelsPage = () => {
 
 			<Switch>
 				<Match when={query.data}>{(labeler) => <LabelerView data={labeler()} config={config()} />}</Match>
+
+				<Match when={query.error}>
+					{(error) => <ErrorView error={error()} onRetry={() => query.refetch()} />}
+				</Match>
 
 				<Match when>
 					<CircularProgressView />
