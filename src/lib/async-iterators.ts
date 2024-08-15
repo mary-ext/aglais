@@ -8,6 +8,16 @@ export async function toArray<T>(iterable: AsyncIterable<T>): Promise<T[]> {
 	return array;
 }
 
+export async function count(iterable: AsyncIterable<unknown>): Promise<number> {
+	let count = 0;
+
+	for await (const _value of iterable) {
+		count++;
+	}
+
+	return count;
+}
+
 export async function every<T>(
 	iterable: AsyncIterable<T>,
 	predicate: (value: T) => unknown,
