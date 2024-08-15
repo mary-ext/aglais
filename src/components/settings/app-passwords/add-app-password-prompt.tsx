@@ -24,7 +24,7 @@ const AddAppPasswordPrompt = ({}: AddAppPasswordPromptProps) => {
 			async mutationFn() {
 				const { data } = await rpc.call('com.atproto.server.createAppPassword', {
 					data: {
-						name: name().replace(/^\s+|\s+$|(?=\s)\s+/g, ''),
+						name: name().replace(/^\s+|\s+$|(?<=\s)\s+/g, ''),
 						privileged: privileged(),
 					},
 				});
