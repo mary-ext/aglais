@@ -653,6 +653,19 @@ const PostAction = (props: {
 			if (prev.type === EmbedKind.IMAGE) {
 				prev.images = prev.images.concat(next.images.slice(0, MAX_IMAGES - prev.images.length));
 				return;
+			} else if (prev.type === EmbedKind.RECORD_WITH_MEDIA) {
+				if (prev.media.type === EmbedKind.IMAGE) {
+					prev.media.images = prev.media.images.concat(
+						next.images.slice(0, MAX_IMAGES - prev.media.images.length),
+					);
+					return;
+				} else {
+					next = {
+						type: EmbedKind.RECORD_WITH_MEDIA,
+						record: prev.record,
+						media: next,
+					};
+				}
 			} else if (prev.type & EmbedKind.RECORD) {
 				next = {
 					type: EmbedKind.RECORD_WITH_MEDIA,
