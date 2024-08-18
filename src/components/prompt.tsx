@@ -32,7 +32,7 @@ const PromptContainer = (props: PromptContainerProps) => {
 					<Backdrop />
 					<div
 						ref={containerRef}
-						class="z-1 my-auto flex flex-col rounded-xl bg-background p-6"
+						class="a-dialog-desktop z-1 my-auto flex flex-col overflow-y-auto rounded-xl bg-background p-6"
 						style={{ width: getPromptDesktopWidth(props) }}
 					>
 						{props.children}
