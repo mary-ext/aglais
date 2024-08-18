@@ -41,7 +41,7 @@ export const compressPostImage = async (blob: Blob): Promise<CompressResult> => 
 			quality: q / 100,
 		});
 
-		if (result.size < MAX_SIZE) {
+		if (result.size <= MAX_SIZE) {
 			return { blob: result, ratio: { width: width, height: height } };
 		}
 	}
@@ -82,7 +82,7 @@ export const compressProfileImage = async (
 			quality: q / 100,
 		});
 
-		if (result.size < MAX_SIZE) {
+		if (result.size <= MAX_SIZE) {
 			return { blob: result, ratio: { width: width, height: height } };
 		}
 	}
