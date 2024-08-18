@@ -11,7 +11,7 @@ import {
 	type JSX,
 } from 'solid-js';
 
-import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 
 import { autoPlacement, autoUpdate, offset, shift, size } from '@floating-ui/dom';
 

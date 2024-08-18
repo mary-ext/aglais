@@ -1,4 +1,4 @@
-import type { AppBskyActorDefs, AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/client/lexicons';
 
 type Post = AppBskyFeedDefs.PostView;
 type TimelineItem = AppBskyFeedDefs.FeedViewPost;

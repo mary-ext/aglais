@@ -1,4 +1,4 @@
-import type { AppBskyFeedDefs, AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 import { DID_RE, HANDLE_RE } from '~/api/utils/strings';
 
 const SIMPLE_DATE_RE = /^\d{4}-[01]\d-[0-3]\d$/;

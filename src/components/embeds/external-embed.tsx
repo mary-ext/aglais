@@ -1,6 +1,6 @@
 import { createSignal, type JSX } from 'solid-js';
 
-import type { AppBskyEmbedExternal } from '@mary/bluesky-client/lexicons';
+import type { AppBskyEmbedExternal } from '@atcute/client/lexicons';
 
 import { safeUrlParse } from '~/api/utils/strings';
 

@@ -1,6 +1,7 @@
 import { createContext, createMemo, useContext, type JSX, type ParentProps } from 'solid-js';
 
-import { BskyXRPC, type BskyAuth } from '@mary/bluesky-client';
+import { XRPC } from '@atcute/client';
+import type { AtpAuth } from '@atcute/client/middlewares/auth';
 import { QueryClient, QueryClientProvider } from '@mary/solid-query';
 
 import { assert } from '../invariant';
@@ -10,8 +11,8 @@ import { createQueryPersister } from '../utils/query-storage';
 import { useSession } from './session';
 
 export interface AgentContext {
-	rpc: BskyXRPC;
-	auth: BskyAuth | null;
+	rpc: XRPC;
+	auth: AtpAuth | null;
 	persister: ReturnType<typeof createQueryPersister>;
 }
 
@@ -32,7 +33,7 @@ export const AgentProvider = (props: ParentProps) => {
 		}
 
 		return {
-			rpc: new BskyXRPC({ service: 'https://public.api.bsky.app' }),
+			rpc: new XRPC({ service: 'https://public.api.bsky.app' }),
 			auth: null,
 			persister: createQueryPersister({ name: `queryCache-public` }),
 		};

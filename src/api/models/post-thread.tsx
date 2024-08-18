@@ -4,7 +4,7 @@ import type {
 	AppBskyFeedPost,
 	At,
 	Brand,
-} from '@mary/bluesky-client/lexicons';
+} from '@atcute/client/lexicons';
 
 import type { ThreadViewPreferences } from '~/lib/preferences/account';
 

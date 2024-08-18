@@ -4,7 +4,7 @@ import type {
 	AppBskyEmbedRecord,
 	AppBskyFeedDefs,
 	Brand,
-} from '@mary/bluesky-client/lexicons';
+} from '@atcute/client/lexicons';
 
 import { ContextContentMedia, getModerationUI, type ModerationCause } from '~/api/moderation';
 import { parseAtUri } from '~/api/utils/strings';

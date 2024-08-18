@@ -1,4 +1,4 @@
-import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 
 import { type PostShadowView } from '~/api/cache/post-shadow';
 import { createPostLikeMutation, createPostRepostMutation } from '~/api/mutations/post';

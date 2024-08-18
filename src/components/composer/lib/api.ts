@@ -1,4 +1,4 @@
-import * as TID from '@mary/atproto-tid';
+import { XRPCError } from '@atcute/client';
 import type {
 	AppBskyEmbedExternal,
 	AppBskyEmbedImages,
@@ -13,8 +13,8 @@ import type {
 	ComAtprotoLabelDefs,
 	ComAtprotoRepoApplyWrites,
 	ComAtprotoRepoStrongRef,
-} from '@mary/bluesky-client/lexicons';
-import { XRPCError } from '@mary/bluesky-client/xrpc';
+} from '@atcute/client/lexicons';
+import * as TID from '@atcute/tid';
 import type { QueryClient } from '@mary/solid-query';
 
 import { uploadBlob } from '~/api/queries/blob';

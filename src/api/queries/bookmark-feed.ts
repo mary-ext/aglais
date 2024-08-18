@@ -1,4 +1,4 @@
-import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 import { createInfiniteQuery, createQuery } from '@mary/solid-query';
 
 import type { BookmarkItem, HydratedBookmarkItem } from '~/lib/aglais-bookmarks/db';

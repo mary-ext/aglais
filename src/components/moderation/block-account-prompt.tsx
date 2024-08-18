@@ -1,6 +1,6 @@
 import { Match, onMount, Switch } from 'solid-js';
 
-import type { AppBskyActorDefs, At } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { createMutation } from '@mary/solid-query';
 
 import { updateProfileShadow, useProfileShadow } from '~/api/cache/profile-shadow';

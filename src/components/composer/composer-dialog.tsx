@@ -11,7 +11,7 @@ import {
 } from 'solid-js';
 import { createMutable, unwrap } from 'solid-js/store';
 
-import type { AppBskyActorDefs, AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 import { useQueryClient, type CreateQueryResult } from '@mary/solid-query';
 
 import { GLOBAL_LABELS, getLocalizedLabel } from '~/api/moderation';

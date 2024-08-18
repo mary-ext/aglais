@@ -1,5 +1,5 @@
-import type { AppBskyLabelerDefs, At } from '@mary/bluesky-client/lexicons';
-import { XRPCError } from '@mary/bluesky-client/xrpc';
+import { XRPCError } from '@atcute/client';
+import type { AppBskyLabelerDefs, At } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';

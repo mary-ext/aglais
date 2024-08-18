@@ -1,6 +1,6 @@
 import { type Component, type ComponentProps, createMemo, type JSX, Match, Show, Switch } from 'solid-js';
 
-import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 
 import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { ContextProfileMedia, getModerationUI } from '~/api/moderation';

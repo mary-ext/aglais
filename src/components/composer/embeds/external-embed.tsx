@@ -1,6 +1,6 @@
 import { Match, Switch, onCleanup } from 'solid-js';
 
-import type { AppBskyEmbedExternal } from '@mary/bluesky-client/lexicons';
+import type { AppBskyEmbedExternal } from '@atcute/client/lexicons';
 
 import { createLinkMetaQuery } from '~/api/queries/composer';
 

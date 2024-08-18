@@ -1,6 +1,6 @@
 import { Suspense, lazy, type Accessor, type Component, type ComponentProps } from 'solid-js';
 
-import type { AppBskyNotificationGetUnreadCount } from '@mary/bluesky-client/lexicons';
+import type { AppBskyNotificationGetUnreadCount } from '@atcute/client/lexicons';
 import type { DefinedCreateQueryResult } from '@mary/solid-query';
 
 import { createNotificationCountQuery } from './api/queries/notification-count';

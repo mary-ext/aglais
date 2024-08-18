@@ -1,7 +1,7 @@
 import { createSignal, Match, Show, Switch } from 'solid-js';
 
-import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
-import { XRPCError } from '@mary/bluesky-client/xrpc';
+import { XRPCError } from '@atcute/client';
+import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { useProfileShadow } from '~/api/cache/profile-shadow';

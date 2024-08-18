@@ -1,6 +1,6 @@
 import { createMemo, For } from 'solid-js';
 
-import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { createBookmarkMetaQuery } from '~/api/queries/bookmark';

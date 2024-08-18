@@ -1,9 +1,9 @@
-import type { BskyXRPC } from '@mary/bluesky-client';
-import type { At } from '@mary/bluesky-client/lexicons';
+import type { XRPC } from '@atcute/client';
+import type { At } from '@atcute/client/lexicons';
 
 import { isDid } from './strings';
 
-const getDid = async (rpc: BskyXRPC, actor: string, signal?: AbortSignal) => {
+const getDid = async (rpc: XRPC, actor: string, signal?: AbortSignal) => {
 	let did: At.DID;
 	if (isDid(actor)) {
 		did = actor;

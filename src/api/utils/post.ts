@@ -5,7 +5,7 @@ import type {
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
 	Brand,
-} from '@mary/bluesky-client/lexicons';
+} from '@atcute/client/lexicons';
 
 type RecordEmbed = AppBskyFeedPost.Record['embed'];
 type ViewEmbed = AppBskyFeedDefs.PostView['embed'];

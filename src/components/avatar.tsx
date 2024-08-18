@@ -1,5 +1,6 @@
-import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
 import { Match, Switch } from 'solid-js';
+
+import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 
 import { ContextProfileMedia, getModerationUI, type ModerationCause } from '~/api/moderation';
 

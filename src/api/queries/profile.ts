@@ -1,4 +1,4 @@
-import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 import { createQuery, type QueryPersister } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';

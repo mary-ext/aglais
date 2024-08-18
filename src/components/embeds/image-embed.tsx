@@ -1,4 +1,4 @@
-import type { AppBskyEmbedImages } from '@mary/bluesky-client/lexicons';
+import type { AppBskyEmbedImages } from '@atcute/client/lexicons';
 
 import { openModal } from '~/globals/modals';
 

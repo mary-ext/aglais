@@ -3,7 +3,7 @@ import type {
 	AppBskyFeedDefs,
 	AppBskyFeedGetPostThread,
 	At,
-} from '@mary/bluesky-client/lexicons';
+} from '@atcute/client/lexicons';
 
 import type { CacheMatcher } from '../cache/utils';
 import { embedViewRecordToPostView, getEmbeddedPost } from '../utils/post';

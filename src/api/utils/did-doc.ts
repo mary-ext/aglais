@@ -1,5 +1,6 @@
-import { BskyXRPC, getPdsEndpoint, type DidDocument } from '@mary/bluesky-client';
-import type { At } from '@mary/bluesky-client/lexicons';
+import { XRPC } from '@atcute/client';
+import type { At } from '@atcute/client/lexicons';
+import { getPdsEndpoint, type DidDocument } from '@atcute/client/utils/did';
 
 import { DEFAULT_APP_VIEW } from '../defaults';
 import type { DataServer } from '../types';
@@ -29,7 +30,7 @@ export const findDidDocument = async (identifier: string): Promise<DidDocument> 
 	if (isDid(identifier)) {
 		did = identifier;
 	} else {
-		const rpc = new BskyXRPC({ service: DEFAULT_APP_VIEW });
+		const rpc = new XRPC({ service: DEFAULT_APP_VIEW });
 		const response = await rpc.get('com.atproto.identity.resolveHandle', {
 			params: {
 				handle: identifier,

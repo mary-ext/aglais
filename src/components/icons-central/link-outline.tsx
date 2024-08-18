@@ -12,4 +12,4 @@ const LinkOutlinedIcon = createIcon(() => (
 	</svg>
 ));
 
-export default LinkOutlinedIcon
+export default LinkOutlinedIcon;

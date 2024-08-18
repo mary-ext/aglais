@@ -1,4 +1,4 @@
-import type { AppBskyRichtextFacet } from '@mary/bluesky-client/lexicons';
+import type { AppBskyRichtextFacet } from '@atcute/client/lexicons';
 
 import type { UnwrapArray } from '../utils/types';
 import { textDecoder, textEncoder } from './intl';

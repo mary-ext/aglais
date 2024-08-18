@@ -1,13 +1,13 @@
 import { createEffect, createMemo, createRenderEffect, onCleanup, untrack } from 'solid-js';
 
-import type { BskyXRPC } from '@mary/bluesky-client';
+import type { XRPC } from '@atcute/client';
 import type {
 	AppBskyEmbedRecord,
 	AppBskyFeedDefs,
 	AppBskyFeedGetTimeline,
 	AppBskyFeedPost,
 	At,
-} from '@mary/bluesky-client/lexicons';
+} from '@atcute/client/lexicons';
 import { createInfiniteQuery, createQuery, useQueryClient, type InfiniteData } from '@mary/solid-query';
 
 import { globalEvents } from '~/globals/events';
@@ -277,7 +277,7 @@ const isTimelineStale = (
 
 //// Raw fetch
 const fetchPage = async (
-	rpc: BskyXRPC,
+	rpc: XRPC,
 	params: TimelineParams,
 	limit: number,
 	cursor: string | undefined,

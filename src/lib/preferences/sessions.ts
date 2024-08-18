@@ -1,5 +1,5 @@
-import type { AtpSessionData } from '@mary/bluesky-client';
-import type { At } from '@mary/bluesky-client/lexicons';
+import type { At } from '@atcute/client/lexicons';
+import type { AtpSessionData } from '@atcute/client/middlewares/auth';
 
 export interface SessionPreferenceSchema {
 	$version: 1;

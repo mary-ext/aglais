@@ -5,7 +5,7 @@ import type {
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
 	AppBskyNotificationListNotifications,
-} from '@mary/bluesky-client/lexicons';
+} from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { moderateProfile } from '~/api/moderation/entities/profile';

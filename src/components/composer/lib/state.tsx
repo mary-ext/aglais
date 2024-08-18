@@ -1,6 +1,6 @@
 import { unwrap } from 'solid-js/store';
 
-import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/client/lexicons';
 
 import { parseRt, type PreliminaryRichText } from '~/api/richtext/parser/parse';
 

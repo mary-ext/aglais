@@ -1,7 +1,7 @@
 import { createContext, createMemo, useContext, type ParentProps } from 'solid-js';
 import { unwrap } from 'solid-js/store';
 
-import type { AppBskyLabelerDefs, At } from '@mary/bluesky-client/lexicons';
+import type { AppBskyLabelerDefs, At } from '@atcute/client/lexicons';
 import { createQueries } from '@mary/solid-query';
 
 import { BLUESKY_MODERATION_DID } from '~/api/defaults';

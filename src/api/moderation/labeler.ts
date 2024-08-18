@@ -1,4 +1,4 @@
-import type { AppBskyLabelerDefs } from '@mary/bluesky-client/lexicons';
+import type { AppBskyLabelerDefs } from '@atcute/client/lexicons';
 
 import { mapDefined } from '~/lib/misc';
 

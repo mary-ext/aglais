@@ -1,4 +1,4 @@
-import type { AppBskyActorDefs, AppBskyGraphGetFollowers } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs, AppBskyGraphGetFollowers } from '@atcute/client/lexicons';
 import { createInfiniteQuery, type InfiniteData, type QueryFunctionContext as QC } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';

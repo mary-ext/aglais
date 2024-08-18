@@ -1,6 +1,6 @@
 import { createMemo } from 'solid-js';
 
-import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 
 import { moderateGeneric } from '~/api/moderation/entities/generic';
 import { parseAtUri } from '~/api/utils/strings';

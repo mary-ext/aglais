@@ -1,4 +1,4 @@
-import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';

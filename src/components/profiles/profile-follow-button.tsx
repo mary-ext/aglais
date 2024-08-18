@@ -1,6 +1,6 @@
 import { createMemo, type JSX } from 'solid-js';
 
-import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 
 import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { createProfileFollowMutation } from '~/api/mutations/profile';

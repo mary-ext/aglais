@@ -1,4 +1,4 @@
-import type { At } from '@mary/bluesky-client/lexicons';
+import type { At } from '@atcute/client/lexicons';
 
 import { assert } from '~/lib/invariant';
 

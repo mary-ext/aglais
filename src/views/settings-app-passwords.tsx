@@ -1,7 +1,7 @@
 import { For, Match, Show, Switch } from 'solid-js';
 
-import type { ComAtprotoServerListAppPasswords } from '@mary/bluesky-client/lexicons';
-import { XRPCError } from '@mary/bluesky-client/xrpc';
+import { XRPCError } from '@atcute/client';
+import type { ComAtprotoServerListAppPasswords } from '@atcute/client/lexicons';
 import { createMutation, createQuery } from '@mary/solid-query';
 
 import { openModal } from '~/globals/modals';

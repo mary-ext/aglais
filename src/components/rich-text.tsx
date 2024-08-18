@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js';
 
-import type { AppBskyRichtextFacet } from '@mary/bluesky-client/lexicons';
+import type { AppBskyRichtextFacet } from '@atcute/client/lexicons';
 
 import { segmentRichText } from '~/api/richtext/segment';
 import { isLinkValid, safeUrlParse } from '~/api/utils/strings';

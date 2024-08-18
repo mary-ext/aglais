@@ -9,17 +9,18 @@
 		"fmt": "prettier --cache --write ."
 	},
 	"dependencies": {
+		"@atcute/base32": "^1.0.0",
+		"@atcute/bluesky": "^1.0.0",
+		"@atcute/cbor": "^1.0.0",
+		"@atcute/cid": "^1.0.0",
+		"@atcute/client": "^1.0.0",
+		"@atcute/tid": "^1.0.0",
 		"@floating-ui/dom": "^1.6.10",
 		"@floating-ui/utils": "^0.2.7",
-		"@mary/atproto-cid": "npm:@jsr/mary__atproto-cid@^0.1.4",
-		"@mary/atproto-tid": "npm:@jsr/mary__atproto-tid@^0.1.1",
-		"@mary/base32": "npm:@jsr/mary__base32@^0.1.0",
-		"@mary/bluesky-client": "npm:@jsr/mary__bluesky-client@^0.5.27",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
 		"@mary/exif-rm": "npm:@jsr/mary__exif-rm@^0.2.1",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
 		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.5",
-		"cborg": "4.2.3",
 		"idb": "^8.0.0",
 		"nanoid": "^5.0.7",
 		"solid-floating-ui": "~0.2.1",
@@ -42,7 +43,6 @@
 	"pnpm": {
 		"patchedDependencies": {
 			"@tanstack/query-core@5.17.19": "patches/@tanstack__query-core@5.17.19.patch",
-			"cborg@4.2.3": "patches/cborg@4.2.3.patch",
 			"solid-js@1.8.20": "patches/solid-js@1.8.20.patch",
 			"vite-plugin-pwa@0.17.4": "patches/vite-plugin-pwa@0.17.4.patch",
 			"vite@5.4.0": "patches/vite@5.4.0.patch",

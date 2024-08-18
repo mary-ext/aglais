@@ -1,6 +1,6 @@
 import { createSignal } from 'solid-js';
 
-import type { AppBskyFeedDefs, AppBskyNotificationListNotifications } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedDefs, AppBskyNotificationListNotifications } from '@atcute/client/lexicons';
 import { createInfiniteQuery, useQueryClient, type QueryFunctionContext as QC } from '@mary/solid-query';
 
 import { mapDefined } from '~/lib/misc';

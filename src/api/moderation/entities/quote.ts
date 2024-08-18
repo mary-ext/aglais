@@ -1,4 +1,4 @@
-import type { AppBskyEmbedRecord, AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
+import type { AppBskyEmbedRecord, AppBskyFeedPost } from '@atcute/client/lexicons';
 
 import { unwrapPostEmbedText } from '~/api/utils/post';
 

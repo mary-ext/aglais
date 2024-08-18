@@ -1,4 +1,4 @@
-import type { AppBskyActorDefs, At } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import type { InfiniteData } from '@mary/solid-query';
 
 import type { CacheMatcher } from '../cache/utils';

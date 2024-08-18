@@ -1,6 +1,6 @@
 import type { DBSchema } from 'idb';
 
-import type { AppBskyFeedDefs } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 
 export interface BookmarkDBSchema extends DBSchema {
 	tags: {

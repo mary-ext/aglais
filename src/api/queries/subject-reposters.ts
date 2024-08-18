@@ -1,4 +1,4 @@
-import type { AppBskyFeedGetRepostedBy } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedGetRepostedBy } from '@atcute/client/lexicons';
 import type { QueryFunctionContext as QC } from '@mary/solid-query';
 import { createInfiniteQuery } from '@mary/solid-query';
 

@@ -1,6 +1,6 @@
 import { createMemo, type JSX } from 'solid-js';
 
-import type { AppBskyActorDefs } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { moderateProfile } from '~/api/moderation/entities/profile';

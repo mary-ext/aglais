@@ -1,4 +1,4 @@
-import type { AppBskyActorDefs, AppBskyGraphGetKnownFollowers, At } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs, AppBskyGraphGetKnownFollowers, At } from '@atcute/client/lexicons';
 import type { InfiniteData } from '@mary/solid-query';
 
 import type { CacheMatcher } from '../cache/utils';

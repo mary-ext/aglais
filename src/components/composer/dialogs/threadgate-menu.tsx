@@ -1,6 +1,6 @@
 import { createMemo } from 'solid-js';
 
-import type { AppBskyFeedThreadgate } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedThreadgate } from '@atcute/client/lexicons';
 
 import { useModalContext } from '~/globals/modals';
 

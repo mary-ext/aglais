@@ -1,6 +1,6 @@
 import { createMemo } from 'solid-js';
 
-import type { AppBskyFeedPost, At } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedPost, At } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { usePostShadow } from '~/api/cache/post-shadow';

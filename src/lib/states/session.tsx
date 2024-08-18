@@ -10,9 +10,11 @@ import {
 } from 'solid-js';
 import { unwrap } from 'solid-js/store';
 
-import { BskyAuth, BskyMod, BskyXRPC, type AtpAccessJwt, type BskyAuthOptions } from '@mary/bluesky-client';
-import type { At } from '@mary/bluesky-client/lexicons';
-import { decodeJwt } from '@mary/bluesky-client/utils/jwt';
+import { XRPC } from '@atcute/client';
+import type { At } from '@atcute/client/lexicons';
+import { AtpAuth, type AtpAccessJwt, type AtpAuthOptions } from '@atcute/client/middlewares/auth';
+import { AtpMod } from '@atcute/client/middlewares/mod';
+import { decodeJwt } from '@atcute/client/utils/jwt';
 
 import { BLUESKY_MODERATION_DID } from '~/api/defaults';
 
@@ -39,8 +41,8 @@ export interface CurrentAccountState {
 	readonly data: AccountData;
 	readonly preferences: PerAccountPreferenceSchema;
 
-	readonly rpc: BskyXRPC;
-	readonly auth: BskyAuth;
+	readonly rpc: XRPC;
+	readonly auth: AtpAuth;
 	readonly _cleanup: () => void;
 }
 
@@ -68,10 +70,10 @@ export const SessionProvider = (props: ParentProps) => {
 		});
 	};
 
-	const createAccountState = (account: AccountData, rpc: BskyXRPC, auth: BskyAuth): CurrentAccountState => {
+	const createAccountState = (account: AccountData, rpc: XRPC, auth: AtpAuth): CurrentAccountState => {
 		return createRoot((cleanup): CurrentAccountState => {
 			const preferences = createAccountPreferences(account.did);
-			const mod = new BskyMod(rpc);
+			const mod = new AtpMod(rpc);
 
 			const [abortable] = makeAbortable();
 
@@ -130,7 +132,7 @@ export const SessionProvider = (props: ParentProps) => {
 		}, null);
 	};
 
-	const getAuthOptions = (): BskyAuthOptions => {
+	const getAuthOptions = (): AtpAuthOptions => {
 		return {
 			onExpired() {
 				globalEvents.emit('sessionexpired');
@@ -158,8 +160,8 @@ export const SessionProvider = (props: ParentProps) => {
 			const signal = getSignal();
 			const session = unwrap(account.session);
 
-			const rpc = new BskyXRPC({ service: account.service });
-			const auth = new BskyAuth(rpc, getAuthOptions());
+			const rpc = new XRPC({ service: account.service });
+			const auth = new AtpAuth(rpc, getAuthOptions());
 
 			await auth.resume(session);
 			signal.throwIfAborted();
@@ -184,8 +186,8 @@ export const SessionProvider = (props: ParentProps) => {
 		async login(opts: LoginOptions): Promise<void> {
 			const signal = getSignal();
 
-			const rpc = new BskyXRPC({ service: opts.service });
-			const auth = new BskyAuth(rpc, getAuthOptions());
+			const rpc = new XRPC({ service: opts.service });
+			const auth = new AtpAuth(rpc, getAuthOptions());
 
 			await auth.login({ identifier: opts.identifier, password: opts.password, code: opts.authFactorToken });
 			signal.throwIfAborted();

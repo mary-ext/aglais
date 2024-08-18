@@ -1,4 +1,4 @@
-import type { AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedPost } from '@atcute/client/lexicons';
 
 import type { UiTimelineItem } from '~/api/models/timeline';
 import { createProfileQuery } from '~/api/queries/profile';

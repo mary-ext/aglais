@@ -1,6 +1,6 @@
 import { createMemo } from 'solid-js';
 
-import type { AppBskyFeedDefs, AppBskyFeedPost } from '@mary/bluesky-client/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 
 import { usePostShadow } from '~/api/cache/post-shadow';
 import { ContextContentView, getModerationUI } from '~/api/moderation';

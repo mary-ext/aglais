@@ -1,6 +1,6 @@
 import { createMemo, createSignal, Show } from 'solid-js';
 
-import type { AppBskyActorDefs, At } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { createMutation } from '@mary/solid-query';
 
 import { uploadBlob } from '~/api/queries/blob';

@@ -1,6 +1,6 @@
 import { createMemo, createSignal } from 'solid-js';
 
-import * as TID from '@mary/atproto-tid';
+import * as TID from '@atcute/tid';
 import { useQueryClient } from '@mary/solid-query';
 
 import { useModalContext } from '~/globals/modals';

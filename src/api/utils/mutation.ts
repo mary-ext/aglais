@@ -1,5 +1,5 @@
-import { BskyXRPC } from '@mary/bluesky-client';
-import type { At, ComAtprotoRepoGetRecord, Records } from '@mary/bluesky-client/lexicons';
+import type { XRPC } from '@atcute/client';
+import type { At, ComAtprotoRepoGetRecord, Records } from '@atcute/client/lexicons';
 
 type RecordType = keyof Records;
 
@@ -12,7 +12,7 @@ export interface CreateRecordOptions<K extends RecordType> {
 	validate?: boolean;
 }
 
-export const createRecord = async <K extends RecordType>(rpc: BskyXRPC, options: CreateRecordOptions<K>) => {
+export const createRecord = async <K extends RecordType>(rpc: XRPC, options: CreateRecordOptions<K>) => {
 	const { data } = await rpc.call('com.atproto.repo.createRecord', { data: options });
 
 	return data;
@@ -28,7 +28,7 @@ export interface PutRecordOptions<K extends RecordType> {
 	validate?: boolean;
 }
 
-export const putRecord = async <K extends RecordType>(rpc: BskyXRPC, options: PutRecordOptions<K>) => {
+export const putRecord = async <K extends RecordType>(rpc: XRPC, options: PutRecordOptions<K>) => {
 	const { data } = await rpc.call('com.atproto.repo.putRecord', { data: options });
 
 	return data;
@@ -42,7 +42,7 @@ export interface DeleteRecordOptions<K extends RecordType> {
 	swapRecord?: string;
 }
 
-export const deleteRecord = async <K extends RecordType>(rpc: BskyXRPC, options: DeleteRecordOptions<K>) => {
+export const deleteRecord = async <K extends RecordType>(rpc: XRPC, options: DeleteRecordOptions<K>) => {
 	await rpc.call('com.atproto.repo.deleteRecord', {
 		data: options,
 	});
@@ -60,7 +60,7 @@ export interface GetRecordOutput<T> extends ComAtprotoRepoGetRecord.Output {
 }
 
 export const getRecord = async <K extends RecordType>(
-	rpc: BskyXRPC,
+	rpc: XRPC,
 	options: GetRecordOptions<K>,
 ): Promise<GetRecordOutput<Records[K]>> => {
 	const { data } = await rpc.get('com.atproto.repo.getRecord', {

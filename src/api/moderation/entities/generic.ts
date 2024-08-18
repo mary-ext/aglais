@@ -1,4 +1,4 @@
-import type { At, ComAtprotoLabelDefs } from '@mary/bluesky-client/lexicons';
+import type { At, ComAtprotoLabelDefs } from '@atcute/client/lexicons';
 
 import { TargetContent, decideLabelModeration, type ModerationCause, type ModerationOptions } from '..';
 

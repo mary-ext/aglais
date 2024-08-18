@@ -1,6 +1,6 @@
 import { batch, createRenderEffect, createSignal, onCleanup, type Accessor } from 'solid-js';
 
-import type { AppBskyActorDefs, At } from '@mary/bluesky-client/lexicons';
+import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { EventEmitter } from '@mary/events';
 import type { QueryClient } from '@mary/solid-query';
 

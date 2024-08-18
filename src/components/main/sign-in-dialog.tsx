@@ -1,6 +1,6 @@
 import { Match, Switch, batch, createSignal } from 'solid-js';
 
-import { XRPCError } from '@mary/bluesky-client/xrpc';
+import { XRPCError } from '@atcute/client';
 import { createMutation } from '@mary/solid-query';
 
 import { DEFAULT_DATA_SERVER } from '~/api/defaults';
