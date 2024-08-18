@@ -1,5 +1,10 @@
 import type { XRPC } from '@atcute/client';
-import type { At, ComAtprotoRepoGetRecord, Records } from '@atcute/client/lexicons';
+import type {
+	At,
+	ComAtprotoRepoGetRecord,
+	ComAtprotoRepoListRecords,
+	Records,
+} from '@atcute/client/lexicons';
 
 type RecordType = keyof Records;
 
@@ -65,6 +70,36 @@ export const getRecord = async <K extends RecordType>(
 ): Promise<GetRecordOutput<Records[K]>> => {
 	const { data } = await rpc.get('com.atproto.repo.getRecord', {
 		params: options,
+	});
+
+	return data as any;
+};
+
+export interface ListRecordsOptions<K extends RecordType> {
+	signal?: AbortSignal;
+	repo: At.DID;
+	collection: K;
+	cursor?: string;
+	limit?: number;
+}
+
+export interface ListRecordsOutput<T> extends ComAtprotoRepoListRecords.Output {
+	cursor?: string;
+	records: { cid: At.CID; uri: At.Uri; value: T }[];
+}
+
+export const listRecords = async <K extends RecordType>(
+	rpc: XRPC,
+	options: ListRecordsOptions<K>,
+): Promise<ListRecordsOutput<ListRecordsOutput<Records[K]>>> => {
+	const { data } = await rpc.get('com.atproto.repo.listRecords', {
+		signal: options.signal,
+		params: {
+			repo: options.repo,
+			collection: options.collection,
+			limit: options.limit,
+			cursor: options.cursor,
+		},
 	});
 
 	return data as any;

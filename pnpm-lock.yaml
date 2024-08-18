@@ -28,6 +28,9 @@ importers:
       '@atcute/base32':
         specifier: ^1.0.0
         version: 1.0.0
+      '@atcute/bluemoji':
+        specifier: ^1.0.0
+        version: 1.0.0(@atcute/bluesky@1.0.0(@atcute/client@1.0.0))(@atcute/client@1.0.0)
       '@atcute/bluesky':
         specifier: ^1.0.0
         version: 1.0.0(@atcute/client@1.0.0)
@@ -129,6 +132,12 @@ packages:
 
   '@atcute/base32@1.0.0':
     resolution: {integrity: sha512-Mbjsv6kd/ymvDMGjCoh9eqhlpFsoJ6zYguU6xtKxqh1wGhe5rvBOfMRXsEqcp7srn8Bfp8QhevqLgmwrWvzqrA==}
+
+  '@atcute/bluemoji@1.0.0':
+    resolution: {integrity: sha512-roxi2DaN9Xuy4YcCj+ADYIeva2qEilsAmJOBqgPWmyR+myxFNsL4Fme5u3iddRmyCdzQQmW8tIgpXF4cnmdIPw==}
+    peerDependencies:
+      '@atcute/bluesky': ^1.0.0
+      '@atcute/client': ^1.0.0
 
   '@atcute/bluesky@1.0.0':
     resolution: {integrity: sha512-GG5oMa0QZj7aOyszbrjZNZVdaF3+yCG26kl1rxuV5EAI9v+EgjB5C3M6zedmP1im9Q/ZXONvevgypfeFjqBibw==}
@@ -2788,6 +2797,11 @@ snapshots:
       leven: 3.1.0
 
   '@atcute/base32@1.0.0': {}
+
+  '@atcute/bluemoji@1.0.0(@atcute/bluesky@1.0.0(@atcute/client@1.0.0))(@atcute/client@1.0.0)':
+    dependencies:
+      '@atcute/bluesky': 1.0.0(@atcute/client@1.0.0)
+      '@atcute/client': 1.0.0
 
   '@atcute/bluesky@1.0.0(@atcute/client@1.0.0)':
     dependencies:

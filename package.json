@@ -10,6 +10,7 @@
 	},
 	"dependencies": {
 		"@atcute/base32": "^1.0.0",
+		"@atcute/bluemoji": "^1.0.0",
 		"@atcute/bluesky": "^1.0.0",
 		"@atcute/cbor": "^1.0.0",
 		"@atcute/cid": "^1.0.0",

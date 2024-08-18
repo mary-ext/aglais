@@ -113,6 +113,11 @@ const routes: RouteDefinition[] = [
 	},
 
 	{
+		path: '/bluemoji/emotes',
+		component: lazy(() => import('./views/bluemoji-emotes')),
+	},
+
+	{
 		path: '/:didOrHandle',
 		component: lazy(() => import('./views/profile')),
 		validate(params) {
