@@ -127,7 +127,7 @@ export { PromptAction as Action };
 export interface PromptConfirmProps {
 	title: JSX.Element;
 	description: JSX.Element;
-	onConfirm: () => void;
+	onConfirm?: () => void;
 	confirmLabel?: string;
 	cancelLabel?: string;
 	noCancel?: boolean;
