@@ -117,10 +117,9 @@ export const getImageFromBlob = (blob: Blob): Promise<HTMLImageElement> => {
 	});
 };
 
-const enum Crop {
+export const enum Crop {
 	CONTAIN,
 	COVER,
-	STRETCH,
 }
 
 export const getResizedImage = (img: HTMLImageElement, maxW: number, maxH: number, mode: Crop) => {
