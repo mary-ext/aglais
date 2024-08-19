@@ -91,7 +91,7 @@ export interface ListRecordsOutput<T> extends ComAtprotoRepoListRecords.Output {
 export const listRecords = async <K extends RecordType>(
 	rpc: XRPC,
 	options: ListRecordsOptions<K>,
-): Promise<ListRecordsOutput<ListRecordsOutput<Records[K]>>> => {
+): Promise<ListRecordsOutput<Records[K]>> => {
 	const { data } = await rpc.get('com.atproto.repo.listRecords', {
 		signal: options.signal,
 		params: {
