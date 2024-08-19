@@ -17,8 +17,13 @@ export const formatQueryError = (err: unknown) => {
 
 			return `Account session invalid, please sign in again`;
 		}
+
 		if (kind === 'UpstreamFailure') {
-			return `Server appears to be experiencing issues, please try again later`;
+			return `Server appears to be experiencing issues, try again later`;
+		}
+
+		if (kind === 'InternalServerError') {
+			return `Server is having issues processing this request, try again later`;
 		}
 
 		return formatXRPCError(err);
@@ -26,7 +31,7 @@ export const formatQueryError = (err: unknown) => {
 
 	if (err instanceof Error) {
 		if (/NetworkError|Failed to fetch|timed out|abort/.test(err.message)) {
-			return `Unable to access the internet, please try again later`;
+			return `Unable to access the internet, try again later`;
 		}
 	}
 
