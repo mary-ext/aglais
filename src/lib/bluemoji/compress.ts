@@ -1,3 +1,4 @@
+import { contain, cover } from '../bsky/crop';
 import { getImageFromBlob } from '../bsky/image';
 
 export const SUPPORTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -29,7 +30,7 @@ const compressIfNeeded = async (image: HTMLImageElement, blob: Blob, type: strin
 		return blob;
 	}
 
-	const [canvas, width, height] = getResizedImage(image, EMOTE_SIZE, crop);
+	const canvas = getResizedImage(image, EMOTE_SIZE, crop);
 	const large = blob.size > 1_500_000;
 
 	// Start at 90% if we're over 1.5 MB because it's unlikely 100% will work.
@@ -48,31 +49,21 @@ const compressIfNeeded = async (image: HTMLImageElement, blob: Blob, type: strin
 };
 
 const getResizedImage = (img: HTMLImageElement, maxD: number, mode: Crop) => {
-	let scale = 1;
-	let w = img.naturalHeight;
-	let h = img.naturalWidth;
+	const w = img.naturalWidth;
+	const h = img.naturalHeight;
 
-	{
-		const idealSize = Math.min(maxD, Math.max(w, h));
+	const s = Math.min(maxD, Math.max(w, h));
 
-		if (mode === 'cover') {
-			scale = w < h ? idealSize / w : idealSize / h;
-		} else if (mode === 'contain') {
-			scale = w > h ? idealSize / w : idealSize / h;
-		}
+	const [offsetX, offsetY, width, height] = (mode === 'contain' ? contain : cover)(s, s, w, h);
 
-		w = Math.floor(w * scale);
-		h = Math.floor(h * scale);
-	}
-
-	const canvas = new OffscreenCanvas(w, h);
+	const canvas = new OffscreenCanvas(s, s);
 	const ctx = canvas.getContext('2d');
 
 	if (!ctx) {
 		throw new Error(`Failed to compress image, unable to create canvas`);
 	}
 
-	ctx.drawImage(img, 0, 0, w, h);
+	ctx.drawImage(img, offsetX, offsetY, width, height);
 
-	return [canvas, w, h] as const;
+	return canvas;
 };
