@@ -55,7 +55,11 @@ const PagedList = <T,>(props: PagedListProps<T>) => {
 				each={props.data}
 				fallback={
 					(() => {
-						if (props.manualScroll || !props.hasNextPage) {
+						if (!('fallback' in props)) {
+							return;
+						}
+
+						if (props.manualScroll || (!props.hasNextPage && !props.isFetchingNextPage)) {
 							return untrack(() => props.fallback);
 						}
 					}) as unknown as JSX.Element
