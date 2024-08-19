@@ -44,13 +44,21 @@ export interface TagPreliminarySegment {
 	tag: string;
 }
 
+export interface EmotePreliminarySegment {
+	type: 'emote';
+	raw: string;
+	text: string;
+	name: string;
+}
+
 export type PreliminarySegment =
-	| TextPreliminarySegment
+	| EmotePreliminarySegment
 	| EscapePreliminarySegment
 	| LinkPreliminarySegment
 	| MdLinkPreliminarySegment
 	| MentionPreliminarySegment
-	| TagPreliminarySegment;
+	| TagPreliminarySegment
+	| TextPreliminarySegment;
 
 export interface PreliminaryRichText {
 	source: string;
@@ -61,32 +69,38 @@ export interface PreliminaryRichText {
 }
 
 const enum CharCode {
-	ESCAPE = 0x5c,
+	ESCAPE = 92,
 
-	AT = 0x40,
-	TAG = 0x23,
+	AT = 64,
+	TAG = 35,
 
-	OSQUARE = 0x5b,
-	ESQUARE = 0x5d,
-	OPAREN = 0x28,
-	EPAREN = 0x29,
+	OSQUARE = 91,
+	ESQUARE = 93,
+	OPAREN = 40,
+	EPAREN = 41,
 
-	NEWLINE = 0xa,
-	SPACE = 0x20,
+	NEWLINE = 10,
+	SPACE = 32,
 
-	COLON = 0x3a,
-	FSLASH = 0x2f,
+	COLON = 58,
+	FSLASH = 47,
 
-	COMMA = 0x2c,
-	DOT = 0x2e,
-	SEMICOLON = 0x3b,
-	DQUOTE = 0x22,
-	SQUOTE = 0x27,
+	COMMA = 44,
+	DOT = 46,
+	SEMICOLON = 59,
+	DQUOTE = 34,
+	SQUOTE = 39,
+	DASH = 45,
+	UNDERSCORE = 46,
 
-	H = 0x68,
-	P = 0x70,
-	S = 0x73,
-	T = 0x74,
+	LOWER_A = 97,
+	LOWER_H = 104,
+	LOWER_P = 112,
+	LOWER_S = 115,
+	LOWER_T = 116,
+	LOWER_Z = 122,
+	UPPER_A = 65,
+	UPPER_Z = 90,
 }
 
 const WS_RE = / +(?=\n)|\n(?=(?: *\n){2} *)/g;
@@ -234,14 +248,50 @@ export const parseRt = (source: string): PreliminaryRichText => {
 			}
 
 			continue;
+		} else if (look === CharCode.COLON) {
+			let nameStart = idx + 1;
+			let nameEnd = nameStart;
+
+			for (; nameEnd < len; nameEnd++) {
+				const char = c(nameEnd);
+
+				if (
+					!(
+						(char >= CharCode.LOWER_A && char <= CharCode.LOWER_Z) ||
+						(char >= CharCode.UPPER_A && char <= CharCode.UPPER_Z) ||
+						char === CharCode.DASH ||
+						char === CharCode.UNDERSCORE
+					)
+				) {
+					break;
+				}
+			}
+
+			if (c(nameEnd) !== CharCode.COLON) {
+				break jump;
+			}
+
+			const name = source.slice(nameStart, nameEnd);
+			const raw = ':' + name + ':';
+
+			idx = nameEnd + 1;
+
+			segments.push({
+				type: 'emote',
+				name: name,
+				text: raw,
+				raw: raw,
+			});
+			continue;
 		} else if (look === CharCode.ESCAPE) {
 			const next = c(idx + 1);
 
 			if (
 				next === CharCode.AT ||
-				next === CharCode.TAG ||
+				next === CharCode.COLON ||
+				next === CharCode.ESCAPE ||
 				next === CharCode.OSQUARE ||
-				next === CharCode.ESCAPE
+				next === CharCode.TAG
 			) {
 				const ch = source.charAt(idx + 1);
 
@@ -259,7 +309,7 @@ export const parseRt = (source: string): PreliminaryRichText => {
 			for (; end < len; end++) {
 				const char = c(end);
 
-				if (char === CharCode.ESCAPE || char === CharCode.OSQUARE) {
+				if (char === CharCode.ESCAPE || char === CharCode.OSQUARE || char === CharCode.COLON) {
 					break;
 				}
 
@@ -289,18 +339,18 @@ export const parseRt = (source: string): PreliminaryRichText => {
 					((secure =
 						end - idx >= 5 &&
 						// the 5 characters are `https` (reverse-order)
-						c(end - 1) === CharCode.S &&
-						c(end - 2) === CharCode.P &&
-						c(end - 3) === CharCode.T &&
-						c(end - 4) === CharCode.T &&
-						c(end - 5) === CharCode.H) ||
+						c(end - 1) === CharCode.LOWER_S &&
+						c(end - 2) === CharCode.LOWER_P &&
+						c(end - 3) === CharCode.LOWER_T &&
+						c(end - 4) === CharCode.LOWER_T &&
+						c(end - 5) === CharCode.LOWER_H) ||
 						// or, we have 4 preceeding characters
 						(end - idx >= 4 &&
 							// the 4 characters are `http` (reverse-order)
-							c(end - 1) === CharCode.P &&
-							c(end - 2) === CharCode.T &&
-							c(end - 3) === CharCode.T &&
-							c(end - 4) === CharCode.H))
+							c(end - 1) === CharCode.LOWER_P &&
+							c(end - 2) === CharCode.LOWER_T &&
+							c(end - 3) === CharCode.LOWER_T &&
+							c(end - 4) === CharCode.LOWER_H))
 				) {
 					const start = end - (secure ? 5 : 4);
 					let hasParen = false;

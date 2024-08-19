@@ -9,6 +9,7 @@ import type {
 	AppBskyGraphDefs,
 	AppBskyRichtextFacet,
 	At,
+	BlueMojiRichtextFacet,
 	Brand,
 	ComAtprotoLabelDefs,
 	ComAtprotoRepoApplyWrites,
@@ -35,6 +36,7 @@ import {
 	type PostMediaEmbed,
 	type PostRecordEmbed,
 } from './state';
+import { getRecord } from '~/api/utils/mutation';
 
 export interface PublishOptions {
 	agent: AgentContext;
@@ -369,6 +371,55 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				facets.push({
 					index: index,
 					features: [{ $type: 'app.bsky.richtext.facet#tag', tag: segment.tag }],
+				});
+			} else if (type === 'emote') {
+				const { value } = await getRecord(rpc, {
+					repo: did,
+					collection: 'blue.moji.collection.item',
+					rkey: segment.name,
+				});
+
+				const raws = value.formats;
+
+				const cids: Brand.Union<BlueMojiRichtextFacet.Formats_v0> = {
+					$type: 'blue.moji.richtext.facet#formats_v0',
+				};
+
+				if (raws.$type === 'blue.moji.collection.item#formats_v0') {
+					if (raws.apng_128) {
+						cids.apng_128 = true;
+					}
+
+					if (raws.lottie) {
+						cids.lottie = true;
+					}
+
+					if (raws.gif_128) {
+						cids.gif_128 = raws.gif_128.ref.$link;
+					}
+
+					if (raws.png_128) {
+						cids.png_128 = raws.png_128.ref.$link;
+					}
+
+					if (raws.webp_128) {
+						cids.webp_128 = raws.webp_128.ref.$link;
+					}
+				}
+
+				const facet: Brand.Union<BlueMojiRichtextFacet.Main> = {
+					$type: 'blue.moji.richtext.facet',
+					did: did,
+					name: segment.raw,
+					alt: value.alt || undefined,
+					adultOnly: value.adultOnly || undefined,
+					labels: value.labels,
+					formats: cids,
+				};
+
+				facets.push({
+					index: index,
+					features: [facet as any],
 				});
 			}
 		}

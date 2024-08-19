@@ -446,6 +446,13 @@ const buildHtml = (rt: PreliminaryRichText) => {
 
 		if (type === 'link' || type === 'mention' || type === 'tag') {
 			str += `<span class=text-accent>` + escape(segment.raw, false) + `</span>`;
+		} else if (type === 'emote') {
+			str +=
+				`<span class=text-contrast-muted>:</span>` +
+				`<span class=text-accent>` +
+				escape(segment.name, false) +
+				`</span>` +
+				`<span class=text-contrast-muted>:</span>`;
 		} else if (type === 'escape') {
 			str += `<span class=opacity-50>` + escape(segment.raw, false) + `</span>`;
 		} else if (type === 'mdlink') {
