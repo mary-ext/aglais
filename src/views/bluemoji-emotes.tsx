@@ -1,19 +1,26 @@
 import { createEffect, createSignal, type JSX } from 'solid-js';
 
 import { remove as removeExif } from '@mary/exif-rm';
+import { createInfiniteQuery } from '@mary/solid-query';
+
+import { listRecords } from '~/api/utils/mutation';
 
 import { hasModals, openModal } from '~/globals/modals';
 
 import { createEventListener } from '~/lib/hooks/event-listener';
 import { on } from '~/lib/misc';
+import { useAgent } from '~/lib/states/agent';
+import { useSession } from '~/lib/states/session';
 
 import { MAX_ORIGINAL_SIZE, SUPPORTED_IMAGE_TYPES } from '~/lib/bluemoji/compress';
+import { getCdnUrl } from '~/lib/bluemoji/render';
 
-import * as Boxed from '~/components/boxed';
 import IconButton from '~/components/icon-button';
 import AddOutlinedIcon from '~/components/icons-central/add-outline';
 import * as Page from '~/components/page';
+import PagedList from '~/components/paged-list';
 import * as Prompt from '~/components/prompt';
+
 import AddEmotePrompt from '~/components/settings/bluemoji/add-emote-prompt';
 
 const BluemojiEmotesPage = () => {
@@ -38,6 +45,23 @@ const BluemojiEmotesPage = () => {
 
 		openModal(() => <AddEmotePrompt blob={blob} onAdd={() => {}} />);
 	};
+
+	const { rpc } = useAgent();
+	const { currentAccount } = useSession();
+
+	const query = createInfiniteQuery(() => ({
+		queryKey: ['bluemoji', 'emotes'],
+		async queryFn(ctx) {
+			return listRecords(rpc, {
+				repo: currentAccount!.did,
+				collection: 'blue.moji.collection.item',
+				limit: 100,
+				cursor: ctx.pageParam,
+			});
+		},
+		initialPageParam: undefined as string | undefined,
+		getNextPageParam: (last) => last.cursor,
+	}));
 
 	return (
 		<>
@@ -72,14 +96,39 @@ const BluemojiEmotesPage = () => {
 				</Page.HeaderAccessory>
 			</Page.Header>
 
-			<Boxed.Container>
-				<Boxed.Group>
-					<Boxed.GroupBlurb>
-						Here be dragons, this is an experimental feature, and things can change at any time. Animated
-						emotes are not yet supported.
-					</Boxed.GroupBlurb>
-				</Boxed.Group>
-			</Boxed.Container>
+			<p class="text-pretty p-4 text-de text-contrast-muted">
+				Here be dragons, this is an experimental feature, and things can change at any time. Animated emotes
+				are not yet supported.
+			</p>
+
+			<PagedList
+				data={query.data?.pages.map((page) => page.records)}
+				render={(item) => {
+					const record = item.value;
+					const formats = record.formats;
+
+					const blob = formats.png_128 ?? formats.original;
+
+					return (
+						<div class="flex items-center gap-4 px-4 py-4">
+							<img
+								src={/* @once */ getCdnUrl(currentAccount!.did, blob!.ref.$link)}
+								class="h-8 w-8 object-cover"
+							/>
+
+							<div class="grow text-sm font-medium">
+								<span class="text-contrast-muted">:</span>
+								<span>{/* @once */ record.name}</span>
+								<span class="text-contrast-muted">:</span>
+							</div>
+						</div>
+					);
+				}}
+				fallback={<p class="py-6 text-center text-base font-medium">No emotes added yet.</p>}
+				hasNextPage={query.hasNextPage}
+				isFetchingNextPage={query.isFetching}
+				onEndReached={() => query.fetchNextPage()}
+			/>
 		</>
 	);
 };
