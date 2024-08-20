@@ -91,7 +91,7 @@ const enum CharCode {
 	DQUOTE = 34,
 	SQUOTE = 39,
 	DASH = 45,
-	UNDERSCORE = 46,
+	UNDERSCORE = 95,
 
 	LOWER_A = 97,
 	LOWER_H = 104,
