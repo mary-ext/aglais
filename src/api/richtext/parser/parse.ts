@@ -309,20 +309,6 @@ export const parseRt = (source: string): PreliminaryRichText => {
 			for (; end < len; end++) {
 				const char = c(end);
 
-				if (char === CharCode.ESCAPE || char === CharCode.OSQUARE || char === CharCode.COLON) {
-					break;
-				}
-
-				if (char === CharCode.AT || char === CharCode.TAG) {
-					const prev = c(end - 1);
-
-					if (prev !== CharCode.SPACE && prev !== CharCode.NEWLINE) {
-						continue;
-					}
-
-					break;
-				}
-
 				// Auto-link detection
 				if (
 					char === CharCode.COLON &&
@@ -414,6 +400,20 @@ export const parseRt = (source: string): PreliminaryRichText => {
 					}
 
 					continue;
+				}
+
+				if (char === CharCode.ESCAPE || char === CharCode.OSQUARE || char === CharCode.COLON) {
+					break;
+				}
+
+				if (char === CharCode.AT || char === CharCode.TAG) {
+					const prev = c(end - 1);
+
+					if (prev !== CharCode.SPACE && prev !== CharCode.NEWLINE) {
+						continue;
+					}
+
+					break;
 				}
 			}
 
