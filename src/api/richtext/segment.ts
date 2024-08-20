@@ -1,4 +1,4 @@
-import type { AppBskyRichtextFacet } from '@atcute/client/lexicons';
+import type { AppBskyRichtextFacet, BlueMojiRichtextFacet, Brand } from '@atcute/client/lexicons';
 
 import type { UnwrapArray } from '../utils/types';
 import { textDecoder, textEncoder } from './intl';
@@ -21,15 +21,15 @@ const sliceUtf8 = (utf: UtfString, start?: number, end?: number) => {
 };
 
 type Facet = AppBskyRichtextFacet.Main;
-type FacetFeature = UnwrapArray<Facet['features']>;
+type FacetFeature = UnwrapArray<Facet['features']> | Brand.Union<BlueMojiRichtextFacet.Main>;
 
 export interface RichtextSegment {
 	text: string;
-	feature: FacetFeature | undefined;
+	features: FacetFeature[] | undefined;
 }
 
-const createRichtextSegment = (text: string, feature: FacetFeature | undefined): RichtextSegment => {
-	return { text: text, feature: feature };
+const createRichtextSegment = (text: string, features: FacetFeature[] | undefined): RichtextSegment => {
+	return { text: text, features: features };
 };
 
 export const segmentRichText = (rtText: string, facets: Facet[] | undefined): RichtextSegment[] => {
@@ -65,7 +65,7 @@ export const segmentRichText = (rtText: string, facets: Facet[] | undefined): Ri
 			if (features.length === 0 || subtext.trim().length === 0) {
 				segments.push(createRichtextSegment(subtext, undefined));
 			} else {
-				segments.push(createRichtextSegment(subtext, features[0]));
+				segments.push(createRichtextSegment(subtext, features));
 			}
 		}
 

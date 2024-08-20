@@ -5,6 +5,7 @@ import type { AppBskyRichtextFacet } from '@atcute/client/lexicons';
 import { segmentRichText } from '~/api/richtext/segment';
 import { isLinkValid, safeUrlParse } from '~/api/utils/strings';
 
+import { getCdnUrl } from '~/lib/bluemoji/render';
 import {
 	BSKY_FEED_LINK_RE,
 	BSKY_LIST_LINK_RE,
@@ -38,54 +39,53 @@ const RichText = (props: RichTextProps) => {
 			for (let idx = 0, len = segments.length; idx < len; idx++) {
 				const segment = segments[idx];
 				const subtext = segment.text;
-				const feature = segment.feature;
+				const features = segment.features;
 
-				let to: string | undefined;
-				let external = false;
+				let node: JSX.Element = subtext;
 
-				if (feature) {
-					const type = feature.$type;
+				if (features) {
+					for (let j = 0, jlen = features.length; j < jlen; j++) {
+						const feature = features[j];
+						const type = feature.$type;
 
-					if (type === 'app.bsky.richtext.facet#link') {
-						const uri = feature.uri;
-						const redirect = findLinkRedirect(uri);
+						if (type === 'app.bsky.richtext.facet#link') {
+							const uri = feature.uri;
+							const redirect = findLinkRedirect(uri);
 
-						if (redirect === null) {
-							to = uri;
-							external = true;
-						} else {
-							to = redirect;
+							if (redirect === null) {
+								node = renderExternalLink(uri, subtext);
+							} else {
+								node = renderInternalLink(redirect, subtext);
+							}
+
+							break;
+						} else if (type === 'app.bsky.richtext.facet#mention') {
+							node = renderInternalLink(`/${feature.did}`, subtext);
+
+							break;
+						} else if (type === 'app.bsky.richtext.facet#tag') {
+							node = renderInternalLink(`/topics/${feature.tag}`, subtext);
+
+							break;
+						} else if (type === 'blue.moji.richtext.facet') {
+							const formats = feature.formats;
+							if (formats.$type !== 'blue.moji.richtext.facet#formats_v0' || !formats.png_128) {
+								continue;
+							}
+
+							node = (
+								<img
+									src={/* @once */ getCdnUrl(feature.did, formats.png_128)}
+									title={/* @once */ feature.name}
+									class={`mx-px inline-block align-top text-[0]` + (!large ? ` h-5 w-5` : ` h-6 w-6`)}
+								/>
+							);
+							break;
 						}
-					} else if (type === 'app.bsky.richtext.facet#mention') {
-						to = `/${feature.did}`;
-					} else if (type === 'app.bsky.richtext.facet#tag') {
-						to = `/topics/${feature.tag}`;
 					}
 				}
 
-				if (to !== undefined) {
-					if (!external) {
-						nodes.push(
-							<a href={to} class="text-accent hover:underline">
-								{subtext}
-							</a>,
-						);
-					} else {
-						nodes.push(
-							<a
-								target="_blank"
-								href={to}
-								onClick={handleUnsafeLinkNavigation}
-								onAuxClick={handleUnsafeLinkNavigation}
-								class="text-accent hover:underline"
-							>
-								{subtext}
-							</a>,
-						);
-					}
-				} else {
-					nodes.push(subtext);
-				}
+				nodes.push(node);
 			}
 		} else {
 			nodes = text;
@@ -108,6 +108,28 @@ const RichText = (props: RichTextProps) => {
 };
 
 export default RichText;
+
+const renderInternalLink = (to: string, subtext: string) => {
+	return (
+		<a href={to} class="text-accent hover:underline">
+			{subtext}
+		</a>
+	);
+};
+
+const renderExternalLink = (to: string, subtext: string) => {
+	return (
+		<a
+			target="_blank"
+			href={to}
+			onClick={handleUnsafeLinkNavigation}
+			onAuxClick={handleUnsafeLinkNavigation}
+			class="text-accent hover:underline"
+		>
+			{subtext}
+		</a>
+	);
+};
 
 const handleUnsafeLinkNavigation = (ev: MouseEvent) => {
 	if (ev.defaultPrevented || (ev.type === 'auxclick' && (ev as MouseEvent).button !== 1)) {
