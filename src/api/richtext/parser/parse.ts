@@ -409,7 +409,7 @@ export const parseRt = (source: string): PreliminaryRichText => {
 				if (char === CharCode.AT || char === CharCode.TAG) {
 					const prev = c(end - 1);
 
-					if (prev !== CharCode.SPACE && prev !== CharCode.NEWLINE) {
+					if (prev !== CharCode.SPACE && prev !== CharCode.NEWLINE && prev !== CharCode.OPAREN) {
 						continue;
 					}
 
