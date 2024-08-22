@@ -12,16 +12,16 @@ import ProfileFollowButton from '~/components/profiles/profile-follow-button';
 import ProfileItem from '~/components/profiles/profile-item';
 
 const ProfileFollowingPage = () => {
-	const { didOrHandle } = useParams();
+	const { did } = useParams();
 
-	const following = createProfileFollowingQuery(() => didOrHandle);
+	const following = createProfileFollowingQuery(() => did);
 	const subject = createMemo(() => following.data?.pages[0].subject);
 
 	return (
 		<>
 			<Page.Header>
 				<Page.HeaderAccessory>
-					<Page.Back to={`/${didOrHandle}`} />
+					<Page.Back to={`/${did}`} />
 				</Page.HeaderAccessory>
 
 				<Page.Heading

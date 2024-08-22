@@ -1,4 +1,4 @@
-import { createMemo } from 'solid-js';
+import { createMemo, Show } from 'solid-js';
 
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 
@@ -122,20 +122,12 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 				{embed() && <Embed embed={embed()!} moderation={moderation()} gutterTop />}
 			</ContentHider>
 
-			<p class="mt-3 text-sm text-contrast-muted">{formatAbsDateTime(post().indexedAt)}</p>
+			<p class="my-3 text-sm text-contrast-muted">{formatAbsDateTime(post().indexedAt)}</p>
 
-			<Divider gutterTop="md" />
-
-			<div class="flex flex-wrap gap-4 py-4 text-sm">
-				<a href={`${href}/reposts`} class="hover:underline">
-					<span class="font-bold">{formatCompact(shadow().repostCount)}</span>
-					<span class="text-contrast-muted"> Reposts</span>
-				</a>
-
-				<a href={`${href}/likes`} class="hover:underline">
-					<span class="font-bold">{formatCompact(shadow().likeCount)}</span>
-					<span class="text-contrast-muted"> Likes</span>
-				</a>
+			<div class="flex flex-wrap gap-4 border-t border-outline py-4 empty:hidden">
+				<StatItem count={shadow().repostCount} label="Reposts" href={`${href}/reposts`} />
+				<StatItem count={post().quoteCount ?? 0} label="Quotes" href={`${href}/quotes`} />
+				<StatItem count={shadow().likeCount} label="Likes" href={`${href}/likes`} />
 			</div>
 
 			<Divider />
@@ -204,3 +196,14 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 };
 
 export default HighlightedPost;
+
+const StatItem = (props: { count: number; label: string; href: string }) => {
+	return (
+		<Show when={props.count > 0}>
+			<a href={props.href} class="text-sm hover:underline">
+				<span class="font-bold">{formatCompact(props.count)}</span>
+				<span class="text-contrast-muted"> {props.label}</span>
+			</a>
+		</Show>
+	);
+};

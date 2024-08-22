@@ -125,31 +125,31 @@ const routes: RouteDefinition[] = [
 		},
 	},
 	{
-		path: '/:didOrHandle/following',
+		path: '/:did/following',
 		component: lazy(() => import('./views/profile-following')),
 		validate(params) {
-			return isValidDidOrHandle(params.didOrHandle);
+			return isValidDid(params.did);
 		},
 	},
 	{
-		path: '/:didOrHandle/followers',
+		path: '/:did/followers',
 		component: lazy(() => import('./views/profile-followers')),
 		validate(params) {
-			return isValidDidOrHandle(params.didOrHandle);
+			return isValidDid(params.did);
 		},
 	},
 	{
-		path: '/:didOrHandle/known-followers',
+		path: '/:did/known-followers',
 		component: lazy(() => import('./views/profile-known-followers')),
 		validate(params) {
-			return isValidDidOrHandle(params.didOrHandle);
+			return isValidDid(params.did);
 		},
 	},
 	{
 		path: '/:did/labels',
 		component: lazy(() => import('./views/profile-labels')),
 		validate(params) {
-			return isValidDidOrHandle(params.did);
+			return isValidDid(params.did);
 		},
 	},
 	{
