@@ -173,6 +173,13 @@ const routes: RouteDefinition[] = [
 			return isValidDid(params.did) && isValidTid(params.rkey);
 		},
 	},
+	{
+		path: '/:did/:rkey/quotes',
+		component: lazy(() => import('./views/post-quotes')),
+		validate(params) {
+			return isValidDid(params.did) && isValidTid(params.rkey);
+		},
+	},
 
 	{
 		path: '*',
