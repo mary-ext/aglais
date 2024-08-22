@@ -6,6 +6,7 @@ import type { QueryClient } from '@mary/solid-query';
 
 import { findAllPosts as findAllPostsInBookmarkFeed } from '../queries-cache/bookmark-feed';
 import { findAllPosts as findAllPostsInNotificationFeed } from '../queries-cache/notification-feed';
+import { findAllPosts as findAllPostsInPostQuotes } from '../queries-cache/post-quotes';
 import { findAllPosts as findAllPostsInPostThread } from '../queries-cache/post-thread';
 import { findAllPosts as findAllPostsInTimeline } from '../queries-cache/timeline';
 import { EQUALS_DEQUAL } from '../utils/dequal';
@@ -109,6 +110,7 @@ export function findPostsInCache(
 	return iterateQueryCache(queryClient, [
 		findAllPostsInTimeline(uri, includeQuote),
 		findAllPostsInPostThread(uri, includeQuote),
+		findAllPostsInPostQuotes(uri, includeQuote),
 		findAllPostsInBookmarkFeed(uri, includeQuote),
 		findAllPostsInNotificationFeed(uri, includeQuote),
 	]);
