@@ -30,10 +30,10 @@ importers:
         version: 1.0.0
       '@atcute/bluemoji':
         specifier: ^1.0.0
-        version: 1.0.0(@atcute/bluesky@1.0.0(@atcute/client@1.0.0))(@atcute/client@1.0.0)
+        version: 1.0.0(@atcute/bluesky@1.0.1(@atcute/client@1.0.0))(@atcute/client@1.0.0)
       '@atcute/bluesky':
-        specifier: ^1.0.0
-        version: 1.0.0(@atcute/client@1.0.0)
+        specifier: ^1.0.1
+        version: 1.0.1(@atcute/client@1.0.0)
       '@atcute/cbor':
         specifier: ^1.0.0
         version: 1.0.0
@@ -139,8 +139,8 @@ packages:
       '@atcute/bluesky': ^1.0.0
       '@atcute/client': ^1.0.0
 
-  '@atcute/bluesky@1.0.0':
-    resolution: {integrity: sha512-GG5oMa0QZj7aOyszbrjZNZVdaF3+yCG26kl1rxuV5EAI9v+EgjB5C3M6zedmP1im9Q/ZXONvevgypfeFjqBibw==}
+  '@atcute/bluesky@1.0.1':
+    resolution: {integrity: sha512-lQ5u3C60OVsD+7BVYWkgxBYm5F6V4OS1NAx/NUoObhhSCHiFCobE3TNtE7REKYUf7Yr2lWezAw+oPzUP/Z6VXA==}
     peerDependencies:
       '@atcute/client': ^1.0.0
 
@@ -2798,12 +2798,12 @@ snapshots:
 
   '@atcute/base32@1.0.0': {}
 
-  '@atcute/bluemoji@1.0.0(@atcute/bluesky@1.0.0(@atcute/client@1.0.0))(@atcute/client@1.0.0)':
+  '@atcute/bluemoji@1.0.0(@atcute/bluesky@1.0.1(@atcute/client@1.0.0))(@atcute/client@1.0.0)':
     dependencies:
-      '@atcute/bluesky': 1.0.0(@atcute/client@1.0.0)
+      '@atcute/bluesky': 1.0.1(@atcute/client@1.0.0)
       '@atcute/client': 1.0.0
 
-  '@atcute/bluesky@1.0.0(@atcute/client@1.0.0)':
+  '@atcute/bluesky@1.0.1(@atcute/client@1.0.0)':
     dependencies:
       '@atcute/client': 1.0.0
 
