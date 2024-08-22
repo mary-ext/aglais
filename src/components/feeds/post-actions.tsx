@@ -105,7 +105,7 @@ const PostActions = (props: PostActionsProps) => {
 					</div>
 
 					<span class="overflow-hidden text-ellipsis whitespace-nowrap pr-2 text-de">
-						{formatCompact(props.shadow.repostCount)}
+						{formatCompact(props.shadow.repostCount + (post().quoteCount ?? 0))}
 					</span>
 				</button>
 			</div>
