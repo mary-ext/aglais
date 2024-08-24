@@ -90,5 +90,6 @@ export const embedViewRecordToPostView = (v: AppBskyEmbedRecord.ViewRecord): App
 		likeCount: v.likeCount,
 		replyCount: v.replyCount,
 		repostCount: v.repostCount,
+		quoteCount: v.quoteCount,
 	};
 };
