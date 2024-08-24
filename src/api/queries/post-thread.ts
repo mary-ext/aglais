@@ -1,6 +1,6 @@
+import { XRPCError } from '@atcute/client';
 import type { AppBskyFeedDefs, Brand } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
-import { XRPCError } from '@atcute/client';
 
 import { useAgent } from '~/lib/states/agent';
 
@@ -39,10 +39,24 @@ export const usePostThreadQuery = (uri: () => string) => {
 				return thread;
 			},
 			placeholderData(): ThreadReturn | undefined {
+				let found: AppBskyFeedDefs.PostView | undefined;
+				let step = 0;
+
 				for (const post of findPostsInCache(queryClient, $uri, true)) {
+					found = post;
+
+					// Break if either:
+					// - This isn't a quote embed transformed into a post view
+					// - We've went through 10 post views
+					if (!('$transform' in found) || ++step >= 10) {
+						break;
+					}
+				}
+
+				if (found) {
 					return {
 						$type: 'app.bsky.feed.defs#threadViewPost',
-						post: post,
+						post: found,
 						parent: undefined,
 						replies: undefined,
 					};

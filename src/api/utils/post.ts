@@ -78,8 +78,11 @@ export const getEmbeddedPost = (
 	}
 };
 
-export const embedViewRecordToPostView = (v: AppBskyEmbedRecord.ViewRecord): AppBskyFeedDefs.PostView => {
+export const embedViewRecordToPostView = (
+	v: AppBskyEmbedRecord.ViewRecord,
+): AppBskyFeedDefs.PostView & { $transform: true } => {
 	return {
+		$transform: true,
 		uri: v.uri,
 		cid: v.cid,
 		author: v.author,
