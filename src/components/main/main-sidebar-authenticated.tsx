@@ -92,7 +92,7 @@ const AuthenticatedHeader = () => {
 											{(account) => {
 												const profile = createProfileQuery(() => account.did);
 												const handleClick = () => {
-													resumeSession(account);
+													resumeSession(account.did);
 													close();
 												};
 
@@ -107,7 +107,7 @@ const AuthenticatedHeader = () => {
 																/>
 															);
 														}}
-														title={`@${profile.data?.handle ?? account.session.handle}`}
+														title={`@${profile.data?.handle}`}
 														size="sm"
 														onClick={handleClick}
 													/>

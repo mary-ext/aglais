@@ -22,6 +22,14 @@ const isValidBookmarkTagId = (str: string | undefined) => {
 
 const routes: RouteDefinition[] = [
 	{
+		path: '/oauth/callback',
+		component: lazy(() => import('./views/oauth-callback')),
+		meta: {
+			public: true,
+		},
+	},
+
+	{
 		path: '/',
 		component: lazy(() => import('./views/main/home')),
 		single: true,

@@ -1,0 +1,12 @@
+{
+	"client_id": "https://aglais.pages.dev/oauth/client-metadata.json",
+	"client_uri": "https://aglais.pages.dev",
+	"client_name": "Aglais",
+	"application_type": "web",
+	"scope": "atproto transition:generic transition:chat.bsky",
+	"grant_types": ["authorization_code", "refresh_token"],
+	"redirect_uris": ["https://aglais.pages.dev/oauth/callback"],
+	"response_types": ["code"],
+	"token_endpoint_auth_method": "none",
+	"dpop_bound_access_tokens": true
+}

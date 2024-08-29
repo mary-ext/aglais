@@ -18,7 +18,7 @@ const NotificationsPage = () => {
 
 	// We want to differentiate a refetch done by the user and one that's done
 	// by us from the route enter callback.
-	const [isRefetching, setIsRefetching] = createSignal(false);
+	const [isManualRefetch, setIsManualRefetch] = createSignal(false);
 
 	const isStale = () => {
 		if (unread.dataUpdatedAt > firstFetchedAt()) {
@@ -30,10 +30,10 @@ const NotificationsPage = () => {
 
 	const refetch = async () => {
 		try {
-			setIsRefetching(true);
+			setIsManualRefetch(true);
 			await reset();
 		} finally {
-			setIsRefetching(false);
+			setIsManualRefetch(false);
 		}
 	};
 
@@ -72,8 +72,10 @@ const NotificationsPage = () => {
 				// Only show refreshing if:
 				// - User is explicitly refreshing
 				// - We're doing an automatic refresh with an unread count
-				isRefreshing={isRefetching() || (feed.isRefetching && unread.data.count > 0)}
-				onEndReached={() => feed.fetchNextPage()}
+				isRefreshing={isManualRefetch() || (feed.isRefetching && unread.data.count > 0)}
+				// Check for `isRefetching` here because our automatic refresh could be
+				// cancelled due to this handler being called after resetting the data
+				onEndReached={() => !feed.isRefetching && feed.fetchNextPage()}
 				onRefresh={refetch}
 				extraBottomGutter
 			/>

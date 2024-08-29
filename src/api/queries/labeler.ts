@@ -26,7 +26,10 @@ export const createLabelerMetaQuery = (did: () => At.DID) => {
 				const service = data.views[0] as AppBskyLabelerDefs.LabelerViewDetailed;
 
 				if (!service) {
-					throw new XRPCError(400, { kind: 'NotFound', message: `Labeler not found: ${$did}` });
+					throw new XRPCError(400, {
+						kind: 'NotFound',
+						description: `Labeler not found: ${$did}`,
+					});
 				}
 
 				return interpretLabelerDefinition(service);

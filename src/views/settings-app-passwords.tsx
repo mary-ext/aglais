@@ -1,6 +1,5 @@
 import { For, Match, Show, Switch } from 'solid-js';
 
-import { XRPCError } from '@atcute/client';
 import type { ComAtprotoServerListAppPasswords } from '@atcute/client/lexicons';
 import { createMutation, createQuery } from '@mary/solid-query';
 
@@ -9,7 +8,6 @@ import { openModal } from '~/globals/modals';
 import { formatAbsDateTime } from '~/lib/intl/time';
 import { reconcile } from '~/lib/misc';
 import { useAgent } from '~/lib/states/agent';
-import { useSession } from '~/lib/states/session';
 
 import * as Boxed from '~/components/boxed';
 import CircularProgressView from '~/components/circular-progress-view';
@@ -24,20 +22,12 @@ import * as Prompt from '~/components/prompt';
 import AddAppPasswordPrompt from '~/components/settings/app-passwords/add-app-password-prompt';
 
 const AppPasswordsSettingsPage = () => {
-	const { currentAccount } = useSession();
 	const { rpc } = useAgent();
-
-	const isLimited = !currentAccount || currentAccount.data.scope !== undefined;
 
 	const passwords = createQuery(() => {
 		return {
 			queryKey: ['app-passwords'],
 			async queryFn() {
-				// We know this is going to throw so throw early
-				if (isLimited) {
-					throw new XRPCError(400, { kind: 'InvalidToken', message: 'Bad token scope' });
-				}
-
 				const { data } = await rpc.get('com.atproto.server.listAppPasswords', {});
 
 				return data.passwords;
@@ -62,7 +52,6 @@ const AppPasswordsSettingsPage = () => {
 					<IconButton
 						icon={AddOutlinedIcon}
 						title="Create new app password"
-						disabled={isLimited}
 						onClick={() => {
 							openModal(() => <AddAppPasswordPrompt />);
 						}}

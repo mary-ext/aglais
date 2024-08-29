@@ -1,0 +1,13 @@
+diff --git a/dist/node/chunks/dep-BzOvws4Y.js b/dist/node/chunks/dep-BzOvws4Y.js
+index 184597a2d7b1acc23556e16264e6677457023e81..d98dc4f1d3457ce2705aa0badbb972780e238060 100644
+--- a/dist/node/chunks/dep-BzOvws4Y.js
++++ b/dist/node/chunks/dep-BzOvws4Y.js
+@@ -65109,7 +65109,7 @@ async function resolveBuildPlugins(config) {
+       ...config.isWorker ? [webWorkerPostPlugin()] : []
+     ],
+     post: [
+-      buildImportAnalysisPlugin(config),
++        ...(config.build.modulePreload !== false ? [buildImportAnalysisPlugin(config)] : []),
+       ...config.esbuild !== false ? [buildEsbuildPlugin(config)] : [],
+       ...options.minify ? [terserPlugin(config)] : [],
+       ...!config.isWorker ? [

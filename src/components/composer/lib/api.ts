@@ -49,7 +49,7 @@ let cidPromise: Promise<typeof import('./cid')>;
 
 export const publish = async ({ agent, queryClient, state, onLog: log }: PublishOptions) => {
 	const rpc = agent.rpc;
-	const did = agent.auth!.session!.did;
+	const did = agent.did!;
 
 	const now = new Date();
 	const writes: Brand.Union<ComAtprotoRepoApplyWrites.Create>[] = [];

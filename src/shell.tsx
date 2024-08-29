@@ -1,4 +1,12 @@
-import { Suspense, lazy, type Accessor, type Component, type ComponentProps } from 'solid-js';
+import {
+	ErrorBoundary,
+	Suspense,
+	createMemo,
+	lazy,
+	type Accessor,
+	type Component,
+	type ComponentProps,
+} from 'solid-js';
 
 import type { AppBskyNotificationGetUnreadCount } from '@atcute/client/lexicons';
 import type { DefinedCreateQueryResult } from '@mary/solid-query';
@@ -20,6 +28,7 @@ import HomeSolidIcon from './components/icons-central/home-solid';
 import MagnifyingGlassOutlinedIcon from './components/icons-central/magnifying-glass-outline';
 import MailOutlinedIcon from './components/icons-central/mail-outline';
 import MailSolidIcon from './components/icons-central/mail-solid';
+import ErrorPage from './views/_error';
 
 const SignedOutView = lazy(() => import('./views/_signed-out'));
 
@@ -28,7 +37,16 @@ const Shell = () => {
 
 	// Will always match because we've set a 404 handler.
 	const route = useMatchedRoute() as Accessor<MatchedRouteState>;
-	const unread = createNotificationCountQuery();
+
+	const showNavBar = createMemo((): boolean => {
+		return !!(currentAccount && route().def.meta?.main);
+	});
+
+	const unread = createNotificationCountQuery({
+		get disabled() {
+			return !showNavBar();
+		},
+	});
 
 	return (
 		<div
@@ -41,15 +59,17 @@ const Shell = () => {
 				<RouterView
 					render={({ def }) => {
 						return (
-							<Suspense
-								children={(() => {
-									if (!currentAccount && !def.meta?.public) {
-										return <SignedOutView />;
-									}
+							<ErrorBoundary fallback={(error, reset) => <ErrorPage error={error} reset={reset} />}>
+								<Suspense
+									children={(() => {
+										if (!currentAccount && !def.meta?.public) {
+											return <SignedOutView />;
+										}
 
-									return <def.component />;
-								})()}
-							/>
+										return <def.component />;
+									})()}
+								/>
+							</ErrorBoundary>
 						);
 					}}
 				/>

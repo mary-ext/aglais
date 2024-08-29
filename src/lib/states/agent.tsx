@@ -1,7 +1,7 @@
 import { createContext, createMemo, useContext, type JSX, type ParentProps } from 'solid-js';
 
-import { XRPC } from '@atcute/client';
-import type { AtpAuth } from '@atcute/client/middlewares/auth';
+import { simpleFetchHandler, XRPC } from '@atcute/client';
+import type { At } from '@atcute/client/lexicons';
 import { QueryClient, QueryClientProvider } from '@mary/solid-query';
 
 import { assert } from '../invariant';
@@ -11,8 +11,8 @@ import { createQueryPersister } from '../utils/query-storage';
 import { useSession } from './session';
 
 export interface AgentContext {
+	did: At.DID | null;
 	rpc: XRPC;
-	auth: AtpAuth | null;
 	persister: ReturnType<typeof createQueryPersister>;
 }
 
@@ -26,15 +26,16 @@ export const AgentProvider = (props: ParentProps) => {
 
 		if (currentAccount) {
 			return {
+				did: currentAccount.did,
+
 				rpc: currentAccount.rpc,
-				auth: currentAccount.auth,
 				persister: createQueryPersister({ name: `queryCache-${currentAccount.did}` }),
 			};
 		}
 
 		return {
-			rpc: new XRPC({ service: 'https://public.api.bsky.app' }),
-			auth: null,
+			did: null,
+			rpc: new XRPC({ handler: simpleFetchHandler({ service: 'https://public.api.bsky.app' }) }),
 			persister: createQueryPersister({ name: `queryCache-public` }),
 		};
 	});

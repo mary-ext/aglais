@@ -5,13 +5,13 @@ import './styles/app.css';
 import { createSignal, onMount, type JSX } from 'solid-js';
 import { render } from 'solid-js/web';
 
+import type { At } from '@atcute/client/lexicons';
+
 import * as navigation from './globals/navigation';
 import * as preferences from './globals/preferences';
 
 import { on } from './lib/misc';
 import { configureRouter } from './lib/navigation/router';
-
-import type { AccountData } from './lib/preferences/sessions';
 
 import { AgentProvider } from './lib/states/agent';
 import { BookmarksProvider } from './lib/states/bookmarks';
@@ -35,10 +35,10 @@ const InnerApp = () => {
 	const session = useSession();
 
 	onMount(() => {
-		const resumeAccount = async (account: AccountData | undefined) => {
+		const resumeAccount = async (did: At.DID | undefined) => {
 			try {
-				if (account) {
-					await session.resumeSession(account);
+				if (did) {
+					await session.resumeSession(did);
 				}
 			} finally {
 				setReady(true);
@@ -46,10 +46,7 @@ const InnerApp = () => {
 		};
 
 		{
-			const { active, accounts } = preferences.sessions;
-			const account = active && accounts.find((acc) => acc.did === active);
-
-			resumeAccount(account);
+			resumeAccount(preferences.sessions.active);
 		}
 	});
 

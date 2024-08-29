@@ -1,16 +1,7 @@
-import { safeUrlParse } from '~/api/utils/strings';
-
-import { useSession } from '~/lib/states/session';
-
 import * as Boxed from '~/components/boxed';
 import * as Page from '~/components/page';
 
 const AccountSettingsPage = () => {
-	const { currentAccount } = useSession();
-
-	const session = currentAccount!.data.session;
-	const isLimited = currentAccount!.data.scope !== undefined;
-
 	return (
 		<>
 			<Page.Header>
@@ -26,28 +17,20 @@ const AccountSettingsPage = () => {
 					<Boxed.GroupHeader>Account information</Boxed.GroupHeader>
 
 					<Boxed.List>
-						<Boxed.ButtonItem label="Handle" blurb={'@' + session.handle} />
-						<Boxed.StaticItem
-							label="Data server"
-							description={formatDataServer(currentAccount!.data.service)}
-						/>
+						<Boxed.ButtonItem label="Handle" blurb={'@' + 'lol'} />
+						<Boxed.StaticItem label="Data server" description={'lol'} />
 					</Boxed.List>
 				</Boxed.Group>
 
-				{!isLimited && (
-					<Boxed.Group>
-						<Boxed.GroupHeader>Account security</Boxed.GroupHeader>
+				<Boxed.Group>
+					<Boxed.GroupHeader>Account security</Boxed.GroupHeader>
 
-						<Boxed.List>
-							<Boxed.LinkItem to="/settings/app-passwords" label="Manage app passwords" />
-							<Boxed.ButtonItem label="Change password" />
-							<Boxed.StaticItem
-								label="Email two-factor authentication"
-								description={session.emailAuthFactor ? `Enabled` : `Disabled`}
-							/>
-						</Boxed.List>
-					</Boxed.Group>
-				)}
+					<Boxed.List>
+						<Boxed.LinkItem to="/settings/app-passwords" label="Manage app passwords" />
+						<Boxed.ButtonItem label="Change password" />
+						<Boxed.StaticItem label="Email two-factor authentication" description={'lol'} />
+					</Boxed.List>
+				</Boxed.Group>
 
 				<Boxed.Group>
 					<Boxed.GroupHeader>Account management</Boxed.GroupHeader>
@@ -55,12 +38,8 @@ const AccountSettingsPage = () => {
 					<Boxed.List>
 						<Boxed.LinkItem to="/settings/export" label="Export my data" />
 
-						{!isLimited && (
-							<>
-								<Boxed.ButtonItem label="Deactivate account" variant="danger" />
-								<Boxed.ButtonItem label="Delete account" variant="danger" />
-							</>
-						)}
+						<Boxed.ButtonItem label="Deactivate account" variant="danger" />
+						<Boxed.ButtonItem label="Delete account" variant="danger" />
 					</Boxed.List>
 				</Boxed.Group>
 			</Boxed.Container>
@@ -69,17 +48,3 @@ const AccountSettingsPage = () => {
 };
 
 export default AccountSettingsPage;
-
-const formatDataServer = (uri: string): string => {
-	const url = safeUrlParse(uri);
-	if (url === null) {
-		return `N/A`;
-	}
-
-	const host = url.host;
-	if (host.endsWith('.host.bsky.network')) {
-		return 'bsky.social';
-	}
-
-	return host;
-};

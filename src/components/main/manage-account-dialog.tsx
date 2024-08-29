@@ -18,7 +18,7 @@ const ManageAccountDialog = () => {
 	const { currentAccount, getAccounts, resumeSession } = useSession();
 
 	const switchAccount = async (account: AccountData) => {
-		resumeSession(account);
+		resumeSession(account.did);
 		closeAllModals();
 	};
 
@@ -78,7 +78,7 @@ const CurrentAccountItem = () => {
 					{profile.data?.displayName}
 				</p>
 				<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">
-					{'@' + (profile.data?.handle ?? currentAccount!.data.session.handle)}
+					{'@' + profile.data?.handle}
 				</p>
 			</div>
 
@@ -104,7 +104,7 @@ const AccountItem = ({ account, onClick }: { account: AccountData; onClick?: () 
 					{profile.data?.displayName}
 				</p>
 				<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">
-					{'@' + (profile.data?.handle ?? account.session.handle)}
+					{'@' + profile.data?.handle}
 				</p>
 			</div>
 		</button>

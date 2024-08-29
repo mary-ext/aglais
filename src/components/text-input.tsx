@@ -8,6 +8,7 @@ export interface TextInputProps {
 	ref?: (node: HTMLInputElement) => void;
 	label?: string;
 	type?: 'text' | 'email' | 'password' | 'search' | 'tel' | 'url';
+	name?: string;
 	autocomplete?:
 		| 'off'
 		| 'on'
@@ -53,6 +54,7 @@ const TextInput = (props: TextInputProps) => {
 			<input
 				ref={props.ref}
 				id={id}
+				name={props.name}
 				type={props.type || 'text'}
 				autocomplete={props.autocomplete}
 				pattern={props.pattern}

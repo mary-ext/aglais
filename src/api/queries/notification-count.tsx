@@ -1,12 +1,15 @@
 import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
+import { useSession } from '~/lib/states/session';
 
-export const createNotificationCountQuery = () => {
+export const createNotificationCountQuery = (options?: { readonly disabled?: boolean }) => {
+	const { currentAccount } = useSession();
 	const { rpc } = useAgent();
 
 	const query = createQuery(() => ({
 		queryKey: ['notification', 'count'],
+		enabled: currentAccount !== undefined && !options?.disabled,
 		async queryFn() {
 			const { data } = await rpc.get('app.bsky.notification.getUnreadCount', {
 				params: {},

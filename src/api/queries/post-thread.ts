@@ -33,7 +33,10 @@ export const usePostThreadQuery = (uri: () => string) => {
 				const thread = data.thread;
 
 				if (thread.$type === 'app.bsky.feed.defs#notFoundPost') {
-					throw new XRPCError(400, { kind: 'NotFound', message: `Post not found: ${$uri}` });
+					throw new XRPCError(400, {
+						kind: 'NotFound',
+						description: `Post not found: ${$uri}`,
+					});
 				}
 
 				return thread;

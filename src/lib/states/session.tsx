@@ -2,39 +2,34 @@ import {
 	batch,
 	createContext,
 	createEffect,
+	createMemo,
 	createRoot,
 	createSignal,
 	untrack,
 	useContext,
 	type ParentProps,
 } from 'solid-js';
-import { unwrap } from 'solid-js/store';
 
 import { XRPC } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
-import { AtpAuth, type AtpAccessJwt, type AtpAuthOptions } from '@atcute/client/middlewares/auth';
-import { AtpMod } from '@atcute/client/middlewares/mod';
-import { decodeJwt } from '@atcute/client/utils/jwt';
 
 import { BLUESKY_MODERATION_DID } from '~/api/defaults';
 
-import { globalEvents } from '~/globals/events';
 import { sessions } from '~/globals/preferences';
 
+import { attachLabelerHeaders, type Labeler } from '../atproto/labeler';
+import { OAuthUserAgent } from '../bsky-oauth/agents/user-agent';
 import { makeAbortable } from '../hooks/abortable';
 import type { PerAccountPreferenceSchema } from '../preferences/account';
 import type { AccountData } from '../preferences/sessions';
 import { createReactiveLocalStorage, isExternalWriting } from '../signals/storage';
 
+import { OAuthServerAgent } from '../bsky-oauth/agents/server-agent';
+import { getSession } from '../bsky-oauth/agents/session';
+import { database } from '../bsky-oauth/globals';
+import { getMetadataFromAuthorizationServer } from '../bsky-oauth/resolver';
 import { assert } from '../invariant';
 import { mapDefined } from '../misc';
-
-interface LoginOptions {
-	service: string;
-	identifier: string;
-	password: string;
-	authFactorToken?: string;
-}
 
 export interface CurrentAccountState {
 	readonly did: At.DID;
@@ -42,7 +37,7 @@ export interface CurrentAccountState {
 	readonly preferences: PerAccountPreferenceSchema;
 
 	readonly rpc: XRPC;
-	readonly auth: AtpAuth;
+	readonly session: OAuthUserAgent;
 	readonly _cleanup: () => void;
 }
 
@@ -50,11 +45,10 @@ export interface SessionContext {
 	readonly currentAccount: CurrentAccountState | undefined;
 
 	getAccounts(): AccountData[];
-	resumeSession(account: AccountData): Promise<void>;
-	removeAccount(account: AccountData): void;
+	resumeSession(did: At.DID): Promise<void>;
+	removeAccount(did: At.DID): Promise<void>;
 
-	login(opts: LoginOptions): Promise<void>;
-	logout(): void;
+	logout(): Promise<void>;
 }
 
 const Context = createContext<SessionContext>();
@@ -70,17 +64,24 @@ export const SessionProvider = (props: ParentProps) => {
 		});
 	};
 
-	const createAccountState = (account: AccountData, rpc: XRPC, auth: AtpAuth): CurrentAccountState => {
+	const createAccountState = (
+		account: AccountData,
+		session: OAuthUserAgent,
+		rpc: XRPC,
+	): CurrentAccountState => {
 		return createRoot((cleanup): CurrentAccountState => {
 			const preferences = createAccountPreferences(account.did);
-			const mod = new AtpMod(rpc);
 
 			const [abortable] = makeAbortable();
 
-			createEffect(() => {
-				const entries = Object.entries(preferences.moderation.labelers);
-				mod.labelers = entries.map(([did, info]) => ({ did: did as At.DID, redact: info.redact }));
+			const labelers = createMemo((): Labeler[] => {
+				return Object.entries(preferences.moderation.labelers).map(([did, info]): Labeler => {
+					return { did: did as At.DID, redact: info.redact };
+				});
 			});
+
+			// A bit of a hack, but works right now.
+			rpc.handle = attachLabelerHeaders(rpc.handle, labelers);
 
 			createEffect(() => {
 				const signal = abortable();
@@ -125,27 +126,11 @@ export const SessionProvider = (props: ParentProps) => {
 				data: account,
 				preferences: preferences,
 
-				auth: auth,
 				rpc: rpc,
+				session: session,
 				_cleanup: cleanup,
 			};
 		}, null);
-	};
-
-	const getAuthOptions = (): AtpAuthOptions => {
-		return {
-			onExpired() {
-				globalEvents.emit('sessionexpired');
-			},
-			onSessionUpdate(session) {
-				const did = session.did;
-				const existing = sessions.accounts.find((acc) => acc.did === did);
-
-				if (existing) {
-					batch(() => Object.assign(existing.session, session));
-				}
-			},
-		};
 	};
 
 	const context: SessionContext = {
@@ -156,77 +141,68 @@ export const SessionProvider = (props: ParentProps) => {
 		getAccounts(): AccountData[] {
 			return sessions.accounts;
 		},
-		async resumeSession(account: AccountData): Promise<void> {
+		async resumeSession(did: At.DID): Promise<void> {
+			const account = sessions.accounts.find((acc) => acc.did === did);
+			if (!account) {
+				return;
+			}
+
 			const signal = getSignal();
-			const session = unwrap(account.session);
 
-			const rpc = new XRPC({ service: account.service });
-			const auth = new AtpAuth(rpc, getAuthOptions());
+			const { tokenSet, dpopKey } = await getSession(did);
 
-			await auth.resume(session);
+			const session = new OAuthUserAgent(tokenSet, dpopKey);
+			const rpc = new XRPC({ handler: session });
+
 			signal.throwIfAborted();
 
 			batch(() => {
-				sessions.active = account.did;
-				sessions.accounts = [account, ...sessions.accounts.filter((acc) => acc.did !== session.did)];
-				replaceState(createAccountState(account, rpc, auth));
+				sessions.active = did;
+				sessions.accounts = [account, ...sessions.accounts.filter((acc) => acc.did !== did)];
+
+				replaceState(createAccountState(account, session, rpc));
 			});
 		},
-		removeAccount(account: AccountData): void {
+
+		async removeAccount(did: At.DID): Promise<void> {
 			const $state = untrack(state);
-			const isLoggedIn = $state !== undefined && $state.did === account.did;
+			const isLoggedIn = $state !== undefined && $state.did === did;
 
 			batch(() => {
 				if (isLoggedIn) {
 					replaceState(undefined);
 				}
+
+				sessions.accounts = sessions.accounts.filter((acc) => acc.did !== did);
 			});
-		},
 
-		async login(opts: LoginOptions): Promise<void> {
-			const signal = getSignal();
+			try {
+				if (isLoggedIn) {
+					const session = $state.session;
 
-			const rpc = new XRPC({ service: opts.service });
-			const auth = new AtpAuth(rpc, getAuthOptions());
+					await session.signOut();
+				} else {
+					const { dpopKey, tokenSet } = await getSession(did, false);
 
-			await auth.login({ identifier: opts.identifier, password: opts.password, code: opts.authFactorToken });
-			signal.throwIfAborted();
+					const as_meta = await getMetadataFromAuthorizationServer(tokenSet.iss);
+					const server = new OAuthServerAgent(as_meta, dpopKey);
 
-			const session = auth.session!;
-			const sessionJwt = decodeJwt(session.accessJwt) as AtpAccessJwt;
-
-			const scope = sessionJwt.scope;
-			let accountScope: AccountData['scope'];
-			if (scope === 'com.atproto.appPass') {
-				accountScope = 'limited';
-			} else if (scope === 'com.atproto.appPassPrivileged') {
-				accountScope = 'privileged';
+					await server.revoke(tokenSet.access_token);
+				}
+			} finally {
+				await database.sessions.delete(did);
 			}
-
-			const account: AccountData = {
-				did: session.did,
-				service: opts.service,
-				session: session,
-				scope: accountScope,
-			};
-
-			batch(() => {
-				sessions.active = account.did;
-				sessions.accounts = [account, ...sessions.accounts.filter((acc) => acc.did !== session.did)];
-				replaceState(createAccountState(account, rpc, auth));
-			});
 		},
-		logout(): void {
+		async logout(): Promise<void> {
 			const $state = untrack(state);
 			if ($state !== undefined) {
-				this.removeAccount($state.data);
+				return this.removeAccount($state.did);
 			}
 		},
 	};
 
 	createEffect(() => {
 		const active = sessions.active;
-		const activeAccount = active && sessions.accounts.find((acc) => acc.did === active);
 
 		// Only run this on external changes
 		if (isExternalWriting) {
@@ -241,14 +217,8 @@ export const SessionProvider = (props: ParentProps) => {
 						replaceState(undefined);
 					}
 
-					// Account data exists, try to login as that account
-					if (activeAccount) {
-						context.resumeSession(activeAccount);
-					}
-				} else if (activeAccount) {
-					// It's likely that this external write occured due to session changes
-					// so update it to whatever it is now
-					untrackedState.auth.session = unwrap(activeAccount.session);
+					// Try to resume from this new account if we have it.
+					context.resumeSession(active);
 				}
 			} else if (untrackedState) {
 				// No active account yet we have a session, log out
