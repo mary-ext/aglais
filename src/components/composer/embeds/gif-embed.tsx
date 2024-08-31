@@ -5,8 +5,9 @@ import CrossLargeOutlinedIcon from '../../icons-central/cross-large-outline';
 import Keyed from '../../keyed';
 
 import AltButton from '../../alt-button';
+
 import { SnippetType, type BlueskyGifSnippet } from '../../embeds/lib/snippet';
-import { GifPlayer } from '../../embeds/supports/gif-player';
+import { GifEmbed as GifEmbedContent } from '../../embeds/supports/gif-embed';
 
 import GifAltDialogLazy from '../dialogs/gif-alt-dialog-lazy';
 
@@ -34,7 +35,7 @@ const GifEmbed = (props: GifEmbedProps) => {
 						},
 					};
 
-					return <GifPlayer snippet={snippet} disabled={!props.active} />;
+					return <GifEmbedContent snippet={snippet} disabled={!props.active} />;
 				}}
 			</Keyed>
 

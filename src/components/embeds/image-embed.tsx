@@ -11,6 +11,8 @@ export interface ImageEmbedProps {
 	/** Expected to be static */
 	borderless?: boolean;
 	/** Expected to be static */
+	standalone?: boolean;
+	/** Expected to be static */
 	interactive?: boolean;
 }
 
@@ -22,12 +24,12 @@ const enum RenderMode {
 }
 
 const ImageEmbed = (props: ImageEmbedProps) => {
-	const { embed, borderless, interactive } = props;
+	const { embed, borderless, standalone, interactive } = props;
 
 	const images = embed.images;
 	const length = images.length;
 
-	const hasStandaloneImage = interactive ? length === 1 && images[0].aspectRatio !== undefined : false;
+	const hasStandaloneImage = standalone && length === 1 && images[0].aspectRatio !== undefined;
 
 	const render = (index: number, mode: RenderMode) => {
 		const { alt, thumb, aspectRatio } = images[index];
@@ -81,7 +83,7 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 
 				{interactive && alt && (
 					<div class="pointer-events-none absolute bottom-0 right-0 p-2">
-						<div class="flex h-4 items-center rounded bg-p-neutral-950/75 px-1 text-[9px] font-bold tracking-wider text-white">
+						<div class="flex h-4 items-center rounded bg-p-neutral-950/60 px-1 text-[9px] font-bold tracking-wider text-white">
 							ALT
 						</div>
 					</div>

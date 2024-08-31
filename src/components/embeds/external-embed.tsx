@@ -9,7 +9,7 @@ import { on } from '~/lib/misc';
 import PlaySolidIcon from '../icons-central/play-solid';
 
 import { SnippetType, detectSnippet } from './lib/snippet';
-import { GifPlayer } from './supports/gif-player';
+import { GifEmbed } from './supports/gif-embed';
 
 export interface ExternalEmbedProps {
 	/** Expected to be static */
@@ -28,7 +28,7 @@ const ExternalEmbed = ({ embed, interactive }: ExternalEmbedProps) => {
 	const type = snippet.type;
 
 	if (type === SnippetType.BLUESKY_GIF) {
-		return <GifPlayer snippet={snippet} />;
+		return <GifEmbed snippet={snippet} />;
 	}
 
 	if (type === SnippetType.IFRAME) {
