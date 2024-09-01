@@ -419,7 +419,13 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 				facets.push({
 					index: index,
-					features: [facet as any],
+					features: [
+						facet as any,
+						{
+							$type: 'app.bsky.richtext.facet#link',
+							uri: 'https://github.com/aendra-rininsland/bluemoji',
+						},
+					],
 				});
 			}
 		}
