@@ -1,6 +1,6 @@
 import { createContext, onCleanup, useContext, type ParentProps } from 'solid-js';
 
-import type { IDBPDatabase } from 'idb';
+import { openDB, type IDBPDatabase } from 'idb';
 
 import { assert } from '../invariant';
 
@@ -29,8 +29,6 @@ export const BookmarksProvider = (props: ParentProps) => {
 			assert(currentAccount !== undefined, `Can't open database when not signed in`);
 
 			return (promise = (async (): Promise<IDBPDatabase<BookmarkDBSchema>> => {
-				const { openDB } = await import('idb');
-
 				const db = await openDB<BookmarkDBSchema>(`aglais-bookmarks-${currentAccount.did}`, 1, {
 					async upgrade(db, oldVersion) {
 						if (oldVersion < 1) {
