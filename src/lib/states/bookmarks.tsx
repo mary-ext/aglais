@@ -4,7 +4,6 @@ import { openDB, type IDBPDatabase } from 'idb';
 
 import { assert } from '../invariant';
 
-import { useAgent } from './agent';
 import { useSession } from './session';
 
 import type { BookmarkDBSchema } from '../aglais-bookmarks/db';
@@ -17,7 +16,6 @@ const Context = createContext<BookmarkContext>();
 
 export const BookmarksProvider = (props: ParentProps) => {
 	const { currentAccount } = useSession();
-	useAgent();
 
 	let promise: Promise<IDBPDatabase<BookmarkDBSchema>> | undefined;
 	const context: BookmarkContext = {
