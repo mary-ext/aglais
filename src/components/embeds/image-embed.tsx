@@ -67,7 +67,7 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 					src={thumb}
 					title={alt}
 					class={
-						`h-full w-full object-cover text-[0px]` +
+						`h-full w-full object-contain text-[0px]` +
 						(interactive ? ` cursor-pointer` : ``) +
 						// prettier-ignore
 						(props.blur ? ` scale-125` + (!borderless ? ` blur` : ` blur-lg`) : ``)
