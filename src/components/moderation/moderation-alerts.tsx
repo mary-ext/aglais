@@ -38,8 +38,8 @@ const ModerationAlerts = (props: ModerationAlertsProps) => {
 			return (
 				<button
 					class={
-						`group flex items-center rounded-md bg-[#1A1A1A] text-contrast/75 hover:text-contrast` +
-						(!large ? ` h-5 text-xs` : ` h-6 text-de`)
+						`group flex items-center rounded-md text-contrast/75 hover:text-contrast` +
+						(!large ? ` h-5 text-xs hover:bg-contrast/sm-pressed` : ` h-6 bg-[#1A1A1A] text-de`)
 					}
 				>
 					<Avatar
