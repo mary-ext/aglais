@@ -19,6 +19,7 @@ import PostActions from '../feeds/post-actions';
 import PostMeta from '../feeds/post-meta';
 import PostReplyContext from '../feeds/post-reply-context';
 import ContentHider from '../moderation/content-hider';
+import ModerationAlerts from '../moderation/moderation-alerts';
 import RichText from '../rich-text';
 
 export interface BookmarkFeedItemProps {
@@ -42,6 +43,7 @@ const BookmarkFeedItem = ({ item }: BookmarkFeedItemProps) => {
 	const href = `/${author.did}/${uri.rkey}`;
 
 	const moderation = createMemo(() => moderatePost(post, moderationOptions()));
+	const ui = createMemo(() => getModerationUI(moderation(), ContextContentList));
 
 	const handleClick = (ev: MouseEvent | KeyboardEvent) => {
 		if (!isElementClicked(ev)) {
@@ -78,11 +80,9 @@ const BookmarkFeedItem = ({ item }: BookmarkFeedItemProps) => {
 				<PostMeta post={post} href={href} authorHref={authorHref} gutterBottom />
 				<PostReplyContext item={{ post, reply: undefined, reason: undefined, next: false, prev: false }} />
 
-				<ContentHider
-					ui={getModerationUI(moderation(), ContextContentList)}
-					containerClass="mt-2"
-					innerClass="mt-2"
-				>
+				<ModerationAlerts ui={ui()} class="-mx-1 my-1" />
+
+				<ContentHider ui={ui()} containerClass="mt-2" innerClass="mt-2">
 					<RichText text={/* @once */ record.text} facets={/* @once */ record.facets} clipped />
 					{embed && <Embed embed={embed} moderation={moderation()} gutterTop />}
 				</ContentHider>
