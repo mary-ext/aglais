@@ -2,6 +2,7 @@ import type {
 	AppBskyEmbedExternal,
 	AppBskyEmbedImages,
 	AppBskyEmbedRecord,
+	AppBskyEmbedVideo,
 	AppBskyFeedDefs,
 	Brand,
 } from '@atcute/client/lexicons';
@@ -16,6 +17,7 @@ import FeedEmbed from './feed-embed';
 import ImageEmbed from './image-embed';
 import ListEmbed from './list-embed';
 import QuoteEmbed from './quote-embed';
+import VideoEmbed from './video-embed';
 
 export interface EmbedProps {
 	/** Expected to be static */
@@ -54,7 +56,7 @@ export default Embed;
 
 interface MediaEmbedProps {
 	/** Expected to be static */
-	embed: Brand.Union<AppBskyEmbedExternal.View | AppBskyEmbedImages.View>;
+	embed: Brand.Union<AppBskyEmbedExternal.View | AppBskyEmbedImages.View | AppBskyEmbedVideo.View>;
 	moderation?: ModerationCause[];
 }
 
@@ -68,11 +70,15 @@ const MediaEmbed = (props: MediaEmbedProps) => {
 				const type = embed.$type;
 
 				if (type === 'app.bsky.embed.images#view') {
-					return <ImageEmbed embed={embed} interactive />;
+					return <ImageEmbed embed={embed} interactive standalone />;
 				}
 
 				if (type === 'app.bsky.embed.external#view') {
 					return <ExternalEmbed embed={embed} interactive />;
+				}
+
+				if (type === 'app.bsky.embed.video#view') {
+					return <VideoEmbed embed={embed} interactive standalone />;
 				}
 
 				return renderEmpty(`Unsupported media`);

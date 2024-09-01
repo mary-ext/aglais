@@ -64,6 +64,9 @@ importers:
       '@mary/solid-query':
         specifier: npm:@externdefs/solid-query@^0.1.5
         version: '@externdefs/solid-query@0.1.5(solid-js@1.8.22(patch_hash=5rodyfcb76rtbo26dwlsojy7jy))'
+      hls.js:
+        specifier: ^1.5.15
+        version: 1.5.15
       idb:
         specifier: ^8.0.0
         version: 8.0.0
@@ -1786,6 +1789,9 @@ packages:
   hasown@2.0.2:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
+
+  hls.js@1.5.15:
+    resolution: {integrity: sha512-6cD7xN6bycBHaXz2WyPIaHn/iXFizE5au2yvY5q9aC4wfihxAr16C9fUy4nxh2a3wOw0fEgLRa9dN6wsYjlpNg==}
 
   html-entities@2.3.3:
     resolution: {integrity: sha512-DV5Ln36z34NNTDgnz0EWGBLZENelNAtkiFA4kyNOG2tDI6Mz1uSWiq1wAKdyjnJwyDiDO7Fa2SO1CTxPXL8VxA==}
@@ -4564,6 +4570,8 @@ snapshots:
   hasown@2.0.2:
     dependencies:
       function-bind: 1.1.2
+
+  hls.js@1.5.15: {}
 
   html-entities@2.3.3: {}
 

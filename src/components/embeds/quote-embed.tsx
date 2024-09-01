@@ -3,6 +3,7 @@ import { createMemo, type JSX } from 'solid-js';
 import type {
 	AppBskyEmbedImages,
 	AppBskyEmbedRecord,
+	AppBskyEmbedVideo,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
 } from '@atcute/client/lexicons';
@@ -16,6 +17,7 @@ import { useModerationOptions } from '~/lib/states/moderation';
 import Avatar, { getUserAvatarType } from '../avatar';
 import TimeAgo from '../time-ago';
 import ImageEmbed from './image-embed';
+import VideoEmbed from './video-embed';
 
 export interface QuoteEmbedProps {
 	/** Expected to be static */
@@ -28,19 +30,20 @@ export interface QuoteEmbedProps {
 
 const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 	const record = quote.value as AppBskyFeedPost.Record;
+	const embed = quote.embeds?.[0];
 	const author = quote.author;
 
 	const uri = parseAtUri(quote.uri);
 	const href = `/${author.did}/${uri.rkey}`;
 
 	const text = record.text.trim();
-	const image = getPostImage(quote.embeds?.[0]);
+	const image = getPostImage(embed);
+	const video = getPostVideo(embed);
 
 	const moderationOptions = useModerationOptions();
 	const moderation = createMemo(() => moderateQuote(quote, moderationOptions()));
 
-	const showLargeImages = image && (large || !text);
-	const shouldBlurImage = () => getModerationUI(moderation(), ContextContentMedia).b.length !== 0;
+	const shouldBlurMedia = () => getModerationUI(moderation(), ContextContentMedia).b.length !== 0;
 
 	return (
 		<a
@@ -79,11 +82,17 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 
 			{text ? (
 				<div class="flex items-start">
-					{image && !large && (
-						<div class="mb-3 ml-3 mt-2 grow basis-0">
-							<ImageEmbed embed={image} blur={shouldBlurImage()} />
-						</div>
-					)}
+					{!large ? (
+						image ? (
+							<div class="mb-3 ml-3 mt-2 grow basis-0">
+								<ImageEmbed embed={image} blur={shouldBlurMedia()} />
+							</div>
+						) : video ? (
+							<div class="mb-3 ml-3 mt-2 grow basis-0">
+								<VideoEmbed embed={video} blur={shouldBlurMedia()} />
+							</div>
+						) : null
+					) : null}
 
 					<div class="mx-3 mb-3 mt-2 line-clamp-6 min-w-0 grow-4 basis-0 whitespace-pre-wrap break-words text-sm empty:hidden">
 						{text}
@@ -93,7 +102,13 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 				<div class="mt-3"></div>
 			)}
 
-			{showLargeImages && <ImageEmbed embed={image} borderless blur={shouldBlurImage()} />}
+			{large || !text ? (
+				image ? (
+					<ImageEmbed embed={image} borderless blur={shouldBlurMedia()} />
+				) : video ? (
+					<VideoEmbed embed={video} borderless blur={shouldBlurMedia()} />
+				) : null
+			) : null}
 		</a>
 	);
 };
@@ -108,6 +123,18 @@ const getPostImage = (embed: AppBskyFeedDefs.PostView['embed']): AppBskyEmbedIma
 
 		if (embed.$type === 'app.bsky.embed.recordWithMedia#view') {
 			return getPostImage(embed.media);
+		}
+	}
+};
+
+const getPostVideo = (embed: AppBskyFeedDefs.PostView['embed']): AppBskyEmbedVideo.View | undefined => {
+	if (embed) {
+		if (embed.$type === 'app.bsky.embed.video#view') {
+			return embed;
+		}
+
+		if (embed.$type === 'app.bsky.embed.recordWithMedia#view') {
+			return getPostVideo(embed.media);
 		}
 	}
 };
