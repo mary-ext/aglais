@@ -13,10 +13,14 @@ import {
 	type ModerationUI,
 } from '~/api/moderation';
 
+import { openModal } from '~/globals/modals';
+
 import CircleInfoOutlinedIcon from '../icons-central/circle-info-outline';
 import FilterOutlinedIcon from '../icons-central/filter-outline';
 import PersonRemoveOutlinedIcon from '../icons-central/person-remove-outline';
 import ProblemOutlinedIcon from '../icons-central/problem-outline';
+
+import LabelDetailsPromptLazy from './label-details-prompt-lazy';
 
 export interface ContentHiderProps extends ParentProps {
 	ui: ModerationUI | undefined;
@@ -86,7 +90,12 @@ const ContentHider = (props: ContentHiderProps) => {
 						return (
 							<div class="mt-1.5 break-words text-de text-contrast-muted">
 								Applied by <span>{source ? renderLabelSource(source) : `the author`}</span>.{' '}
-								<button onClick={() => {}} class="text-accent hover:underline">
+								<button
+									onClick={() => {
+										openModal(() => <LabelDetailsPromptLazy cause={blur} />);
+									}}
+									class="text-accent hover:underline"
+								>
 									Learn more
 								</button>
 							</div>

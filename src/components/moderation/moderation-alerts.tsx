@@ -8,8 +8,14 @@ import {
 	type ModerationUI,
 } from '~/api/moderation';
 import { EQUALS_DEQUAL } from '~/api/utils/dequal';
+
+import { openModal } from '~/globals/modals';
+
 import { on } from '~/lib/misc';
+
 import Avatar from '../avatar';
+
+import LabelDetailsPromptLazy from './label-details-prompt-lazy';
 
 export interface ModerationAlertsProps {
 	ui: ModerationUI;
@@ -37,6 +43,9 @@ const ModerationAlerts = (props: ModerationAlertsProps) => {
 
 			return (
 				<button
+					onClick={() => {
+						openModal(() => <LabelDetailsPromptLazy cause={cause} />);
+					}}
 					class={
 						`group flex items-center rounded-md text-contrast/75 hover:text-contrast` +
 						(!large ? ` h-5 text-xs hover:bg-contrast/sm-pressed` : ` h-6 bg-[#1A1A1A] text-de`)
