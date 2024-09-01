@@ -119,7 +119,7 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 				innerClass="mt-2"
 			>
 				<RichText text={record().text} facets={record().facets} large />
-				{embed() && <Embed embed={embed()!} moderation={moderation()} gutterTop />}
+				{embed() && <Embed embed={embed()!} large moderation={moderation()} gutterTop />}
 			</ContentHider>
 
 			<p class="my-3 text-sm text-contrast-muted">{formatAbsDateTime(post().indexedAt)}</p>
