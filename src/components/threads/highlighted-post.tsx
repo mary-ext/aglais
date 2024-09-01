@@ -29,6 +29,7 @@ import Embed from '../embeds/embed';
 import PostOverflowMenu from '../feeds/post-overflow-menu';
 import RepostMenu from '../feeds/repost-menu';
 import ContentHider from '../moderation/content-hider';
+import ModerationAlerts from '../moderation/moderation-alerts';
 
 export interface HighlightedPostProps {
 	post: AppBskyFeedDefs.PostView;
@@ -56,6 +57,7 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 	const href = `/${did}/${uri.rkey}`;
 
 	const moderation = createMemo(() => moderatePost(post(), moderationOptions()));
+	const ui = createMemo(() => getModerationUI(moderation(), ContextContentView));
 
 	const mutateLike = createPostLikeMutation(post, shadow);
 	const mutateRepost = createPostRepostMutation(post, shadow);
@@ -112,12 +114,9 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 				</div>
 			</div>
 
-			<ContentHider
-				ui={getModerationUI(moderation(), ContextContentView)}
-				ignoreMute
-				containerClass="mt-3"
-				innerClass="mt-2"
-			>
+			<ModerationAlerts ui={ui()} large class="mb-1" />
+
+			<ContentHider ui={ui()} ignoreMute containerClass="mt-3" innerClass="mt-2">
 				<RichText text={record().text} facets={record().facets} large />
 				{embed() && <Embed embed={embed()!} large moderation={moderation()} gutterTop />}
 			</ContentHider>
