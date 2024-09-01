@@ -22,6 +22,7 @@ import * as Prompt from '../prompt';
 
 import { useAgent } from '~/lib/states/agent';
 import AddPostToFolderDialogLazy from '../bookmarks/add-post-to-folder-dialog-lazy';
+import OpenInNewOutlinedIcon from '../icons-central/open-in-new-outline';
 
 export interface PostOverflowMenuProps {
 	anchor: HTMLElement;
@@ -46,6 +47,17 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 
 	return (
 		<Menu.Container anchor={props.anchor} placement="bottom-end" cover>
+			<Menu.Item
+				icon={OpenInNewOutlinedIcon}
+				label="Open in Bluesky app"
+				onClick={() => {
+					const uri = `https://bsky.app/profile/${post.author.did}/post/${parseAtUri(post.uri).rkey}`;
+
+					close();
+					window.open(uri, '_blank');
+				}}
+			/>
+
 			{isOurPost && (
 				<>
 					<Menu.Item
