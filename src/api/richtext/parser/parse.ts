@@ -279,7 +279,7 @@ export const parseRt = (source: string): PreliminaryRichText => {
 			segments.push({
 				type: 'emote',
 				name: name,
-				text: raw,
+				text: '◌',
 				raw: raw,
 			});
 			continue;
