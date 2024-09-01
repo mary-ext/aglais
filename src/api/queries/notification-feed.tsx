@@ -228,9 +228,9 @@ export const createNotificationFeedQuery = () => {
 
 				setFirstFetchedAt(now);
 
-				if (hasUnread) {
+				{
 					const indexedAt = new Date(notifs[0]?.indexedAt ?? 0).getTime();
-					const seenAt = now > indexedAt ? now : indexedAt;
+					const seenAt = Math.max(now, indexedAt);
 
 					const promise = rpc.call('app.bsky.notification.updateSeen', {
 						data: {
