@@ -79,6 +79,7 @@ function oauthMetadataPlugin() {
 				process.env.VITE_OAUTH_REDIRECT_URL = redirectUri;
 			}
 
+			process.env.VITE_CLIENT_URI = metadata.client_uri;
 			process.env.VITE_OAUTH_SCOPE = metadata.scope;
 		},
 	};
