@@ -53,7 +53,7 @@ export const identityResolver = new CachedGetter(async (did: At.DID, options): P
 			throw new ResolverError('web_invalid');
 		}
 
-		const [host, raw_path] = ident;
+		const [, host, raw_path] = match;
 		const path = raw_path ? raw_path.replaceAll(':', '/') : `/.well-known`;
 
 		const response = await fetch(`https://${host}${path}/did.json`, init);
