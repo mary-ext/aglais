@@ -82,7 +82,15 @@ const ContentHider = (props: ContentHiderProps) => {
 
 				{(() => {
 					if (type === CauseLabel && !override()) {
-						return null;
+						const source = blur.s;
+						return (
+							<div class="mt-1.5 break-words text-de text-contrast-muted">
+								Applied by <span>{source ? renderLabelSource(source) : `the author`}</span>.{' '}
+								<button onClick={() => {}} class="text-accent hover:underline">
+									Learn more
+								</button>
+							</div>
+						);
 					}
 				})()}
 
