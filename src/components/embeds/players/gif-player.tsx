@@ -1,4 +1,4 @@
-import { createSignal } from 'solid-js';
+import { createSignal, onCleanup } from 'solid-js';
 
 import PauseSolidIcon from '~/components/icons-central/pause-solid';
 import PlaySolidIcon from '~/components/icons-central/play-solid';
@@ -15,6 +15,8 @@ const GifPlayer = ({ snippet }: GifPlayerProps) => {
 	const [stalling, setStalling] = createSignal(false);
 
 	let _stallTimeout: number | undefined;
+
+	onCleanup(() => clearTimeout(_stallTimeout));
 
 	return (
 		<div class="contents">
@@ -41,7 +43,7 @@ const GifPlayer = ({ snippet }: GifPlayerProps) => {
 				onPause={() => setPlaying(false)}
 				onWaiting={() => {
 					clearTimeout(_stallTimeout);
-					setTimeout(() => setStalling(true), 50);
+					_stallTimeout = setTimeout(() => setStalling(true), 50);
 				}}
 				onPlaying={() => {
 					clearTimeout(_stallTimeout);
