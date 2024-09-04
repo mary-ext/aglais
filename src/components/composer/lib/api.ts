@@ -23,9 +23,10 @@ import type { LinkMeta } from '~/api/queries/composer';
 import { getUtf8Length } from '~/api/richtext/intl';
 import type { PreliminaryRichText } from '~/api/richtext/parser/parse';
 
+import { getRecord } from '~/api/utils/records';
 import { compressPostImage } from '~/lib/bsky/image';
-import { assert } from '~/lib/utils/invariant';
 import type { AgentContext } from '~/lib/states/agent';
+import { assert } from '~/lib/utils/invariant';
 
 import {
 	EmbedKind,
@@ -36,7 +37,6 @@ import {
 	type PostMediaEmbed,
 	type PostRecordEmbed,
 } from './state';
-import { getRecord } from '~/api/utils/mutation';
 
 export interface PublishOptions {
 	agent: AgentContext;

@@ -5,7 +5,7 @@ import { useQueryClient } from '@mary/solid-query';
 
 import { updatePostShadow } from '~/api/cache/post-shadow';
 import { createBookmarkEntryQuery } from '~/api/queries/bookmark-entry';
-import { deleteRecord } from '~/api/utils/mutation';
+import { deleteRecord } from '~/api/utils/records';
 import { parseAtUri } from '~/api/utils/strings';
 
 import { openModal, useModalContext } from '~/globals/modals';

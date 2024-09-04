@@ -3,7 +3,7 @@ import { createEffect, createSignal, type JSX } from 'solid-js';
 import { remove as removeExif } from '@mary/exif-rm';
 import { createInfiniteQuery } from '@mary/solid-query';
 
-import { listRecords } from '~/api/utils/mutation';
+import { listRecords } from '~/api/utils/records';
 
 import { hasModals, openModal } from '~/globals/modals';
 

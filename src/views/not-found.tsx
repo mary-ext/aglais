@@ -1,5 +1,6 @@
-import Button from '~/components/button';
 import { history, logger } from '~/globals/navigation';
+
+import Button from '~/components/button';
 
 const NotFoundPage = () => {
 	return (

@@ -1,4 +1,5 @@
 import type { Component, JSX } from 'solid-js';
+
 import { useFieldset } from './fieldset';
 
 export interface IconButtonProps {

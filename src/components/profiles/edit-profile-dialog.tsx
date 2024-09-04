@@ -7,7 +7,7 @@ import { uploadBlob } from '~/api/queries/blob';
 import type { TimelineParams } from '~/api/queries/timeline';
 import { graphemeLen } from '~/api/richtext/intl';
 import { PLAIN_WS_RE } from '~/api/richtext/parser/parse';
-import { getRecord, putRecord } from '~/api/utils/mutation';
+import { getRecord, putRecord } from '~/api/utils/records';
 
 import { openModal, useModalContext } from '~/globals/modals';
 
