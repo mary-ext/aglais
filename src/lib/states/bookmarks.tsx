@@ -2,7 +2,7 @@ import { createContext, onCleanup, useContext, type ParentProps } from 'solid-js
 
 import { openDB, type IDBPDatabase } from 'idb';
 
-import { assert } from '../invariant';
+import { assert } from '../utils/invariant';
 
 import { useSession } from './session';
 

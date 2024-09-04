@@ -9,7 +9,7 @@ import { createBookmarkEntryQuery } from '~/api/queries/bookmark-entry';
 import { openModal, useModalContext } from '~/globals/modals';
 
 import { createDerivedSignal } from '~/lib/hooks/derived-signal';
-import { isSetEqual } from '~/lib/misc';
+import { isSetEqual } from '~/lib/utils/misc';
 import { useBookmarks } from '~/lib/states/bookmarks';
 
 import Button from '../button';

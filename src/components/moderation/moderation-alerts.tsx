@@ -11,7 +11,7 @@ import { EQUALS_DEQUAL } from '~/api/utils/dequal';
 
 import { openModal } from '~/globals/modals';
 
-import { on } from '~/lib/misc';
+import { on } from '~/lib/utils/misc';
 
 import Avatar from '../avatar';
 

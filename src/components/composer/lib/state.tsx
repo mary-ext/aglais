@@ -6,7 +6,7 @@ import { parseRt, type PreliminaryRichText } from '~/api/richtext/parser/parse';
 
 import { primarySystemLanguage } from '~/globals/locales';
 
-import { assert } from '~/lib/invariant';
+import { assert } from '~/lib/utils/invariant';
 import type { ComposerPreferences } from '~/lib/preferences/account';
 
 import type { GifMedia } from '../gifs/gif-search-dialog';

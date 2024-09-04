@@ -1,6 +1,6 @@
 import type { At } from '@atcute/client/lexicons';
 
-import { assert } from '~/lib/invariant';
+import { assert } from '~/lib/utils/invariant';
 
 export const isDid = (value: string): value is At.DID => {
 	return value.startsWith('did:');

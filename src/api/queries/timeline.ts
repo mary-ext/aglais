@@ -12,7 +12,7 @@ import { createInfiniteQuery, createQuery, useQueryClient, type InfiniteData } f
 
 import { globalEvents } from '~/globals/events';
 
-import { assert } from '~/lib/invariant';
+import { assert } from '~/lib/utils/invariant';
 import { useAgent } from '~/lib/states/agent';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';

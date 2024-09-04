@@ -3,7 +3,7 @@ import { createContext, createRenderEffect, createSignal, useContext, type Paren
 import * as preferences from '~/globals/preferences';
 
 import { useMediaQuery } from '../hooks/media-query';
-import { assert } from '../invariant';
+import { assert } from '../utils/invariant';
 
 type Theme = 'light' | 'dark';
 

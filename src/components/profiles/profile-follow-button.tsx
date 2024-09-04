@@ -7,7 +7,7 @@ import { createProfileFollowMutation } from '~/api/mutations/profile';
 
 import { openModal } from '~/globals/modals';
 
-import { on } from '~/lib/misc';
+import { on } from '~/lib/utils/misc';
 
 import Button from '../button';
 import * as Prompt from '../prompt';

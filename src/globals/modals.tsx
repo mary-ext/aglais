@@ -1,5 +1,5 @@
 import { createContext, createSignal, useContext, type JSX } from 'solid-js';
-import { assert } from '~/lib/invariant';
+import { assert } from '~/lib/utils/invariant';
 
 type ModalRenderer = (context: ModalContext) => JSX.Element;
 

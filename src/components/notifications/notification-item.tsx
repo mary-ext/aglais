@@ -21,7 +21,7 @@ import { parseAtUri } from '~/api/utils/strings';
 import { history } from '~/globals/navigation';
 
 import { INTERACTION_TAGS, isElementAltClicked, isElementClicked } from '~/lib/interaction';
-import { assert } from '~/lib/invariant';
+import { assert } from '~/lib/utils/invariant';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
 

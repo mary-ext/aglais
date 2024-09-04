@@ -10,7 +10,7 @@ import type { At } from '@atcute/client/lexicons';
 import * as navigation from './globals/navigation';
 import * as preferences from './globals/preferences';
 
-import { on } from './lib/misc';
+import { on } from './lib/utils/misc';
 import { configureRouter } from './lib/navigation/router';
 
 import { AgentProvider } from './lib/states/agent';

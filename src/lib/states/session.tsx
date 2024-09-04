@@ -18,18 +18,19 @@ import { BLUESKY_MODERATION_DID } from '~/api/defaults';
 import { sessions } from '~/globals/preferences';
 
 import { attachLabelerHeaders, type Labeler } from '../atproto/labeler';
-import { OAuthUserAgent } from '../bsky-oauth/agents/user-agent';
-import { makeAbortable } from '../hooks/abortable';
-import type { PerAccountPreferenceSchema } from '../preferences/account';
-import type { AccountData } from '../preferences/sessions';
-import { createReactiveLocalStorage, isExternalWriting } from '../utils/local-storage';
-
 import { OAuthServerAgent } from '../bsky-oauth/agents/server-agent';
 import { getSession } from '../bsky-oauth/agents/session';
+import { OAuthUserAgent } from '../bsky-oauth/agents/user-agent';
 import { database } from '../bsky-oauth/globals';
 import { getMetadataFromAuthorizationServer } from '../bsky-oauth/resolver';
-import { assert } from '../invariant';
-import { mapDefined } from '../misc';
+
+import type { PerAccountPreferenceSchema } from '../preferences/account';
+import type { AccountData } from '../preferences/sessions';
+
+import { makeAbortable } from '../hooks/abortable';
+import { createReactiveLocalStorage, isExternalWriting } from '../hooks/local-storage';
+import { assert } from '../utils/invariant';
+import { mapDefined } from '../utils/misc';
 
 export interface CurrentAccountState {
 	readonly did: At.DID;

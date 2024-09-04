@@ -1,6 +1,6 @@
 import { createSignal, onCleanup, runWithOwner, type JSX } from 'solid-js';
 
-import { requestIdle } from '~/lib/misc';
+import { requestIdle } from '~/lib/utils/misc';
 import { UNSAFE_routerEvents, UNSAFE_useViewContext } from '~/lib/navigation/router';
 import { intersectionCallback } from '~/lib/observer';
 

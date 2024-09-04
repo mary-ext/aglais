@@ -1,5 +1,5 @@
 import { createMemo, type JSX } from 'solid-js';
-import { on } from '~/lib/misc';
+import { on } from '~/lib/utils/misc';
 
 export interface KeyedProps<T> {
 	value: T;

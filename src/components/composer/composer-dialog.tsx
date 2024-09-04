@@ -24,8 +24,8 @@ import { openModal, useModalContext } from '~/globals/modals';
 
 import { createEventListener } from '~/lib/hooks/event-listener';
 import { createGuard, type GuardFunction } from '~/lib/hooks/guard';
-import { assert } from '~/lib/invariant';
-import { on } from '~/lib/misc';
+import { assert } from '~/lib/utils/invariant';
+import { on } from '~/lib/utils/misc';
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 import { SUPPORTED_IMAGE_FORMATS, openImagePicker } from '~/lib/utils/blob';

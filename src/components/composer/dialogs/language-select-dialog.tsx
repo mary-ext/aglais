@@ -5,7 +5,7 @@ import { dequal } from '~/api/utils/dequal';
 import { useModalContext } from '~/globals/modals';
 
 import { LANGUAGE_CODES, getEnglishLanguageName, getNativeLanguageName } from '~/lib/intl/languages';
-import { mapDefined } from '~/lib/misc';
+import { mapDefined } from '~/lib/utils/misc';
 
 import Button from '../../button';
 import * as Dialog from '../../dialog';

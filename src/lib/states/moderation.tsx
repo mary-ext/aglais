@@ -8,8 +8,8 @@ import { BLUESKY_MODERATION_DID } from '~/api/defaults';
 import type { ModerationLabeler, ModerationOptions, ModerationPreferences } from '~/api/moderation';
 import { interpretLabelerDefinition } from '~/api/moderation/labeler';
 
-import { assert } from '~/lib/invariant';
-import { mapDefined } from '~/lib/misc';
+import { assert } from '~/lib/utils/invariant';
+import { mapDefined } from '~/lib/utils/misc';
 import { createBatchedFetch } from '~/lib/utils/batch-fetch';
 
 import { useAgent } from './agent';

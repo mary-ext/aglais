@@ -8,7 +8,7 @@ import { listRecords } from '~/api/utils/mutation';
 import { hasModals, openModal } from '~/globals/modals';
 
 import { createEventListener } from '~/lib/hooks/event-listener';
-import { on } from '~/lib/misc';
+import { on } from '~/lib/utils/misc';
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 

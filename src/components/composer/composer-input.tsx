@@ -22,7 +22,7 @@ import { createDebouncedValue } from '~/lib/hooks/debounced-value';
 import { createEventListener } from '~/lib/hooks/event-listener';
 import { useTextareaAutosize } from '~/lib/hooks/textarea-autosize';
 import { isCtrlKeyPressed } from '~/lib/interaction';
-import { assert } from '~/lib/invariant';
+import { assert } from '~/lib/utils/invariant';
 import { useAgent } from '~/lib/states/agent';
 
 import Avatar, { getUserAvatarType } from '../avatar';

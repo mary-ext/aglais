@@ -24,7 +24,7 @@ import { getUtf8Length } from '~/api/richtext/intl';
 import type { PreliminaryRichText } from '~/api/richtext/parser/parse';
 
 import { compressPostImage } from '~/lib/bsky/image';
-import { assert } from '~/lib/invariant';
+import { assert } from '~/lib/utils/invariant';
 import type { AgentContext } from '~/lib/states/agent';
 
 import {

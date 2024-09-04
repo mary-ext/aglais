@@ -3,7 +3,7 @@ import { useModalContext } from '~/globals/modals';
 
 import { useMediaQuery } from '~/lib/hooks/media-query';
 import { useModalClose } from '~/lib/hooks/modal-close';
-import { on } from '~/lib/misc';
+import { on } from '~/lib/utils/misc';
 
 import Button from './button';
 import { Backdrop } from './dialog';

@@ -6,7 +6,7 @@ import { createMutation, createQuery } from '@mary/solid-query';
 import { openModal } from '~/globals/modals';
 
 import { formatAbsDateTime } from '~/lib/intl/time';
-import { reconcile } from '~/lib/misc';
+import { reconcile } from '~/lib/utils/misc';
 import { useAgent } from '~/lib/states/agent';
 
 import * as Boxed from '~/components/boxed';

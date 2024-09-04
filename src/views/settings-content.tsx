@@ -2,7 +2,7 @@ import { primarySystemLanguage } from '~/globals/locales';
 
 import { getEnglishLanguageName, LANGUAGE_CODES } from '~/lib/intl/languages';
 import { useSession } from '~/lib/states/session';
-import { mapDefined } from '~/lib/misc';
+import { mapDefined } from '~/lib/utils/misc';
 
 import * as Boxed from '~/components/boxed';
 import * as Page from '~/components/page';

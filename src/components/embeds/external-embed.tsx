@@ -4,7 +4,7 @@ import type { AppBskyEmbedExternal } from '@atcute/client/lexicons';
 
 import { safeUrlParse } from '~/api/utils/strings';
 
-import { on } from '~/lib/misc';
+import { on } from '~/lib/utils/misc';
 
 import PlaySolidIcon from '../icons-central/play-solid';
 

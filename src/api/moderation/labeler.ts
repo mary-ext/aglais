@@ -1,6 +1,6 @@
 import type { AppBskyLabelerDefs } from '@atcute/client/lexicons';
 
-import { mapDefined } from '~/lib/misc';
+import { mapDefined } from '~/lib/utils/misc';
 
 import {
 	BlurContent,

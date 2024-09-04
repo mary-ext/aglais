@@ -4,9 +4,9 @@ import { simpleFetchHandler, XRPC } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
 import { QueryClient, QueryClientProvider } from '@mary/solid-query';
 
-import { assert } from '../invariant';
-import { on } from '../misc';
-import { createQueryPersister } from '../utils/query-storage';
+import { createQueryPersister } from '../hooks/query-storage';
+import { assert } from '../utils/invariant';
+import { on } from '../utils/misc';
 
 import { useSession } from './session';
 

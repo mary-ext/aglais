@@ -25,7 +25,7 @@ import { openModal, useModalContext } from '~/globals/modals';
 
 import { formatAbsDateTime } from '~/lib/intl/time';
 import { Key } from '~/lib/keyed';
-import { mapDefined } from '~/lib/misc';
+import { mapDefined } from '~/lib/utils/misc';
 import { useParams } from '~/lib/navigation/router';
 import { useSession } from '~/lib/states/session';
 

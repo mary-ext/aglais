@@ -3,7 +3,7 @@ import { createMemo, type JSX } from 'solid-js';
 import { LineType } from '~/api/models/post-thread';
 import { EQUALS_DEQUAL } from '~/api/utils/dequal';
 
-import { mapDefined, on } from '~/lib/misc';
+import { mapDefined, on } from '~/lib/utils/misc';
 
 export interface ThreadLinesProps {
 	lines: LineType[] | undefined;
