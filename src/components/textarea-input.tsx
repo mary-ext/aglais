@@ -1,7 +1,7 @@
 import { type JSX } from 'solid-js';
 
 import { createId } from '~/lib/hooks/id';
-import { useTextareaAutosize } from '~/lib/textarea-autosize';
+import { useTextareaAutosize } from '~/lib/hooks/textarea-autosize';
 
 import { useFieldset } from './fieldset';
 

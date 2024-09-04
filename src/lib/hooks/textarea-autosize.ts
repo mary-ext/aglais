@@ -3,8 +3,8 @@
 
 import { createRenderEffect, onCleanup, onMount } from 'solid-js';
 
-import { createEventListener } from './hooks/event-listener';
-import { useResizeObserver } from './hooks/resize-observer';
+import { createEventListener } from './event-listener';
+import { useResizeObserver } from './resize-observer';
 
 // src/getSizingData.ts#L4
 const SIZING_STYLES = [

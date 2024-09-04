@@ -20,10 +20,10 @@ import { safeUrlParse } from '~/api/utils/strings';
 
 import { createDebouncedValue } from '~/lib/hooks/debounced-value';
 import { createEventListener } from '~/lib/hooks/event-listener';
+import { useTextareaAutosize } from '~/lib/hooks/textarea-autosize';
 import { isCtrlKeyPressed } from '~/lib/interaction';
 import { assert } from '~/lib/invariant';
 import { useAgent } from '~/lib/states/agent';
-import { useTextareaAutosize } from '~/lib/textarea-autosize';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 import CircularProgress from '../circular-progress';
