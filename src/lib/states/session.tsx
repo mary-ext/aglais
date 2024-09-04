@@ -22,7 +22,7 @@ import { OAuthUserAgent } from '../bsky-oauth/agents/user-agent';
 import { makeAbortable } from '../hooks/abortable';
 import type { PerAccountPreferenceSchema } from '../preferences/account';
 import type { AccountData } from '../preferences/sessions';
-import { createReactiveLocalStorage, isExternalWriting } from '../signals/storage';
+import { createReactiveLocalStorage, isExternalWriting } from '../utils/local-storage';
 
 import { OAuthServerAgent } from '../bsky-oauth/agents/server-agent';
 import { getSession } from '../bsky-oauth/agents/session';
