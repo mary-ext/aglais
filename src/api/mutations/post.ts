@@ -8,7 +8,7 @@ import { updatePostShadow, type PostShadowView } from '../cache/post-shadow';
 import { createRecord, deleteRecord } from '../utils/records';
 import { parseAtUri } from '../utils/strings';
 import { createToggleMutationQueue } from '../utils/toggle-mutation';
-import { getCurrentDate } from '../utils/utils';
+import { getCurrentDate } from '../utils/misc';
 
 export const createPostLikeMutation = (
 	post: () => AppBskyFeedDefs.PostView,

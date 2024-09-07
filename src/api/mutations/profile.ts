@@ -8,7 +8,7 @@ import { updateProfileShadow, type ProfileShadowView } from '../cache/profile-sh
 import { createRecord, deleteRecord } from '../utils/records';
 import { parseAtUri } from '../utils/strings';
 import { createToggleMutationQueue } from '../utils/toggle-mutation';
-import { getCurrentDate } from '../utils/utils';
+import { getCurrentDate } from '../utils/misc';
 
 export const createProfileFollowMutation = (
 	profile: () => AppBskyActorDefs.ProfileView | AppBskyActorDefs.ProfileViewDetailed,

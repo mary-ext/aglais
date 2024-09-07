@@ -1,8 +1,8 @@
 import { createSignal, onCleanup, runWithOwner, type JSX } from 'solid-js';
 
-import { requestIdle } from '~/lib/utils/misc';
 import { UNSAFE_routerEvents, UNSAFE_useViewContext } from '~/lib/navigation/router';
 import { intersectionCallback } from '~/lib/observer';
+import { requestIdle } from '~/lib/utils/misc';
 
 const intersectionObserver = new IntersectionObserver(intersectionCallback, { rootMargin: `106.25% 0%` });
 

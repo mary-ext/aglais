@@ -9,7 +9,7 @@ import { useAgent } from '~/lib/states/agent';
 import { dequal } from '../utils/dequal';
 import { resetInfiniteData } from '../utils/query';
 import { parseAtUri } from '../utils/strings';
-import { chunked } from '../utils/utils';
+import { chunked } from '../utils/misc';
 
 type Notification = AppBskyNotificationListNotifications.Notification;
 
@@ -146,7 +146,6 @@ export const createNotificationFeedQuery = () => {
 
 			// Group these notifications into slices
 			const slices: NotificationSlice[] = [];
-			let hasUnread = false;
 			let slen = 0;
 
 			loop: for (let i = notifs.length - 1; i >= 0; i--) {
