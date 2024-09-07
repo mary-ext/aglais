@@ -155,10 +155,6 @@ export const createNotificationFeedQuery = () => {
 				const date = new Date(item.indexedAt).getTime();
 				const read = firstSeenAt === undefined ? item.isRead : firstSeenAt > date;
 
-				if (!read) {
-					hasUnread = true;
-				}
-
 				if (reason === 'follow') {
 					for (let j = 0; j < slen; j++) {
 						const slice = slices[j];
