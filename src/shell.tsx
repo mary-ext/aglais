@@ -82,7 +82,7 @@ export default Shell;
 
 const enum MainTabs {
 	HOME = 'Home',
-	SEARCH = 'Search',
+	EXPLORE = 'Explore',
 	NOTIFICATIONS = 'Notifications',
 	MESSAGES = 'Messages',
 	FEEDS = 'Feeds',
@@ -90,7 +90,7 @@ const enum MainTabs {
 
 const MainTabsRoutes = {
 	[MainTabs.HOME]: '/',
-	[MainTabs.SEARCH]: '/search',
+	[MainTabs.EXPLORE]: '/explore',
 	[MainTabs.NOTIFICATIONS]: '/notifications',
 	[MainTabs.MESSAGES]: '/messages',
 	[MainTabs.FEEDS]: '/feeds',
@@ -145,8 +145,8 @@ const NavBar = ({
 				/>
 				<NavItem
 					label="Search"
-					active={active() === MainTabs.SEARCH}
-					onClick={bindClick(MainTabs.SEARCH)}
+					active={active() === MainTabs.EXPLORE}
+					onClick={bindClick(MainTabs.EXPLORE)}
 					icon={MagnifyingGlassOutlinedIcon}
 				/>
 				<NavItem

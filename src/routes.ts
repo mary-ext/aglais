@@ -40,11 +40,11 @@ const routes: RouteDefinition[] = [
 		},
 	},
 	{
-		path: '/search',
-		component: lazy(() => import('./views/main/search')),
+		path: '/explore',
+		component: lazy(() => import('./views/main/explore')),
 		single: true,
 		meta: {
-			name: 'Search',
+			name: 'Explore',
 			main: true,
 			// public: true,
 		},
