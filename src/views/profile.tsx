@@ -24,9 +24,9 @@ import ShieldOutlinedIcon from '~/components/icons-central/shield-outline';
 import * as Page from '~/components/page';
 import VirtualItem from '~/components/virtual-item';
 
-import TimelineList from '~/components/feeds/timeline-list';
 import ProfileOverflowMenu from '~/components/profiles/profile-overflow-menu';
 import ProfileViewHeader from '~/components/profiles/profile-view-header';
+import TimelineList from '~/components/timeline/timeline-list';
 
 const ProfilePage = () => {
 	const { didOrHandle } = useParams();

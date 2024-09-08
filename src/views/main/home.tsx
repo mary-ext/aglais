@@ -4,7 +4,7 @@ import GearOutlinedIcon from '~/components/icons-central/gear-outline';
 import * as Page from '~/components/page';
 
 import ComposeFAB from '~/components/composer/compose-fab';
-import TimelineList from '~/components/feeds/timeline-list';
+import TimelineList from '~/components/timeline/timeline-list';
 
 const HomePage = () => {
 	return (

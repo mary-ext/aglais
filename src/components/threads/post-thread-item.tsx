@@ -20,9 +20,9 @@ import Avatar, { getUserAvatarType } from '../avatar';
 import RichText from '../rich-text';
 
 import Embed from '../embeds/embed';
-import PostActions from '../feeds/post-actions';
-import PostMeta from '../feeds/post-meta';
 import ContentHider from '../moderation/content-hider';
+import PostActions from '../timeline/post-actions';
+import PostMeta from '../timeline/post-meta';
 
 import ThreadLines from './thread-lines';
 

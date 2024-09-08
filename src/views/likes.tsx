@@ -1,7 +1,7 @@
 import { useSession } from '~/lib/states/session';
 
 import * as Page from '~/components/page';
-import TimelineList from '~/components/feeds/timeline-list';
+import TimelineList from '~/components/timeline/timeline-list';
 
 const LikesPage = () => {
 	const { currentAccount } = useSession();

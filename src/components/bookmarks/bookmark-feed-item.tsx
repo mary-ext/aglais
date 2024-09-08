@@ -15,12 +15,12 @@ import { useModerationOptions } from '~/lib/states/moderation';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 import Embed from '../embeds/embed';
-import PostActions from '../feeds/post-actions';
-import PostMeta from '../feeds/post-meta';
-import PostReplyContext from '../feeds/post-reply-context';
 import ContentHider from '../moderation/content-hider';
 import ModerationAlerts from '../moderation/moderation-alerts';
 import RichText from '../rich-text';
+import PostActions from '../timeline/post-actions';
+import PostMeta from '../timeline/post-meta';
+import PostReplyContext from '../timeline/post-reply-context';
 
 export interface BookmarkFeedItemProps {
 	/** Expected to be static */

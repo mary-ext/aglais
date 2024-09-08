@@ -21,9 +21,9 @@ import { parseAtUri } from '~/api/utils/strings';
 import { history } from '~/globals/navigation';
 
 import { INTERACTION_TAGS, isElementAltClicked, isElementClicked } from '~/lib/interaction';
-import { assert } from '~/lib/utils/invariant';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
+import { assert } from '~/lib/utils/invariant';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 import HeartSolidIcon from '../icons-central/heart-solid';
@@ -31,7 +31,7 @@ import PersonSolidIcon from '../icons-central/person-solid';
 import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 
 import { detectSnippet, SnippetType, type BlueskyGifSnippet } from '../embeds/lib/snippet';
-import PostFeedItem from '../feeds/post-feed-item';
+import PostFeedItem from '../timeline/post-feed-item';
 
 export interface NotificationItemProps {
 	/** Expected to be static */

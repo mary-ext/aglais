@@ -26,10 +26,10 @@ import RichText from '../rich-text';
 
 import ComposerDialogLazy from '../composer/composer-dialog-lazy';
 import Embed from '../embeds/embed';
-import PostOverflowMenu from '../feeds/post-overflow-menu';
-import RepostMenu from '../feeds/repost-menu';
 import ContentHider from '../moderation/content-hider';
 import ModerationAlerts from '../moderation/moderation-alerts';
+import PostOverflowMenu from '../timeline/post-overflow-menu';
+import RepostMenu from '../timeline/repost-menu';
 
 export interface HighlightedPostProps {
 	post: AppBskyFeedDefs.PostView;

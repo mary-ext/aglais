@@ -4,8 +4,8 @@ import { useParams } from '~/lib/navigation/router';
 
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
+import PostFeedItem from '~/components/timeline/post-feed-item';
 import VirtualItem from '~/components/virtual-item';
-import PostFeedItem from '~/components/feeds/post-feed-item';
 
 const PostQuotesPage = () => {
 	const { did, rkey } = useParams();
