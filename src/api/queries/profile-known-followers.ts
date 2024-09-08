@@ -1,5 +1,5 @@
 import type { AppBskyActorDefs, AppBskyGraphGetFollowers } from '@atcute/client/lexicons';
-import { createInfiniteQuery, type InfiniteData, type QueryFunctionContext as QC } from '@mary/solid-query';
+import { type InfiniteData, type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 

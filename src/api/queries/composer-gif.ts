@@ -1,4 +1,4 @@
-import { createInfiniteQuery, type InfiniteData, type QueryFunctionContext as QC } from '@mary/solid-query';
+import { type InfiniteData, type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 const GIF_ENDPOINT = `https://gifs.bsky.app`;
 

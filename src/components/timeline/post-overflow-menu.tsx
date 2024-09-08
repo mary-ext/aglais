@@ -10,19 +10,18 @@ import { parseAtUri } from '~/api/utils/strings';
 
 import { openModal, useModalContext } from '~/globals/modals';
 
+import { useAgent } from '~/lib/states/agent';
 import { useBookmarks } from '~/lib/states/bookmarks';
 import { useSession } from '~/lib/states/session';
 
+import AddPostToFolderDialogLazy from '../bookmarks/add-post-to-folder-dialog-lazy';
 import BookmarkCheckOutlinedIcon from '../icons-central/bookmark-check-outline';
 import BookmarkOutlinedIcon from '../icons-central/bookmark-outline';
 import FolderAddOutlinedIcon from '../icons-central/folder-add-outline';
+import OpenInNewOutlinedIcon from '../icons-central/open-in-new-outline';
 import TrashOutlinedIcon from '../icons-central/trash-outline';
 import * as Menu from '../menu';
 import * as Prompt from '../prompt';
-
-import { useAgent } from '~/lib/states/agent';
-import AddPostToFolderDialogLazy from '../bookmarks/add-post-to-folder-dialog-lazy';
-import OpenInNewOutlinedIcon from '../icons-central/open-in-new-outline';
 
 export interface PostOverflowMenuProps {
 	anchor: HTMLElement;

@@ -1,4 +1,4 @@
-import { Match, onMount, Switch } from 'solid-js';
+import { Match, Switch, onMount } from 'solid-js';
 
 import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { createMutation } from '@mary/solid-query';

@@ -1,4 +1,5 @@
 import { createEffect } from 'solid-js';
+
 import { createEventListener } from './event-listener';
 
 export const useEscape = (callback: () => void, enabled: () => boolean) => {

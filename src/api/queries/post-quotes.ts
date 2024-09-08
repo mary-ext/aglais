@@ -1,5 +1,5 @@
-import { createInfiniteQuery, type QueryFunctionContext as QC } from '@mary/solid-query';
 import type { AppBskyFeedGetQuotes } from '@atcute/client/lexicons';
+import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 

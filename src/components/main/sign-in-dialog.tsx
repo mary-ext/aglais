@@ -1,8 +1,6 @@
-import { createSignal, Match, Switch } from 'solid-js';
+import { Match, Switch, createSignal } from 'solid-js';
 
 import { createMutation } from '@mary/solid-query';
-
-import { autofocusOnMutation } from '~/lib/input-refs';
 
 import { OAuthServerAgent } from '~/lib/bsky-oauth/agents/server-agent';
 import { createES256Key } from '~/lib/bsky-oauth/dpop';
@@ -10,6 +8,7 @@ import { CLIENT_ID, REDIRECT_URI, SCOPE } from '~/lib/bsky-oauth/env';
 import { database } from '~/lib/bsky-oauth/globals';
 import { resolveFromIdentity } from '~/lib/bsky-oauth/resolver';
 import { generatePKCE, generateState } from '~/lib/bsky-oauth/utils';
+import { autofocusOnMutation } from '~/lib/input-refs';
 
 import Button from '../button';
 import * as Dialog from '../dialog';

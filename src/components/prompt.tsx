@@ -1,4 +1,5 @@
 import type { JSX } from 'solid-js';
+
 import { useModalContext } from '~/globals/modals';
 
 import { useMediaQuery } from '~/lib/hooks/media-query';

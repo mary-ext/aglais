@@ -4,12 +4,11 @@ import { createDPoPFetch } from '../dpop';
 import { CLIENT_ID, REDIRECT_URI } from '../env';
 import { FetchResponseError, OAuthResponseError, TokenRefreshError } from '../errors';
 import { resolveFromIdentity } from '../resolver';
-import { extractContentType } from '../utils';
-
 import type { DPoPKey } from '../types/dpop';
 import type { OAuthParResponse } from '../types/par';
 import type { AuthorizationServerMetadata } from '../types/server';
 import type { OAuthTokenResponse, TokenSet } from '../types/token';
+import { extractContentType } from '../utils';
 
 export class OAuthServerAgent {
 	#fetch: typeof fetch;

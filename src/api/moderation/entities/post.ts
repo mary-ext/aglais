@@ -3,13 +3,14 @@ import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 import { unwrapPostEmbedText } from '~/api/utils/post';
 
 import {
+	type ModerationCause,
+	type ModerationOptions,
 	PreferenceWarn,
 	TargetContent,
 	decideLabelModeration,
 	decideMutedKeywordModeration,
-	type ModerationCause,
-	type ModerationOptions,
 } from '..';
+
 import { moderateProfile } from './profile';
 
 export const moderatePost = (post: AppBskyFeedDefs.PostView, opts: ModerationOptions) => {

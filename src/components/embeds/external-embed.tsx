@@ -1,4 +1,4 @@
-import { createSignal, type JSX } from 'solid-js';
+import { type JSX, createSignal } from 'solid-js';
 
 import type { AppBskyEmbedExternal } from '@atcute/client/lexicons';
 

@@ -1,36 +1,37 @@
 import {
+	type Accessor,
+	type Component,
+	type ComponentProps,
 	ErrorBoundary,
 	Suspense,
 	createMemo,
 	lazy,
-	type Accessor,
-	type Component,
-	type ComponentProps,
 } from 'solid-js';
 
 import type { AppBskyNotificationGetUnreadCount } from '@atcute/client/lexicons';
 import type { DefinedCreateQueryResult } from '@mary/solid-query';
 
-import { createNotificationCountQuery } from './api/queries/notification-count';
+import { createNotificationCountQuery } from '~/api/queries/notification-count';
 
-import { globalEvents } from './globals/events';
-import { hasModals } from './globals/modals';
-import { history } from './globals/navigation';
+import { globalEvents } from '~/globals/events';
+import { hasModals } from '~/globals/modals';
+import { history } from '~/globals/navigation';
 
-import { RouterView, useMatchedRoute, type MatchedRouteState } from './lib/navigation/router';
-import { useSession } from './lib/states/session';
+import { type MatchedRouteState, RouterView, useMatchedRoute } from '~/lib/navigation/router';
+import { useSession } from '~/lib/states/session';
 
-import BellOutlinedIcon from './components/icons-central/bell-outline';
-import BellSolidIcon from './components/icons-central/bell-solid';
-import HashtagOutlinedIcon from './components/icons-central/hashtag-outline';
-import HomeOutlinedIcon from './components/icons-central/home-outline';
-import HomeSolidIcon from './components/icons-central/home-solid';
-import MagnifyingGlassOutlinedIcon from './components/icons-central/magnifying-glass-outline';
-import MailOutlinedIcon from './components/icons-central/mail-outline';
-import MailSolidIcon from './components/icons-central/mail-solid';
-import ErrorPage from './views/_error';
+import BellOutlinedIcon from '~/components/icons-central/bell-outline';
+import BellSolidIcon from '~/components/icons-central/bell-solid';
+import HashtagOutlinedIcon from '~/components/icons-central/hashtag-outline';
+import HomeOutlinedIcon from '~/components/icons-central/home-outline';
+import HomeSolidIcon from '~/components/icons-central/home-solid';
+import MagnifyingGlassOutlinedIcon from '~/components/icons-central/magnifying-glass-outline';
+import MailOutlinedIcon from '~/components/icons-central/mail-outline';
+import MailSolidIcon from '~/components/icons-central/mail-solid';
 
-const SignedOutView = lazy(() => import('./views/_signed-out'));
+import ErrorPage from '~/views/_error';
+
+const SignedOutView = lazy(() => import('~/views/_signed-out'));
 
 const Shell = () => {
 	const { currentAccount } = useSession();

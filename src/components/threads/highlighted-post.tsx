@@ -1,4 +1,4 @@
-import { createMemo, Show } from 'solid-js';
+import { Show, createMemo } from 'solid-js';
 
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 
@@ -15,19 +15,18 @@ import { formatAbsDateTime } from '~/lib/intl/time';
 import { useModerationOptions } from '~/lib/states/moderation';
 
 import Avatar, { getUserAvatarType } from '../avatar';
+import ComposerDialogLazy from '../composer/composer-dialog-lazy';
 import Divider from '../divider';
+import Embed from '../embeds/embed';
 import HeartOutlinedIcon from '../icons-central/heart-outline';
 import HeartSolidIcon from '../icons-central/heart-solid';
 import MoreHorizOutlinedIcon from '../icons-central/more-horiz-outline';
 import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 import ReplyOutlinedIcon from '../icons-central/reply-outline';
 import ShareOutlinedIcon from '../icons-central/share-outline';
-import RichText from '../rich-text';
-
-import ComposerDialogLazy from '../composer/composer-dialog-lazy';
-import Embed from '../embeds/embed';
 import ContentHider from '../moderation/content-hider';
 import ModerationAlerts from '../moderation/moderation-alerts';
+import RichText from '../rich-text';
 import PostOverflowMenu from '../timeline/post-overflow-menu';
 import RepostMenu from '../timeline/repost-menu';
 

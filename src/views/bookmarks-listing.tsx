@@ -4,12 +4,11 @@ import { createBookmarkFeedQuery, createBookmarkFolderMetaQuery } from '~/api/qu
 
 import { useParams } from '~/lib/navigation/router';
 
+import BookmarkFeedItem from '~/components/bookmarks/bookmark-feed-item';
 import MagnifyingGlassOutlinedIcon from '~/components/icons-central/magnifying-glass-outline';
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
 import VirtualItem from '~/components/virtual-item';
-
-import BookmarkFeedItem from '~/components/bookmarks/bookmark-feed-item';
 
 const BookmarksPage = () => {
 	const { tagId } = useParams();

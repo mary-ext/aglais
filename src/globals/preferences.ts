@@ -1,9 +1,8 @@
 import { createRoot } from 'solid-js';
 
+import { createReactiveLocalStorage } from '~/lib/hooks/local-storage';
 import type { GlobalPreferenceSchema } from '~/lib/preferences/global';
 import type { SessionPreferenceSchema } from '~/lib/preferences/sessions';
-
-import { createReactiveLocalStorage } from '~/lib/hooks/local-storage';
 
 export const sessions = createRoot(() => {
 	return createReactiveLocalStorage<SessionPreferenceSchema>('sessions', (version, prev) => {

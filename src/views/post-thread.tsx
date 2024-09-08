@@ -5,9 +5,9 @@ import type { AppBskyFeedDefs, AppBskyFeedPost, At, Brand } from '@atcute/client
 import { useQueryClient } from '@mary/solid-query';
 
 import {
-	createThreadData,
 	type OverflowDescendantItem,
 	type PostDescendantItem,
+	createThreadData,
 } from '~/api/models/post-thread';
 import { usePostThreadQuery } from '~/api/queries/post-thread';
 import { isDid } from '~/api/utils/strings';
@@ -26,12 +26,11 @@ import Divider from '~/components/divider';
 import ErrorView from '~/components/error-view';
 import Keyed from '~/components/keyed';
 import * as Page from '~/components/page';
-import VirtualItem from '~/components/virtual-item';
-
 import HighlightedPost from '~/components/threads/highlighted-post';
 import OverflowThreadItem from '~/components/threads/overflow-thread-item';
 import PostThreadItem from '~/components/threads/post-thread-item';
 import ThreadLines from '~/components/threads/thread-lines';
+import VirtualItem from '~/components/virtual-item';
 
 const PostThreadPage = () => {
 	const { didOrHandle, rkey } = useParams();

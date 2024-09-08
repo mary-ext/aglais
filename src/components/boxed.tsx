@@ -1,4 +1,4 @@
-import { createMemo, type Component, type ComponentProps, type JSX } from 'solid-js';
+import { type Component, type ComponentProps, type JSX, createMemo } from 'solid-js';
 
 import { openModal, useModalContext } from '~/globals/modals';
 

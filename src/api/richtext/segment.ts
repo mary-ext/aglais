@@ -1,6 +1,7 @@
 import type { AppBskyRichtextFacet, BlueMojiRichtextFacet, Brand } from '@atcute/client/lexicons';
 
 import type { UnwrapArray } from '../utils/types';
+
 import { textDecoder, textEncoder } from './intl';
 
 interface UtfString {

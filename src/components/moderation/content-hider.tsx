@@ -1,16 +1,16 @@
-import { createSignal, type Component, type JSX, type ParentProps } from 'solid-js';
+import { type Component, type JSX, type ParentProps, createSignal } from 'solid-js';
 
 import {
 	CauseLabel,
 	CauseMutedKeyword,
 	CauseMutedPermanent,
 	CauseMutedTemporary,
-	SeverityAlert,
-	getLocalizedLabel,
 	type ModerationCause,
 	type ModerationCauseType,
 	type ModerationLabeler,
 	type ModerationUI,
+	SeverityAlert,
+	getLocalizedLabel,
 } from '~/api/moderation';
 
 import { openModal } from '~/globals/modals';

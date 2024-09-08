@@ -1,6 +1,8 @@
+import { autoPlacement, autoUpdate, offset, shift, size } from '@floating-ui/dom';
 import { useFloating } from 'solid-floating-ui';
 import {
 	For,
+	type JSX,
 	Match,
 	Switch,
 	createEffect,
@@ -8,12 +10,9 @@ import {
 	createRenderEffect,
 	createResource,
 	createSignal,
-	type JSX,
 } from 'solid-js';
 
 import type { AppBskyActorDefs } from '@atcute/client/lexicons';
-
-import { autoPlacement, autoUpdate, offset, shift, size } from '@floating-ui/dom';
 
 import { type PreliminaryRichText } from '~/api/richtext/parser/parse';
 import { safeUrlParse } from '~/api/utils/strings';
@@ -22,8 +21,8 @@ import { createDebouncedValue } from '~/lib/hooks/debounced-value';
 import { createEventListener } from '~/lib/hooks/event-listener';
 import { useTextareaAutosize } from '~/lib/hooks/textarea-autosize';
 import { isCtrlKeyPressed } from '~/lib/interaction';
-import { assert } from '~/lib/utils/invariant';
 import { useAgent } from '~/lib/states/agent';
+import { assert } from '~/lib/utils/invariant';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 import CircularProgress from '../circular-progress';

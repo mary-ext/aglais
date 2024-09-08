@@ -17,12 +17,12 @@ import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
 
 import Avatar, { getUserAvatarType } from '../avatar';
-import RepeatOutlinedIcon from '../icons-central/repeat-outline';
-import RichText from '../rich-text';
-
 import Embed from '../embeds/embed';
+import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 import ContentHider from '../moderation/content-hider';
 import ModerationAlerts from '../moderation/moderation-alerts';
+import RichText from '../rich-text';
+
 import PostActions from './post-actions';
 import PostDeletedGate from './post-deleted-gate';
 import PostMeta from './post-meta';

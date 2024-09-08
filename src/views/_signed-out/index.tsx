@@ -1,6 +1,6 @@
-import Button from '~/components/button';
 import { openModal } from '~/globals/modals';
 
+import Button from '~/components/button';
 import SignInDialogLazy from '~/components/main/sign-in-dialog-lazy';
 
 const SignedOutPage = () => {

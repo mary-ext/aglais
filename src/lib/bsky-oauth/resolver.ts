@@ -1,13 +1,13 @@
 import type { At, ComAtprotoIdentityResolveHandle } from '@atcute/client/lexicons';
-import { getPdsEndpoint, type DidDocument } from '@atcute/client/utils/did';
+import { type DidDocument, getPdsEndpoint } from '@atcute/client/utils/did';
 
 import { isDid } from '~/api/utils/strings';
 
 import { database } from './globals';
 import { CachedGetter, type GetCachedOptions } from './store/getter';
+import type { ResolvedIdentity } from './types/identity';
 import type { AuthorizationServerMetadata, ProtectedResourceMetadata } from './types/server';
 import { extractContentType } from './utils';
-import type { ResolvedIdentity } from './types/identity';
 
 const DID_WEB_RE =
 	/^([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,}))((?::[a-zA-Z0-9._%-]*[a-zA-Z0-9._-])*)$/;

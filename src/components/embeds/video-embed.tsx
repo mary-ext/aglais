@@ -1,4 +1,4 @@
-import { createSignal, lazy, Show, Suspense } from 'solid-js';
+import { Show, Suspense, createSignal, lazy } from 'solid-js';
 
 import type { AppBskyEmbedDefs, AppBskyEmbedVideo } from '@atcute/client/lexicons';
 

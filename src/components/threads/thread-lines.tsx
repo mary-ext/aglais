@@ -1,4 +1,4 @@
-import { createMemo, type JSX } from 'solid-js';
+import { type JSX, createMemo } from 'solid-js';
 
 import { LineType } from '~/api/models/post-thread';
 import { EQUALS_DEQUAL } from '~/api/utils/dequal';

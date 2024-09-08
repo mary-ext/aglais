@@ -1,4 +1,4 @@
-import { createContext, createMemo, useContext, type ParentProps } from 'solid-js';
+import { type ParentProps, createContext, createMemo, useContext } from 'solid-js';
 
 export interface FieldsetContext {
 	readonly disabled: boolean;

@@ -1,8 +1,8 @@
 import { type ParentProps } from 'solid-js';
 
 import { useModalContext } from '~/globals/modals';
-import { useMediaQuery } from '~/lib/hooks/media-query';
 
+import { useMediaQuery } from '~/lib/hooks/media-query';
 import { useModalClose } from '~/lib/hooks/modal-close';
 
 import { Fieldset } from './fieldset';

@@ -1,4 +1,4 @@
-import { createMemo, Match, Show, Switch } from 'solid-js';
+import { Match, Show, Switch, createMemo } from 'solid-js';
 
 import type { At } from '@atcute/client/lexicons';
 
@@ -6,18 +6,18 @@ import {
 	BlurContent,
 	BlurMedia,
 	BlurNone,
-	getLocalizedLabel,
 	GLOBAL_LABELS,
+	type LabelDefinition,
+	type LabelPreference,
+	type ModerationLabeler,
+	type ModerationLabelerPreferences,
 	PreferenceHide,
 	PreferenceIgnore,
 	PreferenceWarn,
 	SeverityAlert,
 	SeverityInform,
 	SeverityNone,
-	type LabelDefinition,
-	type LabelPreference,
-	type ModerationLabeler,
-	type ModerationLabelerPreferences,
+	getLocalizedLabel,
 } from '~/api/moderation';
 import { createLabelerMetaQuery } from '~/api/queries/labeler';
 
@@ -25,9 +25,9 @@ import { openModal, useModalContext } from '~/globals/modals';
 
 import { formatAbsDateTime } from '~/lib/intl/time';
 import { Key } from '~/lib/keyed';
-import { mapDefined } from '~/lib/utils/misc';
 import { useParams } from '~/lib/navigation/router';
 import { useSession } from '~/lib/states/session';
+import { mapDefined } from '~/lib/utils/misc';
 
 import Avatar from '~/components/avatar';
 import * as Boxed from '~/components/boxed';
@@ -41,7 +41,6 @@ import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline
 import * as Menu from '~/components/menu';
 import * as Page from '~/components/page';
 import * as Prompt from '~/components/prompt';
-
 import LabelerOverflowMenu from '~/components/settings/moderation/labeling/labeler-overflow-menu';
 
 const ProfileLabelsPage = () => {

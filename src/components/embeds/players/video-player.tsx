@@ -1,6 +1,5 @@
-import { onCleanup } from 'solid-js';
-
 import Hls from 'hls.js';
+import { onCleanup } from 'solid-js';
 
 import type { AppBskyEmbedVideo } from '@atcute/client/lexicons';
 

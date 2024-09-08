@@ -1,4 +1,4 @@
-import { createMemo, createSignal, Show } from 'solid-js';
+import { Show, createMemo, createSignal } from 'solid-js';
 
 import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { createMutation } from '@mary/solid-query';

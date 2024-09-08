@@ -1,14 +1,14 @@
 import {
 	$TRACK,
+	type Accessor,
+	type JSX,
+	type Setter,
+	type SignalOptions,
 	createMemo,
 	createRoot,
 	createSignal,
 	onCleanup,
 	untrack,
-	type Accessor,
-	type JSX,
-	type Setter,
-	type SignalOptions,
 } from 'solid-js';
 
 function dispose(list: Iterable<{ d: VoidFunction }>) {

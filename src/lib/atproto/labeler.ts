@@ -1,6 +1,5 @@
-import { buildFetchHandler, type FetchHandler } from '@atcute/client';
+import { type FetchHandler, buildFetchHandler } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
-
 import { mergeHeaders } from '@atcute/client/utils/http';
 
 export interface Labeler {

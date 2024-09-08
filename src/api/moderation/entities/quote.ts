@@ -3,13 +3,14 @@ import type { AppBskyEmbedRecord, AppBskyFeedPost } from '@atcute/client/lexicon
 import { unwrapPostEmbedText } from '~/api/utils/post';
 
 import {
+	type ModerationCause,
+	type ModerationOptions,
 	PreferenceWarn,
 	TargetContent,
 	decideLabelModeration,
 	decideMutedKeywordModeration,
-	type ModerationCause,
-	type ModerationOptions,
 } from '..';
+
 import { moderateProfile } from './profile';
 
 export const moderateQuote = (quote: AppBskyEmbedRecord.ViewRecord, opts: ModerationOptions) => {

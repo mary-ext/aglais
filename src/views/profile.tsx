@@ -1,4 +1,4 @@
-import { createSignal, Match, Show, Switch } from 'solid-js';
+import { Match, Show, Switch, createSignal } from 'solid-js';
 
 import { XRPCError } from '@atcute/client';
 import type { AppBskyActorDefs } from '@atcute/client/lexicons';
@@ -22,11 +22,10 @@ import IconButton from '~/components/icon-button';
 import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
 import ShieldOutlinedIcon from '~/components/icons-central/shield-outline';
 import * as Page from '~/components/page';
-import VirtualItem from '~/components/virtual-item';
-
 import ProfileOverflowMenu from '~/components/profiles/profile-overflow-menu';
 import ProfileViewHeader from '~/components/profiles/profile-view-header';
 import TimelineList from '~/components/timeline/timeline-list';
+import VirtualItem from '~/components/virtual-item';
 
 const ProfilePage = () => {
 	const { didOrHandle } = useParams();

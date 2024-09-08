@@ -1,11 +1,11 @@
-import { createMemo, type JSX } from 'solid-js';
+import { type JSX, createMemo } from 'solid-js';
 
 import {
 	CauseLabel,
-	getLocalizedLabel,
 	type LabelModerationCause,
 	type ModerationCause,
 	type ModerationUI,
+	getLocalizedLabel,
 } from '~/api/moderation';
 import { EQUALS_DEQUAL } from '~/api/utils/dequal';
 

@@ -1,4 +1,4 @@
-import { getLocalizedLabel, type LabelModerationCause, type ModerationLabeler } from '~/api/moderation';
+import { type LabelModerationCause, type ModerationLabeler, getLocalizedLabel } from '~/api/moderation';
 
 import { useModalContext } from '~/globals/modals';
 

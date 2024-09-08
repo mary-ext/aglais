@@ -1,6 +1,6 @@
 import { For, Match, Switch, createSignal } from 'solid-js';
 
-import { createGifSearchQuery, type Gif } from '~/api/queries/composer-gif';
+import { type Gif, createGifSearchQuery } from '~/api/queries/composer-gif';
 import { chunked } from '~/api/utils/misc';
 
 import { useModalContext } from '~/globals/modals';

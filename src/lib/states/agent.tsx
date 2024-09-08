@@ -1,6 +1,6 @@
-import { createContext, createMemo, useContext, type JSX, type ParentProps } from 'solid-js';
+import { type JSX, type ParentProps, createContext, createMemo, useContext } from 'solid-js';
 
-import { simpleFetchHandler, XRPC } from '@atcute/client';
+import { XRPC, simpleFetchHandler } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
 import { QueryClient, QueryClientProvider } from '@mary/solid-query';
 

@@ -11,12 +11,11 @@ import { createRecord } from '~/api/utils/records';
 
 import { useModalContext } from '~/globals/modals';
 
+import { getCompressedEmotes } from '~/lib/bluemoji/compress';
 import { autofocusNode, modelChecked, modelText } from '~/lib/input-refs';
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
-import { validate, type Validation } from '~/lib/validation';
-
-import { getCompressedEmotes } from '~/lib/bluemoji/compress';
+import { type Validation, validate } from '~/lib/validation';
 
 import CheckboxInput from '../../checkbox-input';
 import * as Prompt from '../../prompt';

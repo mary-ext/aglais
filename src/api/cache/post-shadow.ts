@@ -1,4 +1,4 @@
-import { batch, createRenderEffect, createSignal, onCleanup, type Accessor } from 'solid-js';
+import { type Accessor, batch, createRenderEffect, createSignal, onCleanup } from 'solid-js';
 
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 import { EventEmitter } from '@mary/events';
@@ -11,6 +11,7 @@ import { findAllPosts as findAllPostsInPostThread } from '../queries-cache/post-
 import { findAllPosts as findAllPostsInTimeline } from '../queries-cache/timeline';
 import { EQUALS_DEQUAL } from '../utils/dequal';
 import type { AccessorMaybe } from '../utils/types';
+
 import { iterateQueryCache } from './utils';
 
 export interface PostShadow {

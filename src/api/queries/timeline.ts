@@ -8,35 +8,34 @@ import type {
 	AppBskyFeedPost,
 	At,
 } from '@atcute/client/lexicons';
-import { createInfiniteQuery, createQuery, useQueryClient, type InfiniteData } from '@mary/solid-query';
+import { type InfiniteData, createInfiniteQuery, createQuery, useQueryClient } from '@mary/solid-query';
 
 import { globalEvents } from '~/globals/events';
 
-import { assert } from '~/lib/utils/invariant';
 import { useAgent } from '~/lib/states/agent';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
+import { assert } from '~/lib/utils/invariant';
 
 import {
-	createJoinedItems,
 	type EnsuredReplyRef,
 	type EnsuredTimelineItem,
 	type PostFilter,
 	type SliceFilter,
 	type TimelineSlice,
 	type UiTimelineItem,
+	createJoinedItems,
 } from '../models/timeline';
 import {
 	ContextContentList,
+	type ModerationCause,
+	type ModerationOptions,
 	PreferenceHide,
 	TargetContent,
 	decideLabelModeration,
 	decideMutedKeywordModeration,
 	getModerationUI,
-	type ModerationCause,
-	type ModerationOptions,
 } from '../moderation';
-
 import { EQUALS_DEQUAL } from '../utils/dequal';
 import { unwrapPostEmbedText } from '../utils/post';
 import { resetInfiniteData, wrapQuery } from '../utils/query';

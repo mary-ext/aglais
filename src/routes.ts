@@ -1,4 +1,5 @@
 import { lazy } from 'solid-js';
+
 import type { RouteDefinition } from './lib/navigation/router';
 
 const DID_RE = /^did:[a-z]+:[a-zA-Z0-9._:%-]*[a-zA-Z0-9._-]$/;

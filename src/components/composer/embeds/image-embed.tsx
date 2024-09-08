@@ -2,13 +2,12 @@ import { For, onCleanup } from 'solid-js';
 
 import { openModal } from '~/globals/modals';
 
+import AltButton from '../../alt-button';
 import IconButton from '../../icon-button';
 import CrossLargeOutlinedIcon from '../../icons-central/cross-large-outline';
-
-import AltButton from '../../alt-button';
 import ImageAltDialogLazy from '../dialogs/image-alt-dialog-lazy';
-
 import type { PostImageEmbed } from '../lib/state';
+
 import type { BaseEmbedProps } from './types';
 
 export interface ImageEmbedProps extends BaseEmbedProps {

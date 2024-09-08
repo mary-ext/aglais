@@ -22,20 +22,20 @@ import { uploadBlob } from '~/api/queries/blob';
 import type { LinkMeta } from '~/api/queries/composer';
 import { getUtf8Length } from '~/api/richtext/intl';
 import type { PreliminaryRichText } from '~/api/richtext/parser/parse';
-
 import { getRecord } from '~/api/utils/records';
+
 import { compressPostImage } from '~/lib/bsky/image';
 import type { AgentContext } from '~/lib/states/agent';
 import { assert } from '~/lib/utils/invariant';
 
 import {
-	EmbedKind,
-	getEmbedLabels,
-	getPostRt,
 	type ComposerState,
+	EmbedKind,
 	type PostEmbed,
 	type PostMediaEmbed,
 	type PostRecordEmbed,
+	getEmbedLabels,
+	getPostRt,
 } from './state';
 
 export interface PublishOptions {

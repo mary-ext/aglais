@@ -1,4 +1,4 @@
-import { type Component, type ComponentProps, createMemo, type JSX, Match, Show, Switch } from 'solid-js';
+import { type Component, type ComponentProps, type JSX, Match, Show, Switch, createMemo } from 'solid-js';
 
 import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 
@@ -13,19 +13,18 @@ import { formatCompact } from '~/lib/intl/number';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
 
+import DefaultLabelerAvatar from '~/assets/default-labeler-avatar.svg?url';
+import DefaultUserAvatar from '~/assets/default-user-avatar.svg?url';
+
 import Avatar, { getUserAvatarType } from '../avatar';
 import Button from '../button';
 import IconButton from '../icon-button';
 import MailOutlinedIcon from '../icons-central/mail-outline';
 import MuteOutlinedIcon from '../icons-central/mute-outline';
-
 import ImageViewerModalLazy from '../images/image-viewer-modal-lazy';
 
 import EditProfileDialogLazy from './edit-profile-dialog-lazy';
 import ProfileFollowButton from './profile-follow-button';
-
-import DefaultLabelerAvatar from '~/assets/default-labeler-avatar.svg?url';
-import DefaultUserAvatar from '~/assets/default-user-avatar.svg?url';
 
 export interface ProfileViewHeader {
 	/** Expects DID to be static */

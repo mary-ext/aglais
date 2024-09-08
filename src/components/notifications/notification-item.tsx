@@ -1,4 +1,4 @@
-import { createMemo, type Component, type ComponentProps, type JSX } from 'solid-js';
+import { type Component, type ComponentProps, type JSX, createMemo } from 'solid-js';
 
 import type {
 	AppBskyEmbedImages,
@@ -26,11 +26,10 @@ import { useSession } from '~/lib/states/session';
 import { assert } from '~/lib/utils/invariant';
 
 import Avatar, { getUserAvatarType } from '../avatar';
+import { type BlueskyGifSnippet, SnippetType, detectSnippet } from '../embeds/lib/snippet';
 import HeartSolidIcon from '../icons-central/heart-solid';
 import PersonSolidIcon from '../icons-central/person-solid';
 import RepeatOutlinedIcon from '../icons-central/repeat-outline';
-
-import { detectSnippet, SnippetType, type BlueskyGifSnippet } from '../embeds/lib/snippet';
 import PostFeedItem from '../timeline/post-feed-item';
 
 export interface NotificationItemProps {

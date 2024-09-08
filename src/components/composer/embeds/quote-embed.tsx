@@ -5,12 +5,12 @@ import type { AppBskyEmbedRecord } from '@atcute/client/lexicons';
 import { createPostQuery } from '~/api/queries/post';
 
 import CircularProgress from '~/components/circular-progress';
+import QuoteEmbedContent from '~/components/embeds/quote-embed';
 import IconButton from '~/components/icon-button';
 import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outline';
 
-import QuoteEmbedContent from '~/components/embeds/quote-embed';
-
 import type { PostQuoteEmbed } from '../lib/state';
+
 import type { BaseEmbedProps } from './types';
 
 export interface QuoteEmbedProps extends BaseEmbedProps {

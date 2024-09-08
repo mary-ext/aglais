@@ -4,6 +4,7 @@ import { createQuery } from '@mary/solid-query';
 import { useAgent } from '~/lib/states/agent';
 
 import { isDid, parseAtUri } from '../utils/strings';
+
 import { resolveHandle } from './handle';
 
 export interface ExtendedGeneratorView extends AppBskyFeedDefs.GeneratorView {

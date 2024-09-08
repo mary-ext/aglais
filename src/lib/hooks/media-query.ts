@@ -1,4 +1,4 @@
-import { createSignal, onCleanup, type Accessor } from 'solid-js';
+import { type Accessor, createSignal, onCleanup } from 'solid-js';
 
 interface MediaStore {
 	/** State backing */

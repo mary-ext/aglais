@@ -1,6 +1,6 @@
 import { primarySystemLanguage } from '~/globals/locales';
 
-import { getEnglishLanguageName, LANGUAGE_CODES } from '~/lib/intl/languages';
+import { LANGUAGE_CODES, getEnglishLanguageName } from '~/lib/intl/languages';
 import { useSession } from '~/lib/states/session';
 import { mapDefined } from '~/lib/utils/misc';
 

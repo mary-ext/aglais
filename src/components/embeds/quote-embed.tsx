@@ -1,4 +1,4 @@
-import { createMemo, type JSX } from 'solid-js';
+import { type JSX, createMemo } from 'solid-js';
 
 import type {
 	AppBskyEmbedImages,
@@ -16,6 +16,7 @@ import { useModerationOptions } from '~/lib/states/moderation';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 import TimeAgo from '../time-ago';
+
 import ImageEmbed from './image-embed';
 import VideoEmbed from './video-embed';
 

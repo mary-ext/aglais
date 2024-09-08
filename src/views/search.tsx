@@ -1,4 +1,4 @@
-import { createMemo, createSignal, Match, Switch } from 'solid-js';
+import { Match, Switch, createMemo, createSignal } from 'solid-js';
 
 import type { UnwrapArray } from '~/api/utils/types';
 
@@ -9,7 +9,6 @@ import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline
 import SearchBar from '~/components/main/search-bar';
 import * as Page from '~/components/page';
 import TabBar from '~/components/tab-bar';
-
 import TimelineList from '~/components/timeline/timeline-list';
 
 const SearchPage = () => {

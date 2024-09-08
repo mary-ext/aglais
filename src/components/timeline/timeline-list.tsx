@@ -1,9 +1,10 @@
 import type { At } from '@atcute/client/lexicons';
 
-import { useTimelineQuery, type TimelineParams } from '~/api/queries/timeline';
+import { type TimelineParams, useTimelineQuery } from '~/api/queries/timeline';
 
 import PagedList from '../paged-list';
 import VirtualItem from '../virtual-item';
+
 import PostFeedItem from './post-feed-item';
 
 export interface TimelineListProps {

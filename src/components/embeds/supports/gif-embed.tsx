@@ -1,4 +1,4 @@
-import { createRenderEffect, createSignal, lazy, Show, Suspense } from 'solid-js';
+import { Show, Suspense, createRenderEffect, createSignal, lazy } from 'solid-js';
 
 import CircularProgress from '~/components/circular-progress';
 import PlaySolidIcon from '~/components/icons-central/play-solid';

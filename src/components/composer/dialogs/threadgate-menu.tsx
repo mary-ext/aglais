@@ -8,7 +8,6 @@ import AtOutlinedIcon from '../../icons-central/at-outline';
 import EarthOutlinedIcon from '../../icons-central/earth-outline';
 import PersonCheckOutlinedIcon from '../../icons-central/person-check-outline';
 import * as Menu from '../../menu';
-
 import { ThreadgateKnownValue, getThreadgateValue } from '../lib/state';
 
 export interface ThreadgateMenuProps {

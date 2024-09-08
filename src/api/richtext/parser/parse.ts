@@ -1,5 +1,4 @@
 import { safeUrlParse } from '../../utils/strings';
-
 import { graphemeLen } from '../intl';
 import { toShortUrl } from '../url';
 

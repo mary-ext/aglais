@@ -1,12 +1,10 @@
-import { createContext, onCleanup, useContext, type ParentProps } from 'solid-js';
+import { type IDBPDatabase, openDB } from 'idb';
+import { type ParentProps, createContext, onCleanup, useContext } from 'solid-js';
 
-import { openDB, type IDBPDatabase } from 'idb';
-
+import type { BookmarkDBSchema } from '../aglais-bookmarks/db';
 import { assert } from '../utils/invariant';
 
 import { useSession } from './session';
-
-import type { BookmarkDBSchema } from '../aglais-bookmarks/db';
 
 export interface BookmarkContext {
 	open(): Promise<IDBPDatabase<BookmarkDBSchema>>;

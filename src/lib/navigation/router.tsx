@@ -1,7 +1,9 @@
 /* @refresh reload */
-
 import {
+	type Component,
 	For,
+	type JSX,
+	type Owner,
 	createContext,
 	createMemo,
 	createRoot,
@@ -9,9 +11,6 @@ import {
 	getOwner,
 	onCleanup,
 	useContext,
-	type Component,
-	type JSX,
-	type Owner,
 } from 'solid-js';
 import { delegateEvents } from 'solid-js/web';
 
@@ -19,6 +18,7 @@ import { EventEmitter } from '@mary/events';
 import { Freeze } from '@mary/solid-freeze';
 
 import { createEventListener } from '../hooks/event-listener';
+
 import type { History, Location } from './history';
 import type { HistoryLogger } from './logger';
 

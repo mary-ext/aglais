@@ -6,8 +6,8 @@ import { createMutation, createQuery } from '@mary/solid-query';
 import { openModal } from '~/globals/modals';
 
 import { formatAbsDateTime } from '~/lib/intl/time';
-import { reconcile } from '~/lib/utils/misc';
 import { useAgent } from '~/lib/states/agent';
+import { reconcile } from '~/lib/utils/misc';
 
 import * as Boxed from '~/components/boxed';
 import CircularProgressView from '~/components/circular-progress-view';
@@ -18,7 +18,6 @@ import CircleInfoOutlinedIcon from '~/components/icons-central/circle-info-outli
 import TrashOutlinedIcon from '~/components/icons-central/trash-outline';
 import * as Page from '~/components/page';
 import * as Prompt from '~/components/prompt';
-
 import AddAppPasswordPrompt from '~/components/settings/app-passwords/add-app-password-prompt';
 
 const AppPasswordsSettingsPage = () => {

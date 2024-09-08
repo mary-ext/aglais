@@ -1,18 +1,18 @@
 import {
+	type Component,
+	type ComponentProps,
 	For,
+	type JSX,
 	Show,
 	batch,
 	createEffect,
 	createMemo,
 	createSignal,
-	type Component,
-	type ComponentProps,
-	type JSX,
 } from 'solid-js';
 import { createMutable, unwrap } from 'solid-js/store';
 
 import type { AppBskyActorDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
-import { useQueryClient, type CreateQueryResult } from '@mary/solid-query';
+import { type CreateQueryResult, useQueryClient } from '@mary/solid-query';
 
 import { GLOBAL_LABELS, getLocalizedLabel } from '~/api/moderation';
 import { createProfileQuery } from '~/api/queries/profile';
@@ -23,22 +23,20 @@ import { globalEvents } from '~/globals/events';
 import { openModal, useModalContext } from '~/globals/modals';
 
 import { createEventListener } from '~/lib/hooks/event-listener';
-import { createGuard, type GuardFunction } from '~/lib/hooks/guard';
-import { assert } from '~/lib/utils/invariant';
-import { on } from '~/lib/utils/misc';
+import { type GuardFunction, createGuard } from '~/lib/hooks/guard';
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 import { SUPPORTED_IMAGE_FORMATS, openImagePicker } from '~/lib/utils/blob';
-
-import Button from '../button';
-import * as Dialog from '../dialog';
-import IconButton from '../icon-button';
-import * as Prompt from '../prompt';
+import { assert } from '~/lib/utils/invariant';
+import { on } from '~/lib/utils/misc';
 
 import Avatar, { getUserAvatarType } from '../avatar';
+import Button from '../button';
 import CircularProgress from '../circular-progress';
+import * as Dialog from '../dialog';
 import Divider from '../divider';
 import { useFieldset } from '../fieldset';
+import IconButton from '../icon-button';
 import AddOutlinedIcon from '../icons-central/add-outline';
 import AtOutlinedIcon from '../icons-central/at-outline';
 import BlockOutlinedIcon from '../icons-central/block-outline';
@@ -55,9 +53,9 @@ import ShieldCheckOutlinedIcon from '../icons-central/shield-check-outline';
 import ShieldOutlinedIcon from '../icons-central/shield-outline';
 import TranslateOutlinedIcon from '../icons-central/translate-outline';
 import Keyed from '../keyed';
+import * as Prompt from '../prompt';
 
 import ComposerInput from './composer-input';
-
 import ComposerReplyContext from './composer-reply-context';
 import ContentWarningMenu from './dialogs/content-warning-menu';
 import LanguageSelectDialogLazy from './dialogs/language-select-dialog-lazy';
@@ -69,13 +67,18 @@ import GifEmbed from './embeds/gif-embed';
 import ImageEmbed from './embeds/image-embed';
 import ListEmbed from './embeds/list-embed';
 import QuoteEmbed from './embeds/quote-embed';
-import GifSearchDialogLazy from './gifs/gif-search-dialog-lazy';
-
 import type { BaseEmbedProps } from './embeds/types';
+import GifSearchDialogLazy from './gifs/gif-search-dialog-lazy';
 import { publish } from './lib/api';
 import { getEmbedFromLink } from './lib/link-detection';
 import {
+	type ComposerState,
+	type CreateComposerStateOptions,
 	EmbedKind,
+	type PostEmbed,
+	type PostRecordEmbed,
+	type PostRecordWithMediaEmbed,
+	type PostState,
 	ThreadgateKnownValue,
 	createComposerState,
 	createPostState,
@@ -84,12 +87,6 @@ import {
 	getPostEmbedFlags,
 	getPostRt,
 	getThreadgateValue,
-	type ComposerState,
-	type CreateComposerStateOptions,
-	type PostEmbed,
-	type PostRecordEmbed,
-	type PostRecordWithMediaEmbed,
-	type PostState,
 } from './lib/state';
 
 export interface ComposerDialogProps {

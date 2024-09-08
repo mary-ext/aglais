@@ -1,4 +1,4 @@
-import { createMemo, createSignal, onMount, Show } from 'solid-js';
+import { Show, createMemo, createSignal, onMount } from 'solid-js';
 
 import { useModalContext } from '~/globals/modals';
 

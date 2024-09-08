@@ -1,8 +1,9 @@
+import { history } from '~/globals/navigation';
+
 import IconButton from '~/components/icon-button';
 import GearOutlinedIcon from '~/components/icons-central/gear-outline';
 import SearchBar from '~/components/main/search-bar';
 import * as Page from '~/components/page';
-import { history } from '~/globals/navigation';
 
 const SearchPage = () => {
 	return (

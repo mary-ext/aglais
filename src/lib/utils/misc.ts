@@ -1,5 +1,6 @@
-import { replaceEqualDeep } from '@mary/solid-query';
 import { createMemo, untrack } from 'solid-js';
+
+import { replaceEqualDeep } from '@mary/solid-query';
 
 export const mapDefined = <T, R>(array: T[], mapper: (value: T) => R | undefined): R[] => {
 	var mapped: R[] = [];

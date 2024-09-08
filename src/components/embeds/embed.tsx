@@ -7,7 +7,7 @@ import type {
 	Brand,
 } from '@atcute/client/lexicons';
 
-import { ContextContentMedia, getModerationUI, type ModerationCause } from '~/api/moderation';
+import { ContextContentMedia, type ModerationCause, getModerationUI } from '~/api/moderation';
 import { parseAtUri } from '~/api/utils/strings';
 
 import ContentHider from '../moderation/content-hider';

@@ -10,9 +10,9 @@ import type { ThreadViewPreferences } from '~/lib/preferences/account';
 
 import {
 	ContextContentList,
-	getModerationUI,
 	type ModerationCause,
 	type ModerationOptions,
+	getModerationUI,
 } from '../moderation';
 import { moderatePost } from '../moderation/entities/post';
 

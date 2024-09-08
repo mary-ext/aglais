@@ -1,8 +1,7 @@
-import { useFloating } from 'solid-floating-ui';
-import { createSignal, type Component, type JSX } from 'solid-js';
-
 import { flip, shift, size } from '@floating-ui/dom';
-import { getSide, type Placement } from '@floating-ui/utils';
+import { type Placement, getSide } from '@floating-ui/utils';
+import { useFloating } from 'solid-floating-ui';
+import { type Component, type JSX, createSignal } from 'solid-js';
 
 import { useModalContext } from '~/globals/modals';
 

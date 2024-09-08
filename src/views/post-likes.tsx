@@ -4,10 +4,9 @@ import { useParams } from '~/lib/navigation/router';
 
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
-import VirtualItem from '~/components/virtual-item';
-
 import ProfileFollowButton from '~/components/profiles/profile-follow-button';
 import ProfileItem from '~/components/profiles/profile-item';
+import VirtualItem from '~/components/virtual-item';
 
 const PostLikesPage = () => {
 	const { did, rkey } = useParams();

@@ -1,15 +1,15 @@
 import { createSignal } from 'solid-js';
 
 import type { AppBskyFeedDefs, AppBskyNotificationListNotifications } from '@atcute/client/lexicons';
-import { createInfiniteQuery, useQueryClient, type QueryFunctionContext as QC } from '@mary/solid-query';
+import { type QueryFunctionContext as QC, createInfiniteQuery, useQueryClient } from '@mary/solid-query';
 
-import { mapDefined } from '~/lib/utils/misc';
 import { useAgent } from '~/lib/states/agent';
+import { mapDefined } from '~/lib/utils/misc';
 
 import { dequal } from '../utils/dequal';
+import { chunked } from '../utils/misc';
 import { resetInfiniteData } from '../utils/query';
 import { parseAtUri } from '../utils/strings';
-import { chunked } from '../utils/misc';
 
 type Notification = AppBskyNotificationListNotifications.Notification;
 

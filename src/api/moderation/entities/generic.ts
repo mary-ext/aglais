@@ -1,6 +1,6 @@
 import type { At, ComAtprotoLabelDefs } from '@atcute/client/lexicons';
 
-import { TargetContent, decideLabelModeration, type ModerationCause, type ModerationOptions } from '..';
+import { type ModerationCause, type ModerationOptions, TargetContent, decideLabelModeration } from '..';
 
 export const moderateGeneric = (
 	item: { labels?: ComAtprotoLabelDefs.Label[] },

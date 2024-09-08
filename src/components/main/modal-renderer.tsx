@@ -1,9 +1,9 @@
 import { For, Suspense, onCleanup } from 'solid-js';
 
-import { INTERNAL_ModalContext, INTERNAL_modals, closeModal, type ModalContext } from '~/globals/modals';
+import { INTERNAL_ModalContext, INTERNAL_modals, type ModalContext, closeModal } from '~/globals/modals';
 
-import * as Dialog from '../dialog';
 import CircularProgress from '../circular-progress';
+import * as Dialog from '../dialog';
 
 let isScrollbarSizeDetermined = false;
 

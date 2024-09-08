@@ -6,11 +6,10 @@ import { createNotificationFeedQuery } from '~/api/queries/notification-feed';
 import { onRouteEnter } from '~/lib/navigation/router';
 
 import ComposeFAB from '~/components/composer/compose-fab';
+import NotificationItem from '~/components/notifications/notification-item';
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
 import VirtualItem from '~/components/virtual-item';
-
-import NotificationItem from '~/components/notifications/notification-item';
 
 const NotificationsPage = () => {
 	const { feed, reset, firstFetchedAt } = createNotificationFeedQuery();

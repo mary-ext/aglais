@@ -1,4 +1,4 @@
-import { createMemo, type JSX, Show } from 'solid-js';
+import { type JSX, Show, createMemo } from 'solid-js';
 
 import type { AppBskyFeedPost } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
@@ -17,10 +17,9 @@ import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
 
 import Avatar, { getUserAvatarType } from '../avatar';
-import RichText from '../rich-text';
-
 import Embed from '../embeds/embed';
 import ContentHider from '../moderation/content-hider';
+import RichText from '../rich-text';
 import PostActions from '../timeline/post-actions';
 import PostMeta from '../timeline/post-meta';
 

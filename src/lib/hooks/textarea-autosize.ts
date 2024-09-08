@@ -1,6 +1,5 @@
 // Based off Andarist's react-textarea-autosize, licensed under MIT License
 // Commit reference: 5953e024310ab0b6ad1c26b2bc36addb9cc23afa
-
 import { createRenderEffect, onCleanup, onMount } from 'solid-js';
 
 import { createEventListener } from './event-listener';

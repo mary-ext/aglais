@@ -1,17 +1,14 @@
 import { openModal } from '~/globals/modals';
 
+import AltButton from '../../alt-button';
+import { type BlueskyGifSnippet, SnippetType } from '../../embeds/lib/snippet';
+import { GifEmbed as GifEmbedContent } from '../../embeds/supports/gif-embed';
 import IconButton from '../../icon-button';
 import CrossLargeOutlinedIcon from '../../icons-central/cross-large-outline';
 import Keyed from '../../keyed';
-
-import AltButton from '../../alt-button';
-
-import { SnippetType, type BlueskyGifSnippet } from '../../embeds/lib/snippet';
-import { GifEmbed as GifEmbedContent } from '../../embeds/supports/gif-embed';
-
 import GifAltDialogLazy from '../dialogs/gif-alt-dialog-lazy';
-
 import type { PostGifEmbed } from '../lib/state';
+
 import type { BaseEmbedProps } from './types';
 
 export interface GifEmbedProps extends BaseEmbedProps {

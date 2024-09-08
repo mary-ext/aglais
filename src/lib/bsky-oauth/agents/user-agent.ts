@@ -3,7 +3,6 @@ import type { FetchHandlerObject } from '@atcute/client';
 import { createDPoPFetch } from '../dpop';
 import { CLIENT_ID } from '../env';
 import { authorizationServerMetadataResolver } from '../resolver';
-
 import type { DPoPKey } from '../types/dpop';
 import type { TokenSet } from '../types/token';
 

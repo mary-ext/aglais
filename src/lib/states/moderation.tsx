@@ -1,4 +1,4 @@
-import { createContext, createMemo, useContext, type ParentProps } from 'solid-js';
+import { type ParentProps, createContext, createMemo, useContext } from 'solid-js';
 import { unwrap } from 'solid-js/store';
 
 import type { AppBskyLabelerDefs, At } from '@atcute/client/lexicons';
@@ -8,9 +8,9 @@ import { BLUESKY_MODERATION_DID } from '~/api/defaults';
 import type { ModerationLabeler, ModerationOptions, ModerationPreferences } from '~/api/moderation';
 import { interpretLabelerDefinition } from '~/api/moderation/labeler';
 
+import { createBatchedFetch } from '~/lib/utils/batch-fetch';
 import { assert } from '~/lib/utils/invariant';
 import { mapDefined } from '~/lib/utils/misc';
-import { createBatchedFetch } from '~/lib/utils/batch-fetch';
 
 import { useAgent } from './agent';
 import { useSession } from './session';

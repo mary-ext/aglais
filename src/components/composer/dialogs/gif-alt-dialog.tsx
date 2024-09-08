@@ -12,7 +12,6 @@ import * as Dialog from '../../dialog';
 import Divider from '../../divider';
 import CharCounterAccessory from '../../input/char-counter-accessory';
 import TextareaInput from '../../textarea-input';
-
 import type { GifMedia } from '../gifs/gif-search-dialog';
 
 export interface GifAltDialogProps {

@@ -4,10 +4,10 @@ import { OAuthResponseError, TokenRefreshError } from '../errors';
 import { database } from '../globals';
 import { getMetadataFromAuthorizationServer } from '../resolver';
 import { CachedGetter } from '../store/getter';
-import { OAuthServerAgent } from './server-agent';
-
 import type { DPoPKey } from '../types/dpop';
 import type { TokenSet } from '../types/token';
+
+import { OAuthServerAgent } from './server-agent';
 
 export interface Session {
 	dpopKey: DPoPKey;

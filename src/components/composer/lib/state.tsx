@@ -2,12 +2,12 @@ import { unwrap } from 'solid-js/store';
 
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/client/lexicons';
 
-import { parseRt, type PreliminaryRichText } from '~/api/richtext/parser/parse';
+import { type PreliminaryRichText, parseRt } from '~/api/richtext/parser/parse';
 
 import { primarySystemLanguage } from '~/globals/locales';
 
-import { assert } from '~/lib/utils/invariant';
 import type { ComposerPreferences } from '~/lib/preferences/account';
+import { assert } from '~/lib/utils/invariant';
 
 import type { GifMedia } from '../gifs/gif-search-dialog';
 

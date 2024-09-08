@@ -1,8 +1,6 @@
 // Keeps a best-effort log of history entries.
-
 // To simplify our stack router implementation on dealing with PWA-specific
 // aspects, `createHistoryLogger` is set to drop forward entries by default.
-
 import type { History, Location } from './history';
 
 export interface HistoryLogger {

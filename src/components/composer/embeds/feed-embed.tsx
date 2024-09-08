@@ -3,12 +3,12 @@ import { Match, Switch } from 'solid-js';
 import { createFeedMetaQuery } from '~/api/queries/feed';
 
 import CircularProgress from '~/components/circular-progress';
+import FeedEmbedContent from '~/components/embeds/feed-embed';
 import IconButton from '~/components/icon-button';
 import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outline';
 
-import FeedEmbedContent from '~/components/embeds/feed-embed';
-
 import type { PostFeedEmbed } from '../lib/state';
+
 import type { BaseEmbedProps } from './types';
 
 export interface FeedEmbedProps extends BaseEmbedProps {

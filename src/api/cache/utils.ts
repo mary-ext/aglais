@@ -1,4 +1,4 @@
-import { matchQuery, type QueryClient, type QueryFilters } from '@mary/solid-query';
+import { type QueryClient, type QueryFilters, matchQuery } from '@mary/solid-query';
 
 export interface CacheMatcher<T> {
 	filter: QueryFilters;

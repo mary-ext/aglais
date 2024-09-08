@@ -1,4 +1,4 @@
-import { createMemo, For } from 'solid-js';
+import { For, createMemo } from 'solid-js';
 
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
@@ -9,8 +9,8 @@ import { createBookmarkEntryQuery } from '~/api/queries/bookmark-entry';
 import { openModal, useModalContext } from '~/globals/modals';
 
 import { createDerivedSignal } from '~/lib/hooks/derived-signal';
-import { isSetEqual } from '~/lib/utils/misc';
 import { useBookmarks } from '~/lib/states/bookmarks';
+import { isSetEqual } from '~/lib/utils/misc';
 
 import Button from '../button';
 import * as Dialog from '../dialog';

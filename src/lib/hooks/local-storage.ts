@@ -1,5 +1,6 @@
 import { createEffect } from 'solid-js';
-import { createMutable, modifyMutable, reconcile, type StoreNode } from 'solid-js/store';
+import { type StoreNode, createMutable, modifyMutable, reconcile } from 'solid-js/store';
+
 import { createEventListener } from '../hooks/event-listener';
 
 type MigrateFn<T> = (version: number, prev: any) => T;

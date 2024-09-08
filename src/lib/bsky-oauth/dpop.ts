@@ -1,7 +1,6 @@
 import { database } from './globals';
-import { encoder, extractContentType, randomBytes, toBase64Url, toSha256 } from './utils';
-
 import type { DPoPKey } from './types/dpop';
+import { encoder, extractContentType, randomBytes, toBase64Url, toSha256 } from './utils';
 
 export const createES256Key = async (): Promise<DPoPKey> => {
 	const algorithm = { name: 'ECDSA', namedCurve: 'P-256' } as const;

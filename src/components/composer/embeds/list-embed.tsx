@@ -3,12 +3,12 @@ import { Match, Switch } from 'solid-js';
 import { createListMetaQuery } from '~/api/queries/list';
 
 import CircularProgress from '~/components/circular-progress';
+import ListEmbedContent from '~/components/embeds/list-embed';
 import IconButton from '~/components/icon-button';
 import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outline';
 
-import ListEmbedContent from '~/components/embeds/list-embed';
-
 import type { PostListEmbed } from '../lib/state';
+
 import type { BaseEmbedProps } from './types';
 
 export interface ListEmbedProps extends BaseEmbedProps {

@@ -5,6 +5,7 @@ import { useAgent } from '~/lib/states/agent';
 
 import { findPostsInCache } from '../cache/post-shadow';
 import { isDid, parseAtUri } from '../utils/strings';
+
 import { resolveHandle } from './handle';
 
 export const createPostQuery = (postUri: () => string) => {

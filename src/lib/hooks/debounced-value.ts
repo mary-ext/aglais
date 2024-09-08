@@ -1,4 +1,4 @@
-import { createEffect, createSignal, onCleanup, type Accessor } from 'solid-js';
+import { type Accessor, createEffect, createSignal, onCleanup } from 'solid-js';
 
 export const createDebouncedValue = <T>(
 	accessor: Accessor<T>,

@@ -4,8 +4,8 @@ import { useModalContext } from '~/globals/modals';
 import { history } from '~/globals/navigation';
 
 import PersonOutlinedIcon from '~/components/icons-central/person-outline';
-import * as Menu from '~/components/menu';
 import ShieldOffOutlinedIcon from '~/components/icons-central/shield-off-outline';
+import * as Menu from '~/components/menu';
 
 export interface LabelerOverflowMenuProps {
 	anchor: HTMLElement;

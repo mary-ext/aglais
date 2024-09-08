@@ -1,4 +1,4 @@
-import { createEffect, createSignal, type JSX } from 'solid-js';
+import { type JSX, createEffect, createSignal } from 'solid-js';
 
 import { remove as removeExif } from '@mary/exif-rm';
 import { createInfiniteQuery } from '@mary/solid-query';
@@ -7,20 +7,18 @@ import { listRecords } from '~/api/utils/records';
 
 import { hasModals, openModal } from '~/globals/modals';
 
-import { createEventListener } from '~/lib/hooks/event-listener';
-import { on } from '~/lib/utils/misc';
-import { useAgent } from '~/lib/states/agent';
-import { useSession } from '~/lib/states/session';
-
 import { MAX_ORIGINAL_SIZE, SUPPORTED_IMAGE_TYPES } from '~/lib/bluemoji/compress';
 import { getCdnUrl } from '~/lib/bluemoji/render';
+import { createEventListener } from '~/lib/hooks/event-listener';
+import { useAgent } from '~/lib/states/agent';
+import { useSession } from '~/lib/states/session';
+import { on } from '~/lib/utils/misc';
 
 import IconButton from '~/components/icon-button';
 import AddOutlinedIcon from '~/components/icons-central/add-outline';
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
 import * as Prompt from '~/components/prompt';
-
 import AddEmotePrompt from '~/components/settings/bluemoji/add-emote-prompt';
 
 const BluemojiEmotesPage = () => {

@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import { defineConfig } from 'vite';
 import solid from 'vite-plugin-solid';
 
-import metadata from './public/oauth/client-metadata.json' with { type: 'json' };
+import metadata from './public/oauth/client-metadata.json';
 
 const SERVER_HOST = '127.0.0.1';
 const SERVER_PORT = 52222;

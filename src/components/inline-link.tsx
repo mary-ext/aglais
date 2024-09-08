@@ -1,4 +1,5 @@
 import type { ParentProps } from 'solid-js';
+
 import { useFieldset } from './fieldset';
 
 export interface InlineLinkProps extends ParentProps {

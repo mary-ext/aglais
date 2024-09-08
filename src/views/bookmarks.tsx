@@ -6,16 +6,15 @@ import { openModal } from '~/globals/modals';
 
 import { formatCompact } from '~/lib/intl/number';
 
+import BookmarkFolderAvatar from '~/components/bookmarks/bookmark-folder-avatar';
+import BookmarkFolderFormDialogLazy from '~/components/bookmarks/bookmark-folder-form-dialog-lazy';
+import BookmarkFolderMenu from '~/components/bookmarks/bookmark-folder-menu';
 import Divider from '~/components/divider';
 import IconButton from '~/components/icon-button';
 import ChevronRightOutlinedIcon from '~/components/icons-central/chevron-right-outline';
 import FolderAddOutlinedIcon from '~/components/icons-central/folder-add-outline';
 import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
 import * as Page from '~/components/page';
-
-import BookmarkFolderAvatar from '~/components/bookmarks/bookmark-folder-avatar';
-import BookmarkFolderFormDialogLazy from '~/components/bookmarks/bookmark-folder-form-dialog-lazy';
-import BookmarkFolderMenu from '~/components/bookmarks/bookmark-folder-menu';
 
 const BookmarksPage = () => {
 	const query = createBookmarkMetaQuery();

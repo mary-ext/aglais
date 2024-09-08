@@ -1,12 +1,12 @@
 import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 
 import {
+	type ModerationCause,
+	type ModerationOptions,
 	TargetAccount,
 	TargetProfile,
 	decideLabelModeration,
 	decideMutedPermanentModeration,
-	type ModerationCause,
-	type ModerationOptions,
 } from '..';
 
 type AllProfileView =
