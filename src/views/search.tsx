@@ -8,7 +8,7 @@ import IconButton from '~/components/icon-button';
 import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
 import SearchBar from '~/components/main/search-bar';
 import * as Page from '~/components/page';
-import Tab from '~/components/tab';
+import TabBar from '~/components/tab-bar';
 
 import TimelineList from '~/components/feeds/timeline-list';
 
@@ -57,12 +57,19 @@ const SearchPage = () => {
 				</Page.HeaderAccessory>
 			</Page.Header>
 
-			<div class="flex h-13 shrink-0 overflow-x-auto border-b border-outline">
-				<Tab active>Top</Tab>
-				<Tab>Latest</Tab>
-				<Tab>Profiles</Tab>
-				<Tab>Feeds</Tab>
-			</div>
+			<TabBar
+				value={type()}
+				onChange={(next) => {
+					setType(next);
+					updateHistoryEntry();
+				}}
+				items={[
+					{ value: 'top_posts', label: `Top` },
+					{ value: 'latest_posts', label: `Latest` },
+					{ value: 'profiles', label: `Profiles` },
+					{ value: 'feeds', label: `Feeds` },
+				]}
+			/>
 
 			<Switch>
 				<Match when={type() === 'top_posts'}>
