@@ -1,14 +1,10 @@
-import { createSignal } from 'solid-js';
-
 import IconButton from '~/components/icon-button';
 import GearOutlinedIcon from '~/components/icons-central/gear-outline';
 import SearchBar from '~/components/main/search-bar';
 import * as Page from '~/components/page';
+import { history } from '~/globals/navigation';
 
 const SearchPage = () => {
-	const [search, setSearch] = createSignal('');
-	const [focused, setFocused] = createSignal(false);
-
 	return (
 		<>
 			<Page.Header>
@@ -16,7 +12,16 @@ const SearchPage = () => {
 					<Page.MainMenu />
 				</Page.HeaderAccessory>
 
-				<SearchBar />
+				<SearchBar
+					onEnter={(next, reset) => {
+						if (next.trim() === '') {
+							return;
+						}
+
+						history.navigate(`/search?q=${encodeURIComponent(next)}`);
+						reset();
+					}}
+				/>
 
 				<Page.HeaderAccessory>
 					<IconButton icon={GearOutlinedIcon} title="Settings" />

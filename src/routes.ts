@@ -116,6 +116,11 @@ const routes: RouteDefinition[] = [
 	},
 
 	{
+		path: '/search',
+		component: lazy(() => import('./views/search')),
+	},
+
+	{
 		path: '/likes',
 		component: lazy(() => import('./views/likes')),
 	},

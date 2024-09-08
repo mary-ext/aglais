@@ -7,15 +7,23 @@ import MagnifyingGlassOutlinedIcon from '../icons-central/magnifying-glass-outli
 
 export interface SearchBarProps {
 	value?: string;
-	onEnter?: (next: string) => void;
+	onEnter?: (next: string, reset: () => void) => void;
 }
 
 const SearchBar = (props: SearchBarProps) => {
 	const [search, setSearch] = createDerivedSignal(() => props.value ?? '');
 	const [focused, setFocused] = createSignal(false);
 
+	const reset = () => setSearch(props.value ?? '');
+
 	return (
-		<div class="relative grow">
+		<form
+			onSubmit={(ev) => {
+				ev.preventDefault();
+				props.onEnter?.(search(), reset);
+			}}
+			class="relative grow"
+		>
 			<div
 				onFocusIn={() => setFocused(true)}
 				onFocusOut={(ev) => setFocused(ev.currentTarget.contains(ev.relatedTarget as HTMLElement))}
@@ -30,6 +38,7 @@ const SearchBar = (props: SearchBarProps) => {
 
 				{focused() && search() ? (
 					<button
+						type="button"
 						tabindex={-1}
 						onClick={() => setSearch('')}
 						class="text-contrast-muted outline-none hover:text-contrast"
@@ -40,7 +49,9 @@ const SearchBar = (props: SearchBarProps) => {
 					<MagnifyingGlassOutlinedIcon class="text-lg text-contrast-muted" />
 				)}
 			</div>
-		</div>
+
+			<input type="submit" hidden />
+		</form>
 	);
 };
 

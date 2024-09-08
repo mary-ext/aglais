@@ -355,7 +355,7 @@ const fetchPage = async (
 		const response = await rpc.get('app.bsky.feed.searchPosts', {
 			signal: signal,
 			params: {
-				sort: 'latest',
+				sort: params.sort,
 				q: params.query,
 				cursor: cursor,
 				limit: limit,
