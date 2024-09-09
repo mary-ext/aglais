@@ -11,6 +11,7 @@ import { findAllProfiles as findAllProfilesInProfile } from '../queries-cache/pr
 import { findAllProfiles as findAllProfilesInProfileFollowers } from '../queries-cache/profile-followers';
 import { findAllProfiles as findAllProfilesInProfileFollowing } from '../queries-cache/profile-following';
 import { findAllProfiles as findAllProfilesInProfileKnownFollowers } from '../queries-cache/profile-known-followers';
+import { findAllProfiles as findAllProfilesInSearch } from '../queries-cache/search-profiles';
 import { findAllProfiles as findAllProfilesInSubjectLikers } from '../queries-cache/subject-likers';
 import { findAllProfiles as findAllProfilesInSubjectReposters } from '../queries-cache/subject-reposters';
 import { findAllProfiles as findAllProfilesInTimeline } from '../queries-cache/timeline';
@@ -79,15 +80,16 @@ export const updateProfileShadow = (queryClient: QueryClient, did: At.DID, value
 
 export function findProfilesInCache(queryClient: QueryClient, did: At.DID): Generator<AllProfileView> {
 	return iterateQueryCache<AllProfileView>(queryClient, [
-		findAllProfilesInProfile(did),
-		findAllProfilesInTimeline(did),
-		findAllProfilesInPostThread(did),
 		findAllProfilesInBookmarkFeed(did),
-		findAllProfilesInProfileFollowing(did),
-		findAllProfilesInProfileFollowers(did),
-		findAllProfilesInProfileKnownFollowers(did),
 		findAllProfilesInNotificationFeed(did),
-		findAllProfilesInSubjectReposters(did),
+		findAllProfilesInPostThread(did),
+		findAllProfilesInProfile(did),
+		findAllProfilesInProfileFollowers(did),
+		findAllProfilesInProfileFollowing(did),
+		findAllProfilesInProfileKnownFollowers(did),
+		findAllProfilesInSearch(did),
 		findAllProfilesInSubjectLikers(did),
+		findAllProfilesInSubjectReposters(did),
+		findAllProfilesInTimeline(did),
 	]);
 }

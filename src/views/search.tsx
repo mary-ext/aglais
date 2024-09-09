@@ -1,5 +1,6 @@
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 
+import { createSearchProfilesQuery } from '~/api/queries/search-profiles';
 import type { UnwrapArray } from '~/api/utils/types';
 
 import { tokenizeSearchQuery } from '~/lib/bsky/search';
@@ -8,15 +9,19 @@ import IconButton from '~/components/icon-button';
 import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
 import SearchBar from '~/components/main/search-bar';
 import * as Page from '~/components/page';
+import PagedList from '~/components/paged-list';
+import ProfileFollowButton from '~/components/profiles/profile-follow-button';
+import ProfileItem from '~/components/profiles/profile-item';
 import TabBar from '~/components/tab-bar';
 import TimelineList from '~/components/timeline/timeline-list';
+import VirtualItem from '~/components/virtual-item';
 
 const SearchPage = () => {
 	const searchParams = new URLSearchParams(location.search);
 
 	const [search, setSearch] = createSignal(coerceString(searchParams.get('q')));
 	const [type, setType] = createSignal(
-		coerceStringArray(searchParams.get('t'), ['top_posts', 'latest_posts', 'profiles', 'feeds']),
+		coerceStringArray(searchParams.get('t'), ['top_posts', 'latest_posts', 'users', 'feeds']),
 	);
 
 	const transformedSearch = createMemo(() => {
@@ -65,7 +70,7 @@ const SearchPage = () => {
 				items={[
 					{ value: 'top_posts', label: `Top` },
 					{ value: 'latest_posts', label: `Latest` },
-					{ value: 'profiles', label: `Profiles` },
+					{ value: 'users', label: `People` },
 					{ value: 'feeds', label: `Feeds` },
 				]}
 			/>
@@ -77,6 +82,29 @@ const SearchPage = () => {
 
 				<Match when={type() === 'latest_posts'}>
 					<TimelineList params={{ type: 'search', query: transformedSearch(), sort: 'latest' }} />
+				</Match>
+
+				<Match when={type() === 'users'}>
+					{(_true) => {
+						const profiles = createSearchProfilesQuery(transformedSearch);
+
+						return (
+							<PagedList
+								data={profiles.data?.pages.map((page) => page.actors)}
+								error={profiles.error}
+								render={(item) => {
+									return (
+										<VirtualItem estimateHeight={88}>
+											<ProfileItem item={item} AsideComponent={<ProfileFollowButton profile={item} />} />
+										</VirtualItem>
+									);
+								}}
+								hasNextPage={profiles.hasNextPage}
+								isFetchingNextPage={profiles.isFetching}
+								onEndReached={() => profiles.fetchNextPage()}
+							/>
+						);
+					}}
 				</Match>
 			</Switch>
 		</>
