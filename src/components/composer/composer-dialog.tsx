@@ -834,8 +834,12 @@ const ImageDnd = (props: { onAddImages: (blobs: Blob[]) => void }) => {
 	});
 
 	createEventListener(document, 'dragenter', (ev) => {
-		setDropping(true);
-		tracked = ev.target;
+		if (!tracked && ev.dataTransfer?.types.includes('Files')) {
+			setDropping(true);
+			tracked = ev.target;
+		} else if (tracked) {
+			tracked = ev.target;
+		}
 	});
 
 	createEventListener(document, 'dragleave', (ev) => {
