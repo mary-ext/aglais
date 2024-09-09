@@ -1,4 +1,4 @@
-import { For, type JSX, Match, Switch, untrack } from 'solid-js';
+import { For, type JSX, Match, Switch } from 'solid-js';
 
 import { getQueryErrorInfo } from '~/api/utils/query';
 
@@ -30,6 +30,13 @@ const PagedList = <T,>(props: PagedListProps<T>) => {
 	const onEndReached = props.onEndReached;
 	const onRefresh = props.onRefresh;
 
+	const hasFallback = 'fallback' in props;
+
+	const isEmpty = () => {
+		const data = props.data;
+		return !data || data.length === 0 || (data.length === 1 && data[0].length === 0);
+	};
+
 	return (
 		<div class={'flex flex-col' + (extraBottomGutter ? ` pb-4` : ``)}>
 			<Switch>
@@ -51,22 +58,7 @@ const PagedList = <T,>(props: PagedListProps<T>) => {
 				</Match>
 			</Switch>
 
-			<For
-				each={props.data}
-				fallback={
-					(() => {
-						if (!('fallback' in props)) {
-							return;
-						}
-
-						if (props.manualScroll || (!props.hasNextPage && !props.isFetchingNextPage)) {
-							return untrack(() => props.fallback);
-						}
-					}) as unknown as JSX.Element
-				}
-			>
-				{(array) => array.map(render)}
-			</For>
+			<For each={props.data}>{(array) => array.map(render)}</For>
 
 			<Switch>
 				<Match when={props.isRefreshing}>{null}</Match>
@@ -111,6 +103,8 @@ const PagedList = <T,>(props: PagedListProps<T>) => {
 						<CircularProgress />
 					</div>
 				</Match>
+
+				<Match when={hasFallback && isEmpty()}>{props.fallback}</Match>
 
 				<Match when={props.data}>
 					<EndOfListView />
