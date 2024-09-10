@@ -21,7 +21,7 @@ import type { QueryClient } from '@mary/solid-query';
 import { uploadBlob } from '~/api/queries/blob';
 import type { LinkMeta } from '~/api/queries/composer';
 import { getUtf8Length } from '~/api/richtext/intl';
-import type { PreliminaryRichText } from '~/api/richtext/parser/parse';
+import { type PreliminaryRichText, parseRt } from '~/api/richtext/parser/parse';
 import { getRecord } from '~/api/utils/records';
 
 import { compressPostImage } from '~/lib/bsky/image';
@@ -35,7 +35,6 @@ import {
 	type PostMediaEmbed,
 	type PostRecordEmbed,
 	getEmbedLabels,
-	getPostRt,
 } from './state';
 
 export interface PublishOptions {
@@ -86,7 +85,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 		const uri = `at://${did}/app.bsky.feed.post/${rkey}`;
 
 		// Resolve rich text
-		const rt = await resolveRichtext(getPostRt(post));
+		const rt = await resolveRichtext(parseRt(post.text, true));
 
 		// Resolve embeds
 		let embed: AppBskyFeedPost.Record['embed'];

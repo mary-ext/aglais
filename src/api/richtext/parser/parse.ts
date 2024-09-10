@@ -65,6 +65,7 @@ export interface PreliminaryRichText {
 	length: number;
 	segments: PreliminarySegment[];
 	links: string[];
+	empty: boolean;
 }
 
 const enum CharCode {
@@ -102,8 +103,7 @@ const enum CharCode {
 	UPPER_Z = 90,
 }
 
-const WS_RE = / +(?=\n)|\n(?=(?: *\n){2} *)/g;
-export const EOF_WS_RE = /\s+$| +(?=\n)|\n(?=(?: *\n){2}) */g;
+const S_RE = /^\s+$/;
 
 export const PLAIN_WS_RE = /^\s+|\s+$| +(?=\n)|\n(?=(?: *\n){2}) */g;
 
@@ -114,7 +114,7 @@ const ESCAPE_SEGMENT: EscapePreliminarySegment = { type: 'escape', raw: '\\', te
 
 const charCodeAt = String.prototype.charCodeAt;
 
-export const parseRt = (source: string): PreliminaryRichText => {
+export const parseRt = (source: string, cleanWhitespaces: boolean): PreliminaryRichText => {
 	const segments: PreliminarySegment[] = [];
 	const links: string[] = [];
 
@@ -122,6 +122,10 @@ export const parseRt = (source: string): PreliminaryRichText => {
 
 	let tmp: number;
 	let secure: boolean = false;
+
+	if (cleanWhitespaces) {
+		source = source.replace(PLAIN_WS_RE, '');
+	}
 
 	for (let idx = 0, len = source.length; idx < len; ) {
 		const look = c(idx);
@@ -381,9 +385,8 @@ export const parseRt = (source: string): PreliminaryRichText => {
 
 					if (start > idx) {
 						const raw = source.slice(idx, start);
-						const text = raw.replace(WS_RE, '');
 
-						segments.push({ type: 'text', raw: raw, text: text });
+						segments.push({ type: 'text', raw: raw, text: raw });
 					}
 
 					{
@@ -417,10 +420,9 @@ export const parseRt = (source: string): PreliminaryRichText => {
 			}
 
 			const raw = source.slice(idx, end);
-			const text = raw.replace(end === len ? EOF_WS_RE : WS_RE, '');
 
 			idx = end;
-			segments.push({ type: 'text', raw: raw, text: text });
+			segments.push({ type: 'text', raw: raw, text: raw });
 
 			continue;
 		}
@@ -438,21 +440,6 @@ export const parseRt = (source: string): PreliminaryRichText => {
 		length: graphemeLen(text),
 		segments: segments,
 		links: links,
+		empty: text.length === 0 || (!cleanWhitespaces && S_RE.test(text)),
 	};
-};
-
-export const getRtText = (rt: PreliminaryRichText): string => {
-	const segments = rt.segments;
-	let str = '';
-
-	for (let i = 0, ilen = segments.length; i < ilen; i++) {
-		const segment = segments[i];
-		str += segment.text;
-	}
-
-	return str;
-};
-
-export const getRtGraphemeLength = (rt: PreliminaryRichText): number => {
-	return graphemeLen(getRtText(rt));
 };

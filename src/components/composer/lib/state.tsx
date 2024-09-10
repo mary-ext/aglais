@@ -215,7 +215,7 @@ export const getPostRt = (post: PostState) => {
 	const existing = unwrapped._parsed;
 
 	if (existing === null || existing.t !== text) {
-		return (unwrapped._parsed = { t: text, r: parseRt(text) }).r;
+		return (unwrapped._parsed = { t: text, r: parseRt(text, false) }).r;
 	}
 
 	return existing.r;
