@@ -46,6 +46,7 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 			<video
 				ref={(node) => {
 					hls.attachMedia(node);
+					node.volume = 0.25;
 
 					onCleanup(
 						globalEvents.on('mediaplay', (id) => {
