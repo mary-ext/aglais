@@ -7,4 +7,7 @@ export const globalEvents = new EventEmitter<{
 	postpublished(): void;
 	// User tried navigating to the same main page they're already in
 	softreset(): void;
+
+	// Media is being played
+	mediaplay(id: string): void;
 }>();

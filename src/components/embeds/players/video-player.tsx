@@ -3,12 +3,16 @@ import { onCleanup } from 'solid-js';
 
 import type { AppBskyEmbedVideo } from '@atcute/client/lexicons';
 
+import { globalEvents } from '~/globals/events';
+
 export interface VideoPlayerProps {
 	/** Expected to be static */
 	embed: AppBskyEmbedVideo.View;
 }
 
 const VideoPlayer = ({ embed }: VideoPlayerProps) => {
+	const playerId = crypto.randomUUID();
+
 	const hls = new Hls({
 		capLevelToPlayerSize: true,
 		xhrSetup(xhr, urlString) {
@@ -41,11 +45,20 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 			<video
 				ref={(node) => {
 					hls.attachMedia(node);
+
+					onCleanup(
+						globalEvents.on('mediaplay', (id) => {
+							if (id !== playerId && !node.paused) {
+								node.pause();
+							}
+						}),
+					);
 				}}
 				aria-description={/* @once */ embed.alt}
 				controls
 				playsinline
 				autoplay
+				onPlay={() => globalEvents.emit('mediaplay', playerId)}
 				class="h-full w-full"
 			/>
 		</div>

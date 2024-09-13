@@ -1,5 +1,7 @@
 import { createSignal, onCleanup } from 'solid-js';
 
+import { globalEvents } from '~/globals/events';
+
 import PauseSolidIcon from '~/components/icons-central/pause-solid';
 import PlaySolidIcon from '~/components/icons-central/play-solid';
 
@@ -11,6 +13,8 @@ export interface GifPlayerProps {
 }
 
 const GifPlayer = ({ snippet }: GifPlayerProps) => {
+	const playerId = crypto.randomUUID();
+
 	const [playing, setPlaying] = createSignal(true);
 	const [stalling, setStalling] = createSignal(false);
 
@@ -21,6 +25,15 @@ const GifPlayer = ({ snippet }: GifPlayerProps) => {
 	return (
 		<div class="contents">
 			<video
+				ref={(node) => {
+					onCleanup(
+						globalEvents.on('mediaplay', (id) => {
+							if (id !== playerId && !node.paused) {
+								node.pause();
+							}
+						}),
+					);
+				}}
 				aria-description={/* @once */ snippet.description}
 				src={/* @once */ snippet.url}
 				poster={/* @once */ snippet.thumb}
@@ -39,7 +52,10 @@ const GifPlayer = ({ snippet }: GifPlayerProps) => {
 						video.pause();
 					}
 				}}
-				onPlay={() => setPlaying(true)}
+				onPlay={() => {
+					setPlaying(true);
+					globalEvents.emit('mediaplay', playerId);
+				}}
 				onPause={() => setPlaying(false)}
 				onWaiting={() => {
 					clearTimeout(_stallTimeout);
