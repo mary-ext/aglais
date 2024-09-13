@@ -1,4 +1,4 @@
-import { type FetchHandler, buildFetchHandler } from '@atcute/client';
+import { type FetchHandler, type FetchHandlerObject, buildFetchHandler } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
 import { mergeHeaders } from '@atcute/client/utils/http';
 
@@ -8,7 +8,7 @@ export interface Labeler {
 }
 
 export const attachLabelerHeaders = (
-	handler: FetchHandler | FetchHandler,
+	handler: FetchHandler | FetchHandlerObject,
 	labelers: () => Labeler[],
 ): FetchHandler => {
 	const next = buildFetchHandler(handler);
