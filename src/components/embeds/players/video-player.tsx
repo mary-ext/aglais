@@ -1,4 +1,5 @@
 import Hls from 'hls.js';
+import { nanoid } from 'nanoid/non-secure';
 import { onCleanup } from 'solid-js';
 
 import type { AppBskyEmbedVideo } from '@atcute/client/lexicons';
@@ -11,7 +12,7 @@ export interface VideoPlayerProps {
 }
 
 const VideoPlayer = ({ embed }: VideoPlayerProps) => {
-	const playerId = crypto.randomUUID();
+	const playerId = nanoid();
 
 	const hls = new Hls({
 		capLevelToPlayerSize: true,

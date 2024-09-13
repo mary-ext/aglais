@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid/non-secure';
 import { createSignal, onCleanup } from 'solid-js';
 
 import { globalEvents } from '~/globals/events';
@@ -13,7 +14,7 @@ export interface GifPlayerProps {
 }
 
 const GifPlayer = ({ snippet }: GifPlayerProps) => {
-	const playerId = crypto.randomUUID();
+	const playerId = nanoid();
 
 	const [playing, setPlaying] = createSignal(true);
 	const [stalling, setStalling] = createSignal(false);
