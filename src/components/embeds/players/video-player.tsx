@@ -1,6 +1,6 @@
 import Hls from 'hls.js';
 import { nanoid } from 'nanoid/non-secure';
-import { onCleanup } from 'solid-js';
+import { createEffect, createSignal, onCleanup } from 'solid-js';
 
 import type { AppBskyEmbedVideo } from '@atcute/client/lexicons';
 
@@ -12,6 +12,7 @@ export interface VideoPlayerProps {
 }
 
 const VideoPlayer = ({ embed }: VideoPlayerProps) => {
+	const [playing, setPlaying] = createSignal(false);
 	const playerId = nanoid();
 
 	const hls = new Hls({
@@ -48,19 +49,38 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 					hls.attachMedia(node);
 					node.volume = 0.25;
 
-					onCleanup(
-						globalEvents.on('mediaplay', (id) => {
-							if (id !== playerId && !node.paused) {
-								node.pause();
-							}
-						}),
-					);
+					createEffect(() => {
+						if (!playing()) {
+							return;
+						}
+
+						const observer = new IntersectionObserver(
+							(entries) => {
+								const entry = entries[0];
+								if (!entry.isIntersecting) {
+									node.pause();
+								}
+							},
+							{ threshold: 0.5 },
+						);
+
+						onCleanup(() => observer.disconnect());
+						onCleanup(globalEvents.on('mediaplay', () => node.pause()));
+
+						observer.observe(node);
+					});
 				}}
 				aria-description={/* @once */ embed.alt}
 				controls
 				playsinline
 				autoplay
-				onPlay={() => globalEvents.emit('mediaplay', playerId)}
+				onPlay={() => {
+					globalEvents.emit('mediaplay', playerId);
+					setPlaying(true);
+				}}
+				onPause={() => {
+					setPlaying(false);
+				}}
 				class="h-full w-full"
 			/>
 		</div>

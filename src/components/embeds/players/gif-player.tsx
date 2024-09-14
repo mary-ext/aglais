@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid/non-secure';
-import { createSignal, onCleanup } from 'solid-js';
+import { createEffect, createSignal, onCleanup } from 'solid-js';
 
 import { globalEvents } from '~/globals/events';
 
@@ -27,13 +27,26 @@ const GifPlayer = ({ snippet }: GifPlayerProps) => {
 		<div class="contents">
 			<video
 				ref={(node) => {
-					onCleanup(
-						globalEvents.on('mediaplay', (id) => {
-							if (id !== playerId && !node.paused) {
-								node.pause();
-							}
-						}),
-					);
+					createEffect(() => {
+						if (!playing()) {
+							return;
+						}
+
+						const observer = new IntersectionObserver(
+							(entries) => {
+								const entry = entries[0];
+								if (!entry.isIntersecting) {
+									node.pause();
+								}
+							},
+							{ threshold: 0.5 },
+						);
+
+						onCleanup(() => observer.disconnect());
+						onCleanup(globalEvents.on('mediaplay', () => node.pause()));
+
+						observer.observe(node);
+					});
 				}}
 				aria-description={/* @once */ snippet.description}
 				src={/* @once */ snippet.url}
