@@ -1,7 +1,29 @@
+import { createQuery } from '@mary/solid-query';
+
+import { useAgent } from '~/lib/states/agent';
+
 import * as Boxed from '~/components/boxed';
 import * as Page from '~/components/page';
 
 const AccountSettingsPage = () => {
+	const { did, rpc, persister } = useAgent();
+
+	const repo = createQuery(() => ({
+		queryKey: ['describe-repo'],
+		persister: persister as any,
+		async queryFn() {
+			const [repoResponse, serverResponse] = await Promise.all([
+				rpc.get('com.atproto.repo.describeRepo', { params: { repo: did! } }),
+				rpc.handle('/xrpc/com.atproto.server.describeServer', {}),
+			]);
+
+			return {
+				handle: repoResponse.data.handle,
+				pds: new URL(serverResponse.url).host,
+			};
+		},
+	}));
+
 	return (
 		<>
 			<Page.Header>
@@ -17,8 +39,11 @@ const AccountSettingsPage = () => {
 					<Boxed.GroupHeader>Account information</Boxed.GroupHeader>
 
 					<Boxed.List>
-						<Boxed.ButtonItem label="Handle" blurb={'@' + 'lol'} />
-						<Boxed.StaticItem label="Data server" description={'lol'} />
+						<Boxed.ButtonItem label="Handle" blurb={'@' + (repo.data?.handle ?? 'handle.invalid')} />
+						<Boxed.StaticItem
+							label="Data server"
+							description={repo.data ? formatPdsHost(repo.data.pds) : '-'}
+						/>
 					</Boxed.List>
 				</Boxed.Group>
 
@@ -28,7 +53,7 @@ const AccountSettingsPage = () => {
 					<Boxed.List>
 						<Boxed.LinkItem to="/settings/app-passwords" label="Manage app passwords" />
 						<Boxed.ButtonItem label="Change password" />
-						<Boxed.StaticItem label="Email two-factor authentication" description={'lol'} />
+						<Boxed.StaticItem label="Email two-factor authentication" description={'Disabled'} />
 					</Boxed.List>
 				</Boxed.Group>
 
@@ -48,3 +73,11 @@ const AccountSettingsPage = () => {
 };
 
 export default AccountSettingsPage;
+
+const formatPdsHost = (host: string): string => {
+	if (host.endsWith('.host.bsky.network')) {
+		return 'bsky.social';
+	}
+
+	return host;
+};
