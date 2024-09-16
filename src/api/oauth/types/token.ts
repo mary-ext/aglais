@@ -1,5 +1,8 @@
 import type { At } from '@atcute/client/lexicons';
 
+import type { DPoPKey } from './dpop';
+import type { PersistedAuthorizationServerMetadata } from './server';
+
 export interface OAuthTokenResponse {
 	access_token: string;
 	// Can be DPoP or Bearer, normalize casing.
@@ -22,16 +25,22 @@ export interface OAuthTokenResponse {
 		| undefined;
 }
 
-export interface TokenSet {
-	sub: At.DID;
-	iss: string;
-	aud: string;
-	scope?: string;
-
-	id_token?: `${string}.${string}.${string}`;
-	refresh_token?: string;
-	access_token: string;
-	token_type: string;
-	/** ISO Date */
+export interface TokenInfo {
+	scope: string;
+	type: string;
 	expires_at?: number;
+	refresh?: string;
+	access: string;
+}
+
+export interface ExchangeInfo {
+	sub: At.DID;
+	aud: string;
+	server: PersistedAuthorizationServerMetadata;
+}
+
+export interface Session {
+	dpopKey: DPoPKey;
+	info: ExchangeInfo;
+	token: TokenInfo;
 }

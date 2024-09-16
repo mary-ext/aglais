@@ -2,38 +2,35 @@ import type { FetchHandlerObject } from '@atcute/client';
 
 import { createDPoPFetch } from '../dpop';
 import { CLIENT_ID } from '../env';
-import { authorizationServerMetadataResolver } from '../resolver';
-import type { DPoPKey } from '../types/dpop';
-import type { TokenSet } from '../types/token';
+import type { Session } from '../types/token';
 
 import { OAuthServerAgent } from './server-agent';
-import { getSession, sessions } from './session';
+import { sessions } from './sessions';
 
 export class OAuthUserAgent implements FetchHandlerObject {
 	#fetch: typeof fetch;
 
-	constructor(
-		public tokenSet: TokenSet,
-		public dpopKey: DPoPKey,
-	) {
-		this.#fetch = createDPoPFetch(CLIENT_ID, dpopKey, false);
+	constructor(public session: Session) {
+		this.#fetch = createDPoPFetch(CLIENT_ID, session.dpopKey, false);
 	}
 
-	async #getTokenSet(refresh?: boolean) {
-		const { tokenSet } = await getSession(this.tokenSet.sub, refresh);
-		return (this.tokenSet = tokenSet);
+	async #getSession(refresh?: boolean): Promise<Session> {
+		const session = await sessions.get(this.session.info.sub, {
+			noCache: refresh === true,
+			allowStale: refresh === false,
+		});
+
+		return (this.session = session);
 	}
 
 	async signOut(): Promise<void> {
-		const sub = this.tokenSet.sub;
+		const sub = this.session.info.sub;
 
 		try {
-			const { tokenSet, dpopKey } = await getSession(sub, false);
+			const { dpopKey, info, token } = await sessions.get(sub, { allowStale: true });
+			const server = new OAuthServerAgent(info.server, dpopKey);
 
-			const metadata = await authorizationServerMetadataResolver.get(tokenSet.iss);
-			const server = new OAuthServerAgent(metadata, dpopKey);
-
-			await server.revoke(tokenSet.access_token);
+			await server.revoke(token.refresh ?? token.access);
 		} finally {
 			await sessions.deleteStored(sub);
 		}
@@ -42,10 +39,10 @@ export class OAuthUserAgent implements FetchHandlerObject {
 	async handle(pathname: string, init?: RequestInit): Promise<Response> {
 		const headers = new Headers(init?.headers);
 
-		let tokens = this.tokenSet;
+		let session = this.session;
 
-		let url = new URL(pathname, tokens.aud);
-		headers.set('authorization', `${tokens.token_type} ${tokens.access_token}`);
+		let url = new URL(pathname, session.info.aud);
+		headers.set('authorization', `${session.token.type} ${session.token.access}`);
 
 		let response = await this.#fetch(url, { ...init, headers });
 		if (!isInvalidTokenResponse(response)) {
@@ -54,13 +51,13 @@ export class OAuthUserAgent implements FetchHandlerObject {
 
 		try {
 			// Refresh the token normally first, it could just be that we're behind
-			const newTokens = await this.#getTokenSet();
+			const newSession = await this.#getSession();
 
-			if (newTokens.expires_at === tokens.expires_at) {
+			if (newSession.token.expires_at === session.token.expires_at) {
 				// If it returns the same expiry then we need to force it
-				tokens = await this.#getTokenSet(true);
+				session = await this.#getSession(true);
 			} else {
-				tokens = newTokens;
+				session = newSession;
 			}
 		} catch {
 			return response;
@@ -71,8 +68,8 @@ export class OAuthUserAgent implements FetchHandlerObject {
 			return response;
 		}
 
-		url = new URL(pathname, tokens.aud);
-		headers.set('authorization', `${tokens.token_type} ${tokens.access_token}`);
+		url = new URL(pathname, session.info.aud);
+		headers.set('authorization', `${session.token.type} ${session.token.access}`);
 
 		return await this.#fetch(url, { ...init, headers });
 	}

@@ -1,31 +1,26 @@
-import { database } from './globals';
+import { nanoid } from 'nanoid/non-secure';
+
+import { database } from '../../globals/oauth-db';
 import type { DPoPKey } from './types/dpop';
-import { encoder, extractContentType, randomBytes, toBase64Url, toSha256 } from './utils';
+import { encoder, extractContentType, fromBase64Url, toBase64Url, toSha256 } from './utils';
+
+const ES256_ALG = { name: 'ECDSA', namedCurve: 'P-256' } as const;
 
 export const createES256Key = async (): Promise<DPoPKey> => {
-	const algorithm = { name: 'ECDSA', namedCurve: 'P-256' } as const;
-	const usage = ['sign', 'verify'] as const;
+	const pair = await crypto.subtle.generateKey(ES256_ALG, true, ['sign', 'verify']);
 
-	const pair = await crypto.subtle.generateKey(algorithm, false, usage);
-	const jwk = await crypto.subtle.exportKey('jwk', pair.publicKey);
+	const key = await crypto.subtle.exportKey('pkcs8', pair.privateKey);
+	const { ext: _ext, key_ops: _key_opts, ...jwk } = await crypto.subtle.exportKey('jwk', pair.publicKey);
 
 	return {
-		key: pair.privateKey,
-		jwt: {
-			typ: 'dpop+jwt',
-			alg: 'ES256',
-			jwk: {
-				kty: jwk.kty,
-				x: jwk.x,
-				y: jwk.y,
-				crv: jwk.crv,
-			},
-		},
+		key: toBase64Url(new Uint8Array(key)),
+		jwt: toBase64Url(encoder.encode(JSON.stringify({ typ: 'dpop+jwt', alg: 'ES256', jwk: jwk }))),
 	};
 };
 
 export const createDPoPSignage = (issuer: string, dpopKey: DPoPKey) => {
-	const headerString = toBase64Url(encoder.encode(JSON.stringify(dpopKey.jwt)));
+	const headerString = dpopKey.jwt;
+	const keyPromise = crypto.subtle.importKey('pkcs8', fromBase64Url(dpopKey.key), ES256_ALG, true, ['sign']);
 
 	const constructPayload = (
 		method: string,
@@ -38,7 +33,8 @@ export const createDPoPSignage = (issuer: string, dpopKey: DPoPKey) => {
 		const payload = {
 			iss: issuer,
 			iat: now,
-			jti: randomBytes(12),
+			// This seems fine, we can remake the request if it fails.
+			jti: nanoid(12),
 			htm: method,
 			htu: url,
 			nonce: nonce,
@@ -53,7 +49,7 @@ export const createDPoPSignage = (issuer: string, dpopKey: DPoPKey) => {
 
 		const signed = await crypto.subtle.sign(
 			{ name: 'ECDSA', hash: { name: 'SHA-256' } },
-			dpopKey.key,
+			await keyPromise,
 			encoder.encode(headerString + '.' + payloadString),
 		);
 

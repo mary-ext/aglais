@@ -6,15 +6,15 @@ import { FetchResponseError, OAuthResponseError, TokenRefreshError } from '../er
 import { resolveFromIdentity } from '../resolver';
 import type { DPoPKey } from '../types/dpop';
 import type { OAuthParResponse } from '../types/par';
-import type { AuthorizationServerMetadata } from '../types/server';
-import type { OAuthTokenResponse, TokenSet } from '../types/token';
-import { extractContentType } from '../utils';
+import type { PersistedAuthorizationServerMetadata } from '../types/server';
+import type { ExchangeInfo, OAuthTokenResponse, TokenInfo } from '../types/token';
+import { extractContentType, pick } from '../utils';
 
 export class OAuthServerAgent {
 	#fetch: typeof fetch;
-	#metadata: AuthorizationServerMetadata;
+	#metadata: PersistedAuthorizationServerMetadata;
 
-	constructor(metadata: AuthorizationServerMetadata, dpopKey: DPoPKey) {
+	constructor(metadata: PersistedAuthorizationServerMetadata, dpopKey: DPoPKey) {
 		this.#metadata = metadata;
 		this.#fetch = createDPoPFetch(CLIENT_ID, dpopKey, true);
 	}
@@ -34,13 +34,8 @@ export class OAuthServerAgent {
 
 		const response = await this.#fetch(url, {
 			method: 'post',
-			headers: {
-				'content-type': 'application/json',
-			},
-			body: JSON.stringify({
-				...payload,
-				client_id: CLIENT_ID,
-			}),
+			headers: { 'content-type': 'application/json' },
+			body: JSON.stringify({ ...payload, client_id: CLIENT_ID }),
 		});
 
 		if (extractContentType(response.headers) !== 'application/json') {
@@ -62,7 +57,7 @@ export class OAuthServerAgent {
 		} catch {}
 	}
 
-	async exchangeCode(code: string, verifier?: string) {
+	async exchangeCode(code: string, verifier?: string): Promise<{ info: ExchangeInfo; token: TokenInfo }> {
 		const response = await this.request('token', {
 			grant_type: 'authorization_code',
 			redirect_uri: REDIRECT_URI,
@@ -71,31 +66,26 @@ export class OAuthServerAgent {
 		});
 
 		try {
-			return await this.#processTokenResponse(response);
+			return await this.#processExchangeResponse(response);
 		} catch (err) {
 			await this.revoke(response.access_token);
 			throw err;
 		}
 	}
 
-	async refresh(tokenSet: TokenSet): Promise<TokenSet> {
-		const sub = tokenSet.sub;
-
-		if (!tokenSet.refresh_token) {
-			throw new TokenRefreshError(sub, 'No refresh token available');
+	async refresh({ sub, token }: { sub: At.DID; token: TokenInfo }): Promise<TokenInfo> {
+		if (!token.refresh) {
+			throw new TokenRefreshError(sub, 'no refresh token available');
 		}
 
 		const response = await this.request('token', {
 			grant_type: 'refresh_token',
-			refresh_token: tokenSet.refresh_token,
+			refresh_token: token.refresh,
 		});
 
 		try {
 			if (sub !== response.sub) {
 				throw new TokenRefreshError(sub, `sub mismatch in token response; got ${response.sub}`);
-			}
-			if (tokenSet.iss !== this.#metadata.issuer) {
-				throw new TokenRefreshError(sub, `issuer mismatch; got ${this.#metadata.issuer}`);
 			}
 
 			return this.#processTokenResponse(response);
@@ -106,33 +96,52 @@ export class OAuthServerAgent {
 		}
 	}
 
-	async #processTokenResponse(response: OAuthTokenResponse): Promise<TokenSet> {
-		const sub = response.sub;
+	#processTokenResponse(res: OAuthTokenResponse): TokenInfo {
+		const sub = res.sub;
+		const scope = res.scope;
+		if (!sub) {
+			throw new TypeError(`missing sub field in token response`);
+		}
+		if (!scope) {
+			throw new TypeError(`missing scope field in token response`);
+		}
+
+		return {
+			scope: scope,
+			refresh: res.refresh_token,
+			access: res.access_token,
+			type: res.token_type ?? 'Bearer',
+			expires_at: typeof res.expires_in === 'number' ? Date.now() + res.expires_in * 1000 : undefined,
+		};
+	}
+
+	async #processExchangeResponse(res: OAuthTokenResponse): Promise<{ info: ExchangeInfo; token: TokenInfo }> {
+		const sub = res.sub;
 		if (!sub) {
 			throw new TypeError(`missing sub field in token response`);
 		}
 
-		const resolved = await resolveFromIdentity(sub, { signal: AbortSignal.timeout(10e3) });
+		const token = this.#processTokenResponse(res);
+		const resolved = await resolveFromIdentity(sub);
 
 		if (resolved.metadata.issuer !== this.#metadata.issuer) {
-			// Best case scenario; the user switched PDS. Worst case scenario; a bad
-			// actor is trying to impersonate a user. In any case, we must not allow
-			// this token to be used.
 			throw new TypeError(`issuer mismatch; got ${resolved.metadata.issuer}`);
 		}
 
 		return {
-			sub: sub as At.DID,
-			aud: resolved.identity.pds.href,
-			iss: resolved.metadata.issuer,
-
-			scope: response.scope,
-			id_token: response.id_token,
-			refresh_token: response.refresh_token,
-			access_token: response.access_token,
-			token_type: response.token_type ?? 'Bearer',
-			expires_at:
-				typeof response.expires_in === 'number' ? Date.now() + response.expires_in * 1000 : undefined,
+			token: token,
+			info: {
+				sub: sub as At.DID,
+				aud: resolved.identity.pds.href,
+				server: pick(resolved.metadata, [
+					'issuer',
+					'authorization_endpoint',
+					'introspection_endpoint',
+					'pushed_authorization_request_endpoint',
+					'revocation_endpoint',
+					'token_endpoint',
+				]),
+			},
 		};
 	}
 }

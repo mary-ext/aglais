@@ -1,7 +1,11 @@
+import type { UnwrapArray } from '~/api/utils/types';
+
 type FalsyValue = false | 0 | null | undefined;
 
 export const decoder = new TextDecoder();
 export const encoder = new TextEncoder();
+
+export const locks = navigator.locks;
 
 export const extractContentType = (headers: Headers): string | undefined => {
 	return headers.get('content-type')?.split(';')[0];
@@ -95,4 +99,17 @@ export const generatePKCE = async (): Promise<{ verifier: string; challenge: str
 		challenge: await toSha256(verifier),
 		method: 'S256',
 	};
+};
+
+export const pick = <T, K extends (keyof T)[]>(obj: T, keys: K): Pick<T, UnwrapArray<K>> => {
+	const cloned = {};
+
+	for (let idx = 0, len = keys.length; idx < len; idx++) {
+		const key = keys[idx];
+
+		// @ts-expect-error
+		cloned[key] = obj[key];
+	}
+
+	return cloned as Pick<T, UnwrapArray<K>>;
 };

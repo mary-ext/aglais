@@ -14,15 +14,13 @@ import { XRPC } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
 
 import { BLUESKY_MODERATION_DID } from '~/api/defaults';
+import { sessions as oauthSessions } from '~/api/oauth/agents/sessions';
+import { OAuthUserAgent } from '~/api/oauth/agents/user-agent';
 
+import { database } from '~/globals/oauth-db';
 import { sessions } from '~/globals/preferences';
 
 import { type Labeler, attachLabelerHeaders } from '../atproto/labeler';
-import { OAuthServerAgent } from '../bsky-oauth/agents/server-agent';
-import { getSession } from '../bsky-oauth/agents/session';
-import { OAuthUserAgent } from '../bsky-oauth/agents/user-agent';
-import { database } from '../bsky-oauth/globals';
-import { getMetadataFromAuthorizationServer } from '../bsky-oauth/resolver';
 import { makeAbortable } from '../hooks/abortable';
 import { createReactiveLocalStorage, isExternalWriting } from '../hooks/local-storage';
 import type { PerAccountPreferenceSchema } from '../preferences/account';
@@ -148,10 +146,10 @@ export const SessionProvider = (props: ParentProps) => {
 
 			const signal = getSignal();
 
-			const { tokenSet, dpopKey } = await getSession(did);
+			const session = await oauthSessions.get(did, { allowStale: true });
+			const agent = new OAuthUserAgent(session);
 
-			const session = new OAuthUserAgent(tokenSet, dpopKey);
-			const rpc = new XRPC({ handler: session });
+			const rpc = new XRPC({ handler: agent });
 
 			signal.throwIfAborted();
 
@@ -159,7 +157,7 @@ export const SessionProvider = (props: ParentProps) => {
 				sessions.active = did;
 				sessions.accounts = [account, ...sessions.accounts.filter((acc) => acc.did !== did)];
 
-				replaceState(createAccountState(account, session, rpc));
+				replaceState(createAccountState(account, agent, rpc));
 			});
 		},
 
@@ -181,12 +179,10 @@ export const SessionProvider = (props: ParentProps) => {
 
 					await session.signOut();
 				} else {
-					const { dpopKey, tokenSet } = await getSession(did, false);
+					const session = await oauthSessions.get(did, { allowStale: true });
+					const agent = new OAuthUserAgent(session);
 
-					const as_meta = await getMetadataFromAuthorizationServer(tokenSet.iss);
-					const server = new OAuthServerAgent(as_meta, dpopKey);
-
-					await server.revoke(tokenSet.access_token);
+					await agent.signOut();
 				}
 			} finally {
 				await database.sessions.delete(did);

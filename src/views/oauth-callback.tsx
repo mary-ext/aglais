@@ -1,12 +1,13 @@
 import { Match, Switch, createResource } from 'solid-js';
 
-import * as preferences from '~/globals/preferences';
+import { OAuthServerAgent } from '~/api/oauth/agents/server-agent';
+import { sessions } from '~/api/oauth/agents/sessions';
+import { OAuthUserAgent } from '~/api/oauth/agents/user-agent';
+import { getMetadataFromAuthorizationServer } from '~/api/oauth/resolver';
+import type { Session } from '~/api/oauth/types/token';
 
-import { OAuthServerAgent } from '~/lib/bsky-oauth/agents/server-agent';
-import { sessions } from '~/lib/bsky-oauth/agents/session';
-import { OAuthUserAgent } from '~/lib/bsky-oauth/agents/user-agent';
-import { database } from '~/lib/bsky-oauth/globals';
-import { getMetadataFromAuthorizationServer } from '~/lib/bsky-oauth/resolver';
+import { database } from '~/globals/oauth-db';
+import * as preferences from '~/globals/preferences';
 
 import Button from '~/components/button';
 import CircularProgress from '~/components/circular-progress';
@@ -65,18 +66,19 @@ const OAuthCallbackPage = () => {
 		const dpopKey = stored.dpopKey;
 
 		const server = new OAuthServerAgent(as_meta, dpopKey);
-
-		const tokenSet = await server.exchangeCode(code, stored.verifier);
-		const sub = tokenSet.sub;
+		const { info, token } = await server.exchangeCode(code, stored.verifier);
 
 		// We're finished!
-		await sessions.setStored(sub, { dpopKey, tokenSet });
+		const sub = info.sub;
+		const session: Session = { dpopKey, info, token };
+
+		await sessions.setStored(sub, session);
 
 		// We make 4 requests right at the start of the app's launch, those requests
 		// will fail immediately on bsky.social as they'd be missing a DPoP nonce,
 		// so let's fire a random request right now.
 		try {
-			const session = new OAuthUserAgent(tokenSet, dpopKey);
+			const session = new OAuthUserAgent(session);
 			await session.handle(`/xrpc/app.bsky.notification.getUnreadCount`);
 		} catch {
 			// Don't worry about it failing.

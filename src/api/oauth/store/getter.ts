@@ -84,28 +84,27 @@ export class CachedGetter<K extends string | number, V extends {} | null> {
 				return { isFresh: false, value: storedValue };
 			}
 
-			return Promise.resolve()
-				.then((): Awaitable<V> => (0, this.#getter)(key, options, storedValue))
-				.then(
-					async (value): PendingItem<V> => {
-						await this.setStored(key, value);
-						return { isFresh: true, value };
-					},
-					async (err): Promise<never> => {
-						if (storedValue !== undefined) {
-							try {
-								const deleteOnError = parentOptions?.deleteOnError;
-								if (await deleteOnError?.(err, key, storedValue)) {
-									await this.deleteStored(key, err);
-								}
-							} catch (error) {
-								throw new AggregateError([err, error], 'Error while deleting stored value');
-							}
-						}
+			return resolve((): Awaitable<V> => (0, this.#getter)(key, options, storedValue)).then(
+				async (value): PendingItem<V> => {
+					await this.setStored(key, value);
+					return { isFresh: true, value };
+				},
+				async (err): Promise<never> => {
+					const deleteOnError = parentOptions?.deleteOnError;
 
-						throw err;
-					},
-				);
+					if (deleteOnError && storedValue !== undefined) {
+						try {
+							if (await deleteOnError(err, key, storedValue)) {
+								await this.deleteStored(key, err);
+							}
+						} catch (error) {
+							throw new AggregateError([err, error], 'error while deleting stored value');
+						}
+					}
+
+					throw err;
+				},
+			);
 		};
 
 		let promise: PendingItem<V>;
@@ -123,7 +122,7 @@ export class CachedGetter<K extends string | number, V extends {} | null> {
 			// statement between this and the loop iteration check meaning that
 			// this.pending.get returned undefined. It is there to catch bugs that
 			// would occur in future changes to the code.
-			throw new Error('Concurrent request for the same key');
+			throw new Error('concurrent request for the same key');
 		}
 
 		pending.set(key, promise);
@@ -153,3 +152,7 @@ export class CachedGetter<K extends string | number, V extends {} | null> {
 		await this.#store.delete(key);
 	}
 }
+
+const resolve = <T>(fn: () => T | Promise<T>): Promise<T> => {
+	return new Promise((resolve) => resolve(fn()));
+};
