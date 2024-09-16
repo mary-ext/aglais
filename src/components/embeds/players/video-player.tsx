@@ -61,6 +61,7 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 						observer.observe(node);
 					});
 				}}
+				poster={/* @once */ embed.thumbnail && replaceVideoCdnUrl(embed.thumbnail)}
 				aria-description={/* @once */ embed.alt}
 				controls
 				playsinline
