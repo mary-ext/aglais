@@ -2,6 +2,8 @@ import { Show, Suspense, createSignal, lazy } from 'solid-js';
 
 import type { AppBskyEmbedDefs, AppBskyEmbedVideo } from '@atcute/client/lexicons';
 
+import { replaceVideoCdnUrl } from '~/lib/bsky/video';
+
 import CircularProgress from '../circular-progress';
 import PlaySolidIcon from '../icons-central/play-solid';
 
@@ -48,7 +50,7 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 				{!interactive ? (
 					<img
 						alt={/* @once */ embed.alt}
-						src={/* @once */ embed.thumbnail}
+						src={/* @once */ embed.thumbnail && replaceVideoCdnUrl(embed.thumbnail)}
 						class="h-full w-full object-contain"
 					/>
 				) : (
@@ -61,7 +63,10 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 								onClick={() => setLoaded(true)}
 								class="h-full w-full"
 							>
-								<img src={/* @once */ embed.thumbnail} class="h-full w-full object-contain" />
+								<img
+									src={/* @once */ embed.thumbnail && replaceVideoCdnUrl(embed.thumbnail)}
+									class="h-full w-full object-contain"
+								/>
 
 								<div class="absolute left-1/2 top-1/2 grid -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-p-neutral-700/60 p-3 hover:bg-p-neutral-700/80">
 									<PlaySolidIcon class="text-xl" />

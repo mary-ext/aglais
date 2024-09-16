@@ -6,6 +6,8 @@ import type { AppBskyEmbedVideo } from '@atcute/client/lexicons';
 
 import { globalEvents } from '~/globals/events';
 
+import { replaceVideoCdnUrl } from '~/lib/bsky/video';
+
 export interface VideoPlayerProps {
 	/** Expected to be static */
 	embed: AppBskyEmbedVideo.View;
@@ -29,11 +31,7 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 
 	onCleanup(() => hls.destroy());
 
-	// Redirect .{m3u8,ts} files directly to the CDN, skipping the watch time/retention tracking
-	//
-	// Worth noting, I don't think `session_id` is tied to your account in any way, this is
-	// mostly an effort to get videos to load faster since this player is lazily-loaded
-	hls.loadSource(embed.playlist.replace('https://video.bsky.app/watch/', 'https://video.cdn.bsky.app/hls/'));
+	hls.loadSource(replaceVideoCdnUrl(embed.playlist));
 
 	return (
 		<div class="contents">
