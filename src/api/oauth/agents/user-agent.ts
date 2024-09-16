@@ -2,6 +2,7 @@ import type { FetchHandlerObject } from '@atcute/client';
 
 import { createDPoPFetch } from '../dpop';
 import { CLIENT_ID } from '../env';
+import type { GetCachedOptions } from '../store/getter';
 import type { Session } from '../types/token';
 
 import { OAuthServerAgent } from './server-agent';
@@ -9,18 +10,24 @@ import { sessions } from './sessions';
 
 export class OAuthUserAgent implements FetchHandlerObject {
 	#fetch: typeof fetch;
+	#getSessionPromise: Promise<void> | undefined;
 
 	constructor(public session: Session) {
 		this.#fetch = createDPoPFetch(CLIENT_ID, session.dpopKey, false);
 	}
 
-	async #getSession(refresh?: boolean): Promise<Session> {
-		const session = await sessions.get(this.session.info.sub, {
-			noCache: refresh === true,
-			allowStale: refresh === false,
-		});
+	#getSession(options?: GetCachedOptions): Promise<Session> {
+		const promise = sessions.get(this.session.info.sub, options);
 
-		return (this.session = session);
+		this.#getSessionPromise = promise
+			.then((session): void => {
+				this.session = session;
+			})
+			.finally(() => {
+				this.#getSessionPromise = undefined;
+			});
+
+		return promise;
 	}
 
 	async signOut(): Promise<void> {
@@ -50,12 +57,17 @@ export class OAuthUserAgent implements FetchHandlerObject {
 		}
 
 		try {
+			// Wait for existing getSession attempts to finish first.
+			while (this.#getSessionPromise) {
+				await this.#getSessionPromise;
+			}
+
 			// Refresh the token normally first, it could just be that we're behind
 			const newSession = await this.#getSession();
 
 			if (newSession.token.expires_at === session.token.expires_at) {
 				// If it returns the same expiry then we need to force it
-				session = await this.#getSession(true);
+				session = await this.#getSession({ noCache: true });
 			} else {
 				session = newSession;
 			}
