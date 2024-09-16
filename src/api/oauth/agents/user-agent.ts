@@ -57,7 +57,9 @@ export class OAuthUserAgent implements FetchHandlerObject {
 		}
 
 		try {
-			// Wait for existing getSession attempts to finish first.
+			// CachedGetter doesn't deduplicate requests if they throw, we kinda want
+			// them to throw, so here's an attempt at waiting for existing requests
+			// to see if they'll throw or not.
 			while (this.#getSessionPromise) {
 				await this.#getSessionPromise;
 			}
