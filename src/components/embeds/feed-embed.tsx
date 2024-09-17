@@ -1,8 +1,10 @@
 import { createMemo } from 'solid-js';
 
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+import { useQueryClient } from '@mary/solid-query';
 
 import { moderateGeneric } from '~/api/moderation/entities/generic';
+import { precacheFeed } from '~/api/queries-cache/feed-precache';
 import { parseAtUri } from '~/api/utils/strings';
 
 import { useModerationOptions } from '~/lib/states/moderation';
@@ -17,15 +19,17 @@ export interface FeedEmbedProps {
 }
 
 const FeedEmbed = ({ feed, interactive }: FeedEmbedProps) => {
+	const queryClient = useQueryClient();
 	const moderationOptions = useModerationOptions();
+
 	const moderation = createMemo(() => moderateGeneric(feed, feed.creator.did, moderationOptions()));
 
-	const uri = parseAtUri(feed.uri);
-	const href = `/${feed.creator.did}/feeds/${uri.rkey}`;
+	const href = `/${feed.creator.did}/feeds/${parseAtUri(feed.uri).rkey}`;
 
 	return (
 		<a
 			href={interactive ? href : undefined}
+			onClick={() => precacheFeed(queryClient, feed)}
 			class={
 				`flex gap-3 overflow-hidden rounded-md border border-outline p-3` +
 				(interactive ? ` hover:bg-contrast/sm active:bg-contrast/sm-pressed` : ``)

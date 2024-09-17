@@ -138,6 +138,7 @@ const routes: RouteDefinition[] = [
 			return isValidDidOrHandle(params.didOrHandle);
 		},
 	},
+
 	{
 		path: '/:did/following',
 		component: lazy(() => import('./views/profile-following')),
@@ -159,6 +160,7 @@ const routes: RouteDefinition[] = [
 			return isValidDid(params.did);
 		},
 	},
+
 	{
 		path: '/:did/labels',
 		component: lazy(() => import('./views/profile-labels')),
@@ -166,6 +168,15 @@ const routes: RouteDefinition[] = [
 			return isValidDid(params.did);
 		},
 	},
+
+	{
+		path: '/:did/feeds',
+		component: lazy(() => import('./views/profile-feeds')),
+		validate(params) {
+			return isValidDid(params.did);
+		},
+	},
+
 	{
 		path: '/:didOrHandle/:rkey',
 		component: lazy(() => import('./views/post-thread')),
