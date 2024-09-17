@@ -1,4 +1,4 @@
-import type { AppBskyFeedDefs, At } from '@atcute/client/lexicons';
+import type { At } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
@@ -6,11 +6,6 @@ import { useAgent } from '~/lib/states/agent';
 import { isDid, parseAtUri } from '../utils/strings';
 
 import { resolveHandle } from './handle';
-
-export interface ExtendedGeneratorView extends AppBskyFeedDefs.GeneratorView {
-	isOnline: boolean;
-	isValid: boolean;
-}
 
 export const createFeedMetaQuery = (feedUri: () => string) => {
 	const { rpc } = useAgent();
@@ -20,7 +15,7 @@ export const createFeedMetaQuery = (feedUri: () => string) => {
 
 		return {
 			queryKey: ['feed-meta', $feedUri],
-			async queryFn(ctx): Promise<ExtendedGeneratorView> {
+			async queryFn(ctx) {
 				const uri = parseAtUri($feedUri);
 
 				let did: At.DID;
@@ -37,11 +32,7 @@ export const createFeedMetaQuery = (feedUri: () => string) => {
 					},
 				});
 
-				return {
-					...data.view,
-					isOnline: data.isOnline,
-					isValid: data.isValid,
-				};
+				return data.view;
 			},
 		};
 	});
