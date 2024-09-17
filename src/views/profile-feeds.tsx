@@ -31,7 +31,7 @@ const ProfileFeedsPage = () => {
 		<>
 			<Page.Header>
 				<Page.HeaderAccessory>
-					<Page.Back />
+					<Page.Back to={`/${did}`} />
 				</Page.HeaderAccessory>
 
 				<Page.Heading
