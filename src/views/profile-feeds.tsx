@@ -5,6 +5,7 @@ import { useQueryClient } from '@mary/solid-query';
 
 import { moderateGeneric } from '~/api/moderation/entities/generic';
 import { precacheFeed } from '~/api/queries-cache/feed-precache';
+import { createProfileQuery } from '~/api/queries/profile';
 import { createProfileFeedsQuery } from '~/api/queries/profile-feeds';
 import { parseAtUri } from '~/api/utils/strings';
 
@@ -24,6 +25,7 @@ const ProfileFeedsPage = () => {
 	const { did } = useParams();
 
 	const feeds = createProfileFeedsQuery(() => did);
+	const profile = createProfileQuery(() => did);
 
 	return (
 		<>
@@ -32,7 +34,15 @@ const ProfileFeedsPage = () => {
 					<Page.Back />
 				</Page.HeaderAccessory>
 
-				<Page.Heading title="Feeds" />
+				<Page.Heading
+					title="Feeds"
+					subtitle={(() => {
+						const subject = profile.data;
+						if (subject) {
+							return '@' + subject.handle;
+						}
+					})()}
+				/>
 			</Page.Header>
 
 			<PagedList
