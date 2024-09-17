@@ -120,7 +120,9 @@ const FeedItem = ({ item }: FeedItemProps) => {
 				</a>
 			</div>
 
-			<p class="mb-2 whitespace-pre-wrap break-words text-de empty:hidden">{/* @once */ item.description}</p>
+			<p class="mb-2 line-clamp-5 whitespace-pre-wrap break-words text-de empty:hidden">
+				{/* @once */ item.description}
+			</p>
 
 			<p class="text-de text-contrast-muted">
 				{/* @once */ `Liked by ${formatLong(item.likeCount ?? 0)} users`}
