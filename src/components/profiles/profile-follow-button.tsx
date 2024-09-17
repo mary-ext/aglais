@@ -7,6 +7,7 @@ import { createProfileFollowMutation } from '~/api/mutations/profile';
 
 import { openModal } from '~/globals/modals';
 
+import { useSession } from '~/lib/states/session';
 import { on } from '~/lib/utils/misc';
 
 import Button from '../button';
@@ -18,9 +19,15 @@ export interface ProfileFollowButtonProps {
 }
 
 const ProfileFollowButton = (props: ProfileFollowButtonProps) => {
-	const profile = () => props.profile;
-	const shadow = useProfileShadow(profile);
+	const { currentAccount } = useSession();
 
+	const profile = () => props.profile;
+
+	if (currentAccount && currentAccount.did === profile().did) {
+		return null;
+	}
+
+	const shadow = useProfileShadow(profile);
 	const isBlocked = createMemo(() => !!(profile().viewer?.blockedBy && shadow().blockUri));
 
 	return on(isBlocked, ($isBlocked) => {
