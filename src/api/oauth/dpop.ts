@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid/non-secure';
 
 import { database } from '../../globals/oauth-db';
+
 import type { DPoPKey } from './types/dpop';
 import { encoder, extractContentType, fromBase64Url, toBase64Url, toSha256 } from './utils';
 

@@ -31,7 +31,8 @@ export class DisposableStack {
 			}
 		}
 
-		if (errors.length) {}
+		if (errors.length) {
+		}
 	}
 
 	use<T extends Disposable>(disposable: T): T {
