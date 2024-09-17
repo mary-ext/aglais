@@ -5,42 +5,23 @@ import { parseRt } from './parse';
 describe('parse', () => {
 	it('handles escapes', () => {
 		expect(
-			parseRt(`hello cbsky.app/xrpc/app.cbsky.plc.getIndex?did=did\\:plc:ia76kvnndjutgedggx2ibrem`, false),
+			parseRt(`hello cbsky.app/xrpc/app.cbsky.plc.getIndex?did=did\\:plc:ia76kvnndjutgedggx2ibrem`, false)
+				.text,
+		).toMatchInlineSnapshot(
+			`"hello cbsky.app/xrpc/app.cbsky.plc.getIndex?did=did:plc:ia76kvnndjutgedggx2ibrem"`,
+		);
+	});
+
+	it('handles mention succeeded by url', () => {
+		expect(
+			parseRt(
+				`lol @mary.my.id
+https://bsky.app/profile/did:plc:mn45tewwnse5btfftvd3powc/post/3l4bgf7ihdq2t`,
+				false,
+			).text,
 		).toMatchInlineSnapshot(`
-			{
-			  "empty": false,
-			  "length": 80,
-			  "links": [],
-			  "segments": [
-			    {
-			      "raw": "hello cbsky.app/xrpc/app.cbsky.plc.getIndex?did=did",
-			      "text": "hello cbsky.app/xrpc/app.cbsky.plc.getIndex?did=did",
-			      "type": "text",
-			    },
-			    {
-			      "raw": "\\",
-			      "text": "",
-			      "type": "escape",
-			    },
-			    {
-			      "raw": ":",
-			      "text": ":",
-			      "type": "text",
-			    },
-			    {
-			      "raw": "plc",
-			      "text": "plc",
-			      "type": "text",
-			    },
-			    {
-			      "raw": ":ia76kvnndjutgedggx2ibrem",
-			      "text": ":ia76kvnndjutgedggx2ibrem",
-			      "type": "text",
-			    },
-			  ],
-			  "source": "hello cbsky.app/xrpc/app.cbsky.plc.getIndex?did=did\\:plc:ia76kvnndjutgedggx2ibrem",
-			  "text": "hello cbsky.app/xrpc/app.cbsky.plc.getIndex?did=did:plc:ia76kvnndjutgedggx2ibrem",
-			}
+			"lol @mary.my.id
+			bsky.app/profile/did:pl…"
 		`);
 	});
 });
