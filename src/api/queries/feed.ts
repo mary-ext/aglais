@@ -10,7 +10,7 @@ import { resolveHandle } from './handle';
 export const createFeedMetaQuery = (feedUri: () => string) => {
 	const { rpc } = useAgent();
 
-	return createQuery(() => {
+	return createQuery((queryClient) => {
 		const $feedUri = feedUri();
 
 		return {
@@ -33,6 +33,9 @@ export const createFeedMetaQuery = (feedUri: () => string) => {
 				});
 
 				return data.view;
+			},
+			placeholderData() {
+				return queryClient.getQueryData(['feed-meta-precache', $feedUri]);
 			},
 		};
 	});

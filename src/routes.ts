@@ -176,6 +176,13 @@ const routes: RouteDefinition[] = [
 			return isValidDid(params.did);
 		},
 	},
+	{
+		path: '/:didOrHandle/feeds/:rkey',
+		component: lazy(() => import('./views/feed')),
+		validate(params) {
+			return isValidDidOrHandle(params.didOrHandle);
+		},
+	},
 
 	{
 		path: '/:didOrHandle/:rkey',
