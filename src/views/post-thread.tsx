@@ -162,6 +162,7 @@ const ThreadView = (props: {
 		return createThreadData({
 			thread: props.data,
 			moderationOptions: moderationOptions(),
+			selfDid: currentAccount?.did,
 			preferences: currentAccount?.preferences.threadView ?? {
 				followsFirst: false,
 				sort: 'clout',
