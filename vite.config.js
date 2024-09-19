@@ -21,9 +21,6 @@ export default defineConfig({
 			},
 		},
 	},
-	test: {
-		environment: 'node',
-	},
 	resolve: {
 		alias: {
 			'~': path.join(__dirname, './src'),
