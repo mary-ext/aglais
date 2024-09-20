@@ -30,7 +30,11 @@ export const on = <T, R>(accessor: () => T, callback: (value: T) => R): (() => R
 };
 
 type ReconcilableProperties<T> = { [K in keyof T]: T[K] extends string | number ? K : never }[keyof T];
-export const reconcile = <T = any>(prev: T[] | undefined, next: T[], key: ReconcilableProperties<T>): T[] => {
+export const reconcile = <T = any>(
+	prev: NoInfer<T>[] | undefined,
+	next: T[],
+	key: ReconcilableProperties<T>,
+): T[] => {
 	if (prev === undefined) {
 		return next;
 	}
