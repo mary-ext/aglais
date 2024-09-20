@@ -11,6 +11,7 @@ import SearchBar from '~/components/main/search-bar';
 import * as Page from '~/components/page';
 import TabBar from '~/components/tab-bar';
 
+const SearchFeedsLazy = lazy(() => import('~/components/search/search-feeds'));
 const SearchPostsLazy = lazy(() => import('~/components/search/search-posts'));
 const SearchProfilesLazy = lazy(() => import('~/components/search/search-profiles'));
 
@@ -85,6 +86,10 @@ const SearchPage = () => {
 
 					<Match when={type() === 'users'}>
 						<SearchProfilesLazy q={transformedSearch()} />
+					</Match>
+
+					<Match when={type() === 'feeds'}>
+						<SearchFeedsLazy q={transformedSearch()} />
 					</Match>
 				</Switch>
 			</Suspense>
