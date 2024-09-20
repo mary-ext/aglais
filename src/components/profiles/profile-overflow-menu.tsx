@@ -17,6 +17,7 @@ import HashtagOutlinedIcon from '../icons-central/hashtag-outline';
 import LinkOutlinedIcon from '../icons-central/link-outline';
 import ListSparkleOutlinedIcon from '../icons-central/list-sparkle-outline';
 import MuteOutlinedIcon from '../icons-central/mute-outline';
+import OpenInNewOutlinedIcon from '../icons-central/open-in-new-outline';
 import RepeatOffOutlinedIcon from '../icons-central/repeat-off-outline';
 import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 import ShareOutlinedIcon from '../icons-central/share-outline';
@@ -58,6 +59,17 @@ const ProfileOverflowMenu = (props: ProfileOverflowMenuProps) => {
 
 	return (
 		<Menu.Container anchor={props.anchor}>
+			<Menu.Item
+				icon={OpenInNewOutlinedIcon}
+				label="Open in Bluesky app"
+				onClick={() => {
+					const uri = `https://bsky.app/profile/${profile.did}`;
+
+					close();
+					window.open(uri, '_blank');
+				}}
+			/>
+
 			{shadow().followUri && (
 				<Menu.Item
 					icon={!isRepostHidden() ? RepeatOffOutlinedIcon : RepeatOutlinedIcon}
