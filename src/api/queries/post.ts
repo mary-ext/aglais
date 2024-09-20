@@ -4,7 +4,7 @@ import { createQuery } from '@mary/solid-query';
 import { useAgent } from '~/lib/states/agent';
 
 import { findPostsInCache } from '../cache/post-shadow';
-import { isDid, parseAtUri } from '../utils/strings';
+import { isDid, makeAtUri, parseAtUri } from '../utils/strings';
 
 import { resolveHandle } from './handle';
 
@@ -29,7 +29,7 @@ export const createPostQuery = (postUri: () => string) => {
 				const { data } = await rpc.get('app.bsky.feed.getPosts', {
 					signal: ctx.signal,
 					params: {
-						uris: [`at://${did}/${uri.collection}/${uri.rkey}`],
+						uris: [makeAtUri(did, uri.collection, uri.rkey)],
 					},
 				});
 

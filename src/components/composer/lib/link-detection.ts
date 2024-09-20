@@ -1,4 +1,4 @@
-import { safeUrlParse } from '~/api/utils/strings';
+import { makeAtUri, safeUrlParse } from '~/api/utils/strings';
 
 import { BSKY_FEED_LINK_RE, BSKY_LIST_LINK_RE, BSKY_POST_LINK_RE } from '~/lib/bsky/link-detection';
 
@@ -19,7 +19,7 @@ export const getEmbedFromLink = (href: string): PostRecordEmbed | PostExternalEm
 
 				return {
 					type: EmbedKind.QUOTE,
-					uri: `at://${handleOrDid}/app.bsky.feed.post/${rkey}`,
+					uri: makeAtUri(handleOrDid, 'app.bsky.feed.post', rkey),
 					origin: false,
 				};
 			}
@@ -30,7 +30,7 @@ export const getEmbedFromLink = (href: string): PostRecordEmbed | PostExternalEm
 
 				return {
 					type: EmbedKind.FEED,
-					uri: `at://${handleOrDid}/app.bsky.feed.generator/${rkey}`,
+					uri: makeAtUri(handleOrDid, 'app.bsky.feed.generator', rkey),
 				};
 			}
 
@@ -40,7 +40,7 @@ export const getEmbedFromLink = (href: string): PostRecordEmbed | PostExternalEm
 
 				return {
 					type: EmbedKind.LIST,
-					uri: `at://${handleOrDid}/app.bsky.graph.list/${rkey}`,
+					uri: makeAtUri(handleOrDid, 'app.bsky.graph.list', rkey),
 				};
 			}
 		}

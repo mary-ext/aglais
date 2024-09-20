@@ -1,4 +1,5 @@
 import { createPostQuotesQuery } from '~/api/queries/post-quotes';
+import { makeAtUri } from '~/api/utils/strings';
 
 import { useParams } from '~/lib/navigation/router';
 
@@ -10,7 +11,8 @@ import VirtualItem from '~/components/virtual-item';
 const PostQuotesPage = () => {
 	const { did, rkey } = useParams();
 
-	const quotes = createPostQuotesQuery(() => `at://${did}/app.bsky.feed.post/${rkey}`);
+	const uri = makeAtUri(did, 'app.bsky.feed.post', rkey);
+	const quotes = createPostQuotesQuery(() => uri);
 
 	return (
 		<>

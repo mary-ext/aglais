@@ -3,7 +3,7 @@ import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
-import { isDid, parseAtUri } from '../utils/strings';
+import { isDid, makeAtUri, parseAtUri } from '../utils/strings';
 
 import { resolveHandle } from './handle';
 
@@ -28,7 +28,7 @@ export const createListMetaQuery = (listUri: () => string) => {
 				const { data } = await rpc.get('app.bsky.graph.getList', {
 					signal: ctx.signal,
 					params: {
-						list: `at://${did}/${uri.collection}/${uri.rkey}`,
+						list: makeAtUri(did, uri.collection, uri.rkey),
 						limit: 1,
 					},
 				});

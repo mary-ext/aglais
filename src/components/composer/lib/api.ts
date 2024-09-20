@@ -23,6 +23,7 @@ import type { LinkMeta } from '~/api/queries/composer';
 import { getUtf8Length } from '~/api/richtext/intl';
 import { type PreliminaryRichText, parseRt } from '~/api/richtext/parser/parse';
 import { getRecord } from '~/api/utils/records';
+import { makeAtUri } from '~/api/utils/strings';
 
 import { compressPostImage } from '~/lib/bsky/image';
 import type { AgentContext } from '~/lib/states/agent';
@@ -82,7 +83,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 		rkey = TID.now();
 
 		const post = state.posts[idx];
-		const uri = `at://${did}/app.bsky.feed.post/${rkey}`;
+		const uri = makeAtUri(did, 'app.bsky.feed.post', rkey);
 
 		// Resolve rich text
 		const rt = await resolveRichtext(parseRt(post.text, true));

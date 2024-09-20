@@ -10,7 +10,7 @@ import {
 	createThreadData,
 } from '~/api/models/post-thread';
 import { usePostThreadQuery } from '~/api/queries/post-thread';
-import { isDid } from '~/api/utils/strings';
+import { isDid, makeAtUri } from '~/api/utils/strings';
 
 import { history } from '~/globals/navigation';
 
@@ -36,7 +36,9 @@ const PostThreadPage = () => {
 	const { didOrHandle, rkey } = useParams();
 
 	const queryClient = useQueryClient();
-	const query = usePostThreadQuery(() => `at://${didOrHandle}/app.bsky.feed.post/${rkey}`);
+
+	const uri = makeAtUri(didOrHandle, 'app.bsky.feed.post', rkey);
+	const query = usePostThreadQuery(() => uri);
 
 	return (
 		<>
@@ -93,7 +95,7 @@ const PostThreadPage = () => {
 								keyed
 							>
 								{({ data, did }) => {
-									queryClient.setQueryData(['post-thread', `at://${did}/app.bsky.feed.post/${rkey}`], data);
+									queryClient.setQueryData(['post-thread', makeAtUri(did, 'app.bsky.feed.post', rkey)], data);
 									history.navigate(`/${did}/${rkey}`, { replace: true });
 									return null;
 								}}

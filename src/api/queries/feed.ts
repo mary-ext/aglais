@@ -3,7 +3,7 @@ import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
-import { isDid, parseAtUri } from '../utils/strings';
+import { isDid, makeAtUri, parseAtUri } from '../utils/strings';
 
 import { resolveHandle } from './handle';
 
@@ -28,7 +28,7 @@ export const createFeedMetaQuery = (feedUri: () => string) => {
 				const { data } = await rpc.get('app.bsky.feed.getFeedGenerator', {
 					signal: ctx.signal,
 					params: {
-						feed: `at://${did}/${uri.collection}/${uri.rkey}`,
+						feed: makeAtUri(did, uri.collection, uri.rkey),
 					},
 				});
 

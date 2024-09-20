@@ -1,4 +1,5 @@
 import { createSubjectRepostersQuery } from '~/api/queries/subject-reposters';
+import { makeAtUri } from '~/api/utils/strings';
 
 import { useParams } from '~/lib/navigation/router';
 
@@ -11,7 +12,8 @@ import VirtualItem from '~/components/virtual-item';
 const PostLikesPage = () => {
 	const { did, rkey } = useParams();
 
-	const reposters = createSubjectRepostersQuery(() => `at://${did}/app.bsky.feed.post/${rkey}`);
+	const uri = makeAtUri(did, 'app.bsky.feed.post', rkey);
+	const reposters = createSubjectRepostersQuery(() => uri);
 
 	return (
 		<>
