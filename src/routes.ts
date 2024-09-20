@@ -68,15 +68,6 @@ const routes: RouteDefinition[] = [
 			main: true,
 		},
 	},
-	{
-		path: '/feeds',
-		component: lazy(() => import('./views/main/feeds')),
-		single: true,
-		meta: {
-			name: 'Feeds',
-			main: true,
-		},
-	},
 
 	{
 		path: '/moderation',

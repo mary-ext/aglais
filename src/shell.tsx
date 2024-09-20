@@ -22,7 +22,6 @@ import { useSession } from '~/lib/states/session';
 
 import BellOutlinedIcon from '~/components/icons-central/bell-outline';
 import BellSolidIcon from '~/components/icons-central/bell-solid';
-import HashtagOutlinedIcon from '~/components/icons-central/hashtag-outline';
 import HomeOutlinedIcon from '~/components/icons-central/home-outline';
 import HomeSolidIcon from '~/components/icons-central/home-solid';
 import MagnifyingGlassOutlinedIcon from '~/components/icons-central/magnifying-glass-outline';
@@ -86,7 +85,6 @@ const enum MainTabs {
 	EXPLORE = 'Explore',
 	NOTIFICATIONS = 'Notifications',
 	MESSAGES = 'Messages',
-	FEEDS = 'Feeds',
 }
 
 const MainTabsRoutes = {
@@ -94,7 +92,6 @@ const MainTabsRoutes = {
 	[MainTabs.EXPLORE]: '/explore',
 	[MainTabs.NOTIFICATIONS]: '/notifications',
 	[MainTabs.MESSAGES]: '/messages',
-	[MainTabs.FEEDS]: '/feeds',
 };
 
 const NavBar = ({
@@ -164,12 +161,6 @@ const NavBar = ({
 					onClick={bindClick(MainTabs.MESSAGES)}
 					icon={MailOutlinedIcon}
 					iconActive={MailSolidIcon}
-				/>
-				<NavItem
-					label="Feeds"
-					active={active() === MainTabs.FEEDS}
-					onClick={bindClick(MainTabs.FEEDS)}
-					icon={HashtagOutlinedIcon}
 				/>
 			</div>
 		</>
