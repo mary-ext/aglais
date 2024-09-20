@@ -100,7 +100,7 @@ const FeedItem = ({ item }: FeedItemProps) => {
 			onClick={handleClick}
 			onAuxClick={handleClick}
 			onKeyDown={handleClick}
-			class="flex cursor-pointer flex-col border-b border-outline px-4 py-3 hover:bg-contrast/sm active:bg-contrast/sm-pressed"
+			class="flex cursor-pointer flex-col px-4 py-3 hover:bg-contrast/sm active:bg-contrast/sm-pressed"
 		>
 			<div class="mb-3 flex items-center gap-3">
 				<Avatar
