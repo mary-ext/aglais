@@ -46,17 +46,6 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 
 	return (
 		<Menu.Container anchor={props.anchor} placement="bottom-end" cover>
-			<Menu.Item
-				icon={OpenInNewOutlinedIcon}
-				label="Open in Bluesky app"
-				onClick={() => {
-					const uri = `https://bsky.app/profile/${post.author.did}/post/${parseAtUri(post.uri).rkey}`;
-
-					close();
-					window.open(uri, '_blank');
-				}}
-			/>
-
 			{isOurPost && (
 				<>
 					<Menu.Item
@@ -123,6 +112,17 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 				onClick={() => {
 					close();
 					openModal(() => <AddPostToFolderDialogLazy post={post} />);
+				}}
+			/>
+
+			<Menu.Item
+				icon={OpenInNewOutlinedIcon}
+				label="Open in Bluesky app"
+				onClick={() => {
+					const uri = `https://bsky.app/profile/${post.author.did}/post/${parseAtUri(post.uri).rkey}`;
+
+					close();
+					window.open(uri, '_blank');
 				}}
 			/>
 		</Menu.Container>

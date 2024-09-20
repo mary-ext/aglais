@@ -59,17 +59,6 @@ const ProfileOverflowMenu = (props: ProfileOverflowMenuProps) => {
 
 	return (
 		<Menu.Container anchor={props.anchor}>
-			<Menu.Item
-				icon={OpenInNewOutlinedIcon}
-				label="Open in Bluesky app"
-				onClick={() => {
-					const uri = `https://bsky.app/profile/${profile.did}`;
-
-					close();
-					window.open(uri, '_blank');
-				}}
-			/>
-
 			{shadow().followUri && (
 				<Menu.Item
 					icon={!isRepostHidden() ? RepeatOffOutlinedIcon : RepeatOutlinedIcon}
@@ -132,6 +121,17 @@ const ProfileOverflowMenu = (props: ProfileOverflowMenuProps) => {
 					} else {
 						navigator.clipboard.writeText(url);
 					}
+				}}
+			/>
+
+			<Menu.Item
+				icon={OpenInNewOutlinedIcon}
+				label="Open in Bluesky app"
+				onClick={() => {
+					const uri = `https://bsky.app/profile/${profile.did}`;
+
+					close();
+					window.open(uri, '_blank');
 				}}
 			/>
 
