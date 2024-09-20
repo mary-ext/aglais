@@ -1,3 +1,7 @@
+import { Key } from '~/lib/keyed';
+import { useModerationOptions } from '~/lib/states/moderation';
+import { useSession } from '~/lib/states/session';
+
 import Avatar from '~/components/avatar';
 import * as Boxed from '~/components/boxed';
 import AddOutlinedIcon from '~/components/icons-central/add-outline';
@@ -10,6 +14,11 @@ import RepeatOffOutlinedIcon from '~/components/icons-central/repeat-off-outline
 import * as Page from '~/components/page';
 
 const ModerationPage = () => {
+	const { currentAccount } = useSession();
+
+	const hydratedOptions = useModerationOptions();
+	const moderation = currentAccount!.preferences.moderation;
+
 	return (
 		<>
 			<Page.Header>
@@ -114,20 +123,32 @@ const ModerationPage = () => {
 					<Boxed.GroupHeader>Label providers</Boxed.GroupHeader>
 
 					<Boxed.List>
-						<a class="flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed">
-							<Avatar type="labeler" size="in" />
+						<Key each={Object.values(hydratedOptions().labelerDefinitions)} by={(x) => x.did}>
+							{(labeler) => {
+								const did = labeler().did;
+								const profile = () => labeler().profile;
 
-							<div class="min-w-0 grow">
-								<p class="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium empty:hidden">
-									Bluesky Moderation Service
-								</p>
-								<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">
-									@moderation.bsky.app
-								</p>
-							</div>
+								return (
+									<a
+										href={`/${did}/labels`}
+										class="flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
+									>
+										<Avatar type="labeler" src={profile().avatar} size="in" />
 
-							<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted" />
-						</a>
+										<div class="min-w-0 grow">
+											<p class="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium empty:hidden">
+												{profile().displayName}
+											</p>
+											<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">
+												{'@' + profile().handle}
+											</p>
+										</div>
+
+										<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted" />
+									</a>
+								);
+							}}
+						</Key>
 
 						<a
 							href="/moderation/providers/add"
