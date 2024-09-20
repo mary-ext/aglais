@@ -9,22 +9,22 @@ import { history } from '~/globals/navigation';
 
 import { useSession } from '~/lib/states/session';
 
-import BlockOutlinedIcon from '../icons-central/block-outline';
-import BulletListOutlinedIcon from '../icons-central/bullet-list-outline';
-import CirclePlaceholderDashedOutlinedIcon from '../icons-central/circle-placeholder-dashed-outline';
-import FlagOutlinedIcon from '../icons-central/flag-outline';
-import HashtagOutlinedIcon from '../icons-central/hashtag-outline';
-import LinkOutlinedIcon from '../icons-central/link-outline';
-import ListSparkleOutlinedIcon from '../icons-central/list-sparkle-outline';
-import MuteOutlinedIcon from '../icons-central/mute-outline';
-import OpenInNewOutlinedIcon from '../icons-central/open-in-new-outline';
-import RepeatOffOutlinedIcon from '../icons-central/repeat-off-outline';
-import RepeatOutlinedIcon from '../icons-central/repeat-outline';
-import ShareOutlinedIcon from '../icons-central/share-outline';
-import VolumeFullOutlinedIcon from '../icons-central/volume-full-outlined';
-import * as Menu from '../menu';
-import BlockAccountPromptLazy from '../moderation/block-account-prompt-lazy';
-import MuteAccountPromptLazy from '../moderation/mute-account-prompt-lazy';
+import BlockOutlinedIcon from '~/components/icons-central/block-outline';
+import BulletListOutlinedIcon from '~/components/icons-central/bullet-list-outline';
+import CirclePlaceholderDashedOutlinedIcon from '~/components/icons-central/circle-placeholder-dashed-outline';
+import FlagOutlinedIcon from '~/components/icons-central/flag-outline';
+import HashtagOutlinedIcon from '~/components/icons-central/hashtag-outline';
+import LinkOutlinedIcon from '~/components/icons-central/link-outline';
+import ListSparkleOutlinedIcon from '~/components/icons-central/list-sparkle-outline';
+import MuteOutlinedIcon from '~/components/icons-central/mute-outline';
+import OpenInNewOutlinedIcon from '~/components/icons-central/open-in-new-outline';
+import RepeatOffOutlinedIcon from '~/components/icons-central/repeat-off-outline';
+import RepeatOutlinedIcon from '~/components/icons-central/repeat-outline';
+import ShareOutlinedIcon from '~/components/icons-central/share-outline';
+import VolumeFullOutlinedIcon from '~/components/icons-central/volume-full-outlined';
+import * as Menu from '~/components/menu';
+import BlockAccountPromptLazy from '~/components/moderation/block-account-prompt-lazy';
+import MuteAccountPromptLazy from '~/components/moderation/mute-account-prompt-lazy';
 
 export interface ProfileOverflowMenuProps {
 	anchor: HTMLElement;
