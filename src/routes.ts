@@ -178,14 +178,14 @@ const routes: RouteDefinition[] = [
 	},
 	{
 		path: '/:didOrHandle/feeds/:rkey',
-		component: lazy(() => import('./views/feed')),
+		component: lazy(() => import('./views/profile-feed')),
 		validate(params) {
 			return isValidDidOrHandle(params.didOrHandle);
 		},
 	},
 	{
 		path: '/:did/feeds/:rkey/info',
-		component: lazy(() => import('./views/feed-info')),
+		component: lazy(() => import('./views/profile-feed-info')),
 		validate(params) {
 			return isValidDidOrHandle(params.did);
 		},
