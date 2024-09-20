@@ -1,20 +1,18 @@
-import { Match, Switch, createMemo, createSignal } from 'solid-js';
+import { Match, Suspense, Switch, createMemo, createSignal, lazy } from 'solid-js';
 
-import { createSearchProfilesQuery } from '~/api/queries/search-profiles';
 import type { UnwrapArray } from '~/api/utils/types';
 
 import { tokenizeSearchQuery } from '~/lib/bsky/search';
 
+import CircularProgressView from '~/components/circular-progress-view';
 import IconButton from '~/components/icon-button';
 import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
 import SearchBar from '~/components/main/search-bar';
 import * as Page from '~/components/page';
-import PagedList from '~/components/paged-list';
-import ProfileFollowButton from '~/components/profiles/profile-follow-button';
-import ProfileItem from '~/components/profiles/profile-item';
 import TabBar from '~/components/tab-bar';
-import TimelineList from '~/components/timeline/timeline-list';
-import VirtualItem from '~/components/virtual-item';
+
+const SearchPostsLazy = lazy(() => import('~/components/search/search-posts'));
+const SearchProfilesLazy = lazy(() => import('~/components/search/search-profiles'));
 
 const SearchPage = () => {
 	const searchParams = new URLSearchParams(location.search);
@@ -75,38 +73,21 @@ const SearchPage = () => {
 				]}
 			/>
 
-			<Switch>
-				<Match when={type() === 'top_posts'}>
-					<TimelineList params={{ type: 'search', query: transformedSearch(), sort: 'top' }} />
-				</Match>
+			<Suspense fallback={<CircularProgressView />}>
+				<Switch>
+					<Match when={type() === 'top_posts'}>
+						<SearchPostsLazy q={transformedSearch()} sort="top" />
+					</Match>
 
-				<Match when={type() === 'latest_posts'}>
-					<TimelineList params={{ type: 'search', query: transformedSearch(), sort: 'latest' }} />
-				</Match>
+					<Match when={type() === 'latest_posts'}>
+						<SearchPostsLazy q={transformedSearch()} sort="latest" />
+					</Match>
 
-				<Match when={type() === 'users'}>
-					{(_true) => {
-						const profiles = createSearchProfilesQuery(transformedSearch);
-
-						return (
-							<PagedList
-								data={profiles.data?.pages.map((page) => page.actors)}
-								error={profiles.error}
-								render={(item) => {
-									return (
-										<VirtualItem estimateHeight={88}>
-											<ProfileItem item={item} AsideComponent={<ProfileFollowButton profile={item} />} />
-										</VirtualItem>
-									);
-								}}
-								hasNextPage={profiles.hasNextPage}
-								isFetchingNextPage={profiles.isFetching}
-								onEndReached={() => profiles.fetchNextPage()}
-							/>
-						);
-					}}
-				</Match>
-			</Switch>
+					<Match when={type() === 'users'}>
+						<SearchProfilesLazy q={transformedSearch()} />
+					</Match>
+				</Switch>
+			</Suspense>
 		</>
 	);
 };
