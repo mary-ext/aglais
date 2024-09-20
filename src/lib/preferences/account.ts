@@ -29,8 +29,6 @@ export interface SavedFeed {
 	readonly uri: string;
 	pinned: boolean;
 	info: SavedFeedInfo;
-	avatar?: string;
-	indexedAt?: string;
 }
 
 export interface SavedFeedInfo {

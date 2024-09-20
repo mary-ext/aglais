@@ -5,14 +5,17 @@ import { useQueryClient } from '@mary/solid-query';
 import { createFeedMetaQuery } from '~/api/queries/feed';
 import { isDid, makeAtUri } from '~/api/utils/strings';
 
+import { openModal } from '~/globals/modals';
 import { history } from '~/globals/navigation';
 
 import { useParams } from '~/lib/navigation/router';
 
 import CircularProgressView from '~/components/circular-progress-view';
 import ErrorView from '~/components/error-view';
+import FeedOverflowMenu from '~/components/feeds/feed-overflow-menu';
 import IconButton from '~/components/icon-button';
 import CircleInfoOutlinedIcon from '~/components/icons-central/circle-info-outline';
+import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
 import * as Page from '~/components/page';
 import TimelineList from '~/components/timeline/timeline-list';
 
@@ -43,15 +46,26 @@ const FeedPage = () => {
 				/>
 
 				<Show when={meta.data}>
-					<Page.HeaderAccessory>
-						<IconButton
-							title="Feed information"
-							icon={CircleInfoOutlinedIcon}
-							onClick={() => {
-								history.navigate(`/${didOrHandle}/feeds/${rkey}/info`);
-							}}
-						/>
-					</Page.HeaderAccessory>
+					{(feed) => (
+						<Page.HeaderAccessory>
+							<IconButton
+								title="Feed information"
+								icon={CircleInfoOutlinedIcon}
+								onClick={() => {
+									history.navigate(`/${didOrHandle}/feeds/${rkey}/info`);
+								}}
+							/>
+
+							<IconButton
+								title="More actions"
+								icon={MoreHorizOutlinedIcon}
+								onClick={(ev) => {
+									const anchor = ev.currentTarget;
+									openModal(() => <FeedOverflowMenu anchor={anchor} feed={feed()} />);
+								}}
+							/>
+						</Page.HeaderAccessory>
+					)}
 				</Show>
 			</Page.Header>
 
