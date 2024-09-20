@@ -2,7 +2,12 @@ import { Match, Switch } from 'solid-js';
 
 import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 
-import { ContextProfileMedia, type ModerationCause, getModerationUI } from '~/api/moderation';
+import {
+	ContextProfileMedia,
+	type ModerationCause,
+	type ModerationContext,
+	getModerationUI,
+} from '~/api/moderation';
 
 import DefaultFeedAvatar from '~/assets/default-feed-avatar.svg?url';
 import DefaultLabelerAvatar from '~/assets/default-labeler-avatar.svg?url';
@@ -20,6 +25,7 @@ export interface AvatarProps {
 	type: keyof typeof AVATARS;
 	src?: string;
 	moderation?: ModerationCause[];
+	modContext?: ModerationContext;
 	title?: string;
 	disabled?: boolean;
 	href?: string;
@@ -43,7 +49,7 @@ const Avatar = (props: AvatarProps) => {
 	const hasModeration = 'moderation' in props;
 
 	const shouldBlurAvatar = hasModeration
-		? () => getModerationUI(props.moderation!, ContextProfileMedia).b.length > 0
+		? () => getModerationUI(props.moderation!, props.modContext ?? ContextProfileMedia).b.length > 0
 		: undefined;
 
 	return (
