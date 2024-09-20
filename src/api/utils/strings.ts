@@ -1,4 +1,4 @@
-import type { At } from '@atcute/client/lexicons';
+import type { At, Records } from '@atcute/client/lexicons';
 
 import { assert } from '~/lib/utils/invariant';
 
@@ -29,6 +29,10 @@ export const parseAtUri = (str: string): AtUri => {
 		rkey: match[3],
 		fragment: match[4],
 	};
+};
+
+export const makeAtUri = (repo: string, collection: keyof Records, rkey: string) => {
+	return `at://${repo}/${collection}/${rkey}`;
 };
 
 const _parse = URL.parse;
