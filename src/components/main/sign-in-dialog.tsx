@@ -25,11 +25,17 @@ const enum View {
 
 class LoginError extends Error {}
 
-const SignInDialog = () => {
+export interface SignInDialogProps {
+	autologin?: string;
+}
+
+const SignInDialog = (props: SignInDialogProps) => {
 	const [view, setView] = createSignal(View.HANDLE);
 
 	const [pending, setPending] = createSignal<string>();
 	const [error, setError] = createSignal<string>();
+
+	const autologin = props.autologin;
 
 	const loginMutation = createMutation(() => ({
 		async mutationFn({ identifier }: { identifier: string }) {
@@ -99,6 +105,10 @@ const SignInDialog = () => {
 		},
 	}));
 
+	if (autologin) {
+		loginMutation.mutate({ identifier: autologin });
+	}
+
 	return (
 		<>
 			<Dialog.Backdrop />
@@ -134,6 +144,10 @@ const SignInDialog = () => {
 								<TextInput
 									ref={(node) => {
 										autofocusOnMutation(node, loginMutation);
+
+										if (autologin) {
+											node.value = autologin;
+										}
 									}}
 									name="identifier"
 									autocomplete="username"
