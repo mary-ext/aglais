@@ -25,17 +25,29 @@ export interface ModerationLabelerPreferences {
 	definitions: Record<At.DID, ModerationLabeler>;
 }
 
-export interface SavedFeed {
+export type SavedFeed = SavedGeneratorFeed | SavedListFeed;
+
+export interface SavedGeneratorFeed {
+	readonly type: 'generator';
 	readonly uri: string;
 	pinned: boolean;
-	info: SavedFeedInfo;
+	info: {
+		name: string;
+		avatar?: string;
+		acceptsInteraction?: boolean;
+		indexedAt?: number;
+	};
 }
 
-export interface SavedFeedInfo {
-	name: string;
-	avatar?: string;
-	acceptsInteraction?: boolean;
-	indexedAt?: string;
+export interface SavedListFeed {
+	readonly type: 'list';
+	readonly uri: string;
+	pinned: boolean;
+	info: {
+		name: string;
+		avatar?: string;
+		indexedAt?: number;
+	};
 }
 
 export interface ComposerPreferences {

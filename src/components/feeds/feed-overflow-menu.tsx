@@ -55,13 +55,14 @@ const FeedOverflowMenu = (props: FeedOverflowMenuProps) => {
 							feeds.splice(index, 1);
 						} else {
 							feeds.push({
+								type: 'generator',
 								uri: feed.uri,
 								pinned: false,
 								info: {
 									name: feed.displayName,
 									acceptsInteraction: feed.acceptsInteractions,
 									avatar: feed.avatar,
-									indexedAt: feed.indexedAt,
+									indexedAt: new Date(feed.indexedAt).getTime(),
 								},
 							});
 						}
