@@ -78,8 +78,8 @@ const OAuthCallbackPage = () => {
 		// will fail immediately on bsky.social as they'd be missing a DPoP nonce,
 		// so let's fire a random request right now.
 		try {
-			const session = new OAuthUserAgent(session);
-			await session.handle(`/xrpc/app.bsky.notification.getUnreadCount`);
+			const agent = new OAuthUserAgent(session);
+			await agent.handle(`/xrpc/app.bsky.notification.getUnreadCount`);
 		} catch {
 			// Don't worry about it failing.
 		}
