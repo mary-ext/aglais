@@ -1,7 +1,9 @@
-import type { AppBskyActorDefs, AppBskyGraphGetFollowers } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 import { type InfiniteData, type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
+
+import { type ProfilesListWithSubjectPage, toProfilesListWithSubjectPage } from '../types/profile-response';
 
 export const createProfileFollowersQuery = (didOrHandle: () => string) => {
 	const { rpc } = useAgent();
@@ -11,7 +13,7 @@ export const createProfileFollowersQuery = (didOrHandle: () => string) => {
 
 		return {
 			queryKey: ['profile-followers', $didOrHandle],
-			async queryFn(ctx: QC<never, string | undefined>): Promise<AppBskyGraphGetFollowers.Output> {
+			async queryFn(ctx: QC<never, string | undefined>): Promise<ProfilesListWithSubjectPage> {
 				const { data } = await rpc.get('app.bsky.graph.getFollowers', {
 					signal: ctx.signal,
 					params: {
@@ -21,12 +23,12 @@ export const createProfileFollowersQuery = (didOrHandle: () => string) => {
 					},
 				});
 
-				return data;
+				return toProfilesListWithSubjectPage(data, 'followers');
 			},
 			structuralSharing: false,
 			initialPageParam: undefined,
 			getNextPageParam: (last) => last.cursor,
-			placeholderData(): InfiniteData<AppBskyGraphGetFollowers.Output> | undefined {
+			placeholderData(): InfiniteData<ProfilesListWithSubjectPage> | undefined {
 				const profileQueryKey = ['profile', $didOrHandle];
 				const profile = queryClient.getQueryData<AppBskyActorDefs.ProfileViewDetailed>(profileQueryKey);
 
@@ -35,9 +37,9 @@ export const createProfileFollowersQuery = (didOrHandle: () => string) => {
 						pages: [
 							{
 								cursor: undefined,
-								followers: [],
-								// @ts-expect-error: force ProfileViewDetailed to fit
-								subject: profile,
+								// We'll make this fit.
+								subject: profile as any,
+								profiles: [],
 							},
 						],
 						pageParams: [],

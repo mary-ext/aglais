@@ -1,7 +1,8 @@
-import type { AppBskyActorSearchActors } from '@atcute/client/lexicons';
 import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
+
+import { type ProfilesListPage, toProfilesListPage } from '../types/profile-response';
 
 export const createSearchProfilesQuery = (query: () => string) => {
 	const { rpc } = useAgent();
@@ -11,7 +12,7 @@ export const createSearchProfilesQuery = (query: () => string) => {
 
 		return {
 			queryKey: ['search-profiles', q],
-			async queryFn(ctx: QC<never, string | undefined>): Promise<AppBskyActorSearchActors.Output> {
+			async queryFn(ctx: QC<never, string | undefined>): Promise<ProfilesListPage> {
 				const { data } = await rpc.get('app.bsky.actor.searchActors', {
 					signal: ctx.signal,
 					params: {
@@ -21,7 +22,7 @@ export const createSearchProfilesQuery = (query: () => string) => {
 					},
 				});
 
-				return data;
+				return toProfilesListPage(data, 'actors');
 			},
 			structuralSharing: false,
 			initialPageParam: undefined,

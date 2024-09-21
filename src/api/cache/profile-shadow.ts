@@ -8,12 +8,7 @@ import { findAllProfiles as findAllProfilesInBookmarkFeed } from '../queries-cac
 import { findAllProfiles as findAllProfilesInNotificationFeed } from '../queries-cache/notification-feed';
 import { findAllProfiles as findAllProfilesInPostThread } from '../queries-cache/post-thread';
 import { findAllProfiles as findAllProfilesInProfile } from '../queries-cache/profile';
-import { findAllProfiles as findAllProfilesInProfileFollowers } from '../queries-cache/profile-followers';
-import { findAllProfiles as findAllProfilesInProfileFollowing } from '../queries-cache/profile-following';
-import { findAllProfiles as findAllProfilesInProfileKnownFollowers } from '../queries-cache/profile-known-followers';
-import { findAllProfiles as findAllProfilesInSearch } from '../queries-cache/search-profiles';
-import { findAllProfiles as findAllProfilesInSubjectLikers } from '../queries-cache/subject-likers';
-import { findAllProfiles as findAllProfilesInSubjectReposters } from '../queries-cache/subject-reposters';
+import { findAllProfiles as findAllProfilesInListPage } from '../queries-cache/profile-list';
 import { findAllProfiles as findAllProfilesInTimeline } from '../queries-cache/timeline';
 import { EQUALS_DEQUAL } from '../utils/dequal';
 import type { AccessorMaybe } from '../utils/types';
@@ -84,12 +79,7 @@ export function findProfilesInCache(queryClient: QueryClient, did: At.DID): Gene
 		findAllProfilesInNotificationFeed(did),
 		findAllProfilesInPostThread(did),
 		findAllProfilesInProfile(did),
-		findAllProfilesInProfileFollowers(did),
-		findAllProfilesInProfileFollowing(did),
-		findAllProfilesInProfileKnownFollowers(did),
-		findAllProfilesInSearch(did),
-		findAllProfilesInSubjectLikers(did),
-		findAllProfilesInSubjectReposters(did),
+		findAllProfilesInListPage(did),
 		findAllProfilesInTimeline(did),
 	]);
 }

@@ -35,7 +35,7 @@ const ProfileFollowingPage = () => {
 			</Page.Header>
 
 			<PagedList
-				data={following.data?.pages.map((page) => page.follows)}
+				data={following.data?.pages.map((page) => page.profiles)}
 				error={following.error}
 				render={(item) => {
 					return (

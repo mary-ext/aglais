@@ -35,7 +35,7 @@ const ProfileKnownFollowersPage = () => {
 			</Page.Header>
 
 			<PagedList
-				data={followers.data?.pages.map((page) => page.followers)}
+				data={followers.data?.pages.map((page) => page.profiles)}
 				error={followers.error}
 				render={(item) => {
 					return (

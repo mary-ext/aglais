@@ -1,13 +1,9 @@
-import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 import type { QueryFunctionContext as QC } from '@mary/solid-query';
 import { createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
-export interface SubjectLikersReturn {
-	cursor: string | undefined;
-	likedBy: AppBskyActorDefs.ProfileView[];
-}
+import type { ProfilesListPage } from '../types/profile-response';
 
 export const createSubjectLikersQuery = (uri: () => string) => {
 	const { rpc } = useAgent();
@@ -18,7 +14,7 @@ export const createSubjectLikersQuery = (uri: () => string) => {
 		return {
 			queryKey: ['subject-likers', $uri],
 			structuralSharing: false,
-			async queryFn(ctx: QC<never, string | undefined>): Promise<SubjectLikersReturn> {
+			async queryFn(ctx: QC<never, string | undefined>): Promise<ProfilesListPage> {
 				const { data } = await rpc.get('app.bsky.feed.getLikes', {
 					signal: ctx.signal,
 					params: {
@@ -30,7 +26,7 @@ export const createSubjectLikersQuery = (uri: () => string) => {
 
 				return {
 					cursor: data.cursor,
-					likedBy: data.likes.map((like) => like.actor),
+					profiles: data.likes.map((like) => like.actor),
 				};
 			},
 			initialPageParam: undefined,

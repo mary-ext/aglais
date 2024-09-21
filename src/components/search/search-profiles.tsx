@@ -14,7 +14,7 @@ const SearchProfiles = (props: SearchProfilesProps) => {
 
 	return (
 		<PagedList
-			data={profiles.data?.pages.map((page) => page.actors)}
+			data={profiles.data?.pages.map((page) => page.profiles)}
 			error={profiles.error}
 			render={(item) => {
 				return (

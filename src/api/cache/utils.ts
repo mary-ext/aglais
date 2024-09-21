@@ -1,7 +1,7 @@
 import { type QueryClient, type QueryFilters, matchQuery } from '@mary/solid-query';
 
 export interface CacheMatcher<T> {
-	filter: QueryFilters;
+	filter: QueryFilters | QueryFilters[];
 	iterate: (data: any) => Generator<T>;
 }
 
@@ -19,8 +19,9 @@ export function* iterateQueryCache<T>(queryClient: QueryClient, matchers: CacheM
 
 		for (let j = 0, jlen = matchers.length; j < jlen; j++) {
 			const matcher = matchers[j];
+			const filter = matcher.filter;
 
-			if (matchQuery(matcher.filter, query)) {
+			if (Array.isArray(filter) ? filter.some((f) => matchQuery(f, query)) : matchQuery(filter, query)) {
 				yield* matcher.iterate(data);
 			}
 		}

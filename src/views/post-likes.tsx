@@ -26,7 +26,7 @@ const PostLikesPage = () => {
 			</Page.Header>
 
 			<PagedList
-				data={likers.data?.pages.map((page) => page.likedBy)}
+				data={likers.data?.pages.map((page) => page.profiles)}
 				error={likers.error}
 				render={(item) => {
 					return (
