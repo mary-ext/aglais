@@ -33,7 +33,7 @@ type ReconcilableProperties<T> = { [K in keyof T]: T[K] extends string | number 
 export const reconcile = <T = any>(
 	prev: NoInfer<T>[] | undefined,
 	next: T[],
-	key: ReconcilableProperties<T>,
+	key: ReconcilableProperties<T> | ((item: T) => string | number),
 ): T[] => {
 	if (prev === undefined) {
 		return next;
@@ -47,15 +47,16 @@ export const reconcile = <T = any>(
 
 	for (let idx = 0; idx < prevLen; idx++) {
 		const item = prev[idx];
+
 		// @ts-expect-error
-		map.set(item[key], item);
+		map.set(typeof key === 'function' ? key(item) : item[key], item);
 	}
 
 	const array: T[] = Array.from({ length: next.length });
 	for (let idx = 0; idx < nextLen; idx++) {
 		const nextItem = next[idx];
 		// @ts-expect-error
-		const prevItem = map.get(nextItem[key]);
+		const prevItem = map.get(typeof key === 'function' ? key(nextItem) : nextItem[key]);
 
 		if (prevItem !== undefined) {
 			const replaced = replaceEqualDeep(prevItem, nextItem);
@@ -69,7 +70,7 @@ export const reconcile = <T = any>(
 		}
 	}
 
-	return nextLen === prevLen && equalItems === prevLen ? prev : equalItems === 0 ? next : array;
+	return equalItems === 0 ? next : array;
 };
 
 export const requestIdle = typeof requestIdleCallback === 'function' ? requestIdleCallback : setTimeout;
