@@ -15,7 +15,7 @@ import DefaultListAvatar from '~/assets/default-list-avatar.svg?url';
 import DefaultUserAvatar from '~/assets/default-user-avatar.svg?url';
 
 const AVATARS = {
-	feed: DefaultFeedAvatar,
+	generator: DefaultFeedAvatar,
 	labeler: DefaultLabelerAvatar,
 	list: DefaultListAvatar,
 	user: DefaultUserAvatar,

@@ -64,7 +64,7 @@ const InfoView = (props: { feed: AppBskyFeedDefs.GeneratorView }) => {
 			<div class="px-4">
 				<div class="flex gap-4">
 					<Avatar
-						type="feed"
+						type="generator"
 						src={feed().avatar}
 						size={null}
 						moderation={moderation()}

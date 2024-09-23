@@ -35,7 +35,7 @@ const FeedEmbed = ({ feed, interactive }: FeedEmbedProps) => {
 				(interactive ? ` hover:bg-contrast/sm active:bg-contrast/sm-pressed` : ``)
 			}
 		>
-			<Avatar type="feed" src={feed.avatar} moderation={moderation()} class="mt-0.5" />
+			<Avatar type="generator" src={feed.avatar} moderation={moderation()} class="mt-0.5" />
 
 			<div class="min-w-0 grow">
 				<p class="line-clamp-2 break-words text-sm font-bold">{/* @once */ feed.displayName}</p>

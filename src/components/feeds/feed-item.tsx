@@ -54,7 +54,7 @@ const FeedItem = ({ item }: FeedItemProps) => {
 		>
 			<div class="mb-3 flex items-center gap-3">
 				<Avatar
-					type="feed"
+					type="generator"
 					src={item.avatar}
 					href={href}
 					moderation={moderation()}
