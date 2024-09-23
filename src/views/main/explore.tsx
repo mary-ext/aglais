@@ -1,11 +1,12 @@
 import { history } from '~/globals/navigation';
 
+import MyFeedsSection from '~/components/explore/MyFeedsSection';
 import IconButton from '~/components/icon-button';
 import GearOutlinedIcon from '~/components/icons-central/gear-outline';
 import SearchBar from '~/components/main/search-bar';
 import * as Page from '~/components/page';
 
-const SearchPage = () => {
+const ExplorePage = () => {
 	return (
 		<>
 			<Page.Header>
@@ -28,8 +29,12 @@ const SearchPage = () => {
 					<IconButton icon={GearOutlinedIcon} title="Settings" />
 				</Page.HeaderAccessory>
 			</Page.Header>
+
+			<MyFeedsSection />
+
+			<div class="mt-4"></div>
 		</>
 	);
 };
 
-export default SearchPage;
+export default ExplorePage;
