@@ -67,8 +67,8 @@ const GifPlayer = ({ snippet }: GifPlayerProps) => {
 					}
 				}}
 				onPlay={() => {
-					setPlaying(true);
 					globalEvents.emit('mediaplay', playerId);
+					setPlaying(true);
 				}}
 				onPause={() => setPlaying(false)}
 				onWaiting={() => {
