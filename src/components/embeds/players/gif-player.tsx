@@ -16,7 +16,7 @@ export interface GifPlayerProps {
 const GifPlayer = ({ snippet }: GifPlayerProps) => {
 	const playerId = nanoid();
 
-	const [playing, setPlaying] = createSignal(true);
+	const [playing, setPlaying] = createSignal(false);
 	const [stalling, setStalling] = createSignal(false);
 
 	let _stallTimeout: number | undefined;
@@ -51,7 +51,7 @@ const GifPlayer = ({ snippet }: GifPlayerProps) => {
 				aria-description={/* @once */ snippet.description}
 				src={/* @once */ snippet.url}
 				poster={/* @once */ snippet.thumb}
-				autoplay={/* @once */ playing()}
+				autoplay
 				muted
 				loop
 				playsinline
@@ -70,7 +70,9 @@ const GifPlayer = ({ snippet }: GifPlayerProps) => {
 					globalEvents.emit('mediaplay', playerId);
 					setPlaying(true);
 				}}
-				onPause={() => setPlaying(false)}
+				onPause={() => {
+					setPlaying(false);
+				}}
 				onWaiting={() => {
 					clearTimeout(_stallTimeout);
 					_stallTimeout = setTimeout(() => setStalling(true), 50);
