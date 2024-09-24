@@ -22,7 +22,7 @@ import { sessions } from '~/globals/preferences';
 
 import { type Labeler, attachLabelerHeaders } from '../atproto/labeler';
 import { makeAbortable } from '../hooks/abortable';
-import { createReactiveLocalStorage, isExternalWriting } from '../hooks/local-storage';
+import { createReactiveLocalStorage } from '../hooks/local-storage';
 import type { PerAccountPreferenceSchema } from '../preferences/account';
 import type { AccountData } from '../preferences/sessions';
 import { assert } from '../utils/invariant';
@@ -144,6 +144,18 @@ export const SessionProvider = (props: ParentProps) => {
 				return;
 			}
 
+			// If we already have a session, reload...
+			if (state()) {
+				batch(() => {
+					sessions.active = did;
+					sessions.accounts = [account, ...sessions.accounts.filter((acc) => acc.did !== did)];
+
+					location.reload();
+				});
+
+				return;
+			}
+
 			const signal = getSignal();
 
 			const session = await oauthSessions.get(did, { allowStale: true });
@@ -195,32 +207,6 @@ export const SessionProvider = (props: ParentProps) => {
 			}
 		},
 	};
-
-	createEffect(() => {
-		const active = sessions.active;
-
-		// Only run this on external changes
-		if (isExternalWriting) {
-			const untrackedState = untrack(state);
-
-			if (active) {
-				if (active !== untrackedState?.did) {
-					// Current active account doesn't match what we have
-
-					// Still logged in, so log out of this one
-					if (untrackedState) {
-						replaceState(undefined);
-					}
-
-					// Try to resume from this new account if we have it.
-					context.resumeSession(active);
-				}
-			} else if (untrackedState) {
-				// No active account yet we have a session, log out
-				replaceState(undefined);
-			}
-		}
-	});
 
 	return <Context.Provider value={context}>{props.children}</Context.Provider>;
 };
