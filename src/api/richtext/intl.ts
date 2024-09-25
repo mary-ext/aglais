@@ -1,9 +1,9 @@
-var _graphemeLen: (text: string) => number;
+const segmenter = new Intl.Segmenter();
 
 export const textEncoder = new TextEncoder();
 export const textDecoder = new TextDecoder();
 
-export const graphemeLen = (text: string) => {
+export const graphemeLen = (text: string): number => {
 	var length = asciiLen(text);
 
 	if (length === undefined) {
@@ -13,7 +13,7 @@ export const graphemeLen = (text: string) => {
 	return length;
 };
 
-export const asciiLen = (str: string) => {
+export const asciiLen = (str: string): number | undefined => {
 	for (var idx = 0, len = str.length; idx < len; idx++) {
 		const char = str.charCodeAt(idx);
 
@@ -29,22 +29,13 @@ export const getUtf8Length = (str: string): number => {
 	return asciiLen(str) ?? textEncoder.encode(str).byteLength;
 };
 
-if (Intl.Segmenter) {
-	var segmenter = new Intl.Segmenter();
+const _graphemeLen = (text: string): number => {
+	var iterator = segmenter.segment(text)[Symbol.iterator]();
+	var count = 0;
 
-	_graphemeLen = (text) => {
-		var iterator = segmenter.segment(text)[Symbol.iterator]();
-		var count = 0;
+	while (!iterator.next().done) {
+		count++;
+	}
 
-		while (!iterator.next().done) {
-			count++;
-		}
-
-		return count;
-	};
-} else {
-	console.log('Intl.Segmenter API not available, falling back to polyfill...');
-
-	var { countGraphemes } = await import('./lib/unicode-segmenter.ts');
-	_graphemeLen = countGraphemes;
-}
+	return count;
+};
