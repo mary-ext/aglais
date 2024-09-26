@@ -75,10 +75,6 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 	for (let idx = 0, len = state.posts.length; idx < len; idx++) {
 		log?.(`Processing`);
 
-		// The sorting behavior for multiple posts sharing the same createdAt time is
-		// undefined, so what we'll do here is increment the time by 1 for every post
-		now.setMilliseconds(idx);
-
 		// Get the record key for this post
 		rkey = TID.now();
 
@@ -159,6 +155,11 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				root: reply ? reply.root : ref,
 				parent: ref,
 			};
+
+			// The sorting behavior for multiple posts sharing the same createdAt time
+			// is undefined, so what we'll do here is increment the time by 1 ms
+			// for every post
+			now.setMilliseconds(now.getMilliseconds() + 1);
 		}
 	}
 
