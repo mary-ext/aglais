@@ -20,32 +20,142 @@ const enum RenderMode {
 	MULTIPLE,
 	MULTIPLE_SQUARE,
 	STANDALONE,
-	STANDALONE_RATIO,
 }
 
 const ImageEmbed = (props: ImageEmbedProps) => {
-	const { embed, borderless, standalone, interactive } = props;
+	if (props.standalone) {
+		return StandaloneRenderer(props);
+	}
+
+	return NonStandaloneRenderer(props);
+};
+
+export default ImageEmbed;
+
+const clamp = (value: number, min: number, max: number): number => {
+	return Math.max(min, Math.min(max, value));
+};
+
+const isCloseToThreeByFour = (ratio: number): boolean => {
+	return Math.abs(ratio - 3 / 4) < 0.01;
+};
+
+const isCloseToFourByThree = (ratio: number): boolean => {
+	return Math.abs(ratio - 4 / 3) < 0.01;
+};
+
+const getClampedAspectRatio = (image: AppBskyEmbedImages.ViewImage) => {
+	const dims = image.aspectRatio;
+
+	const width = dims ? dims.width : 1;
+	const height = dims ? dims.height : 1;
+	const ratio = width / height;
+
+	return clamp(ratio, 3 / 4, 4 / 3);
+};
+
+const deriveMultiMediaHeight = (ratioA: number, ratioB: number) => {
+	if (isCloseToFourByThree(ratioA) && isCloseToFourByThree(ratioB)) {
+		return 184;
+	}
+
+	if (
+		(isCloseToThreeByFour(ratioA) && isCloseToFourByThree(ratioB)) ||
+		(isCloseToThreeByFour(ratioA) && isCloseToThreeByFour(ratioB))
+	) {
+		return 235;
+	}
+
+	return ratioA === 1 && ratioB === 1 ? 245 : 200;
+};
+
+const StandaloneRenderer = (props: ImageEmbedProps) => {
+	const { embed } = props;
 
 	const images = embed.images;
 	const length = images.length;
 
-	const hasStandaloneImage = standalone && length === 1 && images[0].aspectRatio !== undefined;
+	if (length === 1) {
+		const image = images[0];
+		const dims = image.aspectRatio;
+
+		const width = dims ? dims.width : 16;
+		const height = dims ? dims.height : 9;
+		const ratio = width / height;
+
+		return (
+			<div class="max-w-full self-start overflow-hidden rounded-md border border-outline">
+				<div class="max-h-80 min-h-16 min-w-16" style={{ 'aspect-ratio': ratio }}>
+					<img src={/* @once */ image.thumb} class="h-full w-full object-contain text-[0px]" />
+
+					{/* beautiful hack that ensures we're always using the maximum possible dimension */}
+					<div class="h-screen w-screen"></div>
+				</div>
+			</div>
+		);
+	}
+
+	if (length === 2) {
+		const a = images[0];
+		const b = images[1];
+
+		const ratioA = getClampedAspectRatio(a);
+		const ratioB = getClampedAspectRatio(b);
+		const totalRatio = ratioA + ratioB;
+
+		return (
+			<div
+				class="grid gap-1.5"
+				style={{
+					'aspect-ratio': totalRatio,
+					'grid-template-columns': `minmax(0, ${Math.floor(ratioA * 100)}fr) minmax(0, ${Math.floor(ratioB * 100)}fr)`,
+				}}
+			>
+				<div class="overflow-hidden rounded-md border border-outline">
+					<img src={/* @once */ a.thumb} class="h-full w-full object-cover text-[0px]" />
+				</div>
+				<div class="overflow-hidden rounded-md border border-outline">
+					<img src={/* @once */ b.thumb} class="h-full w-full object-cover text-[0px]" />
+				</div>
+			</div>
+		);
+	}
+
+	if (length >= 3) {
+		const ratios = images.map(getClampedAspectRatio);
+
+		const height = deriveMultiMediaHeight(ratios[0], ratios[1]);
+		const widths = ratios.map((ratio) => Math.floor(ratio * height));
+
+		const nodes = images.map((img, idx) => {
+			const h = `${height}px`;
+			const w = `${widths[idx]}px`;
+			const r = ratios[idx];
+
+			return (
+				<div
+					class="box-content shrink-0 overflow-hidden rounded-md border border-outline"
+					style={{ height: h, width: w, 'aspect-ratio': r }}
+				>
+					<img src={/* @once */ img.thumb} class="h-full w-full object-cover text-[0px]" />
+				</div>
+			);
+		});
+
+		return <div class="-mx-4 flex gap-1.5 overflow-x-auto px-4">{nodes}</div>;
+	}
+
+	return null;
+};
+
+const NonStandaloneRenderer = (props: ImageEmbedProps) => {
+	const { embed, borderless, interactive } = props;
+
+	const images = embed.images;
+	const length = images.length;
 
 	const render = (index: number, mode: RenderMode) => {
-		const { alt, thumb, aspectRatio } = images[index];
-
-		// FIXME: with STANDALONE_RATIO, we are resizing the image to make it fit
-		// the container with our given constraints, but this doesn't work when the
-		// image hasn't had its metadata loaded yet, the browser will snap to the
-		// smallest possible size for our layout.
-
-		// clients will typically just shove the actual resolution info to the
-		// `aspectRatio` field, but we can't rely on that as it could send
-		// simplified ratios instead.
-
-		// so what we'll do here is to just have an empty <div> sized to the device
-		// screen width and height. there's no issue with keeping the <div> around,
-		// so we'll do just that.
+		const { alt, thumb } = images[index];
 
 		let cn: string | undefined;
 		let ratio: string | undefined;
@@ -56,9 +166,6 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 			cn = `aspect-square overflow-hidden`;
 		} else if (mode === RenderMode.STANDALONE) {
 			cn = `aspect-video overflow-hidden`;
-		} else if (mode === RenderMode.STANDALONE_RATIO) {
-			cn = `max-h-80 min-h-16 min-w-16 max-w-full overflow-hidden`;
-			ratio = `${aspectRatio!.width}/${aspectRatio!.height}`;
 		}
 
 		return (
@@ -79,8 +186,6 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 					}}
 				/>
 
-				{/* @once */ mode === RenderMode.STANDALONE_RATIO && <div class="h-screen w-screen"></div>}
-
 				{interactive && alt && (
 					<div class="pointer-events-none absolute bottom-0 right-0 p-2">
 						<div class="flex h-4 items-center rounded bg-p-neutral-950/60 px-1 text-[9px] font-bold tracking-wider text-white">
@@ -93,13 +198,7 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 	};
 
 	return (
-		<div
-			class={
-				`` +
-				(!borderless ? ` overflow-hidden rounded-md border border-outline` : ``) +
-				(hasStandaloneImage ? ` max-w-full self-start` : ``)
-			}
-		>
+		<div class={`` + (!borderless ? ` overflow-hidden rounded-md border border-outline` : ``)}>
 			{length === 4 ? (
 				<div class="flex gap-0.5">
 					<div class="flex grow basis-0 flex-col gap-0.5">
@@ -128,13 +227,9 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 					<div class="flex grow basis-0 flex-col gap-0.5">{/* @once */ render(0, RenderMode.MULTIPLE)}</div>
 					<div class="flex grow basis-0 flex-col gap-0.5">{/* @once */ render(1, RenderMode.MULTIPLE)}</div>
 				</div>
-			) : hasStandaloneImage ? (
-				<>{/* @once */ render(0, RenderMode.STANDALONE_RATIO)}</>
 			) : length === 1 ? (
 				<>{/* @once */ render(0, RenderMode.STANDALONE)}</>
 			) : null}
 		</div>
 	);
 };
-
-export default ImageEmbed;
