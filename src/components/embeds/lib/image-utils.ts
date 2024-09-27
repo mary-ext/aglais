@@ -25,3 +25,7 @@ export const clampBetween9_16And16_9 = (ratio: number): number => {
 export const clampBetween3_4And16_9 = (ratio: number): number => {
 	return clamp(ratio, 3 / 4, 16 / 9);
 };
+
+export const isRatioMismatching = (a: number, b: number): boolean => {
+	return Math.abs(a - b) > 0.03;
+};

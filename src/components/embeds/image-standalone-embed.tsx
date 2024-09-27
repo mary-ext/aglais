@@ -6,7 +6,12 @@ import ImageViewerModalLazy from '~/components/images/image-viewer-modal-lazy';
 
 import ExpandOutlinedIcon from '../icons-central/expand-outline';
 
-import { clampBetween3_4And4_3, clampBetween9_16And16_9, getAspectRatio } from './lib/image-utils';
+import {
+	clampBetween3_4And4_3,
+	clampBetween9_16And16_9,
+	getAspectRatio,
+	isRatioMismatching,
+} from './lib/image-utils';
 
 export interface ImageStandaloneEmbedProps {
 	/** Expected to be static */
@@ -74,7 +79,7 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 			return (
 				<div class="relative overflow-hidden rounded-md border border-outline">
 					{/* @once */ render(idx, img)}
-					{/* @once */ indicator(!!img.alt, r !== cr)}
+					{/* @once */ indicator(!!img.alt, isRatioMismatching(r, cr))}
 				</div>
 			);
 		});
@@ -114,7 +119,7 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 				<div class="shrink-0" style={{ width: w, height: h, 'aspect-ratio': cr }}>
 					<div class="relative h-full w-full overflow-hidden rounded-md border border-outline">
 						{/* @once */ render(idx, img)}
-						{/* @once */ indicator(!!img.alt, r !== cr)}
+						{/* @once */ indicator(!!img.alt, isRatioMismatching(r, cr))}
 					</div>
 				</div>
 			);
