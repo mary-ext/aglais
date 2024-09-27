@@ -74,7 +74,7 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 
 		return (
 			<div
-				class="grid gap-1.5"
+				class="grid w-full gap-1.5"
 				style={{
 					'aspect-ratio': totalRatio,
 					'grid-template-columns': `minmax(0, ${Math.floor(crA * 100)}fr) minmax(0, ${Math.floor(crB * 100)}fr)`,
