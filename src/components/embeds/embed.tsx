@@ -69,7 +69,7 @@ const MediaEmbed = (props: MediaEmbedProps) => {
 				const embed = props.embed;
 				const type = embed.$type;
 
-				if (type === 'app.bsky.embed.images#view') {
+				if (type === 'app.bsky.embed.images#view' && embed.images.length > 0) {
 					return <ImageStandaloneEmbed embed={embed} />;
 				}
 

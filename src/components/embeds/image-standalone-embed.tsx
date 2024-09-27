@@ -6,12 +6,7 @@ import ImageViewerModalLazy from '~/components/images/image-viewer-modal-lazy';
 
 import ExpandOutlinedIcon from '../icons-central/expand-outline';
 
-import {
-	clampBetween3_4And4_3,
-	clampBetween9_16And16_9,
-	getAspectRatio,
-	isRatioMismatching,
-} from './lib/image-utils';
+import { clampBetween9_16And16_9, getAspectRatio, isRatioMismatching } from './lib/image-utils';
 
 export interface ImageStandaloneEmbedProps {
 	/** Expected to be static */
@@ -21,19 +16,6 @@ export interface ImageStandaloneEmbedProps {
 const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 	const images = embed.images;
 	const length = images.length;
-
-	const render = (index: number, img: AppBskyEmbedImages.ViewImage) => {
-		return (
-			<img
-				src={/* @once */ img.thumb}
-				alt={/* @once */ img.alt}
-				class="h-full w-full cursor-pointer object-cover text-[0px]"
-				onClick={() => {
-					openModal(() => <ImageViewerModalLazy images={images} active={index} />);
-				}}
-			/>
-		);
-	};
 
 	if (length === 1) {
 		const img = images[0];
@@ -64,40 +46,7 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 		);
 	}
 
-	if (length === 2) {
-		const rs = images.map(getAspectRatio);
-		const [crA, crB] = rs.map(clampBetween3_4And4_3);
-
-		const totalRatio = crA + crB;
-
-		const nodes = images.map((img, idx) => {
-			// @todo: this ratio check doesn't always work, espceially since we're
-			// not accounting for rendered container width
-			const r = rs[idx];
-			const cr = !idx ? crA : crB;
-
-			return (
-				<div class="relative overflow-hidden rounded-md border border-outline">
-					{/* @once */ render(idx, img)}
-					{/* @once */ indicator(!!img.alt, isRatioMismatching(r, cr))}
-				</div>
-			);
-		});
-
-		return (
-			<div
-				class="grid w-full gap-1.5"
-				style={{
-					'aspect-ratio': totalRatio,
-					'grid-template-columns': `minmax(0, ${Math.floor(crA * 100)}fr) minmax(0, ${Math.floor(crB * 100)}fr)`,
-				}}
-			>
-				{nodes}
-			</div>
-		);
-	}
-
-	if (length >= 3) {
+	{
 		const rs = images.map(getAspectRatio);
 		const crs = rs.map(clampBetween9_16And16_9);
 
@@ -116,9 +65,25 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 			const cr = crs[idx];
 
 			return (
-				<div class="shrink-0" style={{ width: w, height: h, 'aspect-ratio': cr }}>
+				<div
+					class="shrink-0 snap-center snap-always"
+					style={{
+						width: w,
+						height: h,
+						'aspect-ratio': cr,
+						'scroll-margin-left': idx === 0 ? '32px' : '',
+					}}
+				>
 					<div class="relative h-full w-full overflow-hidden rounded-md border border-outline">
-						{/* @once */ render(idx, img)}
+						<img
+							src={/* @once */ img.thumb}
+							alt={/* @once */ img.alt}
+							class="h-full w-full cursor-pointer object-cover text-[0px]"
+							onClick={() => {
+								openModal(() => <ImageViewerModalLazy images={images} active={idx} />);
+							}}
+						/>
+
 						{/* @once */ indicator(!!img.alt, isRatioMismatching(r, cr))}
 					</div>
 				</div>
@@ -127,7 +92,7 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 
 		return (
 			<div
-				class="-mr-4 flex gap-1.5 overflow-x-auto pr-4 scrollbar-hide"
+				class="-mr-4 flex snap-x snap-mandatory gap-1.5 overflow-x-auto pr-4 scrollbar-hide"
 				style={{
 					'margin-left': `calc(var(--embed-left-gutter, 16px) * -1)`,
 					'padding-left': `var(--embed-left-gutter, 16px)`,
@@ -137,8 +102,6 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 			</div>
 		);
 	}
-
-	return null;
 };
 
 export default ImageStandaloneEmbed;

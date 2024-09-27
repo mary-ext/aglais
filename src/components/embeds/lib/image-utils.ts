@@ -14,10 +14,6 @@ export const getAspectRatio = (image: AppBskyEmbedImages.ViewImage): number => {
 	return ratio;
 };
 
-export const clampBetween3_4And4_3 = (ratio: number): number => {
-	return clamp(ratio, 3 / 4, 4 / 3);
-};
-
 export const clampBetween9_16And16_9 = (ratio: number): number => {
 	return clamp(ratio, 9 / 16, 16 / 9);
 };
