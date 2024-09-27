@@ -157,7 +157,7 @@ const indicator = (alt: boolean, mismatchingRatio: boolean) => {
 			)}
 
 			{mismatchingRatio && (
-				<div class="flex h-4 items-center bg-p-neutral-950/80 px-1 text-[9px] font-bold tracking-wider text-white">
+				<div class="flex h-4 items-center bg-p-neutral-950/60 px-1 text-[9px] font-bold tracking-wider text-white">
 					<ExpandOutlinedIcon />
 				</div>
 			)}
