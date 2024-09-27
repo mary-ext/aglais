@@ -82,6 +82,7 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 				// prettier-ignore
 				(!treeView ? ` px-4` + (!item().next ? ` border-b` : ``) : ` px-3`)
 			}
+			style={{ '--embed-left-gutter': !treeView ? '64px' : `${12 + 8 + (item().lines!.length + 1) * 20}px` }}
 		>
 			<ThreadLines lines={item().lines} />
 

@@ -67,6 +67,7 @@ const BookmarkFeedItem = ({ item }: BookmarkFeedItemProps) => {
 			onAuxClick={handleClick}
 			onKeyDown={handleClick}
 			class="relative flex gap-3 border-b border-outline px-4 pt-3"
+			style={{ '--embed-left-gutter': '64px' }}
 		>
 			<div class="flex shrink-0 flex-col items-center">
 				<Avatar

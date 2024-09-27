@@ -14,7 +14,7 @@ import ContentHider from '../moderation/content-hider';
 
 import ExternalEmbed from './external-embed';
 import FeedEmbed from './feed-embed';
-import ImageEmbed from './image-embed';
+import ImageStandaloneEmbed from './image-standalone-embed';
 import ListEmbed from './list-embed';
 import QuoteEmbed from './quote-embed';
 import VideoEmbed from './video-embed';
@@ -70,7 +70,7 @@ const MediaEmbed = (props: MediaEmbedProps) => {
 				const type = embed.$type;
 
 				if (type === 'app.bsky.embed.images#view') {
-					return <ImageEmbed embed={embed} interactive standalone />;
+					return <ImageStandaloneEmbed embed={embed} />;
 				}
 
 				if (type === 'app.bsky.embed.external#view') {
