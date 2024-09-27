@@ -4,6 +4,8 @@ import { openModal } from '~/globals/modals';
 
 import ImageViewerModalLazy from '~/components/images/image-viewer-modal-lazy';
 
+import ExpandOutlinedIcon from '../icons-central/expand-outline';
+
 import { clampBetween3_4And4_3, clampBetween3_4And16_9, getAspectRatio } from './lib/image-utils';
 
 export interface ImageStandaloneEmbedProps {
@@ -51,7 +53,7 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 					{/* beautiful hack that ensures we're always using the maximum possible dimension */}
 					<div class="h-screen w-screen"></div>
 
-					{/* @once */ img.alt && <AltIndicator />}
+					{/* @once */ indicator(!!img.alt, false)}
 				</div>
 			</div>
 		);
@@ -64,10 +66,15 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 		const totalRatio = crA + crB;
 
 		const nodes = images.map((img, idx) => {
+			// @todo: this ratio check doesn't always work, espceially since we're
+			// not accounting for rendered container width
+			const r = rs[idx];
+			const cr = !idx ? crA : crB;
+
 			return (
 				<div class="relative overflow-hidden rounded-md border border-outline">
 					{/* @once */ render(idx, img)}
-					{/* @once */ img.alt && <AltIndicator />}
+					{/* @once */ indicator(!!img.alt, r !== cr)}
 				</div>
 			);
 		});
@@ -99,13 +106,15 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 		const nodes = images.map((img, idx) => {
 			const h = `${height}px`;
 			const w = `${widths[idx]}px`;
-			const r = crs[idx];
+
+			const r = rs[idx];
+			const cr = crs[idx];
 
 			return (
-				<div class="shrink-0" style={{ width: w, height: h, 'aspect-ratio': r }}>
+				<div class="shrink-0" style={{ width: w, height: h, 'aspect-ratio': cr }}>
 					<div class="relative h-full w-full overflow-hidden rounded-md border border-outline">
 						{/* @once */ render(idx, img)}
-						{/* @once */ img.alt && <AltIndicator />}
+						{/* @once */ indicator(!!img.alt, r !== cr)}
 					</div>
 				</div>
 			);
@@ -129,12 +138,24 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 
 export default ImageStandaloneEmbed;
 
-const AltIndicator = () => {
+const indicator = (alt: boolean, mismatchingRatio: boolean) => {
+	if (!alt && !mismatchingRatio) {
+		return null;
+	}
+
 	return (
-		<div class="pointer-events-none absolute bottom-0 right-0 p-2">
-			<div class="flex h-4 items-center rounded bg-p-neutral-950/60 px-1 text-[9px] font-bold tracking-wider text-white">
-				ALT
-			</div>
+		<div class="pointer-events-none absolute bottom-0 right-0 m-2 flex gap-0.5 overflow-hidden rounded">
+			{alt && (
+				<div class="flex h-4 items-center bg-p-neutral-950/60 px-1 text-[9px] font-bold tracking-wider text-white">
+					ALT
+				</div>
+			)}
+
+			{mismatchingRatio && (
+				<div class="flex h-4 items-center bg-p-neutral-950/80 px-1 text-[9px] font-bold tracking-wider text-white">
+					<ExpandOutlinedIcon />
+				</div>
+			)}
 		</div>
 	);
 };
