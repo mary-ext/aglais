@@ -6,7 +6,7 @@ import ImageViewerModalLazy from '~/components/images/image-viewer-modal-lazy';
 
 import ExpandOutlinedIcon from '../icons-central/expand-outline';
 
-import { clampBetween3_4And4_3, clampBetween3_4And16_9, getAspectRatio } from './lib/image-utils';
+import { clampBetween3_4And4_3, clampBetween9_16And16_9, getAspectRatio } from './lib/image-utils';
 
 export interface ImageStandaloneEmbedProps {
 	/** Expected to be static */
@@ -94,7 +94,7 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 
 	if (length >= 3) {
 		const rs = images.map(getAspectRatio);
-		const crs = rs.map(clampBetween3_4And16_9);
+		const crs = rs.map(clampBetween9_16And16_9);
 
 		// 448px - 2px = maximum possible screen width (desktop)
 		// 80px = width covered by avatar and padding in timeline item (64px on the left, 16px on the right)
