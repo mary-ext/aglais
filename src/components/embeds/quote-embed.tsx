@@ -17,7 +17,7 @@ import { useModerationOptions } from '~/lib/states/moderation';
 import Avatar, { getUserAvatarType } from '../avatar';
 import TimeAgo from '../time-ago';
 
-import ImageEmbed from './image-embed';
+import ImageGridEmbed from './image-grid-embed';
 import VideoEmbed from './video-embed';
 
 export interface QuoteEmbedProps {
@@ -86,7 +86,7 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 					{!large ? (
 						image ? (
 							<div class="mb-3 ml-3 mt-2 grow basis-0">
-								<ImageEmbed embed={image} blur={shouldBlurMedia()} />
+								<ImageGridEmbed embed={image} blur={shouldBlurMedia()} />
 							</div>
 						) : video ? (
 							<div class="mb-3 ml-3 mt-2 grow basis-0">
@@ -105,7 +105,7 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 
 			{large || !text ? (
 				image ? (
-					<ImageEmbed embed={image} borderless blur={shouldBlurMedia()} />
+					<ImageGridEmbed embed={image} borderless blur={shouldBlurMedia()} />
 				) : video ? (
 					<VideoEmbed embed={video} borderless blur={shouldBlurMedia()} />
 				) : null

@@ -8,7 +8,7 @@ import { moderatePost } from '~/api/moderation/entities/post';
 import { useModerationOptions } from '~/lib/states/moderation';
 
 import Avatar, { getUserAvatarType } from '../avatar';
-import ImageEmbed from '../embeds/image-embed';
+import ImageGridEmbed from '../embeds/image-grid-embed';
 import TimeAgo from '../time-ago';
 
 export interface ComposerReplyContextProps {
@@ -76,7 +76,7 @@ const ComposerReplyContext = (props: ComposerReplyContextProps) => {
 
 					{image && (
 						<div class="grow basis-0">
-							<ImageEmbed embed={image} blur={shouldBlurImage()} />
+							<ImageGridEmbed embed={image} blur={shouldBlurImage()} />
 						</div>
 					)}
 				</div>
