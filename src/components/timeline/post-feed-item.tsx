@@ -82,6 +82,7 @@ const PostFeedItem = ({ item, highlighted, timelineDid }: PostFeedItemProps) => 
 				(!highlighted ? ` hover:bg-contrast/sm` : ` bg-accent/15 hover:bg-accent/md`) +
 				(!next ? ` border-b` : ``)
 			}
+			style={{ '--embed-left-gutter': '64px' }}
 		>
 			<div class="relative flex flex-col pb-1 pt-2">
 				{prev && (

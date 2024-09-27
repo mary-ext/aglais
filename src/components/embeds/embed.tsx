@@ -70,7 +70,7 @@ const MediaEmbed = (props: MediaEmbedProps) => {
 				const type = embed.$type;
 
 				if (type === 'app.bsky.embed.images#view') {
-					return <ImageEmbed embed={embed} interactive standalone />;
+					return <ImageEmbed embed={embed} standalone />;
 				}
 
 				if (type === 'app.bsky.embed.external#view') {
