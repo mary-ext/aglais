@@ -51,7 +51,7 @@ const Shell = () => {
 	return (
 		<div
 			inert={hasModals()}
-			class="relative z-0 mx-auto flex min-h-[100dvh] max-w-md flex-col-reverse border-outline sm:border-x"
+			class="relative z-0 mx-auto box-content flex min-h-[100dvh] max-w-[600px] flex-col-reverse border-outline sm:border-x"
 		>
 			{!!(currentAccount && route().def.meta?.main) && <NavBar route={route} unread={unread} />}
 
@@ -133,7 +133,7 @@ const NavBar = ({
 
 	return (
 		<>
-			<div class="sticky bottom-0 z-1 flex h-13 w-full max-w-md shrink-0 items-stretch border-t border-outline bg-background">
+			<div class="sticky bottom-0 z-1 flex h-13 w-full shrink-0 items-stretch border-t border-outline bg-background">
 				<NavItem
 					label="Home"
 					active={active() === MainTabs.HOME}
