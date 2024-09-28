@@ -17,6 +17,7 @@ import { on } from '~/lib/utils/misc';
 
 import ModalRenderer from '~/components/main/modal-renderer';
 
+import './service-worker';
 import routes from './routes';
 import Shell from './shell';
 

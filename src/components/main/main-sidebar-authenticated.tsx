@@ -5,8 +5,9 @@ import { createProfileQuery } from '~/api/queries/profile';
 import { openModal, useModalContext } from '~/globals/modals';
 
 import { formatCompact } from '~/lib/intl/number';
-import { SWStatus, swStatus, updateSW } from '~/lib/service-worker';
 import { useSession } from '~/lib/states/session';
+
+import { SWStatus, swStatus, updateSW } from '~/service-worker';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 import IconButton from '../icon-button';
