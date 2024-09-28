@@ -64,7 +64,8 @@ const RichText = (props: RichTextProps) => {
 
 							break;
 						} else if (type === 'app.bsky.richtext.facet#tag') {
-							node = renderInternalLink(`/topics/${feature.tag}`, subtext);
+							const href = `/search?q=${encodeURIComponent('#' + feature.tag)}&t=top_posts`;
+							node = renderInternalLink(href, subtext);
 
 							break;
 						} else if (type === 'blue.moji.richtext.facet') {
