@@ -16,6 +16,11 @@ export default defineConfig({
 		sourcemap: true,
 		assetsInlineLimit: 0,
 		minify: 'terser',
+		rollupOptions: {
+			output: {
+				chunkFileNames: 'assets/[hash].js',
+			},
+		},
 		terserOptions: {
 			compress: {
 				passes: 3,
