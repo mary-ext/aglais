@@ -90,31 +90,19 @@ export const compressProfileImage = async (
 	throw new Error(`Unable to compress image according to criteria`);
 };
 
-export const getImageFromBlob = (blob: Blob): Promise<HTMLImageElement> => {
-	return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		const image = document.createElement('img');
+export const getImageFromBlob = async (blob: Blob): Promise<HTMLImageElement> => {
+	const image = new Image();
+	const blobUrl = URL.createObjectURL(blob);
 
-		if (!blob.type.startsWith('image/')) {
-			return reject(new Error(`Blob is not an image`));
-		}
+	image.src = blobUrl;
 
-		image.onload = () => {
-			resolve(image);
-		};
-		image.onerror = () => {
-			reject(new Error(`Failed to load image`));
-		};
+	try {
+		await image.decode();
+	} finally {
+		URL.revokeObjectURL(blobUrl);
+	}
 
-		reader.onload = () => {
-			image.src = reader.result as string;
-		};
-		reader.onerror = () => {
-			reject(new Error(`Failed to load image`));
-		};
-
-		reader.readAsDataURL(blob);
-	});
+	return image;
 };
 
 export const enum Crop {
