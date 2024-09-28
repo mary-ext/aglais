@@ -5,6 +5,7 @@ import { createProfileQuery } from '~/api/queries/profile';
 import { openModal, useModalContext } from '~/globals/modals';
 
 import { formatCompact } from '~/lib/intl/number';
+import { SWStatus, swStatus, updateSW } from '~/lib/service-worker';
 import { useSession } from '~/lib/states/session';
 
 import Avatar, { getUserAvatarType } from '../avatar';
@@ -12,6 +13,7 @@ import IconButton from '../icon-button';
 import AddOutlinedIcon from '../icons-central/add-outline';
 import BookmarkOutlinedIcon from '../icons-central/bookmark-outline';
 import BulletListOutlinedIcon from '../icons-central/bullet-list-outline';
+import DownloadOutlinedIcon from '../icons-central/download-outline';
 import GearOutlinedIcon from '../icons-central/gear-outline';
 import HeartOutlinedIcon from '../icons-central/heart-outline';
 import LeaveOutlinedIcon from '../icons-central/leave-outline';
@@ -46,6 +48,32 @@ const MainSidebarAuthenticated = () => {
 						close();
 					}}
 				/>
+
+				<div class="grow">{'' + swStatus()}</div>
+
+				<div class="sticky bottom-0 flex flex-col border-t border-outline bg-background empty:hidden">
+					<Switch>
+						<Match when={swStatus() === SWStatus.UPDATING || swStatus() === SWStatus.INSTALLING}>
+							<div class="flex gap-4 px-4 py-3 text-contrast opacity-50">
+								<DownloadOutlinedIcon class="mt-0.5 text-xl" />
+								<span class="text-base font-bold">
+									{swStatus() === SWStatus.UPDATING ? `Updating app` : `Installing app`}
+								</span>
+							</div>
+						</Match>
+
+						<Match when={swStatus() === SWStatus.NEED_REFRESH}>
+							<Sidebar.Item
+								icon={DownloadOutlinedIcon}
+								label="Update app"
+								onClick={() => {
+									close();
+									updateSW();
+								}}
+							/>
+						</Match>
+					</Switch>
+				</div>
 			</Sidebar.Container>
 		</>
 	);

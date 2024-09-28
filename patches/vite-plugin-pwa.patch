@@ -1,16 +1,16 @@
 diff --git a/dist/client/build/register.js b/dist/client/build/register.js
-index 0dc588160b1a58778ebc02757d9757e45cb212e3..aef9ecfc0eee73fd8406bfa3025e38ba2468064c 100644
+index 95340c19195a56fb0ff3f9a24b00e4ed8ce08858..dc9fb67b8e1dc3ace58cf0322afbf4f2a73dacf7 100644
 --- a/dist/client/build/register.js
 +++ b/dist/client/build/register.js
-@@ -7,6 +7,7 @@ function registerSW(options = {}) {
+@@ -6,6 +6,7 @@ var autoDestroy = selfDestroying === "true";
+ function registerSW(options = {}) {
    const {
      immediate = false,
-     onNeedRefresh,
 +    onBeginUpdate,
+     onNeedRefresh,
      onOfflineReady,
      onRegistered,
-     onRegisteredSW,
-@@ -71,6 +72,12 @@ function registerSW(options = {}) {
+@@ -77,6 +78,12 @@ function registerSW(options = {}) {
          }
        }
        wb.register({ immediate }).then((r) => {
@@ -24,14 +24,13 @@ index 0dc588160b1a58778ebc02757d9757e45cb212e3..aef9ecfc0eee73fd8406bfa3025e38ba
            onRegisteredSW("__SW__", r);
          else
 diff --git a/types/index.d.ts b/types/index.d.ts
-index c2553517a12c98f4f7d1b0ef10a2dd203842d45e..694f29ec1ca485c3d620d3cd47517abdef7e17c1 100644
+index c2553517a12c98f4f7d1b0ef10a2dd203842d45e..ea9006e2d44617f80ed7dd51ce6dd83d16819ad0 100644
 --- a/types/index.d.ts
 +++ b/types/index.d.ts
-@@ -1,6 +1,7 @@
+@@ -1,5 +1,6 @@
  export interface RegisterSWOptions {
    immediate?: boolean
-   onNeedRefresh?: () => void
 +  onBeginUpdate?: () => void
+   onNeedRefresh?: () => void
    onOfflineReady?: () => void
    /**
-    * Called only if `onRegisteredSW` is not provided.
