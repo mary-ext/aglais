@@ -50,11 +50,7 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 		const rs = images.map(getAspectRatio);
 		const crs = rs.map(clampBetween9_16And16_9);
 
-		// 600px = maximum possible screen width (desktop)
-		// 80px = width covered by avatar and padding in timeline item (64px on the left, 16px on the right)
-		// 16px = random value to make it clear there's more items to the right
-		// 220px = reasonable height limit
-		const height = Math.min((1 / crs[0]) * (Math.min(window.innerWidth, 600) - 80 - 16), 220);
+		const height = getIdealHeight(crs);
 		const widths = crs.map((ratio) => Math.floor(ratio * height));
 
 		const nodes = images.map((img, idx) => {
@@ -105,6 +101,22 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 };
 
 export default ImageStandaloneEmbed;
+
+const getIdealHeight = (ratios: number[]) => {
+	// 600px = maximum possible screen width (desktop)
+	// 80px = width covered by avatar and padding in timeline item (64px on the left, 16px on the right)
+	// 16px = random value to make it clear there's more items to the right
+	const maxViewportWidth = Math.min(window.innerWidth, 600) - 80 - 16;
+
+	// 220px = reasonable height limit
+	const maxHeight = 220;
+
+	// Grab the widest image in set
+	const width = Math.max(...ratios);
+
+	// Inverse the ratio to grab height from viewport width
+	return Math.min((1 / width) * maxViewportWidth, maxHeight);
+};
 
 const indicator = (alt: boolean, mismatchingRatio: boolean) => {
 	if (!alt && !mismatchingRatio) {
