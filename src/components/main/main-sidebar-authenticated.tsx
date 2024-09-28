@@ -49,7 +49,7 @@ const MainSidebarAuthenticated = () => {
 					}}
 				/>
 
-				<div class="grow">{'' + swStatus()}</div>
+				<div class="grow"></div>
 
 				<div class="sticky bottom-0 flex flex-col border-t border-outline bg-background empty:hidden">
 					<Switch>
