@@ -338,7 +338,7 @@ const Post = ({
 
 		return (
 			((embed && (embed.type !== EmbedKind.QUOTE || !embed.origin)) || !richtext.empty) &&
-			rtLength < MAX_TEXT_LENGTH
+			rtLength <= MAX_TEXT_LENGTH
 		);
 	});
 
