@@ -9,11 +9,11 @@
 	},
 	"dependencies": {
 		"@atcute/base32": "^1.0.0",
-		"@atcute/bluemoji": "^1.0.2",
-		"@atcute/bluesky": "^1.0.4",
-		"@atcute/cbor": "^1.0.0",
+		"@atcute/bluemoji": "^1.0.3",
+		"@atcute/bluesky": "^1.0.7",
+		"@atcute/cbor": "^1.0.1",
 		"@atcute/cid": "^1.0.0",
-		"@atcute/client": "^2.0.0",
+		"@atcute/client": "^2.0.2",
 		"@atcute/tid": "^1.0.0",
 		"@floating-ui/dom": "^1.6.10",
 		"@floating-ui/utils": "^0.2.7",
@@ -33,14 +33,14 @@
 		"autoprefixer": "^10.4.20",
 		"babel-plugin-transform-typescript-const-enums": "^0.1.0",
 		"prettier": "^3.3.3",
-		"prettier-plugin-tailwindcss": "^0.6.6",
-		"tailwindcss": "^3.4.10",
-		"terser": "^5.31.6",
-		"typescript": "5.6.0-beta",
-		"vite": "^5.4.2",
+		"prettier-plugin-tailwindcss": "^0.6.8",
+		"tailwindcss": "^3.4.13",
+		"terser": "^5.34.1",
+		"typescript": "5.6.2",
+		"vite": "6.0.0-beta.1",
 		"vite-plugin-pwa": "0.20.5",
 		"vite-plugin-solid": "^2.10.2",
-		"wrangler": "^3.72.3"
+		"wrangler": "^3.78.12"
 	},
 	"pnpm": {
 		"patchedDependencies": {

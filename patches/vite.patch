@@ -1,13 +1,13 @@
-diff --git a/dist/node/chunks/dep-BzOvws4Y.js b/dist/node/chunks/dep-BzOvws4Y.js
-index 184597a2d7b1acc23556e16264e6677457023e81..d98dc4f1d3457ce2705aa0badbb972780e238060 100644
---- a/dist/node/chunks/dep-BzOvws4Y.js
-+++ b/dist/node/chunks/dep-BzOvws4Y.js
-@@ -65109,7 +65109,7 @@ async function resolveBuildPlugins(config) {
+diff --git a/dist/node/chunks/dep-BZ_CwQkz.js b/dist/node/chunks/dep-BZ_CwQkz.js
+index 95868be812ff88ec8bdbd3dd619d40c288195f35..1ca642cfb5d34fe5470e6734a840dde5bdd08afc 100644
+--- a/dist/node/chunks/dep-BZ_CwQkz.js
++++ b/dist/node/chunks/dep-BZ_CwQkz.js
+@@ -65110,7 +65110,7 @@ async function resolveBuildPlugins(config) {
        ...config.isWorker ? [webWorkerPostPlugin()] : []
      ],
      post: [
 -      buildImportAnalysisPlugin(config),
-+        ...(config.build.modulePreload !== false ? [buildImportAnalysisPlugin(config)] : []),
++      ...(config.build.modulePreload !== false ? [buildImportAnalysisPlugin(config)] : []),
        ...config.esbuild !== false ? [buildEsbuildPlugin(config)] : [],
-       ...options.minify ? [terserPlugin(config)] : [],
-       ...!config.isWorker ? [
+       terserPlugin(config),
+       ...!config.isWorker ? [manifestPlugin(), ssrManifestPlugin(), buildReporterPlugin(config)] : [],
