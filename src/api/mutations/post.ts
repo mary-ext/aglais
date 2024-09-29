@@ -93,6 +93,7 @@ export const createPostRepostMutation = (
 					repo: currentAccount!.did,
 					collection: 'app.bsky.feed.repost',
 					record: {
+						$type: 'app.bsky.feed.repost',
 						createdAt: getCurrentDate(),
 						subject: {
 							uri: postUri,
