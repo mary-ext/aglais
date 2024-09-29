@@ -83,6 +83,7 @@ const AddEmotePrompt = ({ blob, onAdd }: AddEmotePromptProps) => {
 				rkey: $name,
 				validate: false,
 				record: {
+					$type: 'blue.moji.collection.item',
 					createdAt: getCurrentDate(),
 					name: $name,
 					alt: $altText,

@@ -34,6 +34,7 @@ export const createPostLikeMutation = (
 					repo: currentAccount!.did,
 					collection: 'app.bsky.feed.like',
 					record: {
+						$type: 'app.bsky.feed.like',
 						createdAt: getCurrentDate(),
 						subject: {
 							uri: postUri,

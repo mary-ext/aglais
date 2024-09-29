@@ -34,6 +34,7 @@ export const createProfileFollowMutation = (
 					repo: currentAccount!.did,
 					collection: 'app.bsky.graph.follow',
 					record: {
+						$type: 'app.bsky.graph.follow',
 						createdAt: getCurrentDate(),
 						subject: did,
 					},

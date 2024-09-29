@@ -89,7 +89,7 @@ const EditProfileDialog = ({ profile }: EditProfileDialogProps) => {
 				rkey: 'self',
 			}).catch(() => undefined);
 
-			let record = existing?.value ?? {};
+			let record = existing?.value ?? { $type: 'app.bsky.actor.profile' };
 			record.displayName = $name;
 			record.description = $bio;
 

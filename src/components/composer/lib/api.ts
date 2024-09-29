@@ -102,11 +102,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 		}
 
 		// Now form the record
-		const record: AppBskyFeedPost.Record & { $type: string } = {
-			// IMPORTANT: $type has to exist, CID is calculated with the `$type` field
-			// present and will produce the wrong CID if you omit it.
-			// `createRecord` and `applyWrites` currently lets you omit this and it'll
-			// add it for you, but we want to avoid that here.
+		const record: AppBskyFeedPost.Record = {
 			$type: 'app.bsky.feed.post',
 			createdAt: now.toISOString(),
 			text: rt.text,
@@ -127,6 +123,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 		// If this is the first post, and we have a threadgate set, create one now.
 		if (idx === 0 && state.threadgate) {
 			const threadgateRecord: AppBskyFeedThreadgate.Record = {
+				$type: 'app.bsky.feed.threadgate',
 				createdAt: now.toISOString(),
 				post: uri,
 				allow: state.threadgate,

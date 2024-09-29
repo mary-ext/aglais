@@ -62,6 +62,7 @@ const BlockPrompt = ({ profile }: BlockAccountPrompt) => {
 				repo: currentAccount!.did,
 				collection: 'app.bsky.graph.block',
 				record: {
+					$type: 'app.bsky.graph.block',
 					createdAt: getCurrentDate(),
 					subject: profile.did,
 				},
