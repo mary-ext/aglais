@@ -3,7 +3,7 @@ import { createMemo } from 'solid-js';
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
-import { updatePostShadow } from '~/api/cache/post-shadow';
+import { updatePostShadow, usePostShadow } from '~/api/cache/post-shadow';
 import { createBookmarkEntryQuery } from '~/api/queries/bookmark-entry';
 import { deleteRecord } from '~/api/utils/records';
 import { parseAtUri } from '~/api/utils/strings';
@@ -19,9 +19,12 @@ import BookmarkCheckOutlinedIcon from '../icons-central/bookmark-check-outline';
 import BookmarkOutlinedIcon from '../icons-central/bookmark-outline';
 import FolderAddOutlinedIcon from '../icons-central/folder-add-outline';
 import OpenInNewOutlinedIcon from '../icons-central/open-in-new-outline';
+import PinOutlinedIcon from '../icons-central/pin-outline';
 import TrashOutlinedIcon from '../icons-central/trash-outline';
 import * as Menu from '../menu';
 import * as Prompt from '../prompt';
+
+import PinPostPromptLazy from './pin-post-prompt-lazy';
 
 export interface PostOverflowMenuProps {
 	anchor: HTMLElement;
@@ -39,10 +42,12 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 	const queryClient = useQueryClient();
 
 	const post = props.post;
+	const shadow = usePostShadow(post);
+
 	const isOurPost = currentAccount && currentAccount.did === post.author.did;
 
-	const query = createBookmarkEntryQuery(() => post.uri);
-	const isBookmarked = createMemo(() => query.data.item !== undefined);
+	const bookmarkQuery = createBookmarkEntryQuery(() => post.uri);
+	const isBookmarked = createMemo(() => bookmarkQuery.data.item !== undefined);
 
 	return (
 		<Menu.Container anchor={props.anchor} placement="bottom-end" cover>
@@ -80,13 +85,22 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 							));
 						}}
 					/>
+
+					<Menu.Item
+						icon={PinOutlinedIcon}
+						label={!shadow().pinned ? `Pin to profile` : `Unpin from profile`}
+						onClick={() => {
+							close();
+							openModal(() => <PinPostPromptLazy post={post} />);
+						}}
+					/>
 				</>
 			)}
 
 			<Menu.Item
 				icon={!isBookmarked() ? BookmarkOutlinedIcon : BookmarkCheckOutlinedIcon}
 				label={!isBookmarked() ? `Bookmark` : `Remove bookmark`}
-				disabled={query.isLoading}
+				disabled={bookmarkQuery.isLoading}
 				onClick={async () => {
 					close();
 

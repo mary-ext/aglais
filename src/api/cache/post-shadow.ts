@@ -18,6 +18,7 @@ export interface PostShadow {
 	deleted?: boolean;
 	likeUri?: string;
 	repostUri?: string;
+	pinned?: boolean;
 	threadMuted?: boolean;
 }
 
@@ -27,6 +28,7 @@ export interface PostShadowView {
 	likeUri: string | undefined;
 	repostCount: number;
 	repostUri: string | undefined;
+	pinned: boolean;
 	threadMuted: boolean;
 }
 
@@ -91,6 +93,7 @@ export const getPostShadow = (post: AppBskyFeedDefs.PostView): PostShadowView =>
 		likeUri: 'likeUri' in shadow ? shadow.likeUri : post.viewer?.like,
 		repostCount: repostCount,
 		repostUri: 'repostUri' in shadow ? shadow.repostUri : post.viewer?.repost,
+		pinned: ('pinned' in shadow ? shadow.pinned : post.viewer?.pinned) ?? false,
 		threadMuted: ('threadMuted' in shadow ? shadow.threadMuted : post.viewer?.threadMuted) ?? false,
 	};
 };
