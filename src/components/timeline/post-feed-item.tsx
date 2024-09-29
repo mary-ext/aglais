@@ -18,6 +18,7 @@ import { useSession } from '~/lib/states/session';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 import Embed from '../embeds/embed';
+import PinOutlinedIcon from '../icons-central/pin-outline';
 import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 import ContentHider from '../moderation/content-hider';
 import ModerationAlerts from '../moderation/moderation-alerts';
@@ -154,6 +155,17 @@ const renderReason = (reason: UiTimelineItem['reason']) => {
 						</span>
 						<span class="shrink-0 whitespace-pre"> Reposted</span>
 					</a>
+				</div>
+			);
+		}
+
+		if (type === 'app.bsky.feed.defs#reasonPin') {
+			return (
+				<div class="flex items-center gap-3 text-de text-contrast-muted">
+					<div class="flex w-9 shrink-0 justify-end">
+						<PinOutlinedIcon class="text-sm" />
+					</div>
+					<span class="flex min-w-0 font-medium">Pinned</span>
 				</div>
 			);
 		}

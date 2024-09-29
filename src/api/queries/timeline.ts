@@ -15,6 +15,7 @@ import { globalEvents } from '~/globals/events';
 import { useAgent } from '~/lib/states/agent';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
+import { tinyhash } from '~/lib/utils/hash';
 import { assert } from '~/lib/utils/invariant';
 
 import {
@@ -86,15 +87,45 @@ export type TimelineParams =
 
 export interface TimelinePage {
 	cursor: string | undefined;
-	cid: string | undefined;
+	hash: number | undefined;
+	pinAmount: number;
 	items: UiTimelineItem[];
 }
 
 export interface TimelineLatestResult {
-	cid: string | undefined;
+	hash: number | undefined;
 }
 
 const MAX_TIMELINE_POSTS = 50;
+
+const countPinnedViews = (views: AppBskyFeedDefs.FeedViewPost[]): number => {
+	let count = 0;
+
+	for (let idx = 0, len = views.length; idx < len; idx++) {
+		const view = views[idx];
+		if (view.reason && view.reason.$type === 'app.bsky.feed.defs#reasonPin') {
+			count++;
+		}
+	}
+
+	return count;
+};
+
+const getTimelineHash = (views: AppBskyFeedDefs.FeedViewPost[]): number | undefined => {
+	if (views.length) {
+		let str = '';
+
+		for (const view of views) {
+			str += view.post.cid;
+
+			if (!view.reason || view.reason.$type !== 'app.bsky.feed.defs#reasonPin') {
+				break;
+			}
+		}
+
+		return tinyhash(str);
+	}
+};
 
 export const useTimelineQuery = (_params: () => TimelineParams) => {
 	const getParams = createMemo(() => _params(), EQUALS_DEQUAL);
@@ -176,7 +207,8 @@ export const useTimelineQuery = (_params: () => TimelineParams) => {
 				const page: TimelinePage = {
 					// Prevent overfetching, check if the cursor returned is the same
 					cursor: newCursor !== cursor ? newCursor : undefined,
-					cid: feed.length > 0 ? feed[0].post.cid : undefined,
+					hash: getTimelineHash(feed),
+					pinAmount: countPinnedViews(feed),
 					items: result,
 				};
 
@@ -205,10 +237,14 @@ export const useTimelineQuery = (_params: () => TimelineParams) => {
 				return false;
 			},
 			async queryFn(ctx): Promise<TimelineLatestResult> {
-				const timeline = await fetchPage(rpc, params, 1, undefined, ctx.signal);
+				// `limit` on getAuthorFeed does not take `includePins` into account
+				// const offset = params.type !== 'profile' ? timelineData!.pages[0].pinAmount : 0;
+				const offset = timelineData!.pages[0].pinAmount;
+
+				const timeline = await fetchPage(rpc, params, offset + 1, undefined, ctx.signal);
 				const feed = timeline.feed;
 
-				return { cid: feed.length > 0 ? feed[0].post.cid : undefined };
+				return { hash: getTimelineHash(feed) };
 			},
 		};
 	});
@@ -239,9 +275,9 @@ export const useTimelineQuery = (_params: () => TimelineParams) => {
 				// Untrack so we don't become dependent on this.
 				const params = untrack(getParams);
 
-				queryClient.setQueryData(
+				queryClient.setQueryData<TimelineLatestResult>(
 					['timeline-latest', params],
-					{ cid: pages[0].cid },
+					{ hash: pages[0].hash },
 					{ updatedAt: timeline.dataUpdatedAt },
 				);
 			}
@@ -271,7 +307,7 @@ const isTimelineStale = (
 	timelineData: InfiniteData<TimelinePage> | undefined,
 	latestData: TimelineLatestResult | undefined,
 ) => {
-	return latestData?.cid && timelineData ? latestData.cid !== timelineData.pages[0].cid : false;
+	return latestData?.hash && timelineData ? latestData.hash !== timelineData.pages[0].hash : false;
 };
 
 //// Raw fetch
@@ -339,6 +375,7 @@ const fetchPage = async (
 					actor: params.actor,
 					cursor: cursor,
 					limit: limit,
+					includePins: params.tab !== 'media',
 					filter:
 						params.tab === 'media'
 							? 'posts_with_media'
