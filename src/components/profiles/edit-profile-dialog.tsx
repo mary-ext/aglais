@@ -1,5 +1,6 @@
 import { Show, createMemo, createSignal } from 'solid-js';
 
+import { XRPCError } from '@atcute/client';
 import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { createMutation } from '@mary/solid-query';
 
@@ -83,35 +84,55 @@ const EditProfileDialog = ({ profile }: EditProfileDialogProps) => {
 				bannerPromise = compressProfileImage($banner, 3000, 1000).then((res) => uploadBlob(rpc, res.blob));
 			}
 
-			const existing = await getRecord(rpc, {
-				repo,
-				collection: 'app.bsky.actor.profile',
-				rkey: 'self',
-			}).catch(() => undefined);
+			let retriesRemaining = 3;
+			while (true) {
+				const existing = await getRecord(rpc, {
+					repo,
+					collection: 'app.bsky.actor.profile',
+					rkey: 'self',
+				}).catch(() => undefined);
 
-			let record = existing?.value ?? { $type: 'app.bsky.actor.profile' };
-			record.displayName = $name;
-			record.description = $bio;
+				let record = existing?.value ?? { $type: 'app.bsky.actor.profile' };
 
-			if (avatarPromise) {
-				record.avatar = await avatarPromise;
-			} else if ($avatar === undefined) {
-				record.avatar = undefined;
+				if ($name !== snapshot.name) {
+					record.displayName = $name;
+				}
+				if ($bio !== snapshot.bio) {
+					record.description = $bio;
+				}
+
+				if (avatarPromise) {
+					record.avatar = await avatarPromise;
+				} else if ($avatar === undefined) {
+					record.avatar = undefined;
+				}
+
+				if (bannerPromise) {
+					record.banner = await bannerPromise;
+				} else if ($banner === undefined) {
+					record.banner = undefined;
+				}
+
+				try {
+					await putRecord(rpc, {
+						repo,
+						collection: 'app.bsky.actor.profile',
+						rkey: 'self',
+						record: record,
+						swapRecord: existing?.cid ?? null,
+					});
+				} catch (err) {
+					if (err instanceof XRPCError && err.kind === 'InvalidSwapError') {
+						if (retriesRemaining--) {
+							continue;
+						}
+					}
+
+					throw err;
+				}
+
+				break;
 			}
-
-			if (bannerPromise) {
-				record.banner = await bannerPromise;
-			} else if ($banner === undefined) {
-				record.banner = undefined;
-			}
-
-			await putRecord(rpc, {
-				repo,
-				collection: 'app.bsky.actor.profile',
-				rkey: 'self',
-				record: record,
-				swapRecord: existing?.cid ?? null,
-			});
 		},
 		async onSuccess() {
 			close();
