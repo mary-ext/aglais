@@ -102,6 +102,8 @@ const SignInDialog = (props: SignInDialogProps) => {
 		},
 		async onError(err) {
 			console.error(err);
+
+			setError(`Something went wrong, try again later`);
 		},
 	}));
 
@@ -120,6 +122,7 @@ const SignInDialog = (props: SignInDialogProps) => {
 						const formData = new FormData(ev.currentTarget);
 
 						ev.preventDefault();
+						setError();
 
 						if ($view === View.HANDLE) {
 							loginMutation.mutate({ identifier: formData.get('identifier') as string });
@@ -159,15 +162,17 @@ const SignInDialog = (props: SignInDialogProps) => {
 									placeholder="paul.bsky.social"
 								/>
 
+								<div class="flex flex-col gap-2">
+									<InlineLink>Sign in with your personal data server instead</InlineLink>
+								</div>
+
 								<Switch>
 									<Match when={loginMutation.isPending}>
 										<p class="text-sm text-contrast-muted/80 empty:hidden">{pending()}</p>
 									</Match>
 
-									<Match when>
-										<div class="flex flex-col gap-2">
-											<InlineLink>Sign in with your personal data server instead</InlineLink>
-										</div>
+									<Match when={error() !== undefined}>
+										<p class="text-sm text-p-red-400 empty:hidden">{error()}</p>
 									</Match>
 								</Switch>
 							</div>
