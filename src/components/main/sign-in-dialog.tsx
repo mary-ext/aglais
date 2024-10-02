@@ -1,4 +1,4 @@
-import { Match, Switch, createSignal } from 'solid-js';
+import { Match, Switch, createSignal, onMount } from 'solid-js';
 
 import { createMutation } from '@mary/solid-query';
 
@@ -146,7 +146,9 @@ const SignInDialog = (props: SignInDialogProps) => {
 										autofocusOnMutation(node, loginMutation);
 
 										if (autologin) {
-											node.value = autologin;
+											onMount(() => {
+												node.value = autologin;
+											});
 										}
 									}}
 									name="identifier"
