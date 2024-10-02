@@ -47,8 +47,8 @@ export class OAuthUserAgent implements FetchHandlerObject {
 		const headers = new Headers(init?.headers);
 
 		let session = this.session;
-
 		let url = new URL(pathname, session.info.aud);
+
 		headers.set('authorization', `${session.token.type} ${session.token.access}`);
 
 		let response = await this.#fetch(url, { ...init, headers });
