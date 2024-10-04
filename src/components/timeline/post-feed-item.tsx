@@ -149,7 +149,7 @@ const renderReason = (reason: UiTimelineItem['reason']) => {
 						<RepeatOutlinedIcon class="text-sm" />
 					</div>
 					<a href={`/${did}`} class="flex min-w-0 hover:underline">
-						<span dir="auto" class="overflow-hidden text-ellipsis whitespace-nowrap font-bold">
+						<span dir="auto" class="overflow-hidden text-ellipsis whitespace-nowrap font-medium">
 							{/* @once */ by.handle}
 						</span>
 						<span class="shrink-0 whitespace-pre"> reposted</span>
