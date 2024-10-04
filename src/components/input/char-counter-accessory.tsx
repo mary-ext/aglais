@@ -11,7 +11,7 @@ const CharCounterAccessory = (props: CharCounterAccessoryProps) => {
 	const isOver = createMemo(() => props.value > props.max);
 
 	return (
-		<span class={`text-de` + (!isOver() ? ` text-contrast-muted` : ` text-error`)}>
+		<span class={`text-de tabular-nums` + (!isOver() ? ` text-contrast-muted` : ` text-error`)}>
 			{formatLong(props.value)}/{formatLong(props.max)}
 		</span>
 	);
