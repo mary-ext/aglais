@@ -3,6 +3,7 @@ import { Match, Switch, createResource } from 'solid-js';
 import { OAuthServerAgent } from '~/api/oauth/agents/server-agent';
 import { sessions } from '~/api/oauth/agents/sessions';
 import { OAuthUserAgent } from '~/api/oauth/agents/user-agent';
+import { OAuthResponseError } from '~/api/oauth/errors';
 import { getMetadataFromAuthorizationServer } from '~/api/oauth/resolver';
 import type { Session } from '~/api/oauth/types/token';
 
@@ -99,15 +100,27 @@ const OAuthCallbackPage = () => {
 	return (
 		<Switch>
 			<Match when={resource.error}>
-				<div class="flex max-w-sm grow flex-col items-center justify-center gap-6 p-6">
-					<div class="text-sm">
-						<p class="text-p-red-400">Authentication failed</p>
-						<p class="text-contrast-muted">{'' + resource.error}</p>
+				{(error) => (
+					<div class="flex max-w-sm grow flex-col items-center justify-center gap-6 p-6">
+						<div class="text-sm">
+							<p class="text-p-red-400">Authentication failed</p>
+							<p class="text-contrast-muted">
+								{(() => {
+									const $error = error();
+
+									if ($error instanceof OAuthResponseError) {
+										return $error.description || $error.message;
+									}
+
+									return '' + $error;
+								})()}
+							</p>
+						</div>
+						<Button onClick={() => location.reload()} variant="primary" size="md">
+							Go home
+						</Button>
 					</div>
-					<Button onClick={() => location.reload()} variant="primary" size="md">
-						Go home
-					</Button>
-				</div>
+				)}
 			</Match>
 
 			<Match when>
