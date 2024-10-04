@@ -37,7 +37,7 @@ const PostMeta = ({ post, authorHref, href, gutterBottom }: PostMetaProps) => {
 					onClick={() => precacheProfile(queryClient, author)}
 					class="overflow-hidden text-ellipsis"
 				>
-					<span class="font-medium text-contrast hover:underline">{handle}</span>
+					<span class="font-semibold text-contrast hover:underline">{handle}</span>
 				</a>
 
 				<span class="pl-2"> </span>

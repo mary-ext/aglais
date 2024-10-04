@@ -32,7 +32,7 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 					<a
 						dir="auto"
 						href={`/${did}`}
-						class="overflow-hidden text-ellipsis whitespace-nowrap font-medium hover:underline"
+						class="overflow-hidden text-ellipsis whitespace-nowrap font-semibold hover:underline"
 					>
 						{handle}
 					</a>
@@ -59,7 +59,7 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 						<a
 							dir="auto"
 							href={`/${did}`}
-							class="overflow-hidden text-ellipsis whitespace-nowrap font-medium hover:underline"
+							class="overflow-hidden text-ellipsis whitespace-nowrap font-semibold hover:underline"
 						>
 							{profile.data.handle}
 						</a>
