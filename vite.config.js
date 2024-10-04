@@ -97,7 +97,10 @@ export default defineConfig({
 					process.env.VITE_OAUTH_REDIRECT_URL = metadata.redirect_uris[0];
 				} else {
 					const redirectUri = `http://${SERVER_HOST}:${SERVER_PORT}/oauth/callback`;
-					const clientId = `http://localhost?redirect_uri=${encodeURIComponent(redirectUri)}`;
+					const clientId =
+						`http://localhost` +
+						`?redirect_uri=${encodeURIComponent(redirectUri)}` +
+						`&scope=${encodeURIComponent(metadata.scope)}`;
 
 					process.env.VITE_DEV_SERVER_PORT = '' + SERVER_PORT;
 					process.env.VITE_OAUTH_CLIENT_ID = clientId;
