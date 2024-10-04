@@ -142,18 +142,17 @@ const renderReason = (reason: UiTimelineItem['reason']) => {
 		if (type === 'app.bsky.feed.defs#reasonRepost') {
 			const by = reason.by;
 			const did = by.did;
-			const name = by.displayName || by.handle;
 
 			return (
 				<div class="flex items-center gap-3 text-de text-contrast-muted">
 					<div class="flex w-9 shrink-0 justify-end">
 						<RepeatOutlinedIcon class="text-sm" />
 					</div>
-					<a href={`/${did}`} class="flex min-w-0 font-medium hover:underline">
-						<span dir="auto" class="overflow-hidden text-ellipsis whitespace-nowrap">
-							{name}
+					<a href={`/${did}`} class="flex min-w-0 hover:underline">
+						<span dir="auto" class="overflow-hidden text-ellipsis whitespace-nowrap font-bold">
+							{/* @once */ by.handle}
 						</span>
-						<span class="shrink-0 whitespace-pre"> Reposted</span>
+						<span class="shrink-0 whitespace-pre"> reposted</span>
 					</a>
 				</div>
 			);
@@ -165,7 +164,7 @@ const renderReason = (reason: UiTimelineItem['reason']) => {
 					<div class="flex w-9 shrink-0 justify-end">
 						<PinOutlinedIcon class="text-sm" />
 					</div>
-					<span class="flex min-w-0 font-medium">Pinned</span>
+					<span class="flex min-w-0">Pinned</span>
 				</div>
 			);
 		}

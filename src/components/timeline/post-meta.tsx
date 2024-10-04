@@ -19,12 +19,11 @@ export interface PostMetaProps {
 	gutterBottom?: boolean;
 }
 
-const PostMeta = ({ post, authorHref, href, compact, gutterBottom }: PostMetaProps) => {
+const PostMeta = ({ post, authorHref, href, gutterBottom }: PostMetaProps) => {
 	const queryClient = useQueryClient();
 
 	const author = post.author;
 
-	const displayName = author.displayName;
 	const handle = author.handle;
 	const indexedAt = post.indexedAt;
 
@@ -36,20 +35,12 @@ const PostMeta = ({ post, authorHref, href, compact, gutterBottom }: PostMetaPro
 				<a
 					href={authorHref}
 					onClick={() => precacheProfile(queryClient, author)}
-					class="flex max-w-full gap-1 overflow-hidden text-ellipsis whitespace-nowrap text-left"
+					class="overflow-hidden text-ellipsis"
 				>
-					{displayName && (
-						<bdi class="overflow-hidden text-ellipsis font-bold text-contrast hover:underline">
-							{displayName}
-						</bdi>
-					)}
-
-					{(!compact || !displayName) && (
-						<span class="block overflow-hidden text-ellipsis whitespace-nowrap">@{handle}</span>
-					)}
+					<span class="font-bold text-contrast hover:underline">{handle}</span>
 				</a>
 
-				<span class="px-1">·</span>
+				<span class="pl-2"> </span>
 
 				<TimeAgo value={indexedAt}>
 					{(relative, absolute) => (
