@@ -28,15 +28,13 @@ import {
 	createJoinedItems,
 } from '../models/timeline';
 import {
-	ContextContentList,
 	type ModerationCause,
 	type ModerationOptions,
-	PreferenceHide,
-	TargetContent,
 	decideLabelModeration,
 	decideMutedKeywordModeration,
 	getModerationUI,
 } from '../moderation';
+import { ContextContentList, PreferenceHide, TargetContent } from '../moderation/constants';
 import { EQUALS_DEQUAL } from '../utils/dequal';
 import { unwrapPostEmbedText } from '../utils/post';
 import { resetInfiniteData, wrapQuery } from '../utils/query';

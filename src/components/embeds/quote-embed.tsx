@@ -8,7 +8,8 @@ import type {
 	AppBskyFeedPost,
 } from '@atcute/client/lexicons';
 
-import { ContextContentMedia, getModerationUI } from '~/api/moderation';
+import { getModerationUI } from '~/api/moderation';
+import { ContextContentMedia } from '~/api/moderation/constants';
 import { moderateQuote } from '~/api/moderation/entities/quote';
 import { parseAtUri } from '~/api/utils/strings';
 

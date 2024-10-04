@@ -2,7 +2,8 @@ import { createMemo } from 'solid-js';
 
 import type { AppBskyEmbedImages, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 
-import { ContextContentMedia, getModerationUI } from '~/api/moderation';
+import { getModerationUI } from '~/api/moderation';
+import { ContextContentMedia } from '~/api/moderation/constants';
 import { moderatePost } from '~/api/moderation/entities/post';
 
 import { useModerationOptions } from '~/lib/states/moderation';

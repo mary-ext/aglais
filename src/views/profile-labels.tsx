@@ -3,22 +3,24 @@ import { Match, Show, Switch, createMemo } from 'solid-js';
 import type { At } from '@atcute/client/lexicons';
 
 import {
+	GLOBAL_LABELS,
+	type LabelDefinition,
+	type ModerationLabeler,
+	type ModerationLabelerPreferences,
+	getLocalizedLabel,
+} from '~/api/moderation';
+import {
 	BlurContent,
 	BlurMedia,
 	BlurNone,
-	GLOBAL_LABELS,
-	type LabelDefinition,
 	type LabelPreference,
-	type ModerationLabeler,
-	type ModerationLabelerPreferences,
 	PreferenceHide,
 	PreferenceIgnore,
 	PreferenceWarn,
 	SeverityAlert,
 	SeverityInform,
 	SeverityNone,
-	getLocalizedLabel,
-} from '~/api/moderation';
+} from '~/api/moderation/constants';
 import { createLabelerMetaQuery } from '~/api/queries/labeler';
 
 import { openModal, useModalContext } from '~/globals/modals';

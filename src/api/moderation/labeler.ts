@@ -2,6 +2,7 @@ import type { AppBskyLabelerDefs } from '@atcute/client/lexicons';
 
 import { mapDefined } from '~/lib/utils/misc';
 
+import type { LabelDefinitionMapping, ModerationLabeler } from '.';
 import {
 	BlurContent,
 	BlurMedia,
@@ -10,17 +11,15 @@ import {
 	FlagsNoSelf,
 	FlagsNone,
 	type LabelBlur,
-	type LabelDefinitionMapping,
 	type LabelPreference,
 	type LabelSeverity,
-	type ModerationLabeler,
 	PreferenceHide,
 	PreferenceIgnore,
 	PreferenceWarn,
 	SeverityAlert,
 	SeverityInform,
 	SeverityNone,
-} from '.';
+} from './constants';
 
 export const interpretLabelerDefinition = (
 	service: AppBskyLabelerDefs.LabelerViewDetailed,

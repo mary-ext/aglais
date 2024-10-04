@@ -3,11 +3,10 @@ import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 import {
 	type ModerationCause,
 	type ModerationOptions,
-	TargetAccount,
-	TargetProfile,
 	decideLabelModeration,
 	decideMutedPermanentModeration,
 } from '..';
+import { TargetAccount, TargetProfile } from '../constants';
 
 type AllProfileView =
 	| AppBskyActorDefs.ProfileView

@@ -5,7 +5,8 @@ import { useQueryClient } from '@mary/solid-query';
 
 import { usePostShadow } from '~/api/cache/post-shadow';
 import type { PostAncestorItem, PostDescendantItem } from '~/api/models/post-thread';
-import { ContextContentList, getModerationUI } from '~/api/moderation';
+import { getModerationUI } from '~/api/moderation';
+import { ContextContentList } from '~/api/moderation/constants';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { precacheProfile } from '~/api/queries-cache/profile-precache';
 import { parseAtUri } from '~/api/utils/strings';

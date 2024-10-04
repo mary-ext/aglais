@@ -3,7 +3,8 @@ import { Show, createMemo } from 'solid-js';
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 
 import { usePostShadow } from '~/api/cache/post-shadow';
-import { ContextContentView, getModerationUI } from '~/api/moderation';
+import { getModerationUI } from '~/api/moderation';
+import { ContextContentView } from '~/api/moderation/constants';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { createPostLikeMutation, createPostRepostMutation } from '~/api/mutations/post';
 import { parseAtUri } from '~/api/utils/strings';

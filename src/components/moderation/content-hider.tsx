@@ -9,9 +9,9 @@ import {
 	type ModerationCauseType,
 	type ModerationLabeler,
 	type ModerationUI,
-	SeverityAlert,
 	getLocalizedLabel,
 } from '~/api/moderation';
+import { SeverityAlert } from '~/api/moderation/constants';
 
 import { openModal } from '~/globals/modals';
 

@@ -3,7 +3,7 @@ import { Match, Show, Switch, createMemo } from 'solid-js';
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
-import { ContextContentMedia } from '~/api/moderation';
+import { ContextContentMedia } from '~/api/moderation/constants';
 import { moderateGeneric } from '~/api/moderation/entities/generic';
 import { moderateProfile } from '~/api/moderation/entities/profile';
 import { precacheProfile } from '~/api/queries-cache/profile-precache';

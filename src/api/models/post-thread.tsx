@@ -8,12 +8,8 @@ import type {
 
 import type { ThreadViewPreferences } from '~/lib/preferences/account';
 
-import {
-	ContextContentList,
-	type ModerationCause,
-	type ModerationOptions,
-	getModerationUI,
-} from '../moderation';
+import { type ModerationCause, type ModerationOptions, getModerationUI } from '../moderation';
+import { ContextContentList } from '../moderation/constants';
 import { moderatePost } from '../moderation/entities/post';
 
 export const enum LineType {

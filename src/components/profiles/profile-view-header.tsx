@@ -3,7 +3,8 @@ import { type Component, type ComponentProps, type JSX, Match, Show, Switch, cre
 import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 
 import { useProfileShadow } from '~/api/cache/profile-shadow';
-import { ContextProfileMedia, getModerationUI } from '~/api/moderation';
+import { getModerationUI } from '~/api/moderation';
+import { ContextProfileMedia } from '~/api/moderation/constants';
 import { moderateProfile } from '~/api/moderation/entities/profile';
 import { parseAtUri } from '~/api/utils/strings';
 

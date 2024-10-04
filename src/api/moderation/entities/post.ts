@@ -5,11 +5,10 @@ import { unwrapPostEmbedText } from '~/api/utils/post';
 import {
 	type ModerationCause,
 	type ModerationOptions,
-	PreferenceWarn,
-	TargetContent,
 	decideLabelModeration,
 	decideMutedKeywordModeration,
 } from '..';
+import { PreferenceWarn, TargetContent } from '../constants';
 
 import { moderateProfile } from './profile';
 

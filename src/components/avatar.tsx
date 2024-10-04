@@ -2,12 +2,8 @@ import { Match, Switch } from 'solid-js';
 
 import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 
-import {
-	ContextProfileMedia,
-	type ModerationCause,
-	type ModerationContext,
-	getModerationUI,
-} from '~/api/moderation';
+import { type ModerationCause, getModerationUI } from '~/api/moderation';
+import { ContextProfileMedia, type ModerationContext } from '~/api/moderation/constants';
 
 import DefaultFeedAvatar from '~/assets/default-feed-avatar.svg?url';
 import DefaultLabelerAvatar from '~/assets/default-labeler-avatar.svg?url';
