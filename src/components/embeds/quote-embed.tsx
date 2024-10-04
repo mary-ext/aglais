@@ -63,16 +63,11 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 					class="mr-2"
 				/>
 
-				<span class="flex max-w-full gap-1 overflow-hidden text-ellipsis whitespace-nowrap text-left">
-					<bdi class="overflow-hidden text-ellipsis">
-						<span class="font-bold text-contrast">{/* @once */ author.displayName || author.handle}</span>
-					</bdi>
-					<span class="block overflow-hidden text-ellipsis whitespace-nowrap">
-						@{/* @once */ author.handle}
-					</span>
+				<span class="overflow-hidden text-ellipsis">
+					<span class="font-medium text-contrast">{/* @once */ author.handle}</span>
 				</span>
 
-				<span class="px-1">·</span>
+				<span class="pl-2"></span>
 
 				<span class="whitespace-nowrap">
 					<TimeAgo value={/* @once */ quote.indexedAt}>
