@@ -61,15 +61,7 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 			const cr = crs[idx];
 
 			return (
-				<div
-					class="shrink-0 snap-center snap-always"
-					style={{
-						width: w,
-						height: h,
-						'aspect-ratio': cr,
-						'scroll-margin-left': idx === 0 ? '32px' : '',
-					}}
-				>
+				<div class="shrink-0" style={{ width: w, height: h, 'aspect-ratio': cr }}>
 					<div class="relative h-full w-full overflow-hidden rounded-md border border-outline">
 						<img
 							src={/* @once */ img.thumb}
@@ -88,7 +80,7 @@ const ImageStandaloneEmbed = ({ embed }: ImageStandaloneEmbedProps) => {
 
 		return (
 			<div
-				class="-mr-4 flex snap-x snap-mandatory gap-1.5 overflow-x-auto pr-4 scrollbar-hide"
+				class="-mr-4 flex gap-1.5 overflow-x-auto pr-4 scrollbar-hide"
 				style={{
 					'margin-left': `calc(var(--embed-left-gutter, 16px) * -1)`,
 					'padding-left': `var(--embed-left-gutter, 16px)`,
