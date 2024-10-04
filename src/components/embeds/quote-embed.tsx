@@ -65,7 +65,7 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 				/>
 
 				<span class="overflow-hidden text-ellipsis">
-					<span class="font-medium text-contrast">{/* @once */ author.handle}</span>
+					<span class="font-semibold text-contrast">{/* @once */ author.handle}</span>
 				</span>
 
 				<span class="pl-2"></span>
