@@ -23,11 +23,11 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 			const handle = author.handle;
 
 			if (did === currentAccount?.did) {
-				return <div class="mb-0.5 flex text-sm text-contrast-muted">Replying to you</div>;
+				return <div class="mb-0.5 flex text-de text-contrast-muted">Replying to you</div>;
 			}
 
 			return (
-				<div class="mb-0.5 flex text-sm text-contrast-muted">
+				<div class="mb-0.5 flex text-de text-contrast-muted">
 					<span class="shrink-0 whitespace-pre">Replying to </span>
 					<a
 						dir="auto"
@@ -44,7 +44,7 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 		if (raw) {
 			const did = parseAtUri(raw.uri).repo;
 			if (did === currentAccount?.did) {
-				return <div class="mb-0.5 flex text-sm text-contrast-muted">Replying to you</div>;
+				return <div class="mb-0.5 flex text-de text-contrast-muted">Replying to you</div>;
 			}
 
 			const profile = createProfileQuery(() => did, {
@@ -53,7 +53,7 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 			});
 
 			return (
-				<div class="mb-0.5 flex text-sm text-contrast-muted">
+				<div class="mb-0.5 flex text-de text-contrast-muted">
 					<span class="shrink-0 whitespace-pre">Replying to </span>
 					{profile.data ? (
 						<a
