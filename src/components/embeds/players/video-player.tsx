@@ -19,6 +19,7 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 
 	const hls = new Hls({
 		capLevelToPlayerSize: true,
+		startLevel: 1,
 		xhrSetup(xhr, urlString) {
 			const url = new URL(urlString);
 
