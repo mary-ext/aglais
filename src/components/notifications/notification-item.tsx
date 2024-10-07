@@ -196,12 +196,11 @@ const renderText = (data: FollowNotificationSlice | LikeNotificationSlice | Repo
 
 		nodes.push(
 			<a
-				dir="auto"
 				href={/* @once */ `/${author.did}`}
 				onClick={() => precacheProfile(queryClient, author)}
-				class="inline-block overflow-hidden align-top font-bold hover:underline"
+				class="inline-block overflow-hidden align-top font-semibold hover:underline"
 			>
-				{/* @once */ author.displayName?.trim() || `@${author.handle}`}
+				{/* @once */ author.handle}
 			</a>,
 		);
 	}

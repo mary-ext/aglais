@@ -84,11 +84,8 @@ const InfoView = (props: { feed: AppBskyFeedDefs.GeneratorView }) => {
 						>
 							<Avatar type={getUserAvatarType(creator())} src={creator().avatar} size="xs" class="mr-2" />
 
-							<span class="mr-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm font-bold empty:hidden group-hover:underline">
-								{creator().displayName}
-							</span>
-							<span class="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-contrast-muted">
-								{'@' + creator().handle}
+							<span class="mr-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium text-contrast-muted">
+								{creator().handle}
 							</span>
 						</a>
 					</div>

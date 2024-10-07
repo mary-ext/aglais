@@ -28,7 +28,6 @@ const ComposerReplyContext = (props: ComposerReplyContextProps) => {
 	const moderation = createMemo(() => moderatePost(post, moderationOptions()));
 	const shouldBlurImage = () => getModerationUI(moderation(), ContextContentMedia).b.length !== 0;
 
-	const displayName = author.displayName;
 	const handle = author.handle;
 	const image = getPostImage(post.embed);
 
