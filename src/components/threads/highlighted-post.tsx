@@ -96,7 +96,12 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 
 					<TimeAgo value={post().indexedAt}>
 						{(relative, absolute) => (
-							<a title={absolute()} href={href} class="whitespace-nowrap hover:underline">
+							<a
+								title={absolute()}
+								href={href}
+								class="whitespace-nowrap hover:underline"
+								onClick={(e) => e.preventDefault()}
+							>
 								{relative()}
 							</a>
 						)}
