@@ -101,7 +101,7 @@ const OAuthCallbackPage = () => {
 		<Switch>
 			<Match when={resource.error}>
 				{(error) => (
-					<div class="flex max-w-sm grow flex-col items-center justify-center gap-6 p-6">
+					<div class="mx-auto flex max-w-sm grow flex-col items-center justify-center gap-6 p-6">
 						<div class="text-sm">
 							<p class="text-p-red-400">Authentication failed</p>
 							<p class="text-contrast-muted">
@@ -124,7 +124,7 @@ const OAuthCallbackPage = () => {
 			</Match>
 
 			<Match when>
-				<div class="flex max-w-sm grow flex-col items-center justify-center gap-6 p-6">
+				<div class="mx-auto flex max-w-sm grow flex-col items-center justify-center gap-6 p-6">
 					<p class="text-sm text-contrast-muted">Processing your sign in information</p>
 					<CircularProgress />
 				</div>
