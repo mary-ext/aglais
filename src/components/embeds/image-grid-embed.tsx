@@ -28,7 +28,7 @@ const ImageGridEmbed = (props: ImageGridEmbedProps) => {
 		if (mode === RenderMode.MULTIPLE) {
 			cn = `min-h-0 grow basis-0 overflow-hidden`;
 		} else if (mode === RenderMode.MULTIPLE_SQUARE) {
-			cn = `aspect-square overflow-hidden`;
+			cn = !borderless ? `aspect-square overflow-hidden` : `aspect-video overflow-hidden`;
 		} else if (mode === RenderMode.STANDALONE) {
 			cn = `aspect-video overflow-hidden`;
 		}
