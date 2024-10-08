@@ -126,7 +126,9 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 				{embed() && <Embed embed={embed()!} large moderation={moderation()} gutterTop />}
 			</ContentHider>
 
-			<div class="mt-4 flex flex-wrap gap-4 border-t border-outline py-4 empty:hidden">
+			<div class="mt-4"></div>
+
+			<div class="flex flex-wrap gap-4 border-t border-outline py-4 empty:hidden">
 				<StatItem count={shadow().repostCount} label="Reposts" href={`${href}/reposts`} />
 				<StatItem count={post().quoteCount ?? 0} label="Quotes" href={`${href}/quotes`} />
 				<StatItem count={shadow().likeCount} label="Likes" href={`${href}/likes`} />
