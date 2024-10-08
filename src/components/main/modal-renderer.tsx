@@ -3,7 +3,6 @@ import { For, Suspense, onCleanup } from 'solid-js';
 import { INTERNAL_ModalContext, INTERNAL_modals, type ModalContext, closeModal } from '~/globals/modals';
 
 import CircularProgress from '../circular-progress';
-import * as Dialog from '../dialog';
 
 let isScrollbarSizeDetermined = false;
 
@@ -64,7 +63,7 @@ export default ModalRenderer;
 const FallbackLoader = () => {
 	return (
 		<>
-			<Dialog.Backdrop />
+			<div class="fixed inset-0 z-0 bg-contrast-overlay/40"></div>
 			<div class="grid grow place-items-center">
 				<CircularProgress />
 			</div>
