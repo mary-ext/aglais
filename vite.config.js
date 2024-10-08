@@ -20,7 +20,14 @@ export default defineConfig({
 			output: {
 				chunkFileNames: 'assets/[hash].js',
 				manualChunks: {
-					common: ['solid-js', 'solid-js/web'],
+					common: [
+						'solid-js',
+						'solid-js/store',
+						'solid-js/web',
+						'@atcute/client',
+						'@mary/events',
+						'@mary/solid-query',
+					],
 					routes: ['src/routes.ts'],
 					shell: ['src/shell.tsx'],
 				},
