@@ -67,18 +67,16 @@ const ProfileItem = (props: ProfileItemProps) => {
 			<div class="flex min-w-0 grow flex-col gap-1">
 				<div class="my-auto flex h-10 items-center justify-between gap-3">
 					<a href={href} onClick={() => precacheProfile(queryClient, profile)} class="min-w-0 text-sm">
-						<p class="overflow-hidden text-ellipsis whitespace-nowrap font-bold">
-							{/* @once */ profile.displayName}
+						<p class="overflow-hidden text-ellipsis whitespace-nowrap font-semibold">
+							{/* @once */ profile.handle}
 						</p>
 						<p class="overflow-hidden text-ellipsis whitespace-nowrap text-contrast-muted">
-							{/* @once */ '@' + profile.handle}
+							{/* @once */ profile.displayName}
 						</p>
 					</a>
 
 					<div class="empty:hidden">{/* @once */ props.AsideComponent}</div>
 				</div>
-
-				<div class="line-clamp-3 break-words text-sm empty:hidden">{/* @once */ profile.description}</div>
 
 				{/* @once */ props.FooterComponent}
 			</div>

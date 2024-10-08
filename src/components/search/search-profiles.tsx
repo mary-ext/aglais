@@ -18,7 +18,7 @@ const SearchProfiles = (props: SearchProfilesProps) => {
 			error={profiles.error}
 			render={(item) => {
 				return (
-					<VirtualItem estimateHeight={88}>
+					<VirtualItem estimateHeight={64}>
 						<ProfileItem item={item} AsideComponent={<ProfileFollowButton profile={item} />} />
 					</VirtualItem>
 				);
