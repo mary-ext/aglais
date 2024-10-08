@@ -19,6 +19,11 @@ export default defineConfig({
 		rollupOptions: {
 			output: {
 				chunkFileNames: 'assets/[hash].js',
+				manualChunks: {
+					common: ['solid-js', 'solid-js/web'],
+					routes: ['src/routes.ts'],
+					shell: ['src/shell.tsx'],
+				},
 			},
 		},
 		terserOptions: {
