@@ -12,7 +12,6 @@ import { parseAtUri } from '~/api/utils/strings';
 import { openModal } from '~/globals/modals';
 
 import { formatCompact } from '~/lib/intl/number';
-import { formatAbsDateTime } from '~/lib/intl/time';
 import { useModerationOptions } from '~/lib/states/moderation';
 
 import Avatar, { getUserAvatarType } from '../avatar';
