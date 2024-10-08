@@ -28,6 +28,7 @@ import ShareOutlinedIcon from '../icons-central/share-outline';
 import ContentHider from '../moderation/content-hider';
 import ModerationAlerts from '../moderation/moderation-alerts';
 import RichText from '../rich-text';
+import TimeAgo from '../time-ago';
 import PostOverflowMenu from '../timeline/post-overflow-menu';
 import RepostMenu from '../timeline/repost-menu';
 
@@ -83,19 +84,24 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 					</div>
 				)}
 
-				<a href={authorHref} class="inline-flex min-w-0 max-w-full items-center gap-3">
+				<a href={authorHref} class="inline-flex min-w-0 max-w-full items-center">
 					<Avatar
 						type={/* @once */ getUserAvatarType(author())}
 						src={author().avatar}
 						moderation={moderation()}
 					/>
 
-					<div class="max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
-						<bdi class="overflow-hidden text-ellipsis">
-							<span class="font-bold text-contrast hover:underline">{author().displayName}</span>
-						</bdi>
-						<p class="overflow-hidden text-ellipsis whitespace-nowrap">{'@' + author().handle}</p>
-					</div>
+					<p class="ml-3 mr-2 overflow-hidden text-ellipsis">
+						<span class="font-semibold text-contrast">{author().handle}</span>
+					</p>
+
+					<TimeAgo value={post().indexedAt}>
+						{(relative, absolute) => (
+							<a title={absolute()} href={href} class="whitespace-nowrap hover:underline">
+								{relative()}
+							</a>
+						)}
+					</TimeAgo>
 				</a>
 
 				<div class="flex shrink-0 items-center gap-4">
@@ -121,9 +127,7 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 				{embed() && <Embed embed={embed()!} large moderation={moderation()} gutterTop />}
 			</ContentHider>
 
-			<p class="my-3 text-sm text-contrast-muted">{formatAbsDateTime(post().indexedAt)}</p>
-
-			<div class="flex flex-wrap gap-4 border-t border-outline py-4 empty:hidden">
+			<div class="mt-4 flex flex-wrap gap-4 border-t border-outline py-4 empty:hidden">
 				<StatItem count={shadow().repostCount} label="Reposts" href={`${href}/reposts`} />
 				<StatItem count={post().quoteCount ?? 0} label="Quotes" href={`${href}/quotes`} />
 				<StatItem count={shadow().likeCount} label="Likes" href={`${href}/likes`} />
