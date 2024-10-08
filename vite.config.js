@@ -24,9 +24,25 @@ export default defineConfig({
 						'solid-js',
 						'solid-js/store',
 						'solid-js/web',
+
 						'@atcute/client',
 						'@mary/events',
 						'@mary/solid-query',
+
+						'src/service-worker.tsx',
+
+						'src/globals/events.ts',
+						'src/globals/locales.ts',
+						'src/globals/modals.tsx',
+						'src/globals/navigation.ts',
+						'src/globals/oauth-db.ts',
+						'src/globals/preferences.ts',
+
+						'src/lib/states/agent.tsx',
+						'src/lib/states/bookmarks.tsx',
+						'src/lib/states/moderation.tsx',
+						'src/lib/states/session.tsx',
+						'src/lib/states/theme.tsx',
 					],
 					routes: ['src/routes.ts'],
 					shell: ['src/shell.tsx'],
