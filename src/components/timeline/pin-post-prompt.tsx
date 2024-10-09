@@ -1,4 +1,4 @@
-import { Match, Switch, batch } from 'solid-js';
+import { Match, Show, Switch, batch } from 'solid-js';
 
 import { XRPCError } from '@atcute/client';
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
@@ -30,10 +30,9 @@ const PinPostPrompt = ({ post }: PinPostPromptProps) => {
 	const shadow = usePostShadow(post);
 
 	const repo = currentAccount!.did;
-	const next = !shadow().pinned;
 
 	const mutation = createMutation((queryClient) => ({
-		async mutationFn() {
+		async mutationFn({ next }: { next: boolean }) {
 			let prevPinnedUri: string | undefined;
 			let retriesRemaining = 3;
 
@@ -108,29 +107,30 @@ const PinPostPrompt = ({ post }: PinPostPromptProps) => {
 		},
 	}));
 
-	mutation.mutate();
-
 	return (
 		<Prompt.Container disabled={mutation.isPending}>
 			<Switch>
-				<Match when={mutation.error}>
-					{(err) => (
-						<>
-							<Prompt.Title>Failed to {next ? `pin` : `unpin`} post</Prompt.Title>
-							<Prompt.Description>{formatQueryError(err())}</Prompt.Description>
-
-							<Prompt.Actions>
-								<Prompt.Action noClose onClick={() => mutation.mutate()} variant="primary">
-									Try again
-								</Prompt.Action>
-								<Prompt.Action>Cancel</Prompt.Action>
-							</Prompt.Actions>
-						</>
-					)}
+				<Match when={mutation.isPending}>
+					<CircularProgressView />
 				</Match>
 
 				<Match when>
-					<CircularProgressView />
+					<Prompt.Title>{!shadow().pinned ? `Pin this post?` : `Unpin this post?`}</Prompt.Title>
+
+					<Show when={mutation.error}>
+						{(error) => <p class="text-pretty text-de text-error">{formatQueryError(error())}</p>}
+					</Show>
+
+					<Prompt.Actions>
+						<Prompt.Action
+							noClose
+							variant={!shadow().pinned ? 'primary' : 'danger'}
+							onClick={() => mutation.mutate({ next: !shadow().pinned })}
+						>
+							{!shadow().pinned ? `Pin it` : `Unpin it`}
+						</Prompt.Action>
+						<Prompt.Action>Cancel</Prompt.Action>
+					</Prompt.Actions>
 				</Match>
 			</Switch>
 		</Prompt.Container>
