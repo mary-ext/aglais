@@ -34,7 +34,7 @@ const AboutPage = () => {
 								openModal(() => (
 									<Prompt.Confirm
 										title="Truly reset your settings?"
-										description="Any application settings will be reset to default and you won't be logged out, this can't be undone. The app will reload once you confirm."
+										description="Any application settings will be reset to default but you won't be logged out. This can't be undone, the app will reload once you've confirmed."
 										danger
 										onConfirm={() => {
 											batch(() => {
