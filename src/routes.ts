@@ -79,6 +79,10 @@ const routes: RouteDefinition[] = [
 		component: lazy(() => import('./views/settings')),
 	},
 	{
+		path: '/settings/about',
+		component: lazy(() => import('./views/settings-about')),
+	},
+	{
 		path: '/settings/account',
 		component: lazy(() => import('./views/settings-account')),
 	},
