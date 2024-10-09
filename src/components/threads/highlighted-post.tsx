@@ -91,7 +91,7 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 					/>
 
 					<p class="ml-3 mr-2 overflow-hidden text-ellipsis">
-						<span class="font-semibold text-contrast">{author().handle}</span>
+						<span class="font-semibold text-contrast hover:underline">{author().handle}</span>
 					</p>
 
 					<TimeAgo value={post().indexedAt}>
