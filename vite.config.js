@@ -44,7 +44,6 @@ export default defineConfig({
 						'src/lib/states/session.tsx',
 						'src/lib/states/theme.tsx',
 					],
-					routes: ['src/routes.ts'],
 					shell: ['src/shell.tsx'],
 				},
 			},
