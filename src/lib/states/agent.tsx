@@ -4,6 +4,8 @@ import { XRPC, simpleFetchHandler } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
 import { QueryClient, QueryClientProvider } from '@mary/solid-query';
 
+import { DEFAULT_APP_VIEW } from '~/api/defaults';
+
 import { createQueryPersister } from '../hooks/query-storage';
 import { assert } from '../utils/invariant';
 import { on } from '../utils/misc';
@@ -35,7 +37,7 @@ export const AgentProvider = (props: ParentProps) => {
 
 		return {
 			did: null,
-			rpc: new XRPC({ handler: simpleFetchHandler({ service: 'https://public.api.bsky.app' }) }),
+			rpc: new XRPC({ handler: simpleFetchHandler({ service: DEFAULT_APP_VIEW }) }),
 			persister: createQueryPersister({ name: `queryCache-public` }),
 		};
 	});
