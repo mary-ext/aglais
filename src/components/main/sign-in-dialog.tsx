@@ -5,12 +5,16 @@ import { createMutation } from '@mary/solid-query';
 import { OAuthServerAgent } from '~/api/oauth/agents/server-agent';
 import { createES256Key } from '~/api/oauth/dpop';
 import { CLIENT_ID, REDIRECT_URI, SCOPE } from '~/api/oauth/env';
-import { resolveFromIdentity } from '~/api/oauth/resolver';
+import { OAuthResponseError } from '~/api/oauth/errors';
+import { resolveFromIdentity, resolveFromService } from '~/api/oauth/resolver';
+import type { ResolvedIdentity } from '~/api/oauth/types/identity';
+import type { AuthorizationServerMetadata } from '~/api/oauth/types/server';
 import { generatePKCE, generateState } from '~/api/oauth/utils';
 
 import { database } from '~/globals/oauth-db';
 
 import { autofocusOnMutation } from '~/lib/input-refs';
+import { assert } from '~/lib/utils/invariant';
 
 import Button from '../button';
 import * as Dialog from '../dialog';
@@ -38,10 +42,19 @@ const SignInDialog = (props: SignInDialogProps) => {
 	const autologin = props.autologin;
 
 	const loginMutation = createMutation(() => ({
-		async mutationFn({ identifier }: { identifier: string }) {
+		async mutationFn({ identifier, pds }: { identifier?: string; pds?: string }) {
 			setPending(`Resolving your identity`);
 
-			const { identity, metadata } = await resolveFromIdentity(identifier);
+			let identity: ResolvedIdentity | undefined;
+			let metadata: AuthorizationServerMetadata;
+
+			if (identifier) {
+				({ identity, metadata } = await resolveFromIdentity(identifier));
+			} else if (pds) {
+				({ metadata } = await resolveFromService(pds));
+			} else {
+				assert(false);
+			}
 
 			if (!metadata.pushed_authorization_request_endpoint) {
 				throw new LoginError(`no PAR endpoint is specified`);
@@ -101,9 +114,14 @@ const SignInDialog = (props: SignInDialogProps) => {
 			});
 		},
 		async onError(err) {
-			console.error(err);
+			let msg = `Something went wrong, try again later.`;
 
-			setError(`Something went wrong, try again later`);
+			if (err instanceof OAuthResponseError && err.error) {
+				msg = `Authorization server responded with "${err.error}"`;
+			}
+
+			console.error(err);
+			setError(msg);
 		},
 	}));
 
@@ -124,9 +142,12 @@ const SignInDialog = (props: SignInDialogProps) => {
 						ev.preventDefault();
 						setError();
 
+						console.log(formData);
+
 						if ($view === View.HANDLE) {
 							loginMutation.mutate({ identifier: formData.get('identifier') as string });
 						} else {
+							loginMutation.mutate({ pds: `https://` + formData.get('pds')! });
 						}
 					}}
 				>
@@ -140,31 +161,60 @@ const SignInDialog = (props: SignInDialogProps) => {
 						<Dialog.Body class="flex flex-col gap-6">
 							<div class="flex flex-col gap-1">
 								<h2 class="text-2xl font-bold">Sign in</h2>
-								<h3 class="text-base text-contrast-muted">To begin, enter your Bluesky handle or DID</h3>
+								<h3 class="text-base text-contrast-muted">
+									{view() === View.HANDLE
+										? `To begin, enter your Bluesky handle or DID`
+										: `To begin, enter the domain to your PDS`}
+								</h3>
 							</div>
 
 							<div class="flex flex-col gap-4">
-								<TextInput
-									ref={(node) => {
-										autofocusOnMutation(node, loginMutation);
+								<Switch>
+									<Match when={view() === View.HANDLE}>
+										<TextInput
+											ref={(node) => {
+												autofocusOnMutation(node, loginMutation);
 
-										if (autologin) {
-											onMount(() => {
-												node.value = autologin;
-											});
-										}
-									}}
-									name="identifier"
-									autocomplete="username"
-									pattern="([a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*(?:\.[a-zA-Z]+))|did:[a-z]+:[a-zA-Z0-9._:%\-]*[a-zA-Z0-9._\-]"
-									required
-									label="Bluesky handle or DID"
-									placeholder="paul.bsky.social"
-								/>
+												if (autologin) {
+													onMount(() => {
+														node.value = autologin;
+													});
+												}
+											}}
+											name="identifier"
+											autocomplete="username"
+											pattern="([a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*(?:\.[a-zA-Z]+))|did:[a-z]+:[a-zA-Z0-9._:%\-]*[a-zA-Z0-9._\-]"
+											required
+											label="Bluesky handle or DID"
+											placeholder="paul.bsky.social"
+										/>
 
-								<div class="flex flex-col gap-2">
-									<InlineLink>Sign in with your personal data server instead</InlineLink>
-								</div>
+										<div class="flex flex-col gap-2">
+											<InlineLink onClick={() => setView(View.PDS)}>
+												Sign in with your personal data server instead
+											</InlineLink>
+										</div>
+									</Match>
+
+									<Match when={view() === View.PDS}>
+										<TextInput
+											ref={(node) => {
+												autofocusOnMutation(node, loginMutation);
+											}}
+											name="pds"
+											pattern="([a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*(?:\.[a-zA-Z]+))"
+											required
+											label="PDS domain"
+											placeholder="bsky.social"
+										/>
+
+										<div class="flex flex-col gap-2">
+											<InlineLink onClick={() => setView(View.HANDLE)}>
+												Sign in with your handle instead
+											</InlineLink>
+										</div>
+									</Match>
+								</Switch>
 
 								<Switch>
 									<Match when={loginMutation.isPending}>
