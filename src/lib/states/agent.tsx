@@ -4,7 +4,7 @@ import { XRPC, simpleFetchHandler } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
 import { QueryClient, QueryClientProvider } from '@mary/solid-query';
 
-import { DEFAULT_APP_VIEW } from '~/api/defaults';
+import { DEFAULT_APPVIEW_URL } from '~/api/defaults';
 
 import { createQueryPersister } from '../hooks/query-storage';
 import { assert } from '../utils/invariant';
@@ -37,7 +37,7 @@ export const AgentProvider = (props: ParentProps) => {
 
 		return {
 			did: null,
-			rpc: new XRPC({ handler: simpleFetchHandler({ service: DEFAULT_APP_VIEW }) }),
+			rpc: new XRPC({ handler: simpleFetchHandler({ service: DEFAULT_APPVIEW_URL }) }),
 			persister: createQueryPersister({ name: `queryCache-public` }),
 		};
 	});

@@ -1,6 +1,6 @@
 import type { DataServer } from './types';
 
-export const DEFAULT_APP_VIEW = 'https://public.api.bsky.app';
+export const DEFAULT_APPVIEW_URL = 'https://public.api.bsky.app';
 
 export const DEFAULT_DATA_SERVER: DataServer = {
 	name: 'Bluesky Social',
