@@ -1,6 +1,7 @@
 import type { At, ComAtprotoIdentityResolveHandle } from '@atcute/client/lexicons';
 import { type DidDocument, getPdsEndpoint } from '@atcute/client/utils/did';
 
+import { DEFAULT_APPVIEW_URL } from '~/api/defaults';
 import { isDid } from '~/api/utils/strings';
 
 import type { ResolvedIdentity } from './types/identity';
@@ -11,7 +12,7 @@ const DID_WEB_RE =
 	/^([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,}))((?::[a-zA-Z0-9._%-]*[a-zA-Z0-9._-])*)$/;
 
 export const resolveHandle = async (handle: string): Promise<At.DID> => {
-	const url = `https://api.bsky.app` + `/xrpc/com.atproto.identity.resolveHandle` + `?handle=${handle}`;
+	const url = DEFAULT_APPVIEW_URL + `/xrpc/com.atproto.identity.resolveHandle` + `?handle=${handle}`;
 
 	const response = await fetch(url);
 	if (!response.ok) {
