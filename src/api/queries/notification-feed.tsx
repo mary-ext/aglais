@@ -11,8 +11,6 @@ import { chunked } from '../utils/misc';
 import { resetInfiniteData } from '../utils/query';
 import { parseAtUri } from '../utils/strings';
 
-import type { NotificationCountResponse } from './notification-count';
-
 type Notification = AppBskyNotificationListNotifications.Notification;
 
 export interface FollowNotificationSlice {
@@ -241,12 +239,7 @@ export const createNotificationFeedQuery = () => {
 					});
 
 					promise.finally(() => {
-						const next: NotificationCountResponse = {
-							count: 0,
-							unread: false,
-						};
-
-						queryClient.setQueryData(['notification', 'count'], next);
+						queryClient.setQueryData(['notification', 'count'], { count: 0 });
 					});
 				}
 			}

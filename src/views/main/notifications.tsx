@@ -21,7 +21,7 @@ const NotificationsPage = () => {
 
 	const isStale = () => {
 		if (unread.dataUpdatedAt > firstFetchedAt()) {
-			return unread.data.unread;
+			return unread.data.count > 0;
 		}
 
 		return false;
