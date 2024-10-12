@@ -26,6 +26,7 @@ export default defineConfig({
 						'solid-js/web',
 
 						'@atcute/client',
+						'@atcute/oauth-browser-client',
 						'@mary/events',
 						'@mary/solid-query',
 
@@ -35,7 +36,6 @@ export default defineConfig({
 						'src/globals/locales.ts',
 						'src/globals/modals.tsx',
 						'src/globals/navigation.ts',
-						'src/globals/oauth-db.ts',
 						'src/globals/preferences.ts',
 
 						'src/lib/states/agent.tsx',
@@ -123,7 +123,11 @@ export default defineConfig({
 					process.env.VITE_OAUTH_CLIENT_ID = metadata.client_id;
 					process.env.VITE_OAUTH_REDIRECT_URL = metadata.redirect_uris[0];
 				} else {
-					const redirectUri = `http://${SERVER_HOST}:${SERVER_PORT}/oauth/callback`;
+					const redirectUri = (() => {
+						const url = new URL(metadata.redirect_uris[0]);
+						return `http://${SERVER_HOST}:${SERVER_PORT}${url.pathname}`;
+					})();
+
 					const clientId =
 						`http://localhost` +
 						`?redirect_uri=${encodeURIComponent(redirectUri)}` +

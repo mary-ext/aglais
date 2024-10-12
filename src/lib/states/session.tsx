@@ -10,12 +10,11 @@ import {
 	useContext,
 } from 'solid-js';
 
-import { XRPC } from '@atcute/client';
+import { type FetchHandler, type FetchHandlerObject, XRPC, XRPCError } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
+import { OAuthUserAgent, deleteStoredSession, getSession } from '@atcute/oauth-browser-client';
 
 import { BLUESKY_MODERATION_DID } from '~/api/defaults';
-import { deleteStoredSession, getSession } from '~/api/oauth/agents/sessions';
-import { OAuthUserAgent } from '~/api/oauth/agents/user-agent';
 
 import { sessions } from '~/globals/preferences';
 
@@ -33,7 +32,7 @@ export interface CurrentAccountState {
 	readonly preferences: PerAccountPreferenceSchema;
 
 	readonly rpc: XRPC;
-	readonly session: OAuthUserAgent;
+	readonly agent: OAuthUserAgent | undefined;
 	readonly _cleanup: () => void;
 }
 
@@ -62,7 +61,7 @@ export const SessionProvider = (props: ParentProps) => {
 
 	const createAccountState = (
 		account: AccountData,
-		session: OAuthUserAgent,
+		session: OAuthUserAgent | undefined,
 		rpc: XRPC,
 	): CurrentAccountState => {
 		return createRoot((cleanup): CurrentAccountState => {
@@ -123,7 +122,7 @@ export const SessionProvider = (props: ParentProps) => {
 				preferences: preferences,
 
 				rpc: rpc,
-				session: session,
+				agent: session,
 				_cleanup: cleanup,
 			};
 		}, null);
@@ -157,10 +156,23 @@ export const SessionProvider = (props: ParentProps) => {
 
 			const signal = getSignal();
 
-			const session = await getSession(did, { allowStale: true });
-			const agent = new OAuthUserAgent(session);
+			let handler: FetchHandler | FetchHandlerObject;
+			let agent: OAuthUserAgent | undefined;
 
-			const rpc = new XRPC({ handler: agent });
+			try {
+				const session = await getSession(did, { allowStale: true });
+
+				agent = new OAuthUserAgent(session);
+				handler = agent;
+			} catch {
+				// Dirty hack to account for the fact that we aren't dumping the user
+				// directly to the login modal.
+				handler = () => {
+					throw new XRPCError(400, { kind: 'invalid_token' });
+				};
+			}
+
+			const rpc = new XRPC({ handler });
 
 			signal.throwIfAborted();
 
@@ -186,9 +198,8 @@ export const SessionProvider = (props: ParentProps) => {
 
 			try {
 				if (isLoggedIn) {
-					const session = $state.session;
-
-					await session.signOut();
+					const agent = $state.agent;
+					await agent?.signOut();
 				} else {
 					const session = await getSession(did, { allowStale: true });
 					const agent = new OAuthUserAgent(session);

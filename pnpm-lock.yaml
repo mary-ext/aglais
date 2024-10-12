@@ -30,10 +30,10 @@ importers:
         version: 1.0.0
       '@atcute/bluemoji':
         specifier: ^1.0.3
-        version: 1.0.3(@atcute/bluesky@1.0.7(@atcute/client@2.0.2))(@atcute/client@2.0.2)
+        version: 1.0.3(@atcute/bluesky@1.0.7(@atcute/client@2.0.3))(@atcute/client@2.0.3)
       '@atcute/bluesky':
         specifier: ^1.0.7
-        version: 1.0.7(@atcute/client@2.0.2)
+        version: 1.0.7(@atcute/client@2.0.3)
       '@atcute/cbor':
         specifier: ^1.0.1
         version: 1.0.1
@@ -41,8 +41,11 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@atcute/client':
-        specifier: ^2.0.2
-        version: 2.0.2
+        specifier: ^2.0.3
+        version: 2.0.3
+      '@atcute/oauth-browser-client':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@atcute/tid':
         specifier: ^1.0.0
         version: 1.0.0
@@ -156,8 +159,11 @@ packages:
   '@atcute/cid@1.0.0':
     resolution: {integrity: sha512-JnWv3sg48zDBP318ErPYPI482Vw1Nm7e7WG+VYGSLRLp56b9LgcIh28p28gEmPtmsnM9hTAkKvJdi+CAkNDQUA==}
 
-  '@atcute/client@2.0.2':
-    resolution: {integrity: sha512-bTGoo8cs0B0gXLwI8YYaFayjDIlo8V1wxgng3HkA+jyz22wCh8aL0/4F9Tt4GDKXGCgf+/6IHg1M6uGOX8JVSw==}
+  '@atcute/client@2.0.3':
+    resolution: {integrity: sha512-j9GryA5l+4F0BTQWa6/1XmsuSPSq+bqNCY3mrHUGD592hMqUZxgpYDLgRWL+719V287AW/56AwvFYlbjlENp7A==}
+
+  '@atcute/oauth-browser-client@1.0.1':
+    resolution: {integrity: sha512-vMHf2P+R4tv4qG5cB5YHgOhZf3HNkZhV1DIWXBsRgbfBqoIRWSVTPt2NOunOk0aHtY1NvzU0RTr/j6OnKps/WA==}
 
   '@atcute/tid@1.0.0':
     resolution: {integrity: sha512-hwvo19zlhSskYRmIzTQqj1Kxd9IX+x8B593flXTaR5jO+/3krUwlRnXd/pnZp5wZqAI/j2OlcPGadX93rsoozg==}
@@ -2878,14 +2884,14 @@ snapshots:
 
   '@atcute/base32@1.0.0': {}
 
-  '@atcute/bluemoji@1.0.3(@atcute/bluesky@1.0.7(@atcute/client@2.0.2))(@atcute/client@2.0.2)':
+  '@atcute/bluemoji@1.0.3(@atcute/bluesky@1.0.7(@atcute/client@2.0.3))(@atcute/client@2.0.3)':
     dependencies:
-      '@atcute/bluesky': 1.0.7(@atcute/client@2.0.2)
-      '@atcute/client': 2.0.2
+      '@atcute/bluesky': 1.0.7(@atcute/client@2.0.3)
+      '@atcute/client': 2.0.3
 
-  '@atcute/bluesky@1.0.7(@atcute/client@2.0.2)':
+  '@atcute/bluesky@1.0.7(@atcute/client@2.0.3)':
     dependencies:
-      '@atcute/client': 2.0.2
+      '@atcute/client': 2.0.3
 
   '@atcute/cbor@1.0.1':
     dependencies:
@@ -2898,7 +2904,12 @@ snapshots:
       '@atcute/base32': 1.0.0
       '@atcute/varint': 1.0.0
 
-  '@atcute/client@2.0.2': {}
+  '@atcute/client@2.0.3': {}
+
+  '@atcute/oauth-browser-client@1.0.1':
+    dependencies:
+      '@atcute/client': 2.0.3
+      nanoid: 5.0.7
 
   '@atcute/tid@1.0.0': {}
 

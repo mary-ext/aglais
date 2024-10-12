@@ -1,17 +1,15 @@
 import { Match, Switch, createSignal, onMount } from 'solid-js';
 
+import {
+	type AuthorizationServerMetadata,
+	type IdentityMetadata,
+	OAuthResponseError,
+	ResolverError,
+	createAuthorizationUrl,
+	resolveFromIdentity,
+	resolveFromService,
+} from '@atcute/oauth-browser-client';
 import { createMutation } from '@mary/solid-query';
-
-import { OAuthServerAgent } from '~/api/oauth/agents/server-agent';
-import { createES256Key } from '~/api/oauth/dpop';
-import { CLIENT_ID, REDIRECT_URI, SCOPE } from '~/api/oauth/env';
-import { OAuthResponseError } from '~/api/oauth/errors';
-import { resolveFromIdentity, resolveFromService } from '~/api/oauth/resolver';
-import type { IdentityMetadata } from '~/api/oauth/types/identity';
-import type { AuthorizationServerMetadata } from '~/api/oauth/types/server';
-import { generatePKCE, generateState } from '~/api/oauth/utils';
-
-import { database } from '~/globals/oauth-db';
 
 import { autofocusOnMutation } from '~/lib/input-refs';
 import { assert } from '~/lib/utils/invariant';
@@ -26,8 +24,6 @@ const enum View {
 	HANDLE,
 	PDS,
 }
-
-class LoginError extends Error {}
 
 export interface SignInDialogProps {
 	autologin?: string;
@@ -45,78 +41,46 @@ const SignInDialog = (props: SignInDialogProps) => {
 		async mutationFn({ identifier, pds }: { identifier?: string; pds?: string }) {
 			setPending(`Resolving your identity`);
 
-			let identity: IdentityMetadata | undefined;
 			let metadata: AuthorizationServerMetadata;
+			let identity: IdentityMetadata | undefined;
 
 			if (identifier) {
-				({ identity, metadata } = await resolveFromIdentity(identifier));
+				({ metadata, identity } = await resolveFromIdentity(identifier));
 			} else if (pds) {
 				({ metadata } = await resolveFromService(pds));
 			} else {
 				assert(false);
 			}
 
-			if (!metadata.pushed_authorization_request_endpoint) {
-				throw new LoginError(`no PAR endpoint is specified`);
-			}
-
 			setPending(`Contacting your data server`);
 
-			const state = generateState();
-
-			const pkce = await generatePKCE();
-			const dpopKey = await createES256Key();
-
-			const params = {
-				redirect_uri: REDIRECT_URI,
-				code_challenge: pkce.challenge,
-				code_challenge_method: pkce.method,
-				state: state,
-				login_hint: identity ? identifier : undefined,
-				response_mode: 'fragment',
-				response_type: 'code',
-				display: 'page',
-				// id_token_hint: undefined,
-				// max_age: undefined,
-				// prompt: undefined,
-				scope: SCOPE,
-				// ui_locales: undefined,
-			} satisfies Record<string, string | undefined>;
-
-			database.states.set(state, {
-				dpopKey: dpopKey,
-				issuer: metadata.issuer,
-				verifier: pkce.verifier,
+			const authUrl = await createAuthorizationUrl({
+				metadata: metadata,
+				identity: identity,
+				scope: import.meta.env.VITE_OAUTH_SCOPE,
 			});
 
-			const server = new OAuthServerAgent(metadata, dpopKey);
-			const response = await server.request('pushed_authorization_request', params);
+			setPending(`Redirecting to authorization page`);
 
-			const authUrl = new URL(metadata.authorization_endpoint);
-			authUrl.searchParams.set('client_id', CLIENT_ID);
-			authUrl.searchParams.set('request_uri', response.request_uri);
-
-			setPending(`Redirecting to your data server`);
-
-			// Wait 250ms just in case.
-			await new Promise((resolve) => setTimeout(resolve, 250));
+			// Wait for a moment to let the browser persist the local storage
+			await new Promise((resolve) => setTimeout(resolve, 200));
 
 			window.location.assign(authUrl);
 
 			await new Promise((_resolve, reject) => {
-				window.addEventListener(
-					'pageshow',
-					() => {
-						reject(new LoginError(`User aborted the login request`));
-					},
-					{ once: true },
-				);
+				const listener = () => {
+					reject(new Error(`user aborted the login request`));
+				};
+
+				window.addEventListener('pageshow', listener, { once: true });
 			});
 		},
 		async onError(err) {
 			let msg = `Something went wrong, try again later.`;
 
-			if (err instanceof OAuthResponseError && err.error) {
+			if (err instanceof ResolverError) {
+				msg = `Failed to resolve your identity, please double check or try again later.`;
+			} else if (err instanceof OAuthResponseError && err.error) {
 				msg = `Authorization server responded with "${err.error}"`;
 			}
 
