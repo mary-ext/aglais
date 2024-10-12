@@ -1,7 +1,7 @@
 import { Match, Switch, createResource } from 'solid-js';
 
 import { OAuthServerAgent } from '~/api/oauth/agents/server-agent';
-import { sessions } from '~/api/oauth/agents/sessions';
+import { storeSession } from '~/api/oauth/agents/sessions';
 import { OAuthUserAgent } from '~/api/oauth/agents/user-agent';
 import { OAuthResponseError } from '~/api/oauth/errors';
 import { getMetadataFromAuthorizationServer } from '~/api/oauth/resolver';
@@ -36,10 +36,10 @@ const OAuthCallbackPage = () => {
 			throw new Error(`missing parameters`);
 		}
 
-		const stored = await database.states.get(state);
+		const stored = database.states.get(state);
 		if (stored) {
 			// Delete now that we've caught it
-			await database.states.delete(state);
+			database.states.delete(state);
 		} else {
 			throw new Error(`unknown state`);
 		}
@@ -73,7 +73,7 @@ const OAuthCallbackPage = () => {
 		const sub = info.sub;
 		const session: Session = { dpopKey, info, token };
 
-		await sessions.setStored(sub, session);
+		await storeSession(sub, session);
 
 		// We make 4 requests right at the start of the app's launch, those requests
 		// will fail immediately on bsky.social as they'd be missing a DPoP nonce,

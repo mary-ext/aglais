@@ -62,7 +62,7 @@ export const createOAuthDatabase = ({ name }: OAuthDatabaseOptions) => {
 			subname: N,
 			{ expiresAt }: { expiresAt: (item: Schema[N]['value']) => null | number },
 		): SimpleStore<Schema[N]['key'], Schema[N]['value']> => {
-			const storageKey = `${name}-${subname}`;
+			const storageKey = `${name}:${subname}`;
 
 			const persist = () => store && localStorage.setItem(storageKey, JSON.stringify(store));
 			const read = () => (store ??= parse(localStorage.getItem(storageKey)));
@@ -75,7 +75,7 @@ export const createOAuthDatabase = ({ name }: OAuthDatabaseOptions) => {
 				}
 			});
 
-			locks.request(`${storageKey}-cleanup`, { ifAvailable: true }, async (lock) => {
+			locks.request(`${storageKey}:cleanup`, { ifAvailable: true }, async (lock) => {
 				if (!lock) {
 					return;
 				}
@@ -107,7 +107,7 @@ export const createOAuthDatabase = ({ name }: OAuthDatabaseOptions) => {
 			});
 
 			return {
-				async get(key) {
+				get(key) {
 					if (disposed) {
 						throw new Error(`store closed`);
 					}
@@ -129,7 +129,7 @@ export const createOAuthDatabase = ({ name }: OAuthDatabaseOptions) => {
 
 					return item.value;
 				},
-				async set(key, value) {
+				set(key, value) {
 					if (disposed) {
 						throw new Error(`store closed`);
 					}
@@ -144,7 +144,7 @@ export const createOAuthDatabase = ({ name }: OAuthDatabaseOptions) => {
 					store[key] = item;
 					persist();
 				},
-				async delete(key) {
+				delete(key) {
 					if (disposed) {
 						throw new Error(`store closed`);
 					}
@@ -155,6 +155,10 @@ export const createOAuthDatabase = ({ name }: OAuthDatabaseOptions) => {
 						delete store[key];
 						persist();
 					}
+				},
+				keys() {
+					read();
+					return Object.keys(store);
 				},
 			};
 		};

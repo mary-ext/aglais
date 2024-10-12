@@ -14,10 +14,9 @@ import { XRPC } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
 
 import { BLUESKY_MODERATION_DID } from '~/api/defaults';
-import { sessions as oauthSessions } from '~/api/oauth/agents/sessions';
+import { deleteStoredSession, getSession } from '~/api/oauth/agents/sessions';
 import { OAuthUserAgent } from '~/api/oauth/agents/user-agent';
 
-import { database } from '~/globals/oauth-db';
 import { sessions } from '~/globals/preferences';
 
 import { type Labeler, attachLabelerHeaders } from '../atproto/labeler';
@@ -158,7 +157,7 @@ export const SessionProvider = (props: ParentProps) => {
 
 			const signal = getSignal();
 
-			const session = await oauthSessions.get(did, { allowStale: true });
+			const session = await getSession(did, { allowStale: true });
 			const agent = new OAuthUserAgent(session);
 
 			const rpc = new XRPC({ handler: agent });
@@ -191,13 +190,13 @@ export const SessionProvider = (props: ParentProps) => {
 
 					await session.signOut();
 				} else {
-					const session = await oauthSessions.get(did, { allowStale: true });
+					const session = await getSession(did, { allowStale: true });
 					const agent = new OAuthUserAgent(session);
 
 					await agent.signOut();
 				}
 			} finally {
-				await database.sessions.delete(did);
+				deleteStoredSession(did);
 			}
 		},
 		async logout(): Promise<void> {

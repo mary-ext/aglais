@@ -7,7 +7,7 @@ import { createES256Key } from '~/api/oauth/dpop';
 import { CLIENT_ID, REDIRECT_URI, SCOPE } from '~/api/oauth/env';
 import { OAuthResponseError } from '~/api/oauth/errors';
 import { resolveFromIdentity, resolveFromService } from '~/api/oauth/resolver';
-import type { ResolvedIdentity } from '~/api/oauth/types/identity';
+import type { IdentityMetadata } from '~/api/oauth/types/identity';
 import type { AuthorizationServerMetadata } from '~/api/oauth/types/server';
 import { generatePKCE, generateState } from '~/api/oauth/utils';
 
@@ -45,7 +45,7 @@ const SignInDialog = (props: SignInDialogProps) => {
 		async mutationFn({ identifier, pds }: { identifier?: string; pds?: string }) {
 			setPending(`Resolving your identity`);
 
-			let identity: ResolvedIdentity | undefined;
+			let identity: IdentityMetadata | undefined;
 			let metadata: AuthorizationServerMetadata;
 
 			if (identifier) {
@@ -83,7 +83,7 @@ const SignInDialog = (props: SignInDialogProps) => {
 				// ui_locales: undefined,
 			} satisfies Record<string, string | undefined>;
 
-			await database.states.set(state, {
+			database.states.set(state, {
 				dpopKey: dpopKey,
 				issuer: metadata.issuer,
 				verifier: pkce.verifier,

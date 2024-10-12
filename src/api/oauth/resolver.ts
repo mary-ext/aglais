@@ -4,7 +4,8 @@ import { type DidDocument, getPdsEndpoint } from '@atcute/client/utils/did';
 import { DEFAULT_APPVIEW_URL } from '~/api/defaults';
 import { isDid } from '~/api/utils/strings';
 
-import type { ResolvedIdentity } from './types/identity';
+import { ResolverError } from './errors';
+import type { IdentityMetadata } from './types/identity';
 import type { AuthorizationServerMetadata, ProtectedResourceMetadata } from './types/server';
 import { extractContentType } from './utils';
 
@@ -122,8 +123,8 @@ export const resolveAuthorizationServerMetadata = async (
 	if (!metadata.client_id_metadata_document_supported) {
 		throw new ResolverError(`authorization server does not support 'client_id_metadata_document'`);
 	}
-	if (metadata.require_pushed_authorization_requests && !metadata.pushed_authorization_request_endpoint) {
-		throw new ResolverError(`authorization server requires PAR but no endpoint is specified`);
+	if (!metadata.pushed_authorization_request_endpoint) {
+		throw new ResolverError(`authorization server does not support 'pushed_authorization_request'`);
 	}
 	if (metadata.response_types_supported) {
 		if (!metadata.response_types_supported.includes('code')) {
@@ -136,7 +137,7 @@ export const resolveAuthorizationServerMetadata = async (
 
 export const resolveFromIdentity = async (
 	identifier: string,
-): Promise<{ identity: ResolvedIdentity; metadata: AuthorizationServerMetadata }> => {
+): Promise<{ identity: IdentityMetadata; metadata: AuthorizationServerMetadata }> => {
 	let did: At.DID;
 	if (isDid(identifier)) {
 		did = identifier;
@@ -204,7 +205,3 @@ export const getMetadataFromResourceServer = async (input: string) => {
 export const getMetadataFromAuthorizationServer = (input: string) => {
 	return resolveAuthorizationServerMetadata(input);
 };
-
-export class ResolverError extends Error {
-	name = 'ResolverError';
-}

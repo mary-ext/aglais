@@ -1,5 +1,7 @@
 import type { At } from '@atcute/client/lexicons';
 
+export class ResolverError extends Error {}
+
 export class TokenRefreshError extends Error {
 	constructor(
 		public readonly sub: At.DID,
@@ -7,24 +9,6 @@ export class TokenRefreshError extends Error {
 		options?: ErrorOptions,
 	) {
 		super(message, options);
-	}
-}
-
-export class TokenRevokedError extends Error {
-	constructor(
-		public readonly sub: At.DID,
-		message: string = `session for ${sub} has been revoked`,
-	) {
-		super(message);
-	}
-}
-
-export class TokenInvalidError extends Error {
-	constructor(
-		public readonly sub: At.DID,
-		message = `invalid session for ${sub}`,
-	) {
-		super(message);
 	}
 }
 

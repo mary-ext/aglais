@@ -2,48 +2,49 @@ import type { FetchHandlerObject } from '@atcute/client';
 
 import { createDPoPFetch } from '../dpop';
 import { CLIENT_ID } from '../env';
-import type { GetCachedOptions } from '../store/getter';
 import type { Session } from '../types/token';
 
 import { OAuthServerAgent } from './server-agent';
-import { sessions } from './sessions';
+import { type SessionGetOptions, deleteStoredSession, getSession } from './sessions';
 
 export class OAuthUserAgent implements FetchHandlerObject {
 	#fetch: typeof fetch;
-	#getSessionPromise: Promise<void> | undefined;
+	#getSessionPromise: Promise<Session> | undefined;
 
 	constructor(public session: Session) {
 		this.#fetch = createDPoPFetch(CLIENT_ID, session.dpopKey, false);
 	}
 
-	#getSession(options?: GetCachedOptions): Promise<Session> {
-		const promise = sessions.get(this.session.info.sub, options);
+	#getSession(options?: SessionGetOptions): Promise<Session> {
+		const promise = getSession(this.session.info.sub, options);
 
-		this.#getSessionPromise = promise
-			.then((session): void => {
+		promise
+			.then((session) => {
 				this.session = session;
 			})
 			.finally(() => {
 				this.#getSessionPromise = undefined;
 			});
 
-		return promise;
+		return (this.#getSessionPromise = promise);
 	}
 
 	async signOut(): Promise<void> {
 		const sub = this.session.info.sub;
 
 		try {
-			const { dpopKey, info, token } = await sessions.get(sub, { allowStale: true });
+			const { dpopKey, info, token } = await getSession(sub, { allowStale: true });
 			const server = new OAuthServerAgent(info.server, dpopKey);
 
 			await server.revoke(token.refresh ?? token.access);
 		} finally {
-			await sessions.deleteStored(sub);
+			deleteStoredSession(sub);
 		}
 	}
 
 	async handle(pathname: string, init?: RequestInit): Promise<Response> {
+		await this.#getSessionPromise;
+
 		const headers = new Headers(init?.headers);
 
 		let session = this.session;
@@ -57,21 +58,10 @@ export class OAuthUserAgent implements FetchHandlerObject {
 		}
 
 		try {
-			// CachedGetter doesn't deduplicate requests if they throw, we kinda want
-			// them to throw, so here's an attempt at waiting for existing requests
-			// to see if they'll throw or not.
-			while (this.#getSessionPromise) {
-				await this.#getSessionPromise;
-			}
-
-			// Refresh the token normally first, it could just be that we're behind
-			const newSession = await this.#getSession();
-
-			if (newSession.token.expires_at === session.token.expires_at) {
-				// If it returns the same expiry then we need to force it
-				session = await this.#getSession({ noCache: true });
+			if (this.#getSessionPromise) {
+				session = await this.#getSessionPromise;
 			} else {
-				session = newSession;
+				session = await this.#getSession();
 			}
 		} catch {
 			return response;

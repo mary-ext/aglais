@@ -1,6 +1,6 @@
 import type { At } from '@atcute/client/lexicons';
 
-export interface ResolvedIdentity {
+export interface IdentityMetadata {
 	id: At.DID;
 	pds: URL;
 }
