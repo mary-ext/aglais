@@ -35,17 +35,17 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(@atcute/client@2.0.3)
       '@atcute/cbor':
+        specifier: ^1.0.2
+        version: 1.0.2
+      '@atcute/cid':
         specifier: ^1.0.1
         version: 1.0.1
-      '@atcute/cid':
-        specifier: ^1.0.0
-        version: 1.0.0
       '@atcute/client':
         specifier: ^2.0.3
         version: 2.0.3
       '@atcute/oauth-browser-client':
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^1.0.2
+        version: 1.0.2
       '@atcute/tid':
         specifier: ^1.0.0
         version: 1.0.0
@@ -153,17 +153,17 @@ packages:
     peerDependencies:
       '@atcute/client': ^1.0.0 || ^2.0.0
 
-  '@atcute/cbor@1.0.1':
-    resolution: {integrity: sha512-VOOIrNVSXG0uRl/HC7KbsdVoQAsFMmgf638SBZKMfGEQQa42KnVq8zXYefBTnrQhTQpOiNzbou0/AN/lwDVuOA==}
+  '@atcute/cbor@1.0.2':
+    resolution: {integrity: sha512-yuLzYCwWIv5qHwmecNqaWZE2ZQ7YDnX61l/exBGqtCO9wy70NLetembjukagJOn7beJ6Uf6mW90cMpETYCItLw==}
 
-  '@atcute/cid@1.0.0':
-    resolution: {integrity: sha512-JnWv3sg48zDBP318ErPYPI482Vw1Nm7e7WG+VYGSLRLp56b9LgcIh28p28gEmPtmsnM9hTAkKvJdi+CAkNDQUA==}
+  '@atcute/cid@1.0.1':
+    resolution: {integrity: sha512-92Cor2ruS7y+/wdFutp2qFDjJj4mTcO7HdZ/BhTQRg/nzWdAnTann5DAmYjD+IWRaXd5SYk4dOZnDt4lsGofzg==}
 
   '@atcute/client@2.0.3':
     resolution: {integrity: sha512-j9GryA5l+4F0BTQWa6/1XmsuSPSq+bqNCY3mrHUGD592hMqUZxgpYDLgRWL+719V287AW/56AwvFYlbjlENp7A==}
 
-  '@atcute/oauth-browser-client@1.0.1':
-    resolution: {integrity: sha512-vMHf2P+R4tv4qG5cB5YHgOhZf3HNkZhV1DIWXBsRgbfBqoIRWSVTPt2NOunOk0aHtY1NvzU0RTr/j6OnKps/WA==}
+  '@atcute/oauth-browser-client@1.0.2':
+    resolution: {integrity: sha512-G+CnEtQdwGF99/RDQuNnywD+aF9Ptb6Z5JCT0TyNR+aR5jxvLdIiOm0HywJoD5FPD2DUGsn4nOEXqbhvBieHSQ==}
 
   '@atcute/tid@1.0.0':
     resolution: {integrity: sha512-hwvo19zlhSskYRmIzTQqj1Kxd9IX+x8B593flXTaR5jO+/3krUwlRnXd/pnZp5wZqAI/j2OlcPGadX93rsoozg==}
@@ -2893,20 +2893,20 @@ snapshots:
     dependencies:
       '@atcute/client': 2.0.3
 
-  '@atcute/cbor@1.0.1':
+  '@atcute/cbor@1.0.2':
     dependencies:
       '@atcute/base32': 1.0.0
-      '@atcute/cid': 1.0.0
+      '@atcute/cid': 1.0.1
       fp16: 0.3.0
 
-  '@atcute/cid@1.0.0':
+  '@atcute/cid@1.0.1':
     dependencies:
       '@atcute/base32': 1.0.0
       '@atcute/varint': 1.0.0
 
   '@atcute/client@2.0.3': {}
 
-  '@atcute/oauth-browser-client@1.0.1':
+  '@atcute/oauth-browser-client@1.0.2':
     dependencies:
       '@atcute/client': 2.0.3
       nanoid: 5.0.7
