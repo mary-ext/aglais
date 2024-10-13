@@ -16,17 +16,17 @@
 		"@atcute/client": "^2.0.3",
 		"@atcute/oauth-browser-client": "^1.0.2",
 		"@atcute/tid": "^1.0.0",
-		"@floating-ui/dom": "^1.6.10",
-		"@floating-ui/utils": "^0.2.7",
+		"@floating-ui/dom": "^1.6.11",
+		"@floating-ui/utils": "^0.2.8",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
 		"@mary/exif-rm": "npm:@jsr/mary__exif-rm@^0.2.1",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
 		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.5",
-		"hls.js": "^1.5.15",
+		"hls.js": "^1.5.16",
 		"idb": "^8.0.0",
 		"nanoid": "^5.0.7",
 		"solid-floating-ui": "~0.2.1",
-		"solid-js": "^1.8.22"
+		"solid-js": "^1.9.2"
 	},
 	"devDependencies": {
 		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
@@ -37,11 +37,11 @@
 		"prettier-plugin-tailwindcss": "^0.6.8",
 		"tailwindcss": "^3.4.13",
 		"terser": "^5.34.1",
-		"typescript": "5.6.2",
+		"typescript": "5.6.3",
 		"vite": "6.0.0-beta.1",
 		"vite-plugin-pwa": "0.20.5",
 		"vite-plugin-solid": "^2.10.2",
-		"wrangler": "^3.78.12"
+		"wrangler": "^3.80.4"
 	},
 	"pnpm": {
 		"patchedDependencies": {
