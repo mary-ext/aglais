@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
+  '@floating-ui/utils':
+    hash: y5uq7awxxljsoxlvk2kx3wwgji
+    path: patches/@floating-ui__utils.patch
   '@tanstack/query-core@5.17.19':
     hash: mh34qchsf4y2z6x2owv2ljabky
     path: patches/@tanstack__query-core@5.17.19.patch
@@ -54,7 +57,7 @@ importers:
         version: 1.6.11
       '@floating-ui/utils':
         specifier: ^0.2.8
-        version: 0.2.8
+        version: 0.2.8(patch_hash=y5uq7awxxljsoxlvk2kx3wwgji)
       '@mary/events':
         specifier: npm:@jsr/mary__events@^0.1.0
         version: '@jsr/mary__events@0.1.0'
@@ -3914,14 +3917,14 @@ snapshots:
 
   '@floating-ui/core@1.6.8':
     dependencies:
-      '@floating-ui/utils': 0.2.8
+      '@floating-ui/utils': 0.2.8(patch_hash=y5uq7awxxljsoxlvk2kx3wwgji)
 
   '@floating-ui/dom@1.6.11':
     dependencies:
       '@floating-ui/core': 1.6.8
-      '@floating-ui/utils': 0.2.8
+      '@floating-ui/utils': 0.2.8(patch_hash=y5uq7awxxljsoxlvk2kx3wwgji)
 
-  '@floating-ui/utils@0.2.8': {}
+  '@floating-ui/utils@0.2.8(patch_hash=y5uq7awxxljsoxlvk2kx3wwgji)': {}
 
   '@isaacs/cliui@8.0.2':
     dependencies:

@@ -1,0 +1,39 @@
+diff --git a/dist/floating-ui.utils.dom.mjs b/dist/floating-ui.utils.dom.mjs
+index 3dcfbb2f6e69e892f06618adf26d710c4e435eac..3c7b5c12c4a72ecc54346099184aa885689cb467 100644
+--- a/dist/floating-ui.utils.dom.mjs
++++ b/dist/floating-ui.utils.dom.mjs
+@@ -1,6 +1,3 @@
+-function hasWindow() {
+-  return typeof window !== 'undefined';
+-}
+ function getNodeName(node) {
+   if (isNode(node)) {
+     return (node.nodeName || '').toLowerCase();
+@@ -19,27 +16,15 @@ function getDocumentElement(node) {
+   return (_ref = (isNode(node) ? node.ownerDocument : node.document) || window.document) == null ? void 0 : _ref.documentElement;
+ }
+ function isNode(value) {
+-  if (!hasWindow()) {
+-    return false;
+-  }
+   return value instanceof Node || value instanceof getWindow(value).Node;
+ }
+ function isElement(value) {
+-  if (!hasWindow()) {
+-    return false;
+-  }
+   return value instanceof Element || value instanceof getWindow(value).Element;
+ }
+ function isHTMLElement(value) {
+-  if (!hasWindow()) {
+-    return false;
+-  }
+   return value instanceof HTMLElement || value instanceof getWindow(value).HTMLElement;
+ }
+ function isShadowRoot(value) {
+-  if (!hasWindow() || typeof ShadowRoot === 'undefined') {
+-    return false;
+-  }
+   return value instanceof ShadowRoot || value instanceof getWindow(value).ShadowRoot;
+ }
+ function isOverflowElement(element) {

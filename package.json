@@ -45,6 +45,7 @@
 	},
 	"pnpm": {
 		"patchedDependencies": {
+			"@floating-ui/utils": "patches/@floating-ui__utils.patch",
 			"@tanstack/query-core@5.17.19": "patches/@tanstack__query-core@5.17.19.patch",
 			"solid-js": "patches/solid-js.patch",
 			"vite-plugin-pwa": "patches/vite-plugin-pwa.patch",
