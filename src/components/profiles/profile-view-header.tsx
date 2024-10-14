@@ -212,17 +212,23 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 												const followers = known().followers.slice(0, 2);
 												const rest = known().count - followers.length;
 
-												let array: string[] = [];
+												let arr: JSX.Element[] = [];
 
 												for (const profile of followers) {
-													array.push(profile.displayName || profile.handle);
+													const handle = profile.handle;
+
+													arr.push(<span class="font-semibold">{handle}</span>);
 												}
 
 												if (rest > 0) {
-													array.push(`${rest} others you follow`);
+													arr.push(`${rest} others you follow`);
 												}
 
-												return `Followed by ` + new Intl.ListFormat('en-US').format(array);
+												for (let idx = arr.length - 1; idx > 0; idx--) {
+													arr.splice(idx, 0, idx === arr.length - 1 ? ' and ' : ', ');
+												}
+
+												return [`Followed by `, arr];
 											})()}
 										</span>
 									</a>
