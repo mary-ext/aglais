@@ -1,8 +1,8 @@
 import type { JSX } from 'solid-js';
 
+import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 import type { AppBskyRichtextFacet } from '@atcute/client/lexicons';
 
-import { segmentRichText } from '~/api/richtext/segment';
 import { isLinkValid, safeUrlParse } from '~/api/utils/strings';
 
 import { getCdnUrl } from '~/lib/bluemoji/render';
@@ -32,7 +32,7 @@ const RichText = (props: RichTextProps) => {
 		let emojiOnly = false;
 
 		if (facets !== undefined && facets.length !== 0) {
-			const segments = segmentRichText(text, facets);
+			const segments = segmentize(text, facets);
 
 			nodes = [];
 

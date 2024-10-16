@@ -37,6 +37,9 @@ importers:
       '@atcute/bluesky':
         specifier: ^1.0.7
         version: 1.0.7(@atcute/client@2.0.3)
+      '@atcute/bluesky-richtext-segmenter':
+        specifier: ^1.0.0
+        version: 1.0.0(@atcute/bluesky@1.0.7(@atcute/client@2.0.3))(@atcute/client@2.0.3)
       '@atcute/cbor':
         specifier: ^1.0.2
         version: 1.0.2
@@ -147,6 +150,12 @@ packages:
 
   '@atcute/bluemoji@1.0.3':
     resolution: {integrity: sha512-2V6Q5LO4SKtZUpJedDuuZ3ORkDz5Gj1gvwGsCg6FIPc++ZMwp0KtucMxVLQHxQU+wq6c13Yf3IxhhtIUf2LDpw==}
+    peerDependencies:
+      '@atcute/bluesky': ^1.0.0
+      '@atcute/client': ^1.0.0 || ^2.0.0
+
+  '@atcute/bluesky-richtext-segmenter@1.0.0':
+    resolution: {integrity: sha512-Gymz5IxcFMRL7MwsXWeEL2bjsYa0oq3Wo1o7mpr0qOUGhjxbyEWPJr1+d+NIpXAZG0QiIgyKTCLZvmN/Ovj1SQ==}
     peerDependencies:
       '@atcute/bluesky': ^1.0.0
       '@atcute/client': ^1.0.0 || ^2.0.0
@@ -2825,6 +2834,11 @@ snapshots:
   '@atcute/base32@1.0.0': {}
 
   '@atcute/bluemoji@1.0.3(@atcute/bluesky@1.0.7(@atcute/client@2.0.3))(@atcute/client@2.0.3)':
+    dependencies:
+      '@atcute/bluesky': 1.0.7(@atcute/client@2.0.3)
+      '@atcute/client': 2.0.3
+
+  '@atcute/bluesky-richtext-segmenter@1.0.0(@atcute/bluesky@1.0.7(@atcute/client@2.0.3))(@atcute/client@2.0.3)':
     dependencies:
       '@atcute/bluesky': 1.0.7(@atcute/client@2.0.3)
       '@atcute/client': 2.0.3
