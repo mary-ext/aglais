@@ -387,12 +387,16 @@ const Post = ({
 
 				{(canEmbed() & EmbedKind.EXTERNAL) !== 0 && (
 					<div class={`flex-col gap-1.5` + (isActive() ? ` flex empty:hidden` : ` hidden`)}>
-						<For each={getPostRt(post).links}>
-							{(href) => {
-								const pretty = href.replace(/^https?:\/\//i, '');
+						<For
+							each={getPostRt(post).tokens.filter((token) => {
+								return token.type === 'autolink' || token.type === 'link';
+							})}
+						>
+							{(token) => {
+								const pretty = token.url.replace(/^https?:\/\/(?=.)/i, '');
 
 								const addLink = () => {
-									post.embed = getEmbedFromLink(href);
+									post.embed = getEmbedFromLink(token.url);
 								};
 
 								return (

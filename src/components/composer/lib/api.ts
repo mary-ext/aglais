@@ -20,10 +20,10 @@ import type { QueryClient } from '@mary/solid-query';
 
 import { uploadBlob } from '~/api/queries/blob';
 import type { LinkMeta } from '~/api/queries/composer';
-import { getUtf8Length } from '~/api/richtext/intl';
-import { type PreliminaryRichText, parseRt } from '~/api/richtext/parser/parse';
 import { getRecord } from '~/api/utils/records';
+import { trimRichText } from '~/api/utils/richtext';
 import { makeAtUri } from '~/api/utils/strings';
+import { getUtf8Length } from '~/api/utils/unicode';
 
 import { compressPostImage } from '~/lib/bsky/image';
 import type { AgentContext } from '~/lib/states/agent';
@@ -32,10 +32,12 @@ import { assert } from '~/lib/utils/invariant';
 import {
 	type ComposerState,
 	EmbedKind,
+	type ParsedRichText,
 	type PostEmbed,
 	type PostMediaEmbed,
 	type PostRecordEmbed,
 	getEmbedLabels,
+	parseRichText,
 } from './state';
 
 export interface PublishOptions {
@@ -82,7 +84,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 		const uri = makeAtUri(did, 'app.bsky.feed.post', rkey);
 
 		// Resolve rich text
-		const rt = await resolveRichtext(parseRt(post.text, true));
+		const rt = await resolveRichText(parseRichText(trimRichText(post.text)));
 
 		// Resolve embeds
 		let embed: AppBskyFeedPost.Record['embed'];
@@ -317,29 +319,32 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 		}
 	}
 
-	async function resolveRichtext(rt: PreliminaryRichText) {
-		const segments = rt.segments;
+	async function resolveRichText({ tokens }: ParsedRichText) {
 		const facets: AppBskyRichtextFacet.Main[] = [];
 
 		let utf8Length = 0;
 
-		for (let i = 0, ilen = segments.length; i < ilen; i++) {
-			const segment = segments[i];
+		for (let idx = 0, len = tokens.length; idx < len; idx++) {
+			const token = tokens[idx];
 
 			const index = {
 				byteStart: utf8Length,
-				byteEnd: (utf8Length += getUtf8Length(segment.text)),
+				byteEnd: (utf8Length += getUtf8Length(token.raw)),
 			};
 
-			const type = segment.type;
+			const type = token.type;
 
-			if (type === 'link' || type === 'mdlink') {
+			if (index.byteStart === index.byteEnd) {
+				continue;
+			}
+
+			if (type === 'link' || type === 'autolink') {
 				facets.push({
 					index: index,
-					features: [{ $type: 'app.bsky.richtext.facet#link', uri: segment.uri }],
+					features: [{ $type: 'app.bsky.richtext.facet#link', uri: token.url }],
 				});
 			} else if (type === 'mention') {
-				const handle = segment.handle;
+				const handle = token.handle;
 
 				if (handle === 'handle.invalid') {
 					throw new InvalidHandleError(handle);
@@ -365,16 +370,16 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 					throw err;
 				}
-			} else if (type === 'tag') {
+			} else if (type === 'topic') {
 				facets.push({
 					index: index,
-					features: [{ $type: 'app.bsky.richtext.facet#tag', tag: segment.tag }],
+					features: [{ $type: 'app.bsky.richtext.facet#tag', tag: token.name }],
 				});
 			} else if (type === 'emote') {
 				const { value } = await getRecord(rpc, {
 					repo: did,
 					collection: 'blue.moji.collection.item',
-					rkey: segment.name,
+					rkey: token.name,
 				});
 
 				const raws = value.formats;
@@ -408,7 +413,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				const facet: Brand.Union<BlueMojiRichtextFacet.Main> = {
 					$type: 'blue.moji.richtext.facet',
 					did: did,
-					name: segment.raw,
+					name: token.raw,
 					alt: value.alt || undefined,
 					adultOnly: value.adultOnly || undefined,
 					labels: value.labels,
@@ -428,7 +433,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 			}
 		}
 
-		return { text: rt.text, facets: facets };
+		return { text: tokens.reduce((accu, token) => accu + token.raw, ''), facets: facets };
 	}
 };
 

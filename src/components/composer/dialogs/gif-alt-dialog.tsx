@@ -1,7 +1,7 @@
 import { createMemo, createSignal } from 'solid-js';
 
-import { graphemeLen } from '~/api/richtext/intl';
-import { PLAIN_WS_RE } from '~/api/richtext/parser/parse';
+import { trimRichText } from '~/api/utils/richtext';
+import { graphemeLen } from '~/api/utils/unicode';
 
 import { useModalContext } from '~/globals/modals';
 
@@ -44,7 +44,7 @@ const GifAltDialog = (props: GifAltDialogProps) => {
 							disabled={isEqual() || length() > 1_000}
 							onClick={() => {
 								close();
-								props.onChange(text().replace(PLAIN_WS_RE, '') || undefined);
+								props.onChange(trimRichText(text()) || undefined);
 							}}
 							variant="primary"
 							size="sm"

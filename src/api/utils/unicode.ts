@@ -1,7 +1,6 @@
-const segmenter = new Intl.Segmenter();
+const encoder = new TextEncoder();
 
-export const textEncoder = new TextEncoder();
-export const textDecoder = new TextDecoder();
+const segmenter = new Intl.Segmenter();
 
 export const graphemeLen = (text: string): number => {
 	var length = asciiLen(text);
@@ -26,7 +25,7 @@ export const asciiLen = (str: string): number | undefined => {
 };
 
 export const getUtf8Length = (str: string): number => {
-	return asciiLen(str) ?? textEncoder.encode(str).byteLength;
+	return encoder.encode(str).byteLength;
 };
 
 const _graphemeLen = (text: string): number => {

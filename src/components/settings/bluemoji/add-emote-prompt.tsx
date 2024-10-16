@@ -3,11 +3,11 @@ import { createMemo, createSignal, onCleanup } from 'solid-js';
 import { createMutation } from '@mary/solid-query';
 
 import { uploadBlob } from '~/api/queries/blob';
-import { graphemeLen } from '~/api/richtext/intl';
-import { PLAIN_WS_RE } from '~/api/richtext/parser/parse';
 import { formatQueryError } from '~/api/utils/error';
 import { getCurrentDate } from '~/api/utils/misc';
 import { createRecord } from '~/api/utils/records';
+import { trimRichText } from '~/api/utils/richtext';
+import { graphemeLen } from '~/api/utils/unicode';
 
 import { useModalContext } from '~/globals/modals';
 
@@ -67,7 +67,7 @@ const AddEmotePrompt = ({ blob, onAdd }: AddEmotePromptProps) => {
 	const mutation = createMutation(() => ({
 		async mutationFn() {
 			const $name = name();
-			const $altText = altText().replace(PLAIN_WS_RE, '');
+			const $altText = trimRichText(altText());
 
 			const { png_128, webp_128 } = await getCompressedEmotes(blob, cover() ? 'cover' : 'contain');
 

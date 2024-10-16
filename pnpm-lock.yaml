@@ -37,6 +37,9 @@ importers:
       '@atcute/bluesky':
         specifier: ^1.0.7
         version: 1.0.7(@atcute/client@2.0.3)
+      '@atcute/bluesky-richtext-parser':
+        specifier: ^1.0.3
+        version: 1.0.3
       '@atcute/bluesky-richtext-segmenter':
         specifier: ^1.0.0
         version: 1.0.0(@atcute/bluesky@1.0.7(@atcute/client@2.0.3))(@atcute/client@2.0.3)
@@ -153,6 +156,9 @@ packages:
     peerDependencies:
       '@atcute/bluesky': ^1.0.0
       '@atcute/client': ^1.0.0 || ^2.0.0
+
+  '@atcute/bluesky-richtext-parser@1.0.3':
+    resolution: {integrity: sha512-WnOAByVznYtTonDhpQyih9FIJNANlTQ9DOc7UnyOyPhM/igqffXyfu3onfd4hf7rY7EG2n24gb2Jox/T4gKseg==}
 
   '@atcute/bluesky-richtext-segmenter@1.0.0':
     resolution: {integrity: sha512-Gymz5IxcFMRL7MwsXWeEL2bjsYa0oq3Wo1o7mpr0qOUGhjxbyEWPJr1+d+NIpXAZG0QiIgyKTCLZvmN/Ovj1SQ==}
@@ -2837,6 +2843,8 @@ snapshots:
     dependencies:
       '@atcute/bluesky': 1.0.7(@atcute/client@2.0.3)
       '@atcute/client': 2.0.3
+
+  '@atcute/bluesky-richtext-parser@1.0.3': {}
 
   '@atcute/bluesky-richtext-segmenter@1.0.0(@atcute/bluesky@1.0.7(@atcute/client@2.0.3))(@atcute/client@2.0.3)':
     dependencies:

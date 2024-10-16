@@ -1,4 +1,4 @@
-import { safeUrlParse } from '../utils/strings';
+import { safeUrlParse } from './strings';
 
 const TRIM_HOST_RE = /^www\./;
 const TRIM_URLTEXT_RE = /^\s*(https?:\/\/)?(?:www\.)?/;

@@ -1,8 +1,10 @@
 import { unwrap } from 'solid-js/store';
 
+import { type Token as RichToken, tokenize } from '@atcute/bluesky-richtext-parser';
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/client/lexicons';
 
-import { type PreliminaryRichText, parseRt } from '~/api/richtext/parser/parse';
+import { graphemeLen } from '~/api/utils/unicode';
+import { toShortUrl } from '~/api/utils/url';
 
 import { primarySystemLanguage } from '~/globals/locales';
 
@@ -199,6 +201,43 @@ export function isAltTextMissing(embed: PostEmbed | undefined): boolean {
 	return false;
 }
 
+// Rich text parser
+export interface ParsedRichText {
+	tokens: RichToken[];
+	length: number;
+	empty: boolean;
+}
+
+const S_RE = /^\s+$/;
+const reduceTokenLength = (accu: number, token: RichToken) => accu + graphemeLen(token.raw);
+
+export const parseRichText = (text: string): ParsedRichText => {
+	const tokens = tokenize(text);
+
+	// We're just going to make use of `raw` as our definitive source of truth
+	// since we're not using them for anything else.
+	for (let idx = 0, len = tokens.length; idx < len; idx++) {
+		const token = tokens[idx];
+		const type = token.type;
+
+		if (type === 'autolink') {
+			token.raw = toShortUrl(token.url);
+		} else if (type === 'emote') {
+			token.raw = '◌';
+		} else if (type === 'link') {
+			token.raw = token.text;
+		} else if (type === 'escape') {
+			token.raw = token.escaped;
+		}
+	}
+
+	return {
+		tokens: tokens,
+		length: tokens.reduce(reduceTokenLength, 0),
+		empty: text.length === 0 || S_RE.test(text),
+	};
+};
+
 // Post state
 export interface PostState {
 	text: string;
@@ -208,17 +247,22 @@ export interface PostState {
 	_parsed: ParsedPost | null;
 }
 
+interface ParsedPost {
+	text: string;
+	rt: ParsedRichText;
+}
+
 export const getPostRt = (post: PostState) => {
 	const unwrapped = unwrap(post);
 
 	const text = post.text;
 	const existing = unwrapped._parsed;
 
-	if (existing === null || existing.t !== text) {
-		return (unwrapped._parsed = { t: text, r: parseRt(text, false) }).r;
+	if (existing === null || existing.text !== text) {
+		return (unwrapped._parsed = { text: text, rt: parseRichText(text) }).rt;
 	}
 
-	return existing.r;
+	return existing.rt;
 };
 
 export const getPostEmbedFlags = (embed: PostEmbed | undefined) => {
@@ -232,11 +276,6 @@ export const getPostEmbedFlags = (embed: PostEmbed | undefined) => {
 
 	return 0;
 };
-
-interface ParsedPost {
-	t: string;
-	r: PreliminaryRichText;
-}
 
 export interface CreatePostStateOptions {
 	text?: string;

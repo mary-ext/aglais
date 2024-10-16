@@ -14,7 +14,6 @@ import {
 
 import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 
-import { type PreliminaryRichText } from '~/api/richtext/parser/parse';
 import { safeUrlParse } from '~/api/utils/strings';
 
 import { createDebouncedValue } from '~/lib/hooks/debounced-value';
@@ -27,11 +26,13 @@ import { assert } from '~/lib/utils/invariant';
 import Avatar, { getUserAvatarType } from '../avatar';
 import CircularProgress from '../circular-progress';
 
+import type { ParsedRichText } from './lib/state';
+
 export interface ComposerInputProps {
 	ref?: (el: HTMLTextAreaElement) => void;
 
 	value: string;
-	rt: PreliminaryRichText;
+	rt: ParsedRichText;
 	onChange: (next: string) => void;
 	onSubmit?: () => void;
 
@@ -433,37 +434,36 @@ const escape = (str: string, attr: boolean) => {
 	return escaped + str.substring(last);
 };
 
-const buildHtml = (rt: PreliminaryRichText) => {
-	const segments = rt.segments;
-
+const buildHtml = ({ tokens }: ParsedRichText) => {
 	let str = '';
 
-	for (let i = 0, ilen = segments.length; i < ilen; i++) {
-		const segment = segments[i];
+	for (let i = 0, ilen = tokens.length; i < ilen; i++) {
+		const token = tokens[i];
 
-		const type = segment.type;
+		const type = token.type;
 
-		if (type === 'link' || type === 'mention' || type === 'tag') {
-			str += `<span class=text-accent>` + escape(segment.raw, false) + `</span>`;
+		if (type === 'autolink') {
+			str += `<span class=text-accent>` + escape(token.url, false) + `</span>`;
+		} else if (type === 'mention') {
+			str += `<span class=text-accent>@` + escape(token.handle, false) + `</span>`;
 		} else if (type === 'emote') {
 			str +=
 				`<span class=text-contrast-muted>:</span>` +
 				`<span class=text-accent>` +
-				escape(segment.name, false) +
+				escape(token.name, false) +
 				`</span>` +
 				`<span class=text-contrast-muted>:</span>`;
-		} else if (type === 'escape') {
-			str += `<span class=opacity-50>` + escape(segment.raw, false) + `</span>`;
-		} else if (type === 'mdlink') {
-			const className = segment.valid ? `text-accent` : `text-error`;
-			const [_0, label, _1, uri, _2] = segment.raw;
-
+		} else if (type === 'topic') {
+			str += `<span class=text-accent>@` + escape(token.name, false) + `</span>`;
+		} else if (type === 'link') {
 			str +=
-				`<span class=opacity-50>${_0}</span>` +
-				`<span class=${className}>${escape(label, false)}</span>` +
-				`<span class=opacity-50>${_1}${escape(uri, false)}${_2}</span>`;
+				`<span class=opacity-50>[</span>` +
+				`<span class=text-accent>${escape(token.text, false)}</span>` +
+				`<span class=opacity-50>](${escape(token.url, false)})</span>`;
+		} else if (type === 'escape') {
+			str += `<span class=opacity-50>\\</span>` + escape(token.escaped, false);
 		} else {
-			str += escape(segment.raw, false);
+			str += escape(token.raw, false);
 		}
 	}
 
