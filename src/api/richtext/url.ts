@@ -4,14 +4,18 @@ const TRIM_HOST_RE = /^www\./;
 const TRIM_URLTEXT_RE = /^\s*(https?:\/\/)?(?:www\.)?/;
 const PATH_MAX_LENGTH = 16;
 
-export const toShortUrl = (uri: string): string => {
-	const url = safeUrlParse(uri);
+export const toShortUrl = (href: string): string => {
+	const url = safeUrlParse(href);
 
 	if (url !== null) {
-		const host = url.host.replace(TRIM_HOST_RE, '');
-		const pathname = url.pathname;
+		const host =
+			(url.username ? url.username + (url.password ? ':' + url.password : '') + '@' : '') +
+			url.host.replace(TRIM_HOST_RE, '');
 
-		const path = (pathname === '/' ? '' : pathname) + url.search + url.hash;
+		const path =
+			(url.pathname === '/' ? '' : url.pathname) +
+			(url.search.length > 1 ? url.search : '') +
+			(url.hash.length > 1 ? url.hash : '');
 
 		if (path.length > PATH_MAX_LENGTH) {
 			return host + path.slice(0, PATH_MAX_LENGTH - 1) + '…';
@@ -20,7 +24,7 @@ export const toShortUrl = (uri: string): string => {
 		return host + path;
 	}
 
-	return uri;
+	return href;
 };
 
 export const isLinkValid = (uri: string, text: string) => {
