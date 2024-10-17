@@ -4,6 +4,7 @@ export interface ErrorPageProps {
 }
 
 const ErrorPage = ({ error, reset: retry }: ErrorPageProps) => {
+	console.error(error);
 	return <div>something went wrong</div>;
 };
 
