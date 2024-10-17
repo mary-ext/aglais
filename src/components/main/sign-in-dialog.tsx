@@ -106,8 +106,6 @@ const SignInDialog = (props: SignInDialogProps) => {
 						ev.preventDefault();
 						setError();
 
-						console.log(formData);
-
 						if ($view === View.HANDLE) {
 							loginMutation.mutate({ identifier: formData.get('identifier') as string });
 						} else {
