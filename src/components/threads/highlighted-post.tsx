@@ -1,4 +1,4 @@
-import { Show, createMemo } from 'solid-js';
+import { Show, createMemo, createSignal } from 'solid-js';
 
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 
@@ -9,10 +9,13 @@ import { moderatePost } from '~/api/moderation/entities/post';
 import { createPostLikeMutation, createPostRepostMutation } from '~/api/mutations/post';
 import { parseAtUri } from '~/api/utils/strings';
 
+import { primarySystemLanguage } from '~/globals/locales';
 import { openModal } from '~/globals/modals';
 
 import { formatCompact } from '~/lib/intl/number';
+import type { ContentTranslationPreferences } from '~/lib/preferences/account';
 import { useModerationOptions } from '~/lib/states/moderation';
+import { useSession } from '~/lib/states/session';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 import ComposerDialogLazy from '../composer/composer-dialog-lazy';
@@ -33,16 +36,21 @@ import RepostMenu from '../timeline/repost-menu';
 
 export interface HighlightedPostProps {
 	post: AppBskyFeedDefs.PostView;
+	translate: boolean;
 	/** Expected to be static */
 	prev?: boolean;
+	onTranslate?: () => void;
 	onPostDelete?: () => void;
 	onReplyPublish?: () => void;
 }
 
 const HighlightedPost = (props: HighlightedPostProps) => {
+	const [showTl, setShowTl] = createSignal(false);
+
 	const post = () => props.post;
 
 	const moderationOptions = useModerationOptions();
+	const { currentAccount } = useSession();
 
 	const author = () => post().author;
 	const record = () => post().record as AppBskyFeedPost.Record;
@@ -128,6 +136,28 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 
 			<ContentHider ui={ui()} ignoreMute containerClass="mt-3" innerClass="mt-2">
 				<RichText text={record().text} facets={record().facets} large />
+
+				{(() => {
+					if (!currentAccount) {
+						return;
+					}
+
+					if (props.translate) {
+						return;
+					}
+
+					if (needTranslation(post(), currentAccount.preferences.translation)) {
+						return (
+							<button
+								onClick={() => props.onTranslate?.()}
+								class="mt-1 self-start text-sm text-accent hover:underline"
+							>
+								Translate post
+							</button>
+						);
+					}
+				})()}
+
 				{embed() && <Embed embed={embed()!} large moderation={moderation()} gutterTop />}
 			</ContentHider>
 
@@ -215,4 +245,31 @@ const StatItem = (props: { count: number; label: string; href: string }) => {
 			</a>
 		</Show>
 	);
+};
+
+const needTranslation = (post: AppBskyFeedDefs.PostView, prefs?: ContentTranslationPreferences): boolean => {
+	if (prefs && !prefs.enabled) {
+		return false;
+	}
+
+	const record = post.record as AppBskyFeedPost.Record;
+	const langs = record.langs;
+
+	if (!langs || langs.length < 1 || !record.text) {
+		return false;
+	}
+
+	const exclusions = prefs?.exclusions;
+
+	let preferred = prefs?.to || 'system';
+	if (preferred === 'system') {
+		preferred = primarySystemLanguage;
+	}
+
+	const unknowns = langs.filter((code) => {
+		code = code.split('-')[0];
+		return code !== preferred && (!exclusions || !exclusions.includes(code));
+	});
+
+	return unknowns.length > 0;
 };

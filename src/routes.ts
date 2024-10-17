@@ -98,6 +98,10 @@ const routes: RouteDefinition[] = [
 		path: '/settings/content',
 		component: lazy(() => import('./views/settings-content')),
 	},
+	{
+		path: '/settings/content/translation',
+		component: lazy(() => import('./views/settings-content-translation')),
+	},
 
 	{
 		path: '/bookmarks',

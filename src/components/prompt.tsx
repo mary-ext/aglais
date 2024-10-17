@@ -6,7 +6,7 @@ import { useMediaQuery } from '~/lib/hooks/media-query';
 import { useModalClose } from '~/lib/hooks/modal-close';
 import { on } from '~/lib/utils/misc';
 
-import Button from './button';
+import Button, { type ButtonProps } from './button';
 import { Backdrop } from './dialog';
 import { Fieldset } from './fieldset';
 
@@ -102,6 +102,7 @@ const PromptActions = (props: PromptActionsProps) => {
 export { PromptActions as Actions };
 
 export interface PromptActionProps {
+	type?: ButtonProps['type'];
 	variant?: 'outline' | 'primary' | 'danger';
 	noClose?: boolean;
 	disabled?: boolean;
@@ -117,7 +118,13 @@ const PromptAction = (props: PromptActionProps) => {
 	const handleClick = !noClose ? (onClick ? () => (close(), onClick()) : close) : onClick;
 
 	return (
-		<Button disabled={props.disabled} onClick={handleClick} variant={props.variant} size="lg">
+		<Button
+			type={props.type}
+			disabled={props.disabled}
+			onClick={handleClick}
+			variant={props.variant}
+			size="lg"
+		>
 			{props.children}
 		</Button>
 	);

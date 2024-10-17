@@ -242,7 +242,7 @@ const createAccountPreferences = (did: At.DID) => {
 				},
 				translation: {
 					enabled: false,
-					proxy: true,
+					instances: [],
 					to: 'system',
 					exclusions: [],
 				},

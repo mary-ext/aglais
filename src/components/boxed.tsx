@@ -2,6 +2,7 @@ import { type Component, type ComponentProps, type JSX, createMemo } from 'solid
 
 import { openModal, useModalContext } from '~/globals/modals';
 
+import { useFieldset } from './fieldset';
 import ChevronRightOutlinedIcon from './icons-central/chevron-right-outline';
 import * as Menu from './menu';
 
@@ -114,6 +115,7 @@ export { BoxedLinkItem as LinkItem };
 
 export interface BoxedButtonItemProps {
 	label: string;
+	icon?: Component<ComponentProps<'svg'>>;
 	description?: string;
 	blurb?: string;
 	variant?: 'default' | 'danger';
@@ -126,6 +128,14 @@ const BoxedButtonItem = (props: BoxedButtonItemProps) => {
 			onClick={props.onClick}
 			class="flex justify-between gap-4 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
 		>
+			{(() => {
+				const Icon = props.icon;
+
+				if (Icon) {
+					return <Icon class="mt-px text-lg text-contrast-muted" />;
+				}
+			})()}
+
 			<div class="flex min-w-0 grow flex-col">
 				<p class={buttonItemLabelProps(props)}>{props.label}</p>
 				<p class="text-pretty break-words text-de text-contrast-muted empty:hidden">{props.description}</p>
@@ -133,7 +143,7 @@ const BoxedButtonItem = (props: BoxedButtonItemProps) => {
 
 			<span class="flex min-w-0 gap-1">
 				<span class="min-w-0 break-words text-de text-contrast-muted empty:hidden">{props.blurb}</span>
-				<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted" />
+				<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted " />
 			</span>
 		</button>
 	);
@@ -206,6 +216,7 @@ export interface SelectItemOption<T> {
 export interface BoxedSelectItemProps<T> {
 	label: string;
 	description?: string;
+	disabled?: boolean;
 	value: T;
 	options: SelectItemOption<T>[];
 	onChange: (next: T) => void;
@@ -213,6 +224,8 @@ export interface BoxedSelectItemProps<T> {
 
 const BoxedSelectItem = <T extends string | number>(props: BoxedSelectItemProps<T>) => {
 	const onChange = props.onChange;
+
+	const fieldset = useFieldset();
 
 	const options = createMemo(() => props.options);
 	const selected = createMemo(() => {
@@ -224,6 +237,7 @@ const BoxedSelectItem = <T extends string | number>(props: BoxedSelectItemProps<
 
 	return (
 		<button
+			disabled={fieldset.disabled || !!props.disabled}
 			onClick={(ev) => {
 				const anchor = ev.currentTarget;
 
@@ -246,25 +260,31 @@ const BoxedSelectItem = <T extends string | number>(props: BoxedSelectItemProps<
 					);
 				});
 			}}
-			class="flex flex-col items-stretch px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
+			class="group flex flex-col items-stretch px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed disabled:bg-transparent"
 		>
 			<div class="flex justify-between gap-4">
-				<p class="min-w-0 break-words text-sm font-medium">{props.label}</p>
+				<p class="min-w-0 break-words text-sm font-medium group-disabled:text-contrast-muted group-disabled:opacity-50">
+					{props.label}
+				</p>
 
-				<span class="flex min-w-0 gap-1">
+				<span class="flex min-w-0 gap-1 group-disabled:opacity-50">
 					<span class="min-w-0 break-words text-right text-de text-contrast-muted">
 						{(() => {
 							const $selected = selected();
 							if ($selected) {
 								return $selected.shortLabel ?? $selected.label;
 							}
+
+							return props.value;
 						})()}
 					</span>
 					<ChevronRightOutlinedIcon class="-mr-1 mt-px shrink-0 rotate-90 text-lg text-contrast-muted" />
 				</span>
 			</div>
 
-			<p class="text-pretty break-words text-de text-contrast-muted empty:hidden">{props.description}</p>
+			<p class="text-pretty break-words text-de text-contrast-muted empty:hidden group-disabled:opacity-50">
+				{props.description}
+			</p>
 		</button>
 	);
 };

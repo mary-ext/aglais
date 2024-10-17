@@ -60,8 +60,8 @@ export interface ComposerPreferences {
 export interface ContentTranslationPreferences {
 	/** Whether translations are enabled */
 	enabled: boolean;
-	/** Whether translations should be proxied */
-	proxy: boolean;
+	/** URLs to Basa translate proxy instances */
+	instances: string[];
 	/** Translate content to this language */
 	to: 'system' | (string & {});
 	/** Don't offer to translate on these languages */

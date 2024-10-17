@@ -1,4 +1,4 @@
-import { For, Match, Switch, createEffect, createMemo } from 'solid-js';
+import { For, Match, Switch, createEffect, createMemo, createSignal } from 'solid-js';
 
 import { XRPCError } from '@atcute/client';
 import type { AppBskyFeedDefs, AppBskyFeedPost, At, Brand } from '@atcute/client/lexicons';
@@ -160,6 +160,8 @@ const ThreadView = (props: {
 	const { currentAccount } = useSession();
 	const moderationOptions = useModerationOptions();
 
+	const [showTl, setShowTl] = createSignal(false);
+
 	const thread = createMemo(() => {
 		return createThreadData({
 			thread: props.data,
@@ -261,6 +263,8 @@ const ThreadView = (props: {
 					<HighlightedPost
 						post={thread().post}
 						prev={thread().ancestors.length !== 0 || isLoadingAncestor()}
+						translate={showTl()}
+						onTranslate={() => setShowTl(true)}
 						onReplyPublish={/* @once */ props.onReplyPublish}
 						onPostDelete={/* @once */ props.onPostDelete}
 					/>
