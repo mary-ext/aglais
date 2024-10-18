@@ -61,8 +61,8 @@ const TranslationSettingsPage = () => {
 					</Boxed.List>
 
 					<Boxed.GroupBlurb>
-						Makes use of Basa instances that will proxy your requests to like Google Translate or DeepL.
-						Please read the privacy policies of the services and proxies before use.
+						Makes use of Basa proxy instances that will forward your requests to Google Translate. Please read
+						the privacy policies of the services and proxies before use.
 					</Boxed.GroupBlurb>
 				</Boxed.Group>
 
