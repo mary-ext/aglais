@@ -119,7 +119,8 @@ const AuthenticatedHeader = () => {
 									<div class="flex gap-2">
 										<For each={otherAccounts()}>
 											{(account) => {
-												const profile = createProfileQuery(() => account.did);
+												const profile = () => account.profile;
+
 												const handleClick = () => {
 													resumeSession(account.did);
 													close();
@@ -130,13 +131,18 @@ const AuthenticatedHeader = () => {
 														icon={() => {
 															return (
 																<Avatar
-																	type={getUserAvatarType(profile.data)}
-																	src={profile.data?.avatar}
+																	type={getUserAvatarType(profile())}
+																	src={profile()?.avatar}
 																	size="sm"
 																/>
 															);
 														}}
-														title={`@${profile.data?.handle}`}
+														title={(() => {
+															const $profile = profile();
+															return $profile && $profile.handle !== 'handle.invalid'
+																? '@' + $profile.handle
+																: account.did;
+														})()}
 														size="sm"
 														onClick={handleClick}
 													/>
