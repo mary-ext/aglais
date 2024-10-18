@@ -445,7 +445,7 @@ const buildHtml = ({ tokens }: ParsedRichText) => {
 		if (type === 'autolink') {
 			str += `<span class=text-accent>` + escape(token.url, false) + `</span>`;
 		} else if (type === 'mention') {
-			str += `<span class=text-accent>@` + escape(token.handle, false) + `</span>`;
+			str += `<span class=text-accent>` + escape(token.raw, false) + `</span>`;
 		} else if (type === 'emote') {
 			str +=
 				`<span class=text-contrast-muted>:</span>` +
@@ -454,7 +454,7 @@ const buildHtml = ({ tokens }: ParsedRichText) => {
 				`</span>` +
 				`<span class=text-contrast-muted>:</span>`;
 		} else if (type === 'topic') {
-			str += `<span class=text-accent>@` + escape(token.name, false) + `</span>`;
+			str += `<span class=text-accent>` + escape(token.raw, false) + `</span>`;
 		} else if (type === 'link') {
 			str +=
 				`<span class=opacity-50>[</span>` +
