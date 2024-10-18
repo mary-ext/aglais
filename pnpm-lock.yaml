@@ -38,8 +38,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(@atcute/client@2.0.3)
       '@atcute/bluesky-richtext-parser':
-        specifier: ^1.0.4
-        version: 1.0.4
+        specifier: ^1.0.5
+        version: 1.0.5
       '@atcute/bluesky-richtext-segmenter':
         specifier: ^1.0.0
         version: 1.0.0(@atcute/bluesky@1.0.7(@atcute/client@2.0.3))(@atcute/client@2.0.3)
@@ -77,8 +77,8 @@ importers:
         specifier: npm:@externdefs/solid-query@^0.1.5
         version: '@externdefs/solid-query@0.1.5(solid-js@1.9.2(patch_hash=5rodyfcb76rtbo26dwlsojy7jy))'
       hls.js:
-        specifier: ^1.5.16
-        version: 1.5.16
+        specifier: ^1.5.17
+        version: 1.5.17
       idb:
         specifier: ^8.0.0
         version: 8.0.0
@@ -157,8 +157,8 @@ packages:
       '@atcute/bluesky': ^1.0.0
       '@atcute/client': ^1.0.0 || ^2.0.0
 
-  '@atcute/bluesky-richtext-parser@1.0.4':
-    resolution: {integrity: sha512-Clw49DicHx+SUJJCJl1WsoUyuuoz84b01Pt5rc9i4OgHOdbW1U54fVqRLM/gUMg7Pwie8LMKoBUR2jEm81LZDQ==}
+  '@atcute/bluesky-richtext-parser@1.0.5':
+    resolution: {integrity: sha512-TFYCXBzv/d+MeVl+biptmxR3cQMdB/GNoyAIUvT5s740Pa8BDmKZxP2v+a5KiYyL8i1Aon9WkgLjzobHHi0nsw==}
 
   '@atcute/bluesky-richtext-segmenter@1.0.0':
     resolution: {integrity: sha512-Gymz5IxcFMRL7MwsXWeEL2bjsYa0oq3Wo1o7mpr0qOUGhjxbyEWPJr1+d+NIpXAZG0QiIgyKTCLZvmN/Ovj1SQ==}
@@ -1789,8 +1789,8 @@ packages:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
-  hls.js@1.5.16:
-    resolution: {integrity: sha512-+wAWr4aeRq9ODN8/Vgz0Cee1Cw6Ysr7vyEkZJCwOJYNwlld7CNmhKE+dLwfpUO2UuotYLGF0of6UFiN6zA7mig==}
+  hls.js@1.5.17:
+    resolution: {integrity: sha512-wA66nnYFvQa1o4DO/BFgLNRKnBTVXpNeldGRBJ2Y0SvFtdwvFKCbqa9zhHoZLoxHhZ+jYsj3aIBkWQQCPNOhMw==}
 
   html-entities@2.3.3:
     resolution: {integrity: sha512-DV5Ln36z34NNTDgnz0EWGBLZENelNAtkiFA4kyNOG2tDI6Mz1uSWiq1wAKdyjnJwyDiDO7Fa2SO1CTxPXL8VxA==}
@@ -2847,7 +2847,7 @@ snapshots:
       '@atcute/bluesky': 1.0.7(@atcute/client@2.0.3)
       '@atcute/client': 2.0.3
 
-  '@atcute/bluesky-richtext-parser@1.0.4': {}
+  '@atcute/bluesky-richtext-parser@1.0.5': {}
 
   '@atcute/bluesky-richtext-segmenter@1.0.0(@atcute/bluesky@1.0.7(@atcute/client@2.0.3))(@atcute/client@2.0.3)':
     dependencies:
@@ -4585,7 +4585,7 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  hls.js@1.5.16: {}
+  hls.js@1.5.17: {}
 
   html-entities@2.3.3: {}
 
