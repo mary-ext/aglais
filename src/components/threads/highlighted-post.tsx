@@ -1,4 +1,4 @@
-import { Show, createMemo, createSignal } from 'solid-js';
+import { Show, createMemo } from 'solid-js';
 
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 
@@ -47,8 +47,6 @@ export interface HighlightedPostProps {
 }
 
 const HighlightedPost = (props: HighlightedPostProps) => {
-	const [showTl, setShowTl] = createSignal(false);
-
 	const post = () => props.post;
 
 	const moderationOptions = useModerationOptions();
