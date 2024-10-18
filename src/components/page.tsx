@@ -5,7 +5,6 @@ import { createProfileQuery } from '~/api/queries/profile';
 import { openModal } from '~/globals/modals';
 import { history, logger } from '~/globals/navigation';
 
-import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
 import Avatar, { getUserAvatarType } from './avatar';
@@ -61,14 +60,13 @@ export interface PageMainMenuProps {}
 
 const PageMainMenu = ({}: PageMainMenuProps) => {
 	const { currentAccount } = useSession();
-	const { persister } = useAgent();
 
 	return (
 		<IconButton
 			title="Open main menu"
 			icon={() => {
 				if (currentAccount) {
-					const profile = createProfileQuery(() => currentAccount.did, { persister });
+					const profile = createProfileQuery(() => currentAccount.did);
 					return <Avatar type={getUserAvatarType(profile.data)} src={profile.data?.avatar} size="sm" />;
 				}
 

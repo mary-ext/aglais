@@ -1,5 +1,6 @@
 import { Match, Switch, createResource } from 'solid-js';
 
+import { XRPC } from '@atcute/client';
 import {
 	AuthorizationError,
 	OAuthResponseError,
@@ -23,22 +24,21 @@ const OAuthCallbackPage = () => {
 		const session = await finalizeAuthorization(params);
 		const did = session.info.sub;
 
-		// We make 4 requests right at the start of the app's launch, those requests
-		// will fail immediately on bsky.social as they'd be missing a DPoP nonce,
-		// so let's fire a random request right now.
-		try {
-			const agent = new OAuthUserAgent(session);
-			await agent.handle(`/xrpc/app.bsky.notification.getUnreadCount`);
-		} catch {
-			// Don't worry about it failing.
-		}
+		const agent = new OAuthUserAgent(session);
+		const rpc = new XRPC({ handler: agent });
+
+		const { data: profile } = await rpc.get('app.bsky.actor.getProfile', {
+			params: {
+				actor: did,
+			},
+		});
 
 		{
 			// Update UI preferences
 			const ui = preferences.sessions;
 
 			ui.active = did;
-			ui.accounts = [{ did: did }, ...ui.accounts.filter((acc) => acc.did !== did)];
+			ui.accounts = [{ did, profile }, ...ui.accounts.filter((acc) => acc.did !== did)];
 
 			// Reload, we've routed the user back to `/` earlier.
 			location.reload();

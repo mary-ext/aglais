@@ -1,13 +1,15 @@
-import type { AppBskyActorDefs } from '@atcute/client/lexicons';
-import { type QueryPersister, createQuery } from '@mary/solid-query';
+import { modifyMutable, reconcile } from 'solid-js/store';
 
+import type { AppBskyActorDefs } from '@atcute/client/lexicons';
+import { createQuery } from '@mary/solid-query';
+
+import type { AccountProfileData } from '~/lib/preferences/sessions';
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
 import { dequal } from '../utils/dequal';
 
 export interface ProfileQueryOptions {
-	persister?: QueryPersister;
 	staleTime?: number;
 	gcTime?: number;
 }
@@ -21,7 +23,6 @@ export const createProfileQuery = (didOrHandle: () => string, opts: ProfileQuery
 
 		return {
 			queryKey: ['profile', $didOrHandle],
-			persister: opts.persister as any,
 			staleTime: opts.staleTime,
 			gcTime: opts.gcTime,
 			async queryFn(ctx): Promise<AppBskyActorDefs.ProfileViewDetailed> {
@@ -35,11 +36,25 @@ export const createProfileQuery = (didOrHandle: () => string, opts: ProfileQuery
 				if (currentAccount !== undefined && currentAccount.did === data.did) {
 					// Unset `knownFollowers` as we don't need that on our own profile.
 					data.viewer!.knownFollowers = undefined;
+
+					{
+						const accountData = currentAccount.data;
+
+						if (!accountData.profile) {
+							accountData.profile = data;
+						} else {
+							modifyMutable(accountData.profile, reconcile(data));
+						}
+					}
 				}
 
 				return data;
 			},
 			placeholderData() {
+				if (currentAccount !== undefined && currentAccount.did === $didOrHandle) {
+					return currentAccount.data.profile;
+				}
+
 				return queryClient.getQueryData(['profile-precache', $didOrHandle]);
 			},
 			structuralSharing: ((
