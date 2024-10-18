@@ -34,6 +34,8 @@ import TimeAgo from '../time-ago';
 import PostOverflowMenu from '../timeline/post-overflow-menu';
 import RepostMenu from '../timeline/repost-menu';
 
+import PostTranslation from './post-translation';
+
 export interface HighlightedPostProps {
 	post: AppBskyFeedDefs.PostView;
 	translate: boolean;
@@ -143,7 +145,7 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 					}
 
 					if (props.translate) {
-						return;
+						return <PostTranslation text={(post().record as AppBskyFeedPost.Record).text} />;
 					}
 
 					if (needTranslation(post(), currentAccount.preferences.translation)) {

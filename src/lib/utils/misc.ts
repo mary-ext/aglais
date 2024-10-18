@@ -79,6 +79,10 @@ export const uniq = <T>(items: T[]): T[] => {
 	return Array.from(new Set(items));
 };
 
+export const pickRandom = <T>(items: T[]): T => {
+	return items[(Math.random() * items.length) | 0];
+};
+
 export const isSetEqual = <T>(a: Set<T>, b: Set<T>): boolean => {
 	if (a.size !== b.size) {
 		return false;
