@@ -125,12 +125,10 @@ const TranslationSettingsPage = () => {
 							options={languageOptions}
 						/>
 
-						<Boxed.ButtonItem
+						<Boxed.LinkItem
+							to="/settings/content/translation/exclusion"
 							label="Exclude languages from translation"
 							description={`${translationPrefs.exclusions.length} languages excluded`}
-							onClick={() => {
-								//
-							}}
 						/>
 					</Boxed.List>
 				</Boxed.Group>
