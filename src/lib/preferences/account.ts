@@ -1,4 +1,4 @@
-import type { At } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs, At } from '@atcute/client/lexicons';
 
 import type { ModerationLabeler, ModerationPreferences } from '~/api/moderation';
 
@@ -31,23 +31,14 @@ export interface SavedGeneratorFeed {
 	readonly type: 'generator';
 	readonly uri: string;
 	pinned: boolean;
-	info: {
-		name: string;
-		avatar?: string;
-		acceptsInteraction?: boolean;
-		indexedAt?: number;
-	};
+	info: AppBskyFeedDefs.GeneratorView;
 }
 
 export interface SavedListFeed {
 	readonly type: 'list';
 	readonly uri: string;
 	pinned: boolean;
-	info: {
-		name: string;
-		avatar?: string;
-		indexedAt?: number;
-	};
+	info: AppBskyGraphDefs.ListView;
 }
 
 export interface ComposerPreferences {

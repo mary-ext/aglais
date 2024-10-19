@@ -58,12 +58,7 @@ const FeedOverflowMenu = (props: FeedOverflowMenuProps) => {
 								type: 'generator',
 								uri: feed.uri,
 								pinned: false,
-								info: {
-									name: feed.displayName,
-									acceptsInteraction: feed.acceptsInteractions,
-									avatar: feed.avatar,
-									indexedAt: new Date(feed.indexedAt).getTime(),
-								},
+								info: feed,
 							});
 						}
 					}}

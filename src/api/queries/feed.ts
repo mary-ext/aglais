@@ -1,7 +1,11 @@
-import type { At } from '@atcute/client/lexicons';
+import { modifyMutable, reconcile } from 'solid-js/store';
+
+import type { AppBskyFeedDefs, At } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
+import type { SavedGeneratorFeed } from '~/lib/preferences/account';
 import { useAgent } from '~/lib/states/agent';
+import { useSession } from '~/lib/states/session';
 
 import { isDid, makeAtUri, parseAtUri } from '../utils/strings';
 
@@ -9,13 +13,14 @@ import { resolveHandle } from './handle';
 
 export const createFeedMetaQuery = (feedUri: () => string) => {
 	const { rpc } = useAgent();
+	const { currentAccount } = useSession();
 
 	return createQuery((queryClient) => {
 		const $feedUri = feedUri();
 
 		return {
 			queryKey: ['feed-meta', $feedUri],
-			async queryFn(ctx) {
+			async queryFn(ctx): Promise<AppBskyFeedDefs.GeneratorView> {
 				const uri = parseAtUri($feedUri);
 
 				let did: At.DID;
@@ -32,10 +37,31 @@ export const createFeedMetaQuery = (feedUri: () => string) => {
 					},
 				});
 
+				if (currentAccount) {
+					const found = currentAccount.preferences.feeds.find((feed): feed is SavedGeneratorFeed => {
+						return feed.type === 'generator' && feed.uri === $feedUri;
+					});
+
+					if (found) {
+						modifyMutable(found.info, reconcile(data.view));
+					}
+				}
+
 				return data.view;
 			},
-			placeholderData() {
-				return queryClient.getQueryData(['feed-meta-precache', $feedUri]);
+			placeholderData(): AppBskyFeedDefs.GeneratorView | undefined {
+				const precache = queryClient.getQueryData(['feed-meta-precache', $feedUri]);
+				if (precache) {
+					return precache as any;
+				}
+
+				if (currentAccount) {
+					const found = currentAccount.preferences.feeds.find((feed): feed is SavedGeneratorFeed => {
+						return feed.type === 'generator' && feed.uri === $feedUri;
+					});
+
+					return found?.info;
+				}
 			},
 		};
 	});

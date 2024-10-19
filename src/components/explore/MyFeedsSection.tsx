@@ -52,7 +52,15 @@ const MyFeedsSection = () => {
 							class="flex items-center gap-4 px-4 py-3 hover:bg-contrast/sm-pressed active:bg-contrast/md"
 						>
 							<Avatar type={feed.type} src={feed.info.avatar} />
-							<span class="text-sm font-bold">{feed.info.name}</span>
+							<span class="text-sm font-bold">
+								{(() => {
+									if (type === 'generator') {
+										return feed.info.displayName;
+									} else if (type === 'list') {
+										return feed.info.name;
+									}
+								})()}
+							</span>
 						</a>
 					);
 				}}
