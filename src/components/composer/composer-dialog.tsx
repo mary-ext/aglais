@@ -313,14 +313,13 @@ const Post = ({
 	const hasNext = createMemo(() => idx() !== state.posts.length - 1);
 
 	const isActive = createMemo(() => idx() === state.active && !fieldset.disabled);
-	const isFilled = () => {
+	const isFilled = (): boolean => {
 		const embed = post.embed;
-		const link = embed.link;
-		const media = embed.media;
-		const record = embed.record;
 
 		return !!(
-			(link || media || (record && (record.type !== 'quote' || !record.origin))) &&
+			embed.link ||
+			embed.media ||
+			(embed.record && (embed.record.type !== 'quote' || !embed.record.origin)) ||
 			!getPostRt(post).empty
 		);
 	};
