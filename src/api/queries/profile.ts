@@ -3,7 +3,6 @@ import { modifyMutable, reconcile } from 'solid-js/store';
 import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
-import type { AccountProfileData } from '~/lib/preferences/sessions';
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
@@ -50,12 +49,15 @@ export const createProfileQuery = (didOrHandle: () => string, opts: ProfileQuery
 
 				return data;
 			},
-			placeholderData() {
+			placeholderData(): AppBskyActorDefs.ProfileViewDetailed | undefined {
+				const precache = queryClient.getQueryData(['profile-precache', $didOrHandle]);
+				if (precache) {
+					return precache as any;
+				}
+
 				if (currentAccount !== undefined && currentAccount.did === $didOrHandle) {
 					return currentAccount.data.profile;
 				}
-
-				return queryClient.getQueryData(['profile-precache', $didOrHandle]);
 			},
 			structuralSharing: ((
 				oldData: AppBskyActorDefs.ProfileViewDetailed | undefined,
