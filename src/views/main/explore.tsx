@@ -1,6 +1,6 @@
 import { history } from '~/globals/navigation';
 
-import MyFeedsSection from '~/components/explore/MyFeedsSection';
+import MyFeedsSection from '~/components/explore/my-feeds-section';
 import IconButton from '~/components/icon-button';
 import GearOutlinedIcon from '~/components/icons-central/gear-outline';
 import SearchBar from '~/components/main/search-bar';
