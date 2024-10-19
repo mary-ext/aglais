@@ -1,4 +1,4 @@
-import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs, At } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs, AppBskyGraphDefs, At } from '@atcute/client/lexicons';
 
 import type { ModerationLabeler, ModerationPreferences } from '~/api/moderation';
 
