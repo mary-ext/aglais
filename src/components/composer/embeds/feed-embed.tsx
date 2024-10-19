@@ -9,16 +9,14 @@ import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outli
 
 import type { PostFeedEmbed } from '../lib/state';
 
-import type { BaseEmbedProps } from './types';
-
-export interface FeedEmbedProps extends BaseEmbedProps {
+export interface FeedEmbedProps {
 	embed: PostFeedEmbed;
+	active: boolean;
+	onRemove: () => void;
 }
 
 const FeedEmbed = (props: FeedEmbedProps) => {
 	const query = createFeedMetaQuery(() => props.embed.uri);
-
-	const onRemove = () => props.dispatch({ type: 'remove_record' });
 
 	return (
 		<div class="relative">
@@ -37,7 +35,12 @@ const FeedEmbed = (props: FeedEmbedProps) => {
 			</Switch>
 
 			<div hidden={!props.active} class="absolute right-0 top-0 p-1">
-				<IconButton icon={CrossLargeOutlinedIcon} title="Remove this embed" size="sm" onClick={onRemove} />
+				<IconButton
+					icon={CrossLargeOutlinedIcon}
+					title="Remove this embed"
+					size="sm"
+					onClick={props.onRemove}
+				/>
 			</div>
 		</div>
 	);

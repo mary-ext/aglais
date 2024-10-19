@@ -8,10 +8,10 @@ import CrossLargeOutlinedIcon from '../../icons-central/cross-large-outline';
 import ImageAltDialogLazy from '../dialogs/image-alt-dialog-lazy';
 import type { PostImageEmbed } from '../lib/state';
 
-import type { BaseEmbedProps } from './types';
-
-export interface ImageEmbedProps extends BaseEmbedProps {
+export interface ImageEmbedProps {
 	embed: PostImageEmbed;
+	active: boolean;
+	onRemove: () => void;
 }
 
 const ImageEmbed = (props: ImageEmbedProps) => {
@@ -39,7 +39,7 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 										const images = props.embed.images;
 
 										if (images.length === 1) {
-											props.dispatch({ type: 'remove_media' });
+											props.onRemove();
 										} else {
 											images.splice(index(), 1);
 										}

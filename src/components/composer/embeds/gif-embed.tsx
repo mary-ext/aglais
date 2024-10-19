@@ -9,15 +9,13 @@ import Keyed from '../../keyed';
 import GifAltDialogLazy from '../dialogs/gif-alt-dialog-lazy';
 import type { PostGifEmbed } from '../lib/state';
 
-import type { BaseEmbedProps } from './types';
-
-export interface GifEmbedProps extends BaseEmbedProps {
+export interface GifEmbedProps {
 	embed: PostGifEmbed;
+	active: boolean;
+	onRemove: () => void;
 }
 
 const GifEmbed = (props: GifEmbedProps) => {
-	const onRemove = () => props.dispatch({ type: 'remove_media' });
-
 	return (
 		<div class="relative w-min max-w-full self-start">
 			<Keyed value={props.embed.gif}>
@@ -42,7 +40,7 @@ const GifEmbed = (props: GifEmbedProps) => {
 					title="Remove this embed"
 					variant="black"
 					size="sm"
-					onClick={onRemove}
+					onClick={props.onRemove}
 				/>
 			</div>
 

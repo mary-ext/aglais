@@ -9,18 +9,16 @@ import ExternalEmbedContent from '~/components/embeds/external-embed';
 import IconButton from '~/components/icon-button';
 import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outline';
 
-import type { PostExternalEmbed } from '../lib/state';
+import type { PostLinkEmbed } from '../lib/state';
 
-import type { BaseEmbedProps } from './types';
-
-export interface ExternalEmbedProps extends BaseEmbedProps {
-	embed: PostExternalEmbed;
+export interface LinkEmbedProps {
+	embed: PostLinkEmbed;
+	active: boolean;
+	onRemove: () => void;
 }
 
-const ExternalEmbed = (props: ExternalEmbedProps) => {
+const LinkEmbed = (props: LinkEmbedProps) => {
 	const query = createLinkMetaQuery(() => props.embed.uri);
-
-	const onRemove = () => props.dispatch({ type: 'remove_media' });
 
 	return (
 		<div class="relative">
@@ -53,10 +51,15 @@ const ExternalEmbed = (props: ExternalEmbedProps) => {
 			</Switch>
 
 			<div hidden={!props.active} class="absolute right-0 top-0 p-1">
-				<IconButton icon={CrossLargeOutlinedIcon} title="Remove this embed" size="sm" onClick={onRemove} />
+				<IconButton
+					icon={CrossLargeOutlinedIcon}
+					title="Remove this embed"
+					size="sm"
+					onClick={props.onRemove}
+				/>
 			</div>
 		</div>
 	);
 };
 
-export default ExternalEmbed;
+export default LinkEmbed;

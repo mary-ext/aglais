@@ -1,8 +1,8 @@
 import { XRPCError } from '@atcute/client';
 import type {
-	AppBskyEmbedExternal,
 	AppBskyEmbedImages,
 	AppBskyEmbedRecord,
+	AppBskyEmbedRecordWithMedia,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
 	AppBskyFeedThreadgate,
@@ -31,9 +31,9 @@ import { assert } from '~/lib/utils/invariant';
 
 import {
 	type ComposerState,
-	EmbedKind,
 	type ParsedRichText,
 	type PostEmbed,
+	type PostLinkEmbed,
 	type PostMediaEmbed,
 	type PostRecordEmbed,
 	getEmbedLabels,
@@ -174,39 +174,61 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 	return writes;
 
 	async function resolveEmbed(root: PostEmbed): Promise<AppBskyFeedPost.Record['embed']> {
+		let pMedia: Promise<AppBskyEmbedRecordWithMedia.Main['media']> | undefined;
+		let pRecord: Promise<Brand.Union<AppBskyEmbedRecord.Main>> | undefined;
+
+		if (root.media) {
+			pMedia = resolveMediaEmbed(root.media);
+		} else if (root.link) {
+			pMedia = resolveLinkEmbed(root.link);
+		}
+
+		if (root.record) {
+			pRecord = resolveRecordEmbed(root.record);
+		}
+
+		if (pMedia && pRecord) {
+			const [media, record] = await Promise.all([pMedia, pRecord]);
+
+			return {
+				$type: 'app.bsky.embed.recordWithMedia',
+				media: media,
+				record: record,
+			};
+		} else if (pMedia) {
+			return await pMedia;
+		} else if (pRecord) {
+			return await pRecord;
+		}
+
+		assert(false);
+
 		async function resolveMediaEmbed(
 			embed: PostMediaEmbed,
-		): Promise<Brand.Union<AppBskyEmbedExternal.Main | AppBskyEmbedImages.Main>> {
-			const type = embed.type;
+		): Promise<AppBskyEmbedRecordWithMedia.Main['media']> {
+			if (embed.type === 'image') {
+				log?.(`Uploading images`);
 
-			if (type === EmbedKind.EXTERNAL) {
-				const meta = await queryClient.fetchQuery<LinkMeta>({
-					queryKey: ['link-meta', embed.uri],
-				});
+				const images: AppBskyEmbedImages.Image[] = [];
 
-				// compress... upload...
-				const thumb = meta.thumb;
-				let thumbBlob: At.Blob<any> | undefined;
+				for (const image of embed.images) {
+					const compressed = await compressPostImage(image.blob);
+					const result = await uploadBlob(rpc, compressed.blob);
 
-				if (thumb !== undefined) {
-					log?.(`Uploading link thumbnail`);
-
-					const compressed = await compressPostImage(thumb);
-					const blob = await uploadBlob(rpc, compressed.blob);
-
-					thumbBlob = blob;
+					images.push({
+						image: result,
+						alt: image.alt,
+						aspectRatio: compressed.ratio,
+					});
 				}
 
 				return {
-					$type: 'app.bsky.embed.external',
-					external: {
-						uri: meta.uri,
-						title: meta.title,
-						description: meta.description,
-						thumb: thumbBlob,
-					},
+					$type: 'app.bsky.embed.images',
+					images: images,
 				};
-			} else if (type === EmbedKind.GIF) {
+			}
+
+			if (embed.type === 'gif') {
 				const gif = embed.gif;
 				const alt = embed.alt;
 
@@ -237,37 +259,48 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 						thumb: thumbBlob,
 					},
 				};
-			} else if (type === EmbedKind.IMAGE) {
-				log?.(`Uploading images`);
-
-				const images: AppBskyEmbedImages.Image[] = [];
-
-				for (const image of embed.images) {
-					const compressed = await compressPostImage(image.blob);
-					const result = await uploadBlob(rpc, compressed.blob);
-
-					images.push({
-						image: result,
-						alt: image.alt,
-						aspectRatio: compressed.ratio,
-					});
-				}
-
-				return {
-					$type: 'app.bsky.embed.images',
-					images: images,
-				};
 			}
 
-			assert(false, `Unreachable code`);
+			assert(false);
 		}
 
-		async function resolveRecordEmbed(embed: PostRecordEmbed): Promise<Brand.Union<AppBskyEmbedRecord.Main>> {
-			const type = embed.type;
+		async function resolveLinkEmbed(link: PostLinkEmbed): Promise<AppBskyEmbedRecordWithMedia.Main['media']> {
+			const meta = await queryClient.fetchQuery<LinkMeta>({
+				queryKey: ['link-meta', link.uri],
+			});
 
-			if (type === EmbedKind.FEED) {
+			// compress... upload...
+			const thumb = meta.thumb;
+			let thumbBlob: At.Blob<any> | undefined;
+
+			if (thumb !== undefined) {
+				log?.(`Uploading link thumbnail`);
+
+				const compressed = await compressPostImage(thumb);
+				const blob = await uploadBlob(rpc, compressed.blob);
+
+				thumbBlob = blob;
+			}
+
+			return {
+				$type: 'app.bsky.embed.external',
+				external: {
+					uri: meta.uri,
+					title: meta.title,
+					description: meta.description,
+					thumb: thumbBlob,
+				},
+			};
+		}
+
+		async function resolveRecordEmbed(
+			record: PostRecordEmbed,
+		): Promise<Brand.Union<AppBskyEmbedRecord.Main>> {
+			const type = record.type;
+
+			if (type === 'feed') {
 				const feed = await queryClient.fetchQuery<AppBskyFeedDefs.GeneratorView>({
-					queryKey: ['feed-meta', embed.uri],
+					queryKey: ['feed-meta', record.uri],
 				});
 
 				return {
@@ -277,9 +310,9 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 						cid: feed.cid,
 					},
 				};
-			} else if (type === EmbedKind.LIST) {
+			} else if (type === 'list') {
 				const list = await queryClient.fetchQuery<AppBskyGraphDefs.ListView>({
-					queryKey: ['list-meta', embed.uri],
+					queryKey: ['list-meta', record.uri],
 				});
 
 				return {
@@ -289,9 +322,9 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 						cid: list.cid,
 					},
 				};
-			} else if (type === EmbedKind.QUOTE) {
+			} else if (type === 'quote') {
 				const post = await queryClient.fetchQuery<AppBskyFeedDefs.PostView>({
-					queryKey: ['post', embed.uri],
+					queryKey: ['post', record.uri],
 				});
 
 				return {
@@ -303,19 +336,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				};
 			}
 
-			assert(false, `Unreachable code`);
-		}
-
-		if (root.type === EmbedKind.RECORD_WITH_MEDIA) {
-			return {
-				$type: 'app.bsky.embed.recordWithMedia',
-				record: await resolveRecordEmbed(root.record),
-				media: await resolveMediaEmbed(root.media),
-			};
-		} else if (root.type & EmbedKind.MEDIA) {
-			return await resolveMediaEmbed(root as PostMediaEmbed);
-		} else {
-			return await resolveRecordEmbed(root as PostRecordEmbed);
+			assert(false);
 		}
 	}
 

@@ -3,7 +3,9 @@ import {
 	type ComponentProps,
 	For,
 	type JSX,
+	Match,
 	Show,
+	Switch,
 	batch,
 	createEffect,
 	createMemo,
@@ -61,30 +63,25 @@ import ContentWarningMenu from './dialogs/content-warning-menu';
 import LanguageSelectDialogLazy from './dialogs/language-select-dialog-lazy';
 import ThreadgateMenu from './dialogs/threadgate-menu';
 import DraftListDialogLazy from './drafts/draft-list-dialog-lazy';
-import ExternalEmbed from './embeds/external-embed';
 import FeedEmbed from './embeds/feed-embed';
 import GifEmbed from './embeds/gif-embed';
 import ImageEmbed from './embeds/image-embed';
+import LinkEmbed from './embeds/link-embed';
 import ListEmbed from './embeds/list-embed';
 import QuoteEmbed from './embeds/quote-embed';
-import type { BaseEmbedProps } from './embeds/types';
+import type { GifMedia } from './gifs/gif-search-dialog';
 import GifSearchDialogLazy from './gifs/gif-search-dialog-lazy';
 import { publish } from './lib/api';
-import { getEmbedFromLink } from './lib/link-detection';
+import { getRecordEmbedFromLink } from './lib/link-detection';
 import {
 	type ComposerState,
 	type CreateComposerStateOptions,
-	EmbedKind,
 	type PostEmbed,
-	type PostRecordEmbed,
-	type PostRecordWithMediaEmbed,
 	type PostState,
 	ThreadgateKnownValue,
 	createComposerState,
 	createPostState,
-	getAvailableEmbed,
 	getEmbedLabels,
-	getPostEmbedFlags,
 	getPostRt,
 	getThreadgateValue,
 } from './lib/state';
@@ -318,26 +315,32 @@ const Post = ({
 	const isActive = createMemo(() => idx() === state.active && !fieldset.disabled);
 	const isFilled = () => {
 		const embed = post.embed;
+		const link = embed.link;
+		const media = embed.media;
+		const record = embed.record;
 
-		return (embed && (embed.type !== EmbedKind.QUOTE || !embed.origin)) || !getPostRt(post).empty;
+		return !!(
+			(link || media || (record && (record.type !== 'quote' || !record.origin))) &&
+			!getPostRt(post).empty
+		);
 	};
 
 	const canRemove = createMemo(() => {
 		return isActive() && (hasPrevious() || hasNext()) && !isFilled();
 	});
-	const canEmbed = createMemo(() => {
-		return getAvailableEmbed(post.embed);
-	});
 
 	addCloseGuard(isFilled);
 	addSubmitGuard(() => {
 		const embed = post.embed;
-		const richtext = getPostRt(post);
+		const link = embed.link;
+		const media = embed.media;
+		const record = embed.record;
 
+		const richtext = getPostRt(post);
 		const rtLength = richtext.length;
 
-		return (
-			((embed && (embed.type !== EmbedKind.QUOTE || !embed.origin)) || !richtext.empty) &&
+		return !!(
+			(!richtext.empty || link || media || (record && (record.type !== 'quote' || !record.origin))) &&
 			rtLength <= MAX_TEXT_LENGTH
 		);
 	});
@@ -385,7 +388,15 @@ const Post = ({
 					minRows={isActive() ? 2 : 1}
 				/>
 
-				{(canEmbed() & EmbedKind.EXTERNAL) !== 0 && (
+				<Show
+					when={(() => {
+						const embed = post.embed;
+						const link = embed.link;
+						const media = embed.media;
+
+						return !(link || media);
+					})()}
+				>
 					<div class={`flex-col gap-1.5` + (isActive() ? ` flex empty:hidden` : ` hidden`)}>
 						<For
 							each={getPostRt(post).tokens.filter((token) => {
@@ -396,7 +407,18 @@ const Post = ({
 								const pretty = token.url.replace(/^https?:\/\/(?=.)/i, '');
 
 								const addLink = () => {
-									post.embed = getEmbedFromLink(token.url);
+									const embed = post.embed;
+									const record = getRecordEmbedFromLink(token.url);
+
+									if (record) {
+										if (!embed.record) {
+											embed.record = record;
+										}
+									} else {
+										if (!embed.link) {
+											embed.link = { uri: token.url, labels: [] };
+										}
+									}
 								};
 
 								return (
@@ -413,41 +435,9 @@ const Post = ({
 							}}
 						</For>
 					</div>
-				)}
-
-				<Show when={post.embed}>
-					{(embed) => (
-						<PostEmbeds
-							embed={embed()}
-							active={isActive()}
-							dispatch={(action) => {
-								const $embed = embed();
-								const kind = $embed.type;
-
-								switch (action.type) {
-									case 'remove_media': {
-										if (kind === EmbedKind.RECORD_WITH_MEDIA) {
-											post.embed = $embed.record;
-										} else if (kind & EmbedKind.MEDIA) {
-											post.embed = undefined;
-										}
-
-										break;
-									}
-									case 'remove_record': {
-										if (kind === EmbedKind.RECORD_WITH_MEDIA) {
-											post.embed = $embed.media;
-										} else if (kind & EmbedKind.RECORD) {
-											post.embed = undefined;
-										}
-
-										break;
-									}
-								}
-							}}
-						/>
-					)}
 				</Show>
+
+				<PostEmbeds embed={post.embed} active={isActive()} />
 
 				<Show when={getEmbedLabels(post.embed)}>
 					{(labels) => {
@@ -502,14 +492,19 @@ const Post = ({
 					}}
 				</Show>
 
-				{(getPostEmbedFlags(post.embed) & (EmbedKind.GIF | EmbedKind.IMAGE)) !== 0 && (
+				<Show
+					when={(() => {
+						const media = post.embed.media;
+						return media && (media.type === 'image' || media.type === 'gif');
+					})()}
+				>
 					<div class={`gap-2 text-contrast-muted` + (isActive() ? ` flex` : ` hidden`)}>
 						<CircleInfoOutlinedIcon class="mt-0.5 shrink-0 text-base" />
 						<p class="text-de">
 							Alt text helps describe images for low-vision users and provide context for everyone.
 						</p>
 					</div>
-				)}
+				</Show>
 
 				{canRemove() && (
 					<div class="absolute -right-2 top-0 z-1 mt-3">
@@ -627,57 +622,48 @@ const PostAction = (props: {
 		return (embed || rtLength > 0) && rtLength < MAX_TEXT_LENGTH;
 	};
 
-	const canEmbed = createMemo(() => {
-		return getAvailableEmbed(props.post.embed);
-	});
+	const canEmbedImage = () => {
+		const media = props.post.embed.media;
+		return !media || (media.type === 'image' && media.images.length < MAX_IMAGES);
+	};
 
 	const addImages = (blobs: Blob[]) => {
-		if (!(canEmbed() & EmbedKind.IMAGE)) {
-			return;
-		}
-
-		const filtered = blobs.filter((blob) => SUPPORTED_IMAGE_FORMATS.includes(blob.type));
-		if (filtered.length === 0) {
+		const images = blobs.filter((blob) => SUPPORTED_IMAGE_FORMATS.includes(blob.type));
+		if (images.length === 0) {
 			return;
 		}
 
 		const post = props.post;
 
-		const prev = post.embed;
-		let next: PostEmbed = {
-			type: EmbedKind.IMAGE,
-			images: filtered.slice(0, MAX_IMAGES).map((blob) => ({ blob: blob, alt: '' })),
-			labels: [],
-		};
-
-		if (prev) {
-			if (prev.type === EmbedKind.IMAGE) {
-				prev.images = prev.images.concat(next.images.slice(0, MAX_IMAGES - prev.images.length));
-				return;
-			} else if (prev.type === EmbedKind.RECORD_WITH_MEDIA) {
-				if (prev.media.type === EmbedKind.IMAGE) {
-					prev.media.images = prev.media.images.concat(
-						next.images.slice(0, MAX_IMAGES - prev.media.images.length),
-					);
-					return;
-				} else {
-					next = {
-						type: EmbedKind.RECORD_WITH_MEDIA,
-						record: prev.record,
-						media: next,
-					};
-				}
-			} else if (prev.type & EmbedKind.RECORD) {
-				next = {
-					type: EmbedKind.RECORD_WITH_MEDIA,
-					record: prev as PostRecordEmbed,
-					media: next,
-				};
-			}
+		let next = post.embed.media;
+		if (!next) {
+			next = {
+				type: 'image',
+				images: images.slice(0, MAX_IMAGES).map((blob) => ({ blob, alt: '' })),
+				labels: [],
+			};
+		} else if (next.type === 'image') {
+			next.images = next.images.concat(
+				images.slice(0, MAX_IMAGES - next.images.length).map((blob) => ({ blob, alt: '' })),
+			);
 		}
 
-		post.embed = next;
-		return;
+		post.embed.media = next;
+	};
+
+	const addGif = (gif: GifMedia) => {
+		const post = props.post;
+
+		let next = post.embed.media;
+		if (!next) {
+			next = {
+				type: 'gif',
+				gif: gif,
+				alt: undefined,
+			};
+		}
+
+		post.embed.media = next;
 	};
 
 	return (
@@ -689,7 +675,7 @@ const PostAction = (props: {
 					<IconButton
 						icon={ImageOutlinedIcon}
 						title="Attach image..."
-						disabled={!(canEmbed() & EmbedKind.IMAGE)}
+						disabled={!canEmbedImage()}
 						onClick={() => {
 							openImagePicker(addImages, true);
 						}}
@@ -699,38 +685,12 @@ const PostAction = (props: {
 					<IconButton
 						icon={GifSquareOutlinedIcon}
 						title="Attach GIF..."
-						disabled={!(canEmbed() & EmbedKind.GIF)}
+						disabled={(() => {
+							const media = props.post.embed.media;
+							return !!media;
+						})()}
 						onClick={() => {
-							openModal(() => (
-								<GifSearchDialogLazy
-									onPick={(gif) => {
-										if (!(canEmbed() & EmbedKind.GIF)) {
-											return;
-										}
-
-										const post = props.post;
-
-										const prev = post.embed;
-										let next: PostEmbed = {
-											type: EmbedKind.GIF,
-											gif: gif,
-											alt: undefined,
-										};
-
-										if (prev) {
-											if (prev.type & EmbedKind.RECORD) {
-												next = {
-													type: EmbedKind.RECORD_WITH_MEDIA,
-													record: prev as PostRecordEmbed,
-													media: next,
-												};
-											}
-										}
-
-										post.embed = next;
-									}}
-								/>
-							));
+							openModal(() => <GifSearchDialogLazy onPick={addGif} />);
 						}}
 						variant="accent"
 					/>
@@ -794,7 +754,7 @@ const PostAction = (props: {
 				</div>
 			</div>
 
-			{(canEmbed() & EmbedKind.IMAGE) !== 0 && <ImageDnd onAddImages={addImages} />}
+			{canEmbedImage() && <ImageDnd onAddImages={addImages} />}
 		</>
 	);
 };
@@ -868,51 +828,81 @@ const ImageDnd = (props: { onAddImages: (blobs: Blob[]) => void }) => {
 	}) as unknown as JSX.Element;
 };
 
-const PostEmbeds = (props: BaseEmbedProps) => {
+const PostEmbeds = (props: { embed: PostEmbed; active: boolean }) => {
+	const removeLink = () => {
+		props.embed.link = undefined;
+	};
+	const removeMedia = () => {
+		props.embed.media = undefined;
+	};
+	const removeRecord = () => {
+		props.embed.record = undefined;
+	};
+
 	return (
-		<Keyed value={props.embed.type}>
-			{(type) => {
-				if (type === EmbedKind.EXTERNAL) {
-					// @ts-expect-error
-					return <ExternalEmbed {...props} />;
-				}
+		<>
+			<Switch>
+				<Match
+					when={(() => {
+						const media = props.embed.media;
+						if (media && media.type === 'image') {
+							return media;
+						}
+					})()}
+				>
+					{(image) => <ImageEmbed embed={image()} active={props.active} onRemove={removeMedia} />}
+				</Match>
 
-				if (type === EmbedKind.GIF) {
-					// @ts-expect-error
-					return <GifEmbed {...props} />;
-				}
+				<Match
+					when={(() => {
+						const media = props.embed.media;
+						if (media && media.type === 'gif') {
+							return media;
+						}
+					})()}
+				>
+					{(gif) => <GifEmbed embed={gif()} active={props.active} onRemove={removeMedia} />}
+				</Match>
 
-				if (type === EmbedKind.IMAGE) {
-					// @ts-expect-error
-					return <ImageEmbed {...props} />;
-				}
+				<Match when={props.embed.link}>
+					{(link) => <LinkEmbed embed={link()} active={props.active} onRemove={removeLink} />}
+				</Match>
+			</Switch>
 
-				if (type === EmbedKind.FEED) {
-					// @ts-expect-error
-					return <FeedEmbed {...props} />;
-				}
+			<Switch>
+				<Match
+					when={(() => {
+						const record = props.embed.record;
+						if (record && record.type === 'feed') {
+							return record;
+						}
+					})()}
+				>
+					{(feed) => <FeedEmbed embed={feed()} active={props.active} onRemove={removeRecord} />}
+				</Match>
 
-				if (type === EmbedKind.LIST) {
-					// @ts-expect-error
-					return <ListEmbed {...props} />;
-				}
+				<Match
+					when={(() => {
+						const record = props.embed.record;
+						if (record && record.type === 'list') {
+							return record;
+						}
+					})()}
+				>
+					{(list) => <ListEmbed embed={list()} active={props.active} onRemove={removeRecord} />}
+				</Match>
 
-				if (type === EmbedKind.QUOTE) {
-					// @ts-expect-error
-					return <QuoteEmbed {...props} />;
-				}
-
-				if (type === EmbedKind.RECORD_WITH_MEDIA) {
-					return (
-						<>
-							<PostEmbeds {...props} embed={(props.embed as PostRecordWithMediaEmbed).media} />
-							<PostEmbeds {...props} embed={(props.embed as PostRecordWithMediaEmbed).record} />
-						</>
-					);
-				}
-
-				return null;
-			}}
-		</Keyed>
+				<Match
+					when={(() => {
+						const record = props.embed.record;
+						if (record && record.type === 'quote') {
+							return record;
+						}
+					})()}
+				>
+					{(quote) => <QuoteEmbed embed={quote()} active={props.active} onRemove={removeRecord} />}
+				</Match>
+			</Switch>
+		</>
 	);
 };
