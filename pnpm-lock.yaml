@@ -44,8 +44,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(@atcute/bluesky@1.0.7(@atcute/client@2.0.3))(@atcute/client@2.0.3)
       '@atcute/cbor':
-        specifier: ^1.0.3
-        version: 1.0.3
+        specifier: ^1.0.4
+        version: 1.0.4
       '@atcute/cid':
         specifier: ^1.0.1
         version: 1.0.1
@@ -171,8 +171,8 @@ packages:
     peerDependencies:
       '@atcute/client': ^1.0.0 || ^2.0.0
 
-  '@atcute/cbor@1.0.3':
-    resolution: {integrity: sha512-l9TgRsqCnt1tyTPc4mz5Sf3T0s2oDVTitd2owQO53fn+mnp8gCh7d+7fxIF4wulCGF8qxb5Zqa6VXBMOlhm3UA==}
+  '@atcute/cbor@1.0.4':
+    resolution: {integrity: sha512-3ZUvYuy54HUw3q8y5fmX5pUo6oStorwEMfpWTYtWwrkDneMXL9cHDf6SUHXjgGyifxkCxTuEppk9SabzNfm90A==}
 
   '@atcute/cid@1.0.1':
     resolution: {integrity: sha512-92Cor2ruS7y+/wdFutp2qFDjJj4mTcO7HdZ/BhTQRg/nzWdAnTann5DAmYjD+IWRaXd5SYk4dOZnDt4lsGofzg==}
@@ -1680,9 +1680,6 @@ packages:
     resolution: {integrity: sha512-Ld2g8rrAyMYFXBhEqMz8ZAHBi4J4uS1i/CxGMDnjyFWddMXLVcDp051DZfu+t7+ab7Wv6SMqpWmyFIj5UbfFvg==}
     engines: {node: '>=14'}
 
-  fp16@0.3.0:
-    resolution: {integrity: sha512-Iw6hLaH345EETQGU56NiAcJ173IraDRdJrVy+0fBMPdkZhzKNN/k3eqXFyNmnyx2/jnIzF2nr0mHh5nHrQBMEQ==}
-
   fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
 
@@ -2126,9 +2123,6 @@ packages:
 
   pathe@1.1.2:
     resolution: {integrity: sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==}
-
-  picocolors@1.1.0:
-    resolution: {integrity: sha512-TQ92mBOW0l3LeMeyLV6mzy/kWr8lkd/hp3mTg7wYK7zJhuBStmGMBG0BdeDZS/dZx1IukaX6Bk11zcln25o1Aw==}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -2858,11 +2852,10 @@ snapshots:
     dependencies:
       '@atcute/client': 2.0.3
 
-  '@atcute/cbor@1.0.3':
+  '@atcute/cbor@1.0.4':
     dependencies:
       '@atcute/base32': 1.0.0
       '@atcute/cid': 1.0.1
-      fp16: 0.3.0
 
   '@atcute/cid@1.0.1':
     dependencies:
@@ -2883,7 +2876,7 @@ snapshots:
   '@babel/code-frame@7.25.7':
     dependencies:
       '@babel/highlight': 7.25.7
-      picocolors: 1.1.0
+      picocolors: 1.1.1
 
   '@babel/compat-data@7.25.8': {}
 
@@ -2909,7 +2902,7 @@ snapshots:
 
   '@babel/generator@7.17.7':
     dependencies:
-      '@babel/types': 7.17.0
+      '@babel/types': 7.25.8
       jsesc: 2.5.2
       source-map: 0.5.7
 
@@ -3077,7 +3070,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.25.7
       chalk: 2.4.2
       js-tokens: 4.0.0
-      picocolors: 1.1.0
+      picocolors: 1.1.1
 
   '@babel/parser@7.25.8':
     dependencies:
@@ -4071,7 +4064,7 @@ snapshots:
       caniuse-lite: 1.0.30001668
       fraction.js: 4.3.7
       normalize-range: 0.1.2
-      picocolors: 1.1.0
+      picocolors: 1.1.1
       postcss: 8.4.47
       postcss-value-parser: 4.2.0
 
@@ -4472,8 +4465,6 @@ snapshots:
       cross-spawn: 7.0.3
       signal-exit: 4.1.0
 
-  fp16@0.3.0: {}
-
   fraction.js@4.3.7: {}
 
   fs-extra@9.1.0:
@@ -4873,8 +4864,6 @@ snapshots:
 
   pathe@1.1.2: {}
 
-  picocolors@1.1.0: {}
-
   picocolors@1.1.1: {}
 
   picomatch@2.3.1: {}
@@ -4921,7 +4910,7 @@ snapshots:
   postcss@8.4.47:
     dependencies:
       nanoid: 3.3.7
-      picocolors: 1.1.0
+      picocolors: 1.1.1
       source-map-js: 1.2.1
 
   prettier-plugin-tailwindcss@0.6.8(@trivago/prettier-plugin-sort-imports@4.3.0(prettier@3.3.3))(prettier@3.3.3):
@@ -5394,7 +5383,7 @@ snapshots:
     dependencies:
       browserslist: 4.24.0
       escalade: 3.2.0
-      picocolors: 1.1.0
+      picocolors: 1.1.1
 
   util-deprecate@1.0.2: {}
 
