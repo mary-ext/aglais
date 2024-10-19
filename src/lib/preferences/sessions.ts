@@ -9,5 +9,5 @@ export interface SessionPreferenceSchema {
 export interface AccountData {
 	/** Account DID */
 	readonly did: At.DID;
-	profile?: AppBskyActorDefs.ProfileViewDetailed;
+	profile: AppBskyActorDefs.ProfileViewDetailed;
 }

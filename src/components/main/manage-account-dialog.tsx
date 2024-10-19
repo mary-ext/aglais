@@ -97,16 +97,16 @@ const AccountItem = ({ account, onClick }: { account: AccountData; onClick?: () 
 			onClick={onClick}
 			class="flex gap-4 px-4 py-3 text-left hover:bg-contrast/md active:bg-contrast/sm-pressed"
 		>
-			<Avatar type={getUserAvatarType(profile())} src={profile()?.avatar} class="mt-0.5" />
+			<Avatar type={getUserAvatarType(profile())} src={profile().avatar} class="mt-0.5" />
 
 			<div class="min-w-0 grow self-center text-sm">
 				<p class="overflow-hidden text-ellipsis whitespace-nowrap font-bold empty:hidden">
-					{profile()?.displayName}
+					{profile().displayName}
 				</p>
 				<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">
 					{(() => {
-						const $profile = profile();
-						return $profile && $profile.handle !== 'handle.invalid' ? '@' + $profile.handle : account.did;
+						const handle = profile().handle;
+						return handle !== 'handle.invalid' ? '@' + handle : account.did;
 					})()}
 				</p>
 			</div>

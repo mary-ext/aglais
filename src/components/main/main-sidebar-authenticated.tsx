@@ -132,16 +132,14 @@ const AuthenticatedHeader = () => {
 															return (
 																<Avatar
 																	type={getUserAvatarType(profile())}
-																	src={profile()?.avatar}
+																	src={profile().avatar}
 																	size="sm"
 																/>
 															);
 														}}
 														title={(() => {
-															const $profile = profile();
-															return $profile && $profile.handle !== 'handle.invalid'
-																? '@' + $profile.handle
-																: account.did;
+															const handle = profile().handle;
+															return handle !== 'handle.invalid' ? '@' + handle : account.did;
 														})()}
 														size="sm"
 														onClick={handleClick}
