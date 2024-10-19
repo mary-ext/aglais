@@ -331,15 +331,15 @@ const Post = ({
 	addCloseGuard(isFilled);
 	addSubmitGuard(() => {
 		const embed = post.embed;
-		const link = embed.link;
-		const media = embed.media;
-		const record = embed.record;
 
 		const richtext = getPostRt(post);
 		const rtLength = richtext.length;
 
 		return !!(
-			(!richtext.empty || link || media || (record && (record.type !== 'quote' || !record.origin))) &&
+			(!richtext.empty ||
+				embed.link ||
+				embed.media ||
+				(embed.record && (embed.record.type !== 'quote' || !embed.record.origin))) &&
 			rtLength <= MAX_TEXT_LENGTH
 		);
 	});
