@@ -31,7 +31,14 @@ export interface PostImageEmbed {
 	labels: string[];
 }
 
-export type PostMediaEmbed = PostGifEmbed | PostImageEmbed;
+export interface PostVideoEmbed {
+	type: 'video';
+	blob: Blob;
+	alt: string;
+	labels: string[];
+}
+
+export type PostMediaEmbed = PostGifEmbed | PostImageEmbed | PostVideoEmbed;
 
 export interface PostFeedEmbed {
 	type: 'feed';
@@ -76,7 +83,7 @@ export function getImageCount(embed: PostEmbed): number {
 /** Retrieves labels from external and image embeds, if one is present */
 export function getEmbedLabels(embed: PostEmbed): string[] | undefined {
 	const media = embed.media;
-	if (media && media.type === 'image') {
+	if (media && (media.type === 'image' || media.type === 'video')) {
 		return media.labels;
 	}
 
@@ -93,6 +100,10 @@ export function isAltTextMissing(embed: PostEmbed): boolean {
 	if (media) {
 		if (media.type === 'image') {
 			return media.images.some((i) => i.alt.length === 0);
+		}
+
+		if (media.type === 'video') {
+			return media.alt.length === 0;
 		}
 
 		if (media.type === 'gif') {

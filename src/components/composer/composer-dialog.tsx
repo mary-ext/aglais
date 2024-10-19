@@ -28,7 +28,7 @@ import { createEventListener } from '~/lib/hooks/event-listener';
 import { type GuardFunction, createGuard } from '~/lib/hooks/guard';
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
-import { SUPPORTED_IMAGE_FORMATS, openImagePicker } from '~/lib/utils/blob';
+import { SUPPORTED_IMAGE_FORMATS, SUPPORTED_VIDEO_FORMATS, openMediaPicker } from '~/lib/utils/blob';
 import { assert } from '~/lib/utils/invariant';
 import { on } from '~/lib/utils/misc';
 
@@ -69,9 +69,10 @@ import ImageEmbed from './embeds/image-embed';
 import LinkEmbed from './embeds/link-embed';
 import ListEmbed from './embeds/list-embed';
 import QuoteEmbed from './embeds/quote-embed';
+import VideoEmbed from './embeds/video-embed';
 import type { GifMedia } from './gifs/gif-search-dialog';
 import GifSearchDialogLazy from './gifs/gif-search-dialog-lazy';
-import { publish } from './lib/api';
+import { PublishError, publish } from './lib/api';
 import { getRecordEmbedFromLink } from './lib/link-detection';
 import {
 	type ComposerState,
@@ -187,7 +188,15 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 
 			success = true;
 		} catch (err) {
-			setError(formatQueryError(err));
+			let message: string;
+
+			if (err instanceof PublishError) {
+				message = err.message;
+			} else {
+				message = formatQueryError(err);
+			}
+
+			setError(message);
 		} finally {
 			setPending(false);
 		}
@@ -491,16 +500,11 @@ const Post = ({
 					}}
 				</Show>
 
-				<Show
-					when={(() => {
-						const media = post.embed.media;
-						return media && (media.type === 'image' || media.type === 'gif');
-					})()}
-				>
+				<Show when={post.embed.media}>
 					<div class={`gap-2 text-contrast-muted` + (isActive() ? ` flex` : ` hidden`)}>
 						<CircleInfoOutlinedIcon class="mt-0.5 shrink-0 text-base" />
 						<p class="text-de">
-							Alt text helps describe images for low-vision users and provide context for everyone.
+							Alt text helps describe media for low-vision users and provide context for everyone.
 						</p>
 					</div>
 				</Show>
@@ -621,33 +625,48 @@ const PostAction = (props: {
 		return (embed || rtLength > 0) && rtLength < MAX_TEXT_LENGTH;
 	};
 
-	const canEmbedImage = () => {
+	const canEmbedImageOrVideo = () => {
 		const media = props.post.embed.media;
 		return !media || (media.type === 'image' && media.images.length < MAX_IMAGES);
 	};
 
-	const addImages = (blobs: Blob[]) => {
-		const images = blobs.filter((blob) => SUPPORTED_IMAGE_FORMATS.includes(blob.type));
-		if (images.length === 0) {
+	const addImagesOrVideo = (blobs: Blob[]) => {
+		const post = props.post;
+
+		const video = blobs.find((blob) => SUPPORTED_VIDEO_FORMATS.includes(blob.type));
+		if (video) {
+			let next = post.embed.media;
+			if (!next) {
+				next = {
+					type: 'video',
+					blob: video,
+					alt: '',
+					labels: [],
+				};
+			}
+
+			post.embed.media = next;
 			return;
 		}
 
-		const post = props.post;
+		const images = blobs.filter((blob) => SUPPORTED_IMAGE_FORMATS.includes(blob.type));
+		if (images.length) {
+			let next = post.embed.media;
+			if (!next) {
+				next = {
+					type: 'image',
+					images: images.slice(0, MAX_IMAGES).map((blob) => ({ blob, alt: '' })),
+					labels: [],
+				};
+			} else if (next.type === 'image') {
+				next.images = next.images.concat(
+					images.slice(0, MAX_IMAGES - next.images.length).map((blob) => ({ blob, alt: '' })),
+				);
+			}
 
-		let next = post.embed.media;
-		if (!next) {
-			next = {
-				type: 'image',
-				images: images.slice(0, MAX_IMAGES).map((blob) => ({ blob, alt: '' })),
-				labels: [],
-			};
-		} else if (next.type === 'image') {
-			next.images = next.images.concat(
-				images.slice(0, MAX_IMAGES - next.images.length).map((blob) => ({ blob, alt: '' })),
-			);
+			post.embed.media = next;
+			return;
 		}
-
-		post.embed.media = next;
 	};
 
 	const addGif = (gif: GifMedia) => {
@@ -674,9 +693,9 @@ const PostAction = (props: {
 					<IconButton
 						icon={ImageOutlinedIcon}
 						title="Attach image..."
-						disabled={!canEmbedImage()}
+						disabled={!canEmbedImageOrVideo()}
 						onClick={() => {
-							openImagePicker(addImages, true);
+							openMediaPicker(addImagesOrVideo, true);
 						}}
 						variant="accent"
 					/>
@@ -753,13 +772,13 @@ const PostAction = (props: {
 				</div>
 			</div>
 
-			{canEmbedImage() && <ImageDnd onAddImages={addImages} />}
+			{canEmbedImageOrVideo() && <MediaDnd onAddMedia={addImagesOrVideo} />}
 		</>
 	);
 };
 
-const ImageDnd = (props: { onAddImages: (blobs: Blob[]) => void }) => {
-	const onAddImages = props.onAddImages;
+const MediaDnd = (props: { onAddMedia: (blobs: Blob[]) => void }) => {
+	const onAddMedia = props.onAddMedia;
 	const [dropping, setDropping] = createSignal(false);
 
 	let tracked: any;
@@ -772,7 +791,7 @@ const ImageDnd = (props: { onAddImages: (blobs: Blob[]) => void }) => {
 
 		if (clipboardData.types.includes('Files')) {
 			ev.preventDefault();
-			onAddImages(Array.from(clipboardData.files));
+			onAddMedia(Array.from(clipboardData.files));
 		}
 	});
 
@@ -788,7 +807,7 @@ const ImageDnd = (props: { onAddImages: (blobs: Blob[]) => void }) => {
 		tracked = undefined;
 
 		if (dataTransfer.types.includes('Files')) {
-			onAddImages(Array.from(dataTransfer.files));
+			onAddMedia(Array.from(dataTransfer.files));
 		}
 	});
 
@@ -850,6 +869,17 @@ const PostEmbeds = (props: { embed: PostEmbed; active: boolean }) => {
 					})()}
 				>
 					{(image) => <ImageEmbed embed={image()} active={props.active} onRemove={removeMedia} />}
+				</Match>
+
+				<Match
+					when={(() => {
+						const media = props.embed.media;
+						if (media && media.type === 'video') {
+							return media;
+						}
+					})()}
+				>
+					{(video) => <VideoEmbed embed={video()} active={props.active} onRemove={removeMedia} />}
 				</Match>
 
 				<Match

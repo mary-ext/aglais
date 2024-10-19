@@ -1,4 +1,6 @@
-import { XRPCError } from '@atcute/client';
+import { nanoid } from 'nanoid/non-secure';
+
+import { XRPC, XRPCError, simpleFetchHandler } from '@atcute/client';
 import type {
 	AppBskyEmbedImages,
 	AppBskyEmbedRecord,
@@ -8,6 +10,7 @@ import type {
 	AppBskyFeedThreadgate,
 	AppBskyGraphDefs,
 	AppBskyRichtextFacet,
+	AppBskyVideoDefs,
 	At,
 	BlueMojiRichtextFacet,
 	Brand,
@@ -26,6 +29,7 @@ import { makeAtUri } from '~/api/utils/strings';
 import { getUtf8Length } from '~/api/utils/unicode';
 
 import { compressPostImage } from '~/lib/bsky/image';
+import { getVideoAspectRatio } from '~/lib/bsky/video-upload';
 import type { AgentContext } from '~/lib/states/agent';
 import { assert } from '~/lib/utils/invariant';
 
@@ -225,6 +229,184 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				return {
 					$type: 'app.bsky.embed.images',
 					images: images,
+				};
+			}
+
+			if (embed.type === 'video') {
+				const blob = embed.blob;
+
+				const videoRpc = new XRPC({ handler: simpleFetchHandler({ service: 'https://video.bsky.app' }) });
+
+				// Get the aspect ratio now
+				const aspectRatio = await getVideoAspectRatio(blob);
+
+				// Get upload limit status
+				{
+					log?.(`Checking video upload limits`);
+
+					const { data: tokenData } = await rpc.get('com.atproto.server.getServiceAuth', {
+						params: {
+							aud: 'did:web:video.bsky.app',
+							lxm: 'app.bsky.video.getUploadLimits',
+						},
+					});
+
+					const { data } = await videoRpc.get('app.bsky.video.getUploadLimits', {
+						headers: {
+							authorization: `Bearer ${tokenData.token}`,
+						},
+					});
+
+					if (!data.canUpload) {
+						let message = data.message || `You've reached the limit on video uploads`;
+
+						switch (data.message) {
+							case `User is not allowed to upload videos`:
+								message = `Your ability to upload videos has been disabled`;
+								break;
+							case `Uploading is disabled at the moment`:
+								message = `Your ability to upload videos has been disabled temporarily`;
+								break;
+							case `Failed to get user's upload stats`:
+								message = `Can't determine if you're allowed to upload videos, try again later`;
+								break;
+							case `User has exceeded daily upload bytes limit`:
+							case `User has exceeded daily upload videos limit`:
+								message = `You've reached the daily limit on video uploads`;
+								break;
+							case `Account is not old enough to upload videos`:
+								message = `Your account is not old enough to upload videos`;
+								break;
+						}
+
+						throw new PublishError(message);
+					}
+				}
+
+				// Upload the video
+				let jobId: string;
+				{
+					log?.(`Uploading video`);
+
+					const session = agent.handler!.session;
+
+					const { data: tokenData } = await rpc.get('com.atproto.server.getServiceAuth', {
+						params: {
+							aud: `did:web:${new URL(session.info.aud).host}`,
+							lxm: 'com.atproto.repo.uploadBlob',
+							exp: Date.now() / 1000 + 60 * 30, // 30 minutes
+						},
+					});
+
+					jobId = await new Promise((resolve, reject) => {
+						const xhr = new XMLHttpRequest();
+
+						const uploadUrl = new URL('/xrpc/app.bsky.video.uploadVideo', 'https://video.bsky.app');
+						uploadUrl.searchParams.set('did', session.info.sub);
+						uploadUrl.searchParams.set('name', nanoid() + mimeToExt(blob.type));
+
+						if (log) {
+							let canLog = true;
+
+							xhr.upload.onprogress = (ev) => {
+								if (canLog && ev.lengthComputable) {
+									canLog = false;
+									setTimeout(() => (canLog = true), 1_000);
+
+									log(`Uploading video (${((ev.loaded / ev.total) * 100) | 0}%)`);
+								}
+							};
+						}
+
+						xhr.onload = () => {
+							let json: AppBskyVideoDefs.JobStatus;
+							try {
+								json = JSON.parse(xhr.responseText) as AppBskyVideoDefs.JobStatus;
+							} catch (err) {
+								reject(new PublishError(`Failed to upload video`, { cause: err }));
+								return;
+							}
+
+							if (!json.jobId) {
+								throw new PublishError(`Failed to upload video` + (json.error ? `: ${json.error}` : ''));
+							}
+
+							resolve(json.jobId);
+						};
+						xhr.onerror = () => {
+							reject(new PublishError(`Failed to upload video`));
+						};
+
+						xhr.open('post', uploadUrl);
+						xhr.setRequestHeader('content-type', blob.type);
+						xhr.setRequestHeader('content-length', '' + blob.size);
+						xhr.setRequestHeader('authorization', `Bearer ${tokenData.token}`);
+						xhr.send(blob);
+					});
+				}
+
+				// Check the upload status
+				let result: At.Blob<any>;
+				{
+					let pollFailures = 0;
+
+					log?.(`Processing video`);
+
+					while (true) {
+						let status: AppBskyVideoDefs.JobStatus;
+
+						try {
+							const { data } = await videoRpc.get('app.bsky.video.getJobStatus', {
+								params: {
+									jobId: jobId,
+								},
+							});
+
+							status = data.jobStatus;
+							pollFailures = 0;
+						} catch (err) {
+							if (++pollFailures < 50) {
+								await new Promise((resolve) => setTimeout(resolve, 5_000));
+								continue; // Continue async loop
+							}
+
+							throw new Error(`Failed to process video: repeated poll failure`);
+						}
+
+						const state = status.state;
+
+						if (state === 'JOB_STATE_COMPLETED') {
+							if (!status.blob) {
+								throw new PublishError(`Unexpected error when processing video`);
+							}
+
+							result = status.blob;
+							break;
+						} else if (state === 'JOB_STATE_FAILED') {
+							throw new PublishError(`Failed to process video` + (status.error ? `: ${status.error}` : ''));
+						}
+
+						let msg = `Processing video`;
+
+						if (state === 'JOB_STATE_ENCODING') {
+							msg = `Encoding video`;
+						} else if (state === 'JOB_STATE_SCANNING') {
+							msg = `Video is being scanned`;
+						} else if (state === 'JOB_STATE_SCANNED') {
+							msg = `Waiting on video`;
+						}
+
+						log?.(msg + (status.progress ? ` (${status.progress | 0}%)` : ``));
+						await new Promise((resolve) => setTimeout(resolve, 1_000));
+					}
+				}
+
+				// Done!
+				return {
+					$type: 'app.bsky.embed.video',
+					video: result,
+					alt: embed.alt,
+					aspectRatio: aspectRatio,
 				};
 			}
 
@@ -458,4 +640,20 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 	}
 };
 
+export class PublishError extends Error {}
 export class InvalidHandleError extends Error {}
+
+const mimeToExt = (mime: string): string => {
+	switch (mime) {
+		case 'video/mp4':
+			return '.mp4';
+		case 'video/webm':
+			return '.webm';
+		case 'video/mpeg':
+			return '.mpeg';
+		case 'video/quicktime':
+			return '.mov';
+		default:
+			assert(false);
+	}
+};
