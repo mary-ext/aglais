@@ -7,6 +7,7 @@ import type { AppBskyEmbedVideo } from '@atcute/client/lexicons';
 import { globalEvents } from '~/globals/events';
 
 import { replaceVideoCdnUrl } from '~/lib/bsky/video';
+import { useSession } from '~/lib/states/session';
 
 export interface VideoPlayerProps {
 	/** Expected to be static */
@@ -14,6 +15,8 @@ export interface VideoPlayerProps {
 }
 
 const VideoPlayer = ({ embed }: VideoPlayerProps) => {
+	const { currentAccount } = useSession();
+
 	const [playing, setPlaying] = createSignal(false);
 	const playerId = nanoid();
 
@@ -39,7 +42,10 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 			<video
 				ref={(node) => {
 					hls.attachMedia(node);
-					node.volume = 0.25;
+
+					if (currentAccount) {
+						node.volume = currentAccount.preferences.ui.mediaVolume;
+					}
 
 					createEffect(() => {
 						if (!playing()) {
@@ -73,6 +79,9 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 				}}
 				onPause={() => {
 					setPlaying(false);
+				}}
+				onVolumeChange={(ev) => {
+					currentAccount!.preferences.ui.mediaVolume = ev.currentTarget.volume;
 				}}
 				class="h-full w-full"
 			/>

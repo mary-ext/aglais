@@ -236,6 +236,9 @@ const createAccountPreferences = (did: At.DID) => {
 			const obj: PerAccountPreferenceSchema = {
 				$version: 1,
 				feeds: [],
+				ui: {
+					mediaVolume: 0.25,
+				},
 				composer: {
 					defaultPostLanguage: 'system',
 					defaultReplyGate: 'everyone',

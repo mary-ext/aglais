@@ -4,11 +4,17 @@ import type { ModerationLabeler, ModerationPreferences } from '~/api/moderation'
 
 export interface PerAccountPreferenceSchema {
 	$version: 1;
+	ui: UIPreferences;
 	feeds: SavedFeed[];
 	composer: ComposerPreferences;
 	translation: ContentTranslationPreferences;
 	threadView: ThreadViewPreferences;
 	moderation: ModerationPreferences;
+}
+
+export interface UIPreferences {
+	/** Media player volume */
+	mediaVolume: number;
 }
 
 export interface ThreadViewPreferences {

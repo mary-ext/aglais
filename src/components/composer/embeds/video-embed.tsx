@@ -1,3 +1,6 @@
+import { createEffect } from 'solid-js';
+
+import { useSession } from '~/lib/states/session';
 import { convertBlobToUrl } from '~/lib/utils/blob';
 
 import IconButton from '~/components/icon-button';
@@ -13,6 +16,8 @@ export interface VideoEmbedProps {
 }
 
 const VideoEmbed = (props: VideoEmbedProps) => {
+	const { currentAccount } = useSession();
+
 	return (
 		<div class="relative self-start">
 			<Keyed value={props.embed.blob}>
@@ -21,8 +26,21 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 
 					return (
 						<video
+							ref={(node) => {
+								node.volume = currentAccount!.preferences.ui.mediaVolume;
+
+								createEffect(() => {
+									if (!props.active) {
+										node.pause();
+									}
+								});
+							}}
 							src={blobUrl}
-							controls
+							inert={!props.active}
+							controls={props.active}
+							onVolumeChange={(ev) => {
+								currentAccount!.preferences.ui.mediaVolume = ev.currentTarget.volume;
+							}}
 							class="h-full max-h-80 min-h-16 w-full min-w-16 max-w-full rounded-md border border-outline"
 						/>
 					);
