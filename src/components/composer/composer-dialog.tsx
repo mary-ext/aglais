@@ -357,7 +357,9 @@ const Post = ({
 
 	createEffect(() => {
 		if (isActive()) {
-			post.embed;
+			post.embed.link;
+			post.embed.media;
+			post.embed.record;
 			textarea.focus();
 		}
 	});
