@@ -50,15 +50,14 @@ export const createProfileQuery = (didOrHandle: () => string, opts: ProfileQuery
 				return data;
 			},
 			placeholderData(): AppBskyActorDefs.ProfileViewDetailed | undefined {
-				const precache = queryClient.getQueryData(['profile-precache', $didOrHandle]);
-				if (precache) {
-					return precache as any;
-				}
-
+				return queryClient.getQueryData(['profile-precache', $didOrHandle]);
+			},
+			initialData(): AppBskyActorDefs.ProfileViewDetailed | undefined {
 				if (currentAccount !== undefined && currentAccount.did === $didOrHandle) {
 					return currentAccount.data.profile;
 				}
 			},
+			initialDataUpdatedAt: 0,
 			structuralSharing: ((
 				oldData: AppBskyActorDefs.ProfileViewDetailed | undefined,
 				newData: AppBskyActorDefs.ProfileViewDetailed,

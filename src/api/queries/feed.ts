@@ -50,12 +50,12 @@ export const createFeedMetaQuery = (feedUri: () => string) => {
 				return data.view;
 			},
 			placeholderData(): AppBskyFeedDefs.GeneratorView | undefined {
-				const precache = queryClient.getQueryData(['feed-meta-precache', $feedUri]);
-				if (precache) {
-					return precache as any;
-				}
-
+				return queryClient.getQueryData(['feed-meta-precache', $feedUri]);
+			},
+			initialData(): AppBskyFeedDefs.GeneratorView | undefined {
 				if (currentAccount) {
+					const $feedUri = feedUri();
+
 					const found = currentAccount.preferences.feeds.find((feed): feed is SavedGeneratorFeed => {
 						return feed.type === 'generator' && feed.uri === $feedUri;
 					});
@@ -63,6 +63,7 @@ export const createFeedMetaQuery = (feedUri: () => string) => {
 					return found?.info;
 				}
 			},
+			initialDataUpdatedAt: 0,
 		};
 	});
 };
