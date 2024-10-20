@@ -14,12 +14,18 @@ export interface VideoEmbedProps {
 
 const VideoEmbed = (props: VideoEmbedProps) => {
 	return (
-		<div class="relative">
+		<div class="relative self-start">
 			<Keyed value={props.embed.blob}>
 				{(blob) => {
 					const blobUrl = convertBlobToUrl(blob);
 
-					return <video src={blobUrl} controls class="aspect-video rounded-md border border-outline" />;
+					return (
+						<video
+							src={blobUrl}
+							controls
+							class="h-full max-h-80 min-h-16 w-full min-w-16 max-w-full rounded-md border border-outline"
+						/>
+					);
 				}}
 			</Keyed>
 
