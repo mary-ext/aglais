@@ -24,6 +24,7 @@ import { parseAtUri } from '~/api/utils/strings';
 import { globalEvents } from '~/globals/events';
 import { openModal, useModalContext } from '~/globals/modals';
 
+import { getVideoMetadata } from '~/lib/bsky/video-upload';
 import { createEventListener } from '~/lib/hooks/event-listener';
 import { type GuardFunction, createGuard } from '~/lib/hooks/guard';
 import { useAgent } from '~/lib/states/agent';
@@ -289,6 +290,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 					canAddPost={state.posts.length < MAX_POSTS}
 					showAddPost={showAddPostButton()}
 					onAddPost={addPost}
+					onError={setError}
 				/>
 			</Dialog.Container>
 		</>
@@ -608,8 +610,11 @@ const PostAction = (props: {
 	canAddPost: boolean;
 	showAddPost: boolean;
 	onAddPost: () => void;
+	onError: (message?: string) => void;
 }) => {
 	const fieldset = useFieldset();
+
+	const onError = props.onError;
 
 	const canAddPost = () => {
 		if (!props.canAddPost) {
@@ -630,13 +635,25 @@ const PostAction = (props: {
 		return !media || (media.type === 'image' && media.images.length < MAX_IMAGES);
 	};
 
-	const addImagesOrVideo = (blobs: Blob[]) => {
+	const addImagesOrVideo = async (blobs: Blob[]) => {
 		const post = props.post;
 
 		const video = blobs.find((blob) => SUPPORTED_VIDEO_FORMATS.includes(blob.type));
 		if (video) {
 			let next = post.embed.media;
 			if (!next) {
+				if (video.size > 50_000_000) {
+					onError(`Video can't be more than 50 MB in size`);
+					return;
+				}
+
+				const metadata = await getVideoMetadata(video);
+				if (metadata.duration > 60) {
+					onError(`Video must be less than 60 seconds in duration`);
+					return;
+				}
+
+				onError();
 				next = {
 					type: 'video',
 					blob: video,
@@ -653,12 +670,14 @@ const PostAction = (props: {
 		if (images.length) {
 			let next = post.embed.media;
 			if (!next) {
+				onError();
 				next = {
 					type: 'image',
 					images: images.slice(0, MAX_IMAGES).map((blob) => ({ blob, alt: '' })),
 					labels: [],
 				};
 			} else if (next.type === 'image') {
+				onError();
 				next.images = next.images.concat(
 					images.slice(0, MAX_IMAGES - next.images.length).map((blob) => ({ blob, alt: '' })),
 				);

@@ -1,4 +1,10 @@
-export const getVideoAspectRatio = (blob: Blob): Promise<{ width: number; height: number }> => {
+export interface KnownVideoMetadata {
+	width: number;
+	height: number;
+	duration: number;
+}
+
+export const getVideoMetadata = (blob: Blob): Promise<KnownVideoMetadata> => {
 	return new Promise((resolve, reject) => {
 		const video = document.createElement('video');
 		const blobUrl = URL.createObjectURL(blob);
@@ -12,11 +18,15 @@ export const getVideoAspectRatio = (blob: Blob): Promise<{ width: number; height
 
 		video.onloadedmetadata = () => {
 			cleanup();
-			resolve({ width: video.videoWidth, height: video.videoHeight });
+			resolve({
+				width: video.videoWidth,
+				height: video.videoHeight,
+				duration: video.duration,
+			});
 		};
 		video.onerror = (_ev, _source, _lineno, _colno, error) => {
 			cleanup();
-			reject(new Error(`failed to grab video aspect ratio`, { cause: error }));
+			reject(new Error(`failed to grab video metadata`, { cause: error }));
 		};
 	});
 };
