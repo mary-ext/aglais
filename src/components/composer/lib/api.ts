@@ -91,10 +91,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 		const rt = await resolveRichText(parseRichText(trimRichText(post.text)));
 
 		// Resolve embeds
-		let embed: AppBskyFeedPost.Record['embed'];
-		if (post.embed) {
-			embed = await resolveEmbed(post.embed);
-		}
+		const embed = await resolveEmbed(post.embed);
 
 		// Get the self-labels
 		const labels = getEmbedLabels(post.embed);
@@ -205,7 +202,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 			return await pRecord;
 		}
 
-		assert(false);
+		return;
 
 		async function resolveMediaEmbed(
 			embed: PostMediaEmbed,
