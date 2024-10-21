@@ -83,6 +83,19 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 				onVolumeChange={(ev) => {
 					currentAccount!.preferences.ui.mediaVolume = ev.currentTarget.volume;
 				}}
+				onLoadedMetadata={(ev) => {
+					const video = ev.currentTarget;
+
+					const hasAudio =
+						// @ts-expect-error: Mozilla-specific
+						video.mozHasAudio ||
+						// @ts-expect-error: WebKit/Blink-specific
+						!!video.webkitAudioDecodedByteCount ||
+						// @ts-expect-error: WebKit-specific
+						!!(video.audioTracks && video.audioTracks.length);
+
+					video.loop = !hasAudio || video.duration <= 6;
+				}}
 				class="h-full w-full"
 			/>
 		</div>
