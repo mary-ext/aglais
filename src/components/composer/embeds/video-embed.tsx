@@ -52,7 +52,7 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 									// @ts-expect-error: WebKit-specific
 									!!(video.audioTracks && video.audioTracks.length);
 
-								video.loop = !hasAudio || video.duration <= 10;
+								video.loop = !hasAudio || video.duration <= 6;
 							}}
 							class="h-full max-h-80 min-h-16 w-full min-w-16 max-w-full rounded-md border border-outline"
 						/>
