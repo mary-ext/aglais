@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"target": "ESNext",
 		"lib": ["DOM", "DOM.Iterable", "ESNext"],
-		"types": ["dom-close-watcher"],
+		"types": ["dom-close-watcher", "dom-webcodecs"],
 		"skipLibCheck": true,
 
 		"module": "ESNext",

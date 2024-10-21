@@ -61,6 +61,7 @@ import * as Prompt from '../prompt';
 import ComposerInput from './composer-input';
 import ComposerReplyContext from './composer-reply-context';
 import ContentWarningMenu from './dialogs/content-warning-menu';
+import GifConversionPromptLazy from './dialogs/gif-conversion-prompt-lazy';
 import LanguageSelectDialogLazy from './dialogs/language-select-dialog-lazy';
 import ThreadgateMenu from './dialogs/threadgate-menu';
 import DraftListDialogLazy from './drafts/draft-list-dialog-lazy';
@@ -665,6 +666,23 @@ const PostAction = (props: {
 			}
 
 			post.embed.media = next;
+			return;
+		}
+
+		const gif = blobs.find((blob) => blob.type === 'image/gif');
+		if (gif) {
+			if (!post.embed.media) {
+				if (!VideoEncoder || !ImageDecoder) {
+					onError(`Your browser doesn't support converting GIF into video`);
+					return;
+				}
+
+				onError();
+				openModal(() => (
+					<GifConversionPromptLazy blob={gif} onSuccess={(video) => addImagesOrVideo([video])} />
+				));
+			}
+
 			return;
 		}
 
