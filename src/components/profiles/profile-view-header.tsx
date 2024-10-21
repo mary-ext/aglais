@@ -25,6 +25,7 @@ import MuteOutlinedIcon from '../icons-central/mute-outline';
 import ImageViewerModalLazy from '../images/image-viewer-modal-lazy';
 
 import EditProfileDialogLazy from './edit-profile-dialog-lazy';
+import HandleOverflowMenu from './handle-overflow-menu';
 import ProfileFollowButton from './profile-follow-button';
 
 export interface ProfileViewHeader {
@@ -146,7 +147,13 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 					</p>
 
 					<p class="flex min-w-0 items-start text-sm text-contrast-muted">
-						<button class="overflow-hidden text-ellipsis break-words text-left hover:underline">
+						<button
+							onClick={(ev) => {
+								const anchor = ev.currentTarget;
+								openModal(() => <HandleOverflowMenu anchor={anchor} profile={data()} />);
+							}}
+							class="overflow-hidden text-ellipsis break-words text-left hover:underline"
+						>
 							{'@' + data().handle}
 						</button>
 
