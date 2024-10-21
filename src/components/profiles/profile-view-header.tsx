@@ -13,6 +13,7 @@ import { openModal } from '~/globals/modals';
 import { formatCompact } from '~/lib/intl/number';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
+import { truncateMiddle } from '~/lib/utils/strings';
 
 import DefaultLabelerAvatar from '~/assets/default-labeler-avatar.svg?url';
 import DefaultUserAvatar from '~/assets/default-user-avatar.svg?url';
@@ -222,7 +223,7 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 												let arr: JSX.Element[] = [];
 
 												for (const profile of followers) {
-													const handle = profile.handle;
+													const handle = truncateMiddle(profile.handle, 29);
 
 													arr.push(<span class="font-semibold">{handle}</span>);
 												}
