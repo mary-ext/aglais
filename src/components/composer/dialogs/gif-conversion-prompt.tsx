@@ -24,8 +24,7 @@ const GifConversionPrompt = ({ blob, onSuccess }: GifConversionPromptProps) => {
 
 		let video: Blob;
 		{
-			const workerUrl = new URL('../workers/gif-conversion', import.meta.url);
-			const worker = new Worker(workerUrl, { type: 'module' });
+			const worker = new Worker(new URL('../workers/gif-conversion', import.meta.url), { type: 'module' });
 
 			try {
 				const api = wrap<GifWorkerApi>(worker);
