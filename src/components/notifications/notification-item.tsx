@@ -119,7 +119,7 @@ const NotificationItem = ({ item }: NotificationItemProps) => {
 				</div>
 				<div class="flex min-w-0 grow flex-col gap-3">
 					{/* @once */ renderAvatars(item.items)}
-					<div class="overflow-hidden break-words text-sm">{/* @once */ renderText(item)}</div>
+					<div class="overflow-hidden text-pretty break-words text-sm">{/* @once */ renderText(item)}</div>
 					{/* @once */ renderAccessory(item)}
 				</div>
 			</div>
