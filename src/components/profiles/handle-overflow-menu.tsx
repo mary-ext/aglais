@@ -2,6 +2,8 @@ import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 
 import { useModalContext } from '~/globals/modals';
 
+import { truncateMiddle } from '~/lib/utils/strings';
+
 import ClipboardOutlinedIcon from '~/components/icons-central/clipboard-outline';
 import OpenInNewOutlinedIcon from '~/components/icons-central/open-in-new-outline';
 import * as Menu from '~/components/menu';
@@ -19,6 +21,8 @@ const HandleOverflowMenu = (props: HandleOverflowMenuProps) => {
 
 	const did = profile.did;
 	const handle = profile.handle;
+	const truncatedHandle = truncateMiddle(handle, 29);
+
 	const isHandleInvalid = handle === 'handle.invalid';
 
 	return (
@@ -27,7 +31,7 @@ const HandleOverflowMenu = (props: HandleOverflowMenuProps) => {
 				<>
 					<Menu.Item
 						icon={OpenInNewOutlinedIcon}
-						label={`Open ${handle}`}
+						label={`Open ${truncatedHandle}`}
 						onClick={() => {
 							close();
 							window.open(`https://${handle}`);
@@ -36,7 +40,7 @@ const HandleOverflowMenu = (props: HandleOverflowMenuProps) => {
 
 					<Menu.Item
 						icon={ClipboardOutlinedIcon}
-						label={`Copy ${handle}`}
+						label={`Copy ${truncatedHandle}`}
 						onClick={() => {
 							close();
 							navigator.clipboard.writeText(handle);
