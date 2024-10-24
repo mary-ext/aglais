@@ -24,6 +24,7 @@ import { INTERACTION_TAGS, isElementAltClicked, isElementClicked } from '~/lib/i
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
 import { assert } from '~/lib/utils/invariant';
+import { truncateMiddle } from '~/lib/utils/strings';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 import { type BlueskyGifSnippet, SnippetType, detectSnippet } from '../embeds/lib/snippet';
@@ -186,6 +187,8 @@ const renderText = (data: FollowNotificationSlice | LikeNotificationSlice | Repo
 		const item = items[idx];
 		const author = item.author;
 
+		const handle = truncateMiddle(author.handle, 29);
+
 		if (sliced > 1) {
 			if (remaining < 1 && idx === sliced - 1) {
 				nodes.push(` and `);
@@ -200,7 +203,7 @@ const renderText = (data: FollowNotificationSlice | LikeNotificationSlice | Repo
 				onClick={() => precacheProfile(queryClient, author)}
 				class="inline-block overflow-hidden align-top font-semibold hover:underline"
 			>
-				{/* @once */ author.handle}
+				{handle}
 			</a>,
 		);
 	}
