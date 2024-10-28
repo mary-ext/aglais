@@ -109,7 +109,7 @@ const SignInDialog = (props: SignInDialogProps) => {
 						if ($view === View.HANDLE) {
 							loginMutation.mutate({ identifier: formData.get('identifier') as string });
 						} else {
-							loginMutation.mutate({ pds: `https://` + formData.get('pds')! });
+							loginMutation.mutate({ pds: formData.get('pds') as string });
 						}
 					}}
 				>
@@ -164,10 +164,10 @@ const SignInDialog = (props: SignInDialogProps) => {
 												autofocusOnMutation(node, loginMutation);
 											}}
 											name="pds"
-											pattern="([a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*(?:\.[a-zA-Z]+))"
+											type="url"
 											required
 											label="PDS domain"
-											placeholder="bsky.social"
+											placeholder="https://bsky.social"
 										/>
 
 										<div class="flex flex-col gap-2">
