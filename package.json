@@ -12,8 +12,8 @@
 		"@atcute/bluemoji": "^1.0.3",
 		"@atcute/bluesky": "^1.0.7",
 		"@atcute/bluesky-richtext-parser": "^1.0.5",
-		"@atcute/bluesky-richtext-segmenter": "^1.0.0",
-		"@atcute/cbor": "^1.0.4",
+		"@atcute/bluesky-richtext-segmenter": "^1.0.1",
+		"@atcute/cbor": "^1.0.5",
 		"@atcute/cid": "^1.0.1",
 		"@atcute/client": "^2.0.3",
 		"@atcute/oauth-browser-client": "^1.0.3",
@@ -29,7 +29,7 @@
 		"idb": "^8.0.0",
 		"nanoid": "^5.0.7",
 		"solid-floating-ui": "~0.2.1",
-		"solid-js": "^1.9.2",
+		"solid-js": "^1.9.3",
 		"webm-muxer": "^5.0.2"
 	},
 	"devDependencies": {
@@ -46,7 +46,7 @@
 		"vite": "6.0.0-beta.1",
 		"vite-plugin-pwa": "0.20.5",
 		"vite-plugin-solid": "^2.10.2",
-		"wrangler": "^3.81.0"
+		"wrangler": "^3.83.0"
 	},
 	"pnpm": {
 		"patchedDependencies": {
