@@ -37,7 +37,7 @@ const LabelsOnMe = (props: LabelsOnMeProps) => {
 					}
 				>
 					<CircleInfoOutlinedIcon
-						class={`ml-1 opacity-80 group-hover:opacity-100` + (!props.large ? ` text-xs` : ` text-base`)}
+						class={`ml-1 opacity-80 group-hover:opacity-100` + (!props.large ? ` text-xs` : ` w-4 text-sm`)}
 					/>
 					<span class="mx-1.5">{`${count()} ${count() === 1 ? `label` : `labels`} placed on this content`}</span>
 				</button>
