@@ -28,6 +28,7 @@ import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 import ReplyOutlinedIcon from '../icons-central/reply-outline';
 import ShareOutlinedIcon from '../icons-central/share-outline';
 import ContentHider from '../moderation/content-hider';
+import LabelsOnMe from '../moderation/labels-on-me';
 import ModerationAlerts from '../moderation/moderation-alerts';
 import RichText from '../rich-text';
 import TimeAgo from '../time-ago';
@@ -59,10 +60,12 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 	const shadow = usePostShadow(post);
 
 	const uri = parseAtUri(post().uri);
-	const did = author().did;
+	const authorDid = author().did;
 
-	const authorHref = `/${did}`;
-	const href = `/${did}/${uri.rkey}`;
+	const isOurPost = currentAccount && authorDid === currentAccount.did;
+
+	const authorHref = `/${authorDid}`;
+	const href = `/${authorDid}/${uri.rkey}`;
 
 	const moderation = createMemo(() => moderatePost(post(), moderationOptions()));
 	const ui = createMemo(() => getModerationUI(moderation(), ContextContentView));
@@ -131,6 +134,8 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 					</button>
 				</div>
 			</div>
+
+			{isOurPost && <LabelsOnMe labels={post().labels} large class="mb-1" />}
 
 			<ModerationAlerts ui={ui()} large class="mb-1" />
 

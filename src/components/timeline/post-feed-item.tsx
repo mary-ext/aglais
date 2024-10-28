@@ -22,6 +22,7 @@ import Embed from '../embeds/embed';
 import PinOutlinedIcon from '../icons-central/pin-outline';
 import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 import ContentHider from '../moderation/content-hider';
+import LabelsOnMe from '../moderation/labels-on-me';
 import ModerationAlerts from '../moderation/moderation-alerts';
 import RichText from '../rich-text';
 
@@ -45,16 +46,18 @@ const PostFeedItem = ({ item, highlighted, timelineDid }: PostFeedItemProps) => 
 	const { post, reason, next, prev } = item;
 
 	const author = post.author;
+	const authorDid = author.did;
+
 	const record = post.record as AppBskyFeedPost.Record;
 	const embed = post.embed;
 
 	const shadow = usePostShadow(post);
 
 	const uri = parseAtUri(post.uri);
-	const authorHref = `/${author.did}`;
-	const href = `/${author.did}/${uri.rkey}`;
+	const authorHref = `/${authorDid}`;
+	const href = `/${authorDid}/${uri.rkey}`;
 
-	const isOurPost = currentAccount && author.did === currentAccount.did;
+	const isOurPost = currentAccount && authorDid === currentAccount.did;
 
 	const moderation = createMemo(() => moderatePost(post, moderationOptions()));
 	const ui = createMemo(() => getModerationUI(moderation(), ContextContentList));
@@ -114,6 +117,7 @@ const PostFeedItem = ({ item, highlighted, timelineDid }: PostFeedItemProps) => 
 						<PostMeta post={post} href={href} authorHref={authorHref} gutterBottom />
 						<PostReplyContext item={item} />
 
+						{isOurPost && <LabelsOnMe labels={post.labels} class="-mx-1 my-1" />}
 						<ModerationAlerts ui={ui()} class="-mx-1 my-1" />
 
 						<ContentHider
