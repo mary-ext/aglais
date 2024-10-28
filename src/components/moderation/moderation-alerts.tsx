@@ -48,7 +48,7 @@ const ModerationAlerts = (props: ModerationAlertsProps) => {
 					}}
 					class={
 						`group flex items-center rounded-md text-contrast/75 hover:text-contrast` +
-						(!large ? ` h-5 text-xs hover:bg-contrast/sm-pressed` : ` h-6 bg-[#1A1A1A] text-de`)
+						(!large ? ` h-5 text-xs hover:bg-contrast/sm-pressed` : ` h-6 bg-contrast/10 text-de`)
 					}
 				>
 					<Avatar
