@@ -4,7 +4,7 @@ import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 
 import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { getModerationUI } from '~/api/moderation';
-import { ContextProfileMedia } from '~/api/moderation/constants';
+import { ContextProfileMedia, ContextProfileView } from '~/api/moderation/constants';
 import { moderateProfile } from '~/api/moderation/entities/profile';
 import { parseAtUri } from '~/api/utils/strings';
 
@@ -24,6 +24,8 @@ import IconButton from '../icon-button';
 import MailOutlinedIcon from '../icons-central/mail-outline';
 import MuteOutlinedIcon from '../icons-central/mute-outline';
 import ImageViewerModalLazy from '../images/image-viewer-modal-lazy';
+import LabelsOnMe from '../moderation/labels-on-me';
+import ModerationAlerts from '../moderation/moderation-alerts';
 
 import EditProfileDialogLazy from './edit-profile-dialog-lazy';
 import HandleOverflowMenu from './handle-overflow-menu';
@@ -169,6 +171,12 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 						})()}
 					</p>
 				</div>
+
+				{isSelf ? (
+					<LabelsOnMe type="account" labels={data().labels} large />
+				) : (
+					<ModerationAlerts ui={getModerationUI(moderation(), ContextProfileView)} large />
+				)}
 
 				<div class="whitespace-pre-wrap break-words text-sm empty:hidden">{data().description?.trim()}</div>
 

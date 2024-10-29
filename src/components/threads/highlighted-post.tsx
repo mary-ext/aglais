@@ -135,7 +135,7 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 				</div>
 			</div>
 
-			{isOurPost && <LabelsOnMe labels={post().labels} large class="mb-1" />}
+			{isOurPost && <LabelsOnMe type="content" labels={post().labels} large class="mb-1" />}
 
 			<ModerationAlerts ui={ui()} large class="mb-1" />
 

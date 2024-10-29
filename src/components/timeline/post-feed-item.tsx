@@ -117,7 +117,7 @@ const PostFeedItem = ({ item, highlighted, timelineDid }: PostFeedItemProps) => 
 						<PostMeta post={post} href={href} authorHref={authorHref} gutterBottom />
 						<PostReplyContext item={item} />
 
-						{isOurPost && <LabelsOnMe labels={post.labels} class="-mx-1 my-1" />}
+						{isOurPost && <LabelsOnMe type="content" labels={post.labels} class="-mx-1 my-1" />}
 						<ModerationAlerts ui={ui()} class="-mx-1 my-1" />
 
 						<ContentHider

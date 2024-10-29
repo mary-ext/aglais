@@ -7,6 +7,7 @@ import { useSession } from '~/lib/states/session';
 import CircleInfoOutlinedIcon from '../icons-central/circle-info-outline';
 
 export interface LabelsOnMeProps {
+	type: 'content' | 'account';
 	labels: ComAtprotoLabelDefs.Label[] | undefined;
 	large?: boolean;
 	class?: string;
@@ -38,7 +39,7 @@ const LabelsOnMe = (props: LabelsOnMeProps) => {
 						<CircleInfoOutlinedIcon
 							class={`ml-1 opacity-80 group-hover:opacity-100` + (!props.large ? ` text-xs` : ` w-4 text-sm`)}
 						/>
-						<span class="mx-1.5">{`${labels().length} ${labels().length === 1 ? `label` : `labels`} placed on this content`}</span>
+						<span class="mx-1.5">{`${labels().length} ${labels().length === 1 ? `label` : `labels`} placed on this ${props.type}`}</span>
 					</button>
 				</div>
 			)}
