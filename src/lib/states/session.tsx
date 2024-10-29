@@ -60,14 +60,18 @@ export const SessionProvider = (props: ParentProps) => {
 	};
 
 	const createAccountState = (
-		account: AccountData,
+		did: At.DID,
 		session: OAuthUserAgent | undefined,
 		rpc: XRPC,
 	): CurrentAccountState => {
 		return createRoot((cleanup): CurrentAccountState => {
-			const preferences = createAccountPreferences(account.did);
+			const preferences = createAccountPreferences(did);
 
 			const [abortable] = makeAbortable();
+
+			const data = createMemo(() => {
+				return sessions.accounts.find((acc) => acc.did === did);
+			});
 
 			const labelers = createMemo((): Labeler[] => {
 				return Object.entries(preferences.moderation.labelers).map(([did, info]): Labeler => {
@@ -117,9 +121,13 @@ export const SessionProvider = (props: ParentProps) => {
 			});
 
 			return {
-				did: account.did,
-				data: account,
+				did: did,
 				preferences: preferences,
+				get data() {
+					const $data = data();
+					assert($data !== undefined);
+					return $data;
+				},
 
 				rpc: rpc,
 				agent: session,
@@ -180,7 +188,7 @@ export const SessionProvider = (props: ParentProps) => {
 				sessions.active = did;
 				sessions.accounts = [account, ...sessions.accounts.filter((acc) => acc.did !== did)];
 
-				replaceState(createAccountState(account, agent, rpc));
+				replaceState(createAccountState(did, agent, rpc));
 			});
 		},
 
