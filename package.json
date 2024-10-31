@@ -16,9 +16,9 @@
 		"@atcute/cbor": "^1.0.5",
 		"@atcute/cid": "^1.0.1",
 		"@atcute/client": "^2.0.3",
-		"@atcute/oauth-browser-client": "^1.0.3",
+		"@atcute/oauth-browser-client": "^1.0.4",
 		"@atcute/tid": "^1.0.0",
-		"@floating-ui/dom": "^1.6.11",
+		"@floating-ui/dom": "^1.6.12",
 		"@floating-ui/utils": "^0.2.8",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
 		"@mary/exif-rm": "npm:@jsr/mary__exif-rm@^0.2.1",
@@ -27,7 +27,7 @@
 		"comlink": "^4.4.1",
 		"hls.js": "^1.5.17",
 		"idb": "^8.0.0",
-		"nanoid": "^5.0.7",
+		"nanoid": "^5.0.8",
 		"solid-floating-ui": "~0.2.1",
 		"solid-js": "^1.9.3",
 		"webm-muxer": "^5.0.2"
@@ -46,7 +46,7 @@
 		"vite": "6.0.0-beta.5",
 		"vite-plugin-pwa": "0.20.5",
 		"vite-plugin-solid": "^2.10.2",
-		"wrangler": "^3.83.0"
+		"wrangler": "^3.84.0"
 	},
 	"pnpm": {
 		"patchedDependencies": {
@@ -55,7 +55,7 @@
 			"solid-js": "patches/solid-js.patch",
 			"vite-plugin-pwa": "patches/vite-plugin-pwa.patch",
 			"vite": "patches/vite.patch",
-			"workbox-precaching@7.1.0": "patches/workbox-precaching@7.1.0.patch"
+			"workbox-precaching": "patches/workbox-precaching.patch"
 		}
 	}
 }
