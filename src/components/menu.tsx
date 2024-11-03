@@ -1,15 +1,15 @@
 import { flip, shift, size } from '@floating-ui/dom';
 import { type Placement, getSide } from '@floating-ui/utils';
 import { useFloating } from 'solid-floating-ui';
-import { type Component, type JSX, createSignal } from 'solid-js';
+import { type Component, type JSX, createSignal, onMount } from 'solid-js';
 
 import { useModalContext } from '~/globals/modals';
 
+import { createEventListener } from '~/lib/hooks/event-listener';
 import { useMediaQuery } from '~/lib/hooks/media-query';
 import { useModalClose } from '~/lib/hooks/modal-close';
 import { on } from '~/lib/utils/misc';
 
-import Button from './button';
 import CheckOutlinedIcon from './icons-central/check-outline';
 
 export interface MenuContainerProps {
@@ -22,16 +22,6 @@ export interface MenuContainerProps {
 const MenuContainer = (props: MenuContainerProps) => {
 	const { close, isActive } = useModalContext();
 	const isDesktop = useMediaQuery('(width >= 688px) and (height >= 500px)');
-
-	const containerRef = (node: HTMLElement): void => {
-		useModalClose(node, close, isActive);
-
-		requestAnimationFrame(() => {
-			const found = node.querySelector('[role^=menuitem]');
-			// @ts-expect-error
-			found?.focus();
-		});
-	};
 
 	return on(isDesktop, ($isDesktop) => {
 		if ($isDesktop) {
@@ -76,7 +66,14 @@ const MenuContainer = (props: MenuContainerProps) => {
 
 			const ref = (node: HTMLElement) => {
 				setFloating(node);
-				containerRef(node);
+
+				useModalClose(node, close, isActive);
+
+				requestAnimationFrame(() => {
+					const found = node.querySelector('[role^=menuitem]');
+					// @ts-expect-error
+					found?.focus();
+				});
 			};
 
 			return (
@@ -91,23 +88,79 @@ const MenuContainer = (props: MenuContainerProps) => {
 				</div>
 			);
 		} else {
-			return (
-				<div class="flex grow flex-col self-stretch overflow-y-auto bg-contrast-overlay/40">
-					<div class="h-[40dvh] shrink-0"></div>
-					<div
-						ref={containerRef}
-						role="menu"
-						onKeyDown={onKeyDown}
-						class="mt-auto flex flex-col bg-background"
-					>
-						<div class="flex flex-col pt-1">{props.children}</div>
+			const hasReducedMotion = false && matchMedia('(prefers-reduced-motion)').matches;
+			const hasScrollSnapEvent = 'onscrollsnapchange' in window;
 
-						<div class="sticky bottom-0 mt-3 flex flex-col bg-background px-4 pb-4">
-							<Button role="menuitem" onClick={close} size="lg">
-								Cancel
-							</Button>
+			return (
+				<div
+					ref={(node) => {
+						if (hasScrollSnapEvent) {
+							createEventListener(node, 'scrollsnapchange', () => {
+								if (node.scrollTop < 0) {
+									close();
+								}
+							});
+						} else {
+							onMount(() => {
+								const content = node.firstElementChild!;
+
+								createEventListener(node, 'scroll', () => {
+									if (-node.scrollTop > content.clientHeight - 2) {
+										close();
+									}
+								});
+							});
+						}
+					}}
+					class="flex grow snap-y snap-mandatory flex-col-reverse self-stretch overflow-y-auto overscroll-none bg-contrast-overlay/40 scrollbar-hide"
+				>
+					<div class="relative max-h-[60svh] w-[540px] max-w-full shrink-0 grow">
+						<div class="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between">
+							<div class="h-12 w-full -translate-y-full snap-end"></div>
+							<div class="h-12 w-full snap-end"></div>
+						</div>
+
+						<div
+							ref={(node) => {
+								if (!hasReducedMotion) {
+									let closing = false;
+
+									onMount(() => {
+										const easing = 'cubic-bezier(0.32, 0.72, 0, 1)';
+										const duration = 350;
+
+										const handleClose = () => {
+											if (closing) {
+												return;
+											}
+
+											const anim = node.animate([{ translate: '0 0' }, { translate: '0 100%' }], {
+												easing,
+												duration,
+											});
+
+											closing = true;
+											anim.finished.then(close);
+										};
+
+										node.animate([{ translate: '0 100%' }, { translate: '0 0' }], { easing, duration });
+
+										useModalClose(node, handleClose, isActive);
+									});
+								} else {
+									useModalClose(node, close, isActive);
+								}
+							}}
+							class="flex h-full w-full flex-col overflow-clip rounded-t-lg bg-background pt-6 shadow-lg"
+						>
+							<div class="absolute inset-x-0 top-0 grid h-6 place-items-center">
+								<div class="h-1 w-12 rounded-full bg-contrast/20"></div>
+							</div>
+
+							<div class="flex flex-col overflow-y-auto pb-3 text-sm">{props.children}</div>
 						</div>
 					</div>
+					<div class="h-svh w-full shrink-0 grow"></div>
 				</div>
 			);
 		}
