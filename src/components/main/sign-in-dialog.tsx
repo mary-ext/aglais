@@ -1,5 +1,6 @@
 import { Match, Switch, createSignal, onMount } from 'solid-js';
 
+import type { At } from '@atcute/client/lexicons';
 import {
 	type AuthorizationServerMetadata,
 	type IdentityMetadata,
@@ -26,7 +27,7 @@ const enum View {
 }
 
 export interface SignInDialogProps {
-	autologin?: string;
+	relogin?: { did: At.DID; handle?: string };
 }
 
 const SignInDialog = (props: SignInDialogProps) => {
@@ -35,7 +36,7 @@ const SignInDialog = (props: SignInDialogProps) => {
 	const [pending, setPending] = createSignal<string>();
 	const [error, setError] = createSignal<string>();
 
-	const autologin = props.autologin;
+	const relogin = props.relogin;
 
 	const loginMutation = createMutation(() => ({
 		async mutationFn({ identifier, pds }: { identifier?: string; pds?: string }) {
@@ -89,8 +90,8 @@ const SignInDialog = (props: SignInDialogProps) => {
 		},
 	}));
 
-	if (autologin) {
-		loginMutation.mutate({ identifier: autologin });
+	if (relogin) {
+		loginMutation.mutate({ identifier: relogin.did });
 	}
 
 	return (
@@ -137,9 +138,9 @@ const SignInDialog = (props: SignInDialogProps) => {
 											ref={(node) => {
 												autofocusOnMutation(node, loginMutation);
 
-												if (autologin) {
+												if (relogin) {
 													onMount(() => {
-														node.value = autologin;
+														node.value = relogin.handle ?? relogin.did;
 													});
 												}
 											}}

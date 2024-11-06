@@ -40,9 +40,7 @@ const ErrorView = (props: ErrorViewProps) => {
 								const did = currentAccount!.did;
 								const profile = queryClient.getQueryData<Profile>(['profile', currentAccount!.did]);
 
-								const identifier = profile && profile.handle !== 'handle.invalid' ? profile.handle : did;
-
-								openModal(() => <SignInDialogLazy autologin={identifier} />);
+								openModal(() => <SignInDialogLazy relogin={/* @once */ { did, handle: profile?.handle }} />);
 							}}
 							variant="primary"
 						>
