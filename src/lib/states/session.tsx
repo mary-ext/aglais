@@ -196,14 +196,6 @@ export const SessionProvider = (props: ParentProps) => {
 			const $state = untrack(state);
 			const isLoggedIn = $state !== undefined && $state.did === did;
 
-			batch(() => {
-				if (isLoggedIn) {
-					replaceState(undefined);
-				}
-
-				sessions.accounts = sessions.accounts.filter((acc) => acc.did !== did);
-			});
-
 			try {
 				if (isLoggedIn) {
 					const agent = $state.agent;
@@ -217,11 +209,23 @@ export const SessionProvider = (props: ParentProps) => {
 			} finally {
 				deleteStoredSession(did);
 			}
+
+			batch(() => {
+				if (sessions.active === did) {
+					sessions.active = undefined;
+				}
+
+				sessions.accounts = sessions.accounts.filter((acc) => acc.did !== did);
+
+				if (isLoggedIn) {
+					location.reload();
+				}
+			});
 		},
 		async logout(): Promise<void> {
 			const $state = untrack(state);
 			if ($state !== undefined) {
-				return this.removeAccount($state.did);
+				return context.removeAccount($state.did);
 			}
 		},
 	};

@@ -24,6 +24,7 @@ import ShieldOutlinedIcon from '../icons-central/shield-outline';
 import * as Sidebar from '../sidebar';
 
 import ManageAccountDialogLazy from './manage-account-dialog-lazy';
+import SignOutDialogLazy from './sign-out-dialog-lazy';
 
 const MainSidebarAuthenticated = () => {
 	const { close } = useModalContext();
@@ -47,6 +48,7 @@ const MainSidebarAuthenticated = () => {
 					label="Sign out"
 					onClick={() => {
 						close();
+						openModal(() => <SignOutDialogLazy />);
 					}}
 				/>
 
