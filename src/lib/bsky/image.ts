@@ -31,19 +31,39 @@ export const compressPostImage = async (blob: Blob): Promise<CompressResult> => 
 
 	// We went over the maximum size, resize and compress to fit.
 	const [canvas, width, height] = getResizedImage(image, POST_MAX_WIDTH, POST_MAX_HEIGHT, Crop.CONTAIN);
-	const large = blob.size > 1_500_000;
 
-	// Start at 90% if we're over 1.5 MB because it's unlikely 100% will work.
-	for (let q = large ? 90 : 100; q >= 70; q -= 10) {
-		const result = await canvas.convertToBlob({
-			// WEBP yields a smaller image size on average
+	let low = 70;
+	let high = 100;
+
+	let last: CompressResult | undefined;
+
+	while (low <= high) {
+		const q = Math.floor((low + high) / 2);
+
+		const blob = await canvas.convertToBlob({
 			type: 'image/webp',
 			quality: q / 100,
 		});
 
-		if (result.size <= MAX_SIZE) {
-			return { blob: result, ratio: { width: width, height: height } };
+		const result: CompressResult = {
+			blob: blob,
+			ratio: { width: width, height: height },
+		};
+
+		if (blob.size === MAX_SIZE) {
+			return result;
+		} else if (blob.size < MAX_SIZE) {
+			// Try higher quality
+			low = q + 1;
+			last = result;
+		} else {
+			// Try lower quality
+			high = q - 1;
 		}
+	}
+
+	if (last) {
+		return last;
 	}
 
 	throw new Error(`Unable to compress image according to criteria`);
@@ -73,18 +93,40 @@ export const compressProfileImage = async (
 
 	// We went over the maximum size or format is unsupported, resize and compress to fit.
 	const [canvas, width, height] = getResizedImage(image, maxW, maxH, Crop.COVER);
-	const large = blob.size > 1_500_000;
 
-	for (let q = large ? 90 : 100; q >= 70; q -= 10) {
-		const result = await canvas.convertToBlob({
+	let low = 70;
+	let high = 100;
+
+	let last: CompressResult | undefined;
+
+	while (low <= high) {
+		const q = Math.floor((low + high) / 2);
+
+		const blob = await canvas.convertToBlob({
 			// Profile avatars and banners only accepts PNG and JPEG
 			type: 'image/jpeg',
 			quality: q / 100,
 		});
 
-		if (result.size <= MAX_SIZE) {
-			return { blob: result, ratio: { width: width, height: height } };
+		const result: CompressResult = {
+			blob: blob,
+			ratio: { width: width, height: height },
+		};
+
+		if (blob.size === MAX_SIZE) {
+			return result;
+		} else if (blob.size < MAX_SIZE) {
+			// Try higher quality
+			low = q + 1;
+			last = result;
+		} else {
+			// Try lower quality
+			high = q - 1;
 		}
+	}
+
+	if (last) {
+		return last;
 	}
 
 	throw new Error(`Unable to compress image according to criteria`);
