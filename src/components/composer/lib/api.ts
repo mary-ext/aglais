@@ -208,20 +208,28 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 			embed: PostMediaEmbed,
 		): Promise<AppBskyEmbedRecordWithMedia.Main['media']> {
 			if (embed.type === 'image') {
+				log?.(`Compressing images`);
+
+				const compressed = await Promise.all(
+					embed.images.map(async (image) => {
+						const result = await compressPostImage(image.blob);
+						return { ...image, ...result };
+					}),
+				);
+
 				log?.(`Uploading images`);
 
-				const images: AppBskyEmbedImages.Image[] = [];
+				const images = await Promise.all(
+					compressed.map(async (image): Promise<AppBskyEmbedImages.Image> => {
+						const uploaded = await uploadBlob(rpc, image.blob);
 
-				for (const image of embed.images) {
-					const compressed = await compressPostImage(image.blob);
-					const result = await uploadBlob(rpc, compressed.blob);
-
-					images.push({
-						image: result,
-						alt: image.alt,
-						aspectRatio: compressed.ratio,
-					});
-				}
+						return {
+							image: uploaded,
+							alt: image.alt,
+							aspectRatio: image.ratio,
+						};
+					}),
+				);
 
 				return {
 					$type: 'app.bsky.embed.images',
