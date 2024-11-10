@@ -34,7 +34,7 @@ const HandleOverflowMenu = (props: HandleOverflowMenuProps) => {
 						label={`Open ${truncatedHandle}`}
 						onClick={() => {
 							close();
-							window.open(`https://${handle}`);
+							window.open(`https://${handle}`, '_blank', 'noopener noreferrer');
 						}}
 					/>
 

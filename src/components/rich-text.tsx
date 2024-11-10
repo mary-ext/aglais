@@ -122,6 +122,7 @@ const renderExternalLink = (to: string, subtext: string) => {
 	return (
 		<a
 			target="_blank"
+			rel="noopener noreferrer nofollow"
 			href={to}
 			onClick={handleUnsafeLinkNavigation}
 			onAuxClick={handleUnsafeLinkNavigation}
