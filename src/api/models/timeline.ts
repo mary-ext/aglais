@@ -109,6 +109,11 @@ export const createJoinedItems = (
 		for (let j = 0; j < jlen; j++) {
 			const slice = slices[j];
 
+			// skip, we already have too much.
+			if (slice.items.length >= 7) {
+				continue;
+			}
+
 			if (isFirstInThread(slice, item)) {
 				slice.items.unshift(item);
 
