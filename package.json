@@ -8,23 +8,23 @@
 		"fmt": "prettier --cache --write ."
 	},
 	"dependencies": {
-		"@atcute/base32": "^1.0.0",
-		"@atcute/bluemoji": "^1.0.3",
-		"@atcute/bluesky": "^1.0.7",
-		"@atcute/bluesky-richtext-parser": "^1.0.5",
-		"@atcute/bluesky-richtext-segmenter": "^1.0.2",
-		"@atcute/cbor": "^1.0.5",
-		"@atcute/cid": "^1.0.1",
-		"@atcute/client": "^2.0.3",
-		"@atcute/oauth-browser-client": "^1.0.4",
-		"@atcute/tid": "^1.0.0",
+		"@atcute/base32": "^1.0.1",
+		"@atcute/bluemoji": "^1.0.4",
+		"@atcute/bluesky": "^1.0.8",
+		"@atcute/bluesky-richtext-parser": "^1.0.6",
+		"@atcute/bluesky-richtext-segmenter": "^1.0.4",
+		"@atcute/cbor": "^1.0.6",
+		"@atcute/cid": "^1.0.2",
+		"@atcute/client": "^2.0.4",
+		"@atcute/oauth-browser-client": "^1.0.5",
+		"@atcute/tid": "^1.0.1",
 		"@floating-ui/dom": "^1.6.12",
 		"@floating-ui/utils": "^0.2.8",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
 		"@mary/exif-rm": "npm:@jsr/mary__exif-rm@^0.2.1",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
 		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.5",
-		"comlink": "^4.4.1",
+		"comlink": "^4.4.2",
 		"hls.js": "^1.5.17",
 		"idb": "^8.0.0",
 		"nanoid": "^5.0.8",
@@ -46,7 +46,7 @@
 		"vite": "6.0.0-beta.5",
 		"vite-plugin-pwa": "0.20.5",
 		"vite-plugin-solid": "^2.10.2",
-		"wrangler": "^3.84.0"
+		"wrangler": "^3.86.1"
 	},
 	"pnpm": {
 		"patchedDependencies": {
