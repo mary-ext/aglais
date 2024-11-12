@@ -342,7 +342,13 @@ const fetchPage = async (
 			},
 		});
 
-		return response.data;
+		const data = response.data;
+
+		return {
+			// Discover feed, wooo.
+			cursor: data.cursor && data.cursor.length <= 5_000 ? data.cursor : undefined,
+			feed: data.feed,
+		};
 	} else if (type === 'list') {
 		const response = await rpc.get('app.bsky.feed.getListFeed', {
 			signal: signal,
