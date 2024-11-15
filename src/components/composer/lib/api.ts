@@ -7,6 +7,7 @@ import type {
 	AppBskyEmbedRecordWithMedia,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
+	AppBskyFeedPostgate,
 	AppBskyFeedThreadgate,
 	AppBskyGraphDefs,
 	AppBskyRichtextFacet,
@@ -124,12 +125,12 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 		});
 
 		// If this is the first post, and we have a threadgate set, create one now.
-		if (idx === 0 && state.threadgate) {
+		if (idx === 0 && state.threadgate.allow) {
 			const threadgateRecord: AppBskyFeedThreadgate.Record = {
 				$type: 'app.bsky.feed.threadgate',
 				createdAt: now.toISOString(),
 				post: uri,
-				allow: state.threadgate,
+				allow: state.threadgate.allow,
 			};
 
 			writes.push({
@@ -137,6 +138,23 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				collection: 'app.bsky.feed.threadgate',
 				rkey: rkey,
 				value: threadgateRecord,
+			});
+		}
+
+		// If we have a postgate set, create one for this post.
+		if (state.postgate.embeddingRules?.length) {
+			const postgateRecord: AppBskyFeedPostgate.Record = {
+				$type: 'app.bsky.feed.postgate',
+				createdAt: now.toISOString(),
+				post: uri,
+				embeddingRules: state.postgate.embeddingRules,
+			};
+
+			writes.push({
+				$type: 'com.atproto.repo.applyWrites#create',
+				collection: 'app.bsky.feed.postgate',
+				rkey: rkey,
+				value: postgateRecord,
 			});
 		}
 

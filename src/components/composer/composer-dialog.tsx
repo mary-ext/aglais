@@ -30,7 +30,6 @@ import { type GuardFunction, createGuard } from '~/lib/hooks/guard';
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 import { SUPPORTED_IMAGE_FORMATS, SUPPORTED_VIDEO_FORMATS, openMediaPicker } from '~/lib/utils/blob';
-import { assert } from '~/lib/utils/invariant';
 import { on } from '~/lib/utils/misc';
 
 import Avatar, { getUserAvatarType } from '../avatar';
@@ -41,8 +40,6 @@ import Divider from '../divider';
 import { useFieldset } from '../fieldset';
 import IconButton from '../icon-button';
 import AddOutlinedIcon from '../icons-central/add-outline';
-import AtOutlinedIcon from '../icons-central/at-outline';
-import BlockOutlinedIcon from '../icons-central/block-outline';
 import CircleInfoOutlinedIcon from '../icons-central/circle-info-outline';
 import CrossLargeOutlinedIcon from '../icons-central/cross-large-outline';
 import EarthOutlinedIcon from '../icons-central/earth-outline';
@@ -51,7 +48,6 @@ import GifSquareOutlinedIcon from '../icons-central/gif-square-outline';
 import ImageOutlinedIcon from '../icons-central/image-outline';
 import LinkOutlinedIcon from '../icons-central/link-outline';
 import PeopleOutlinedIcon from '../icons-central/people-outline';
-import PersonCheckOutlinedIcon from '../icons-central/person-check-outline';
 import ShieldCheckOutlinedIcon from '../icons-central/shield-check-outline';
 import ShieldOutlinedIcon from '../icons-central/shield-outline';
 import TranslateOutlinedIcon from '../icons-central/translate-outline';
@@ -60,10 +56,10 @@ import * as Prompt from '../prompt';
 
 import ComposerInput from './composer-input';
 import ComposerReplyContext from './composer-reply-context';
+import ComposedInteractionDialogLazy from './dialogs/composed-interaction-dialog-lazy';
 import ContentWarningMenu from './dialogs/content-warning-menu';
 import GifConversionPromptLazy from './dialogs/gif-conversion-prompt-lazy';
 import LanguageSelectDialogLazy from './dialogs/language-select-dialog-lazy';
-import ThreadgateMenu from './dialogs/threadgate-menu';
 import DraftListDialogLazy from './drafts/draft-list-dialog-lazy';
 import FeedEmbed from './embeds/feed-embed';
 import GifEmbed from './embeds/gif-embed';
@@ -81,12 +77,10 @@ import {
 	type CreateComposerStateOptions,
 	type PostEmbed,
 	type PostState,
-	ThreadgateKnownValue,
 	createComposerState,
 	createPostState,
 	getEmbedLabels,
 	getPostRt,
-	getThreadgateValue,
 } from './lib/state';
 
 export interface ComposerDialogProps {
@@ -283,7 +277,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 					</For>
 				</Dialog.Body>
 
-				{!state.reply && <ThreadgateAction state={state} />}
+				{!state.reply && <GateAction state={state} />}
 
 				<PostAction
 					disabled={false}
@@ -309,7 +303,7 @@ const Post = ({
 	addSubmitGuard,
 	onSubmit,
 }: {
-	profile: CreateQueryResult<AppBskyActorDefs.ProfileViewDetailed>;
+	profile: CreateQueryResult<AppBskyActorDefs.ProfileViewDetailed | undefined>;
 	state: ComposerState;
 	post: PostState;
 	idx: () => number;
@@ -548,7 +542,7 @@ const Post = ({
 	);
 };
 
-const ThreadgateAction = ({ state }: { state: ComposerState }) => {
+const GateAction = ({ state }: { state: ComposerState }) => {
 	const fieldset = useFieldset();
 
 	return (
@@ -557,15 +551,15 @@ const ThreadgateAction = ({ state }: { state: ComposerState }) => {
 
 			<button
 				disabled={fieldset.disabled}
-				onClick={(ev) => {
-					const anchor = ev.currentTarget;
-
+				onClick={() => {
 					openModal(() => (
-						<ThreadgateMenu
-							anchor={anchor}
-							value={state.threadgate}
-							onChange={(next) => {
-								state.threadgate = next;
+						<ComposedInteractionDialogLazy
+							initialState={state}
+							onApply={({ threadgate, postgate }) => {
+								batch(() => {
+									state.threadgate = threadgate;
+									state.postgate = postgate;
+								});
 							}}
 						/>
 					));
@@ -579,25 +573,15 @@ const ThreadgateAction = ({ state }: { state: ComposerState }) => {
 					let Icon: Component<ComponentProps<'svg'>>;
 					let label: string;
 
-					const value = getThreadgateValue(state.threadgate);
+					const threadAllow = state.threadgate.allow;
+					const embedRules = state.postgate.embeddingRules;
 
-					if (value === ThreadgateKnownValue.CUSTOM) {
-						Icon = PeopleOutlinedIcon;
-						label = `Some users can reply`;
-					} else if (value === ThreadgateKnownValue.EVERYONE) {
+					if (threadAllow === undefined && embedRules === undefined) {
 						Icon = EarthOutlinedIcon;
-						label = `Everyone can reply`;
-					} else if (value === ThreadgateKnownValue.FOLLOWS) {
-						Icon = PersonCheckOutlinedIcon;
-						label = `Followed users can reply`;
-					} else if (value === ThreadgateKnownValue.MENTIONS) {
-						Icon = AtOutlinedIcon;
-						label = `Mentioned users can reply`;
-					} else if (value === ThreadgateKnownValue.NONE) {
-						Icon = BlockOutlinedIcon;
-						label = `No one can reply`;
+						label = `Everyone can interact`;
 					} else {
-						assert(false, `unexpected condition`);
+						Icon = PeopleOutlinedIcon;
+						label = `Interaction limited`;
 					}
 
 					return [<Icon class="w-9 text-lg" />, <span class="text-de font-medium">{label}</span>];

@@ -47,11 +47,21 @@ export interface SavedListFeed {
 	info: AppBskyGraphDefs.ListView;
 }
 
+export interface PersistedThreadgate {
+	allow?: Array<{ type: 'following' } | { type: 'mention' } | { type: 'list'; uri: At.Uri }>;
+}
+
+export interface PersistedPostgate {
+	embeddingRules?: Array<{ type: 'disable' }>;
+}
+
 export interface ComposerPreferences {
 	/** Default language to use when composing a new post */
-	defaultPostLanguage: 'none' | 'system' | (string & {});
-	/** Default reply gate when creating a new thread */
-	defaultReplyGate: 'everyone' | 'follows' | 'mentions';
+	language: 'none' | 'system' | (string & {});
+	/** Default thread gate when creating a thread */
+	threadgate: PersistedThreadgate;
+	/** Default post gate when creating a post */
+	postgate: PersistedPostgate;
 }
 
 export interface ContentTranslationPreferences {

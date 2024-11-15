@@ -1,7 +1,7 @@
 import { unwrap } from 'solid-js/store';
 
 import { type Token as RichToken, tokenize } from '@atcute/bluesky-richtext-parser';
-import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 
 import { graphemeLen } from '~/api/utils/unicode';
 import { toShortUrl } from '~/api/utils/url';
@@ -9,6 +9,12 @@ import { toShortUrl } from '~/api/utils/url';
 import { primarySystemLanguage } from '~/globals/locales';
 
 import type { ComposerPreferences } from '~/lib/preferences/account';
+import {
+	type PostgateState,
+	type ThreadgateState,
+	fromPersistedPostgate,
+	fromPersistedThreadgate,
+} from '~/lib/preferences/snippets/composer';
 
 import type { GifMedia } from '../gifs/gif-search-dialog';
 
@@ -210,12 +216,13 @@ export interface ComposerState {
 	active: number;
 	reply: AppBskyFeedDefs.PostView | undefined;
 	posts: PostState[];
-	threadgate: AppBskyFeedThreadgate.Record['allow'];
+	threadgate: ThreadgateState;
+	postgate: PostgateState;
 }
 
 export function createComposerState(
 	{ reply, text, quote }: CreateComposerStateOptions = {},
-	{ defaultPostLanguage, defaultReplyGate }: ComposerPreferences,
+	{ language, threadgate, postgate }: ComposerPreferences,
 ): ComposerState {
 	return {
 		active: 0,
@@ -232,10 +239,11 @@ export function createComposerState(
 							}
 						: undefined,
 				},
-				languages: resolveDefaultLanguage(defaultPostLanguage),
+				languages: resolveDefaultLanguage(language),
 			}),
 		],
-		threadgate: resolveDefaultThreadgate(defaultReplyGate),
+		threadgate: fromPersistedThreadgate(threadgate),
+		postgate: fromPersistedPostgate(postgate),
 	};
 }
 
@@ -249,49 +257,4 @@ const resolveDefaultLanguage = (lang: 'none' | 'system' | (string & {})) => {
 	}
 
 	return [lang];
-};
-
-const resolveDefaultThreadgate = (
-	value: ComposerPreferences['defaultReplyGate'],
-): AppBskyFeedThreadgate.Record['allow'] => {
-	if (value === 'follows') {
-		return [{ $type: 'app.bsky.feed.threadgate#followingRule' }];
-	}
-
-	if (value === 'mentions') {
-		return [{ $type: 'app.bsky.feed.threadgate#mentionRule' }];
-	}
-
-	return undefined;
-};
-
-export const enum ThreadgateKnownValue {
-	EVERYONE,
-	NONE,
-	FOLLOWS,
-	MENTIONS,
-	CUSTOM,
-}
-
-export const getThreadgateValue = (allow: AppBskyFeedThreadgate.Record['allow']) => {
-	if (!allow) {
-		return ThreadgateKnownValue.EVERYONE;
-	}
-
-	if (allow.length === 0) {
-		return ThreadgateKnownValue.NONE;
-	}
-
-	if (allow.length === 1) {
-		const rule = allow[0];
-
-		if (rule.$type === 'app.bsky.feed.threadgate#followingRule') {
-			return ThreadgateKnownValue.FOLLOWS;
-		}
-		if (rule.$type === 'app.bsky.feed.threadgate#mentionRule') {
-			return ThreadgateKnownValue.MENTIONS;
-		}
-	}
-
-	return ThreadgateKnownValue.CUSTOM;
 };

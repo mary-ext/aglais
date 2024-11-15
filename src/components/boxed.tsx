@@ -3,6 +3,7 @@ import { type Component, type ComponentProps, type JSX, createMemo } from 'solid
 import { openModal, useModalContext } from '~/globals/modals';
 
 import { useFieldset } from './fieldset';
+import CheckOutlinedIcon from './icons-central/check-outline';
 import ChevronRightOutlinedIcon from './icons-central/chevron-right-outline';
 import * as Menu from './menu';
 
@@ -206,6 +207,86 @@ const BoxedToggleItem = (props: BoxedToggleItemProps) => {
 };
 
 export { BoxedToggleItem as ToggleItem };
+
+export interface BoxedRadioItemProps {
+	label: string;
+	description?: string;
+	enabled: boolean;
+	onChange: (next: boolean) => void;
+}
+
+const BoxedRadioItem = (props: BoxedRadioItemProps) => {
+	const enabled = createMemo(() => !!props.enabled);
+	const onChange = props.onChange;
+
+	return (
+		<button
+			onClick={() => onChange(true)}
+			class="flex justify-between gap-4 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
+		>
+			<div class="flex min-w-0 grow flex-col">
+				<p class="min-w-0 break-words text-sm font-medium">{props.label}</p>
+				<p class="text-pretty break-words text-de text-contrast-muted empty:hidden">{props.description}</p>
+			</div>
+
+			<div class="shrink-0">
+				{(() => {
+					if (enabled()) {
+						return (
+							<div class="grid h-5 w-5 place-items-center rounded-full bg-accent">
+								<div class="h-2 w-2 rounded-full bg-white"></div>
+							</div>
+						);
+					} else {
+						return <div class="h-5 w-5 rounded-full border border-outline-md bg-background"></div>;
+					}
+				})()}
+			</div>
+		</button>
+	);
+};
+
+export { BoxedRadioItem as RadioItem };
+
+export interface BoxedCheckItemProps {
+	label: string;
+	description?: string;
+	enabled: boolean;
+	onChange: (next: boolean) => void;
+}
+
+const BoxedCheckItem = (props: BoxedCheckItemProps) => {
+	const enabled = createMemo(() => !!props.enabled);
+	const onChange = props.onChange;
+
+	return (
+		<button
+			onClick={() => onChange(!enabled())}
+			class="flex justify-between gap-4 px-4 py-3 text-left hover:bg-contrast/sm active:bg-contrast/sm-pressed"
+		>
+			<div class="flex min-w-0 grow flex-col">
+				<p class="min-w-0 break-words text-sm font-medium">{props.label}</p>
+				<p class="text-pretty break-words text-de text-contrast-muted empty:hidden">{props.description}</p>
+			</div>
+
+			<div class="shrink-0">
+				{(() => {
+					if (enabled()) {
+						return (
+							<div class="grid h-5 w-5 place-items-center rounded bg-accent">
+								<CheckOutlinedIcon class="text-xl" />
+							</div>
+						);
+					} else {
+						return <div class="h-5 w-5 rounded border border-outline-md bg-background"></div>;
+					}
+				})()}
+			</div>
+		</button>
+	);
+};
+
+export { BoxedCheckItem as CheckItem };
 
 export interface SelectItemOption<T> {
 	value: T;

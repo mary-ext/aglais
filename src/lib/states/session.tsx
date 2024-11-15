@@ -252,8 +252,9 @@ const createAccountPreferences = (did: At.DID) => {
 					mediaVolume: 0.25,
 				},
 				composer: {
-					defaultPostLanguage: 'system',
-					defaultReplyGate: 'everyone',
+					language: 'system',
+					threadgate: {},
+					postgate: {},
 				},
 				translation: {
 					enabled: false,

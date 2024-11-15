@@ -1,8 +1,21 @@
+import { batch } from 'solid-js';
+
+import { dequal } from '~/api/utils/dequal';
+
+import { openModal } from '~/globals/modals';
+
 import { LANGUAGE_CODES, getEnglishLanguageName } from '~/lib/intl/languages';
+import {
+	fromPersistedPostgate,
+	fromPersistedThreadgate,
+	toPersistedPostgate,
+	toPersistedThreadgate,
+} from '~/lib/preferences/snippets/composer';
 import { useSession } from '~/lib/states/session';
 import { mapDefined } from '~/lib/utils/misc';
 
 import * as Boxed from '~/components/boxed';
+import ComposedInteractionDialogLazy from '~/components/composer/dialogs/composed-interaction-dialog-lazy';
 import TranslateOutlinedIcon from '~/components/icons-central/translate-outline';
 import * as Page from '~/components/page';
 
@@ -51,20 +64,47 @@ const ComposerSettingsGroup = () => {
 			<Boxed.List>
 				<Boxed.SelectItem
 					label="Post language"
-					value={composerPrefs.defaultPostLanguage}
-					onChange={(next) => (composerPrefs.defaultPostLanguage = next)}
+					value={composerPrefs.language}
+					onChange={(next) => (composerPrefs.language = next)}
 					options={languageOptions}
 				/>
 
-				<Boxed.SelectItem
-					label="Who can reply to my posts"
-					value={composerPrefs.defaultReplyGate}
-					onChange={(next) => (composerPrefs.defaultReplyGate = next)}
-					options={[
-						{ value: 'everyone', label: `Everyone` },
-						{ value: 'follows', label: `Followed users` },
-						{ value: 'mentions', label: `Mentioned users` },
-					]}
+				<Boxed.ButtonItem
+					label="Who can interact with my posts"
+					description={(() => {
+						const threadAllow = composerPrefs.threadgate.allow;
+						const embedRules = composerPrefs.postgate.embeddingRules;
+
+						if (threadAllow === undefined && embedRules === undefined) {
+							return `Everyone`;
+						}
+
+						return `Limited`;
+					})()}
+					onClick={() => {
+						openModal(() => (
+							<ComposedInteractionDialogLazy
+								initialState={{
+									postgate: fromPersistedPostgate(composerPrefs.postgate),
+									threadgate: fromPersistedThreadgate(composerPrefs.threadgate),
+								}}
+								onApply={({ postgate, threadgate }) => {
+									batch(() => {
+										const persistedPostgate = toPersistedPostgate(postgate);
+										const persistedThreadgate = toPersistedThreadgate(threadgate);
+
+										if (!dequal(composerPrefs.postgate, persistedPostgate)) {
+											composerPrefs.postgate = persistedPostgate;
+										}
+
+										if (!dequal(composerPrefs.threadgate, persistedThreadgate)) {
+											composerPrefs.threadgate = persistedThreadgate;
+										}
+									});
+								}}
+							/>
+						));
+					}}
 				/>
 			</Boxed.List>
 
