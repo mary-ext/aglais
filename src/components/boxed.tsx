@@ -143,7 +143,7 @@ const BoxedButtonItem = (props: BoxedButtonItemProps) => {
 
 			<span class="flex min-w-0 gap-1">
 				<span class="min-w-0 break-words text-de text-contrast-muted empty:hidden">{props.blurb}</span>
-				<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted " />
+				<ChevronRightOutlinedIcon class="-mr-1.5 shrink-0 text-xl text-contrast-muted" />
 			</span>
 		</button>
 	);
