@@ -104,19 +104,6 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 					<p class="ml-3 mr-2 overflow-hidden text-ellipsis">
 						<span class="font-semibold text-contrast hover:underline">{author().handle}</span>
 					</p>
-
-					<TimeAgo value={post().indexedAt}>
-						{(relative, absolute) => (
-							<a
-								title={absolute()}
-								href={href}
-								class="whitespace-nowrap hover:underline"
-								onClick={(e) => e.preventDefault()}
-							>
-								{relative()}
-							</a>
-						)}
-					</TimeAgo>
 				</a>
 
 				<div class="flex shrink-0 items-center gap-4">
@@ -166,7 +153,15 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 				{embed() && <Embed embed={embed()!} large moderation={moderation()} gutterTop />}
 			</ContentHider>
 
-			<div class="mt-4"></div>
+			<div class="my-3 text-sm text-contrast-muted">
+				<TimeAgo value={post().indexedAt}>
+					{(_relative, absolute) => (
+						<a href={href} class="whitespace-nowrap hover:underline" onClick={(e) => e.preventDefault()}>
+							{absolute()}
+						</a>
+					)}
+				</TimeAgo>
+			</div>
 
 			<div class="flex flex-wrap gap-4 border-t border-outline py-4 empty:hidden">
 				<StatItem count={shadow().repostCount} label="Reposts" href={`${href}/reposts`} />
