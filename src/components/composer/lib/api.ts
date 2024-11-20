@@ -643,9 +643,9 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 					$type: 'blue.moji.richtext.facet',
 					did: did,
 					name: value.name,
-					alt: value.alt || undefined,
+					alt: trimRichText(value.alt || '') || undefined,
 					adultOnly: value.adultOnly || undefined,
-					labels: value.labels,
+					labels: value.labels?.values.length ? value.labels : undefined,
 					formats: cids,
 				};
 
