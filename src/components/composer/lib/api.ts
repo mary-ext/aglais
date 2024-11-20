@@ -642,7 +642,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				const facet: Brand.Union<BlueMojiRichtextFacet.Main> = {
 					$type: 'blue.moji.richtext.facet',
 					did: did,
-					name: token.raw,
+					name: value.name,
 					alt: value.alt || undefined,
 					adultOnly: value.adultOnly || undefined,
 					labels: value.labels,
