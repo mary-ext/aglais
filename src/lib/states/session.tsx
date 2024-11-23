@@ -277,7 +277,7 @@ const createAccountPreferences = (did: At.DID) => {
 				threadView: {
 					followsFirst: true,
 					sort: 'clout',
-					treeView: true,
+					treeView: false,
 				},
 			};
 
