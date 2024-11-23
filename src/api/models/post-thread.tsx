@@ -288,8 +288,7 @@ export const createThreadData = ({
 				// Sort based on preferred option
 				switch (sort) {
 					case 'clout': {
-						// Prioritize newest first if the same count
-						return getPostClout(bPost) - getPostClout(aPost) || bIndexed - aIndexed;
+						return getHotness(bPost, bIndexed) - getHotness(aPost, aIndexed);
 					}
 					case 'most-likes': {
 						const aLikes = aPost.likeCount ?? 0;
@@ -377,6 +376,14 @@ const push = <T,>(target: T[], source: T[]) => {
 	}
 };
 
-const getPostClout = (post: AppBskyFeedDefs.PostView) => {
-	return (post.likeCount ?? 0) * 1.25 + (post.repostCount ?? 0) * 1.125 + (post.replyCount ?? 0) * 1;
+// https://github.com/bluesky-social/social-app/blob/e9a792e4c1e85760fd073def21aa9e921e3afa3c/src/state/queries/post-thread.ts#L276
+const getHotness = (post: AppBskyFeedDefs.PostView, indexedAt: number) => {
+	const hoursAgo = (Date.now() - indexedAt) / (1000 * 60 * 60);
+
+	const likeCount = post.likeCount ?? 0;
+	const likeOrder = Math.log(3 + likeCount);
+	const timePenaltyExponent = 1.5 + 1.5 / (1 + Math.log(1 + likeCount));
+	const timePenalty = Math.pow(hoursAgo + 2, timePenaltyExponent);
+
+	return likeOrder / timePenalty;
 };
