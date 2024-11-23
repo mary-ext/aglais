@@ -15,8 +15,8 @@
 		"@atcute/bluesky-richtext-segmenter": "^1.0.5",
 		"@atcute/cbor": "^1.0.6",
 		"@atcute/cid": "^1.0.2",
-		"@atcute/client": "^2.0.4",
-		"@atcute/oauth-browser-client": "^1.0.5",
+		"@atcute/client": "^2.0.5",
+		"@atcute/oauth-browser-client": "^1.0.6",
 		"@atcute/tid": "^1.0.1",
 		"@floating-ui/dom": "^1.6.12",
 		"@floating-ui/utils": "^0.2.8",
@@ -39,14 +39,14 @@
 		"autoprefixer": "^10.4.20",
 		"babel-plugin-transform-typescript-const-enums": "^0.1.0",
 		"prettier": "^3.3.3",
-		"prettier-plugin-tailwindcss": "^0.6.8",
+		"prettier-plugin-tailwindcss": "^0.6.9",
 		"tailwindcss": "^3.4.15",
 		"terser": "^5.36.0",
 		"typescript": "5.6.3",
 		"vite": "6.0.0-beta.10",
 		"vite-plugin-pwa": "0.21.0",
 		"vite-plugin-solid": "^2.10.2",
-		"wrangler": "^3.87.0"
+		"wrangler": "^3.90.0"
 	},
 	"pnpm": {
 		"patchedDependencies": {
