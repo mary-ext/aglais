@@ -247,7 +247,29 @@ const createAccountPreferences = (did: At.DID) => {
 		if (version === 0) {
 			const obj: PerAccountPreferenceSchema = {
 				$version: 1,
-				feeds: [],
+				feeds: [
+					{
+						type: 'generator',
+						pinned: false,
+						info: {
+							uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot',
+							cid: 'bafyreievgu2ty7qbiaaom5zhmkznsnajuzideek3lo7e65dwqlrvrxnmo4',
+							did: 'did:web:discover.bsky.app',
+							creator: {
+								did: 'did:plc:z72i7hdynmk6r22z27h6tvur',
+								handle: 'bsky.app',
+								displayName: 'Bluesky',
+							},
+							displayName: 'Discover',
+							description: 'Trending content from your personal network',
+							avatar:
+								'https://cdn.bsky.app/img/avatar/plain/did:plc:z72i7hdynmk6r22z27h6tvur/bafkreidljdg62x3zhlweyzshoekrw2znokytt5tmib7g4xsngwvpnf6ule@jpeg',
+							labels: [],
+							viewer: {},
+							indexedAt: '2023-05-19T23:19:19.592Z',
+						},
+					},
+				],
 				ui: {
 					mediaVolume: 0.25,
 				},
