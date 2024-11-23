@@ -199,6 +199,14 @@ const routes: RouteDefinition[] = [
 	},
 
 	{
+		path: '/:did/lists',
+		component: lazy(() => import('./views/profile-lists')),
+		validate(params) {
+			return isValidDid(params.did);
+		},
+	},
+
+	{
 		path: '/:didOrHandle/:rkey',
 		component: lazy(() => import('./views/post-thread')),
 		validate(params) {
