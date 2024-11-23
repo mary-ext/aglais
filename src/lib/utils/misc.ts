@@ -98,3 +98,17 @@ export const isSetEqual = <T>(a: Set<T>, b: Set<T>): boolean => {
 
 	return true;
 };
+
+export const omit = <T extends Record<string, any>, K extends keyof T>(
+	obj: T,
+	keys: readonly K[],
+): Omit<T, K> => {
+	const result = { ...obj };
+
+	for (let i = 0; i < keys.length; i++) {
+		const key = keys[i];
+		delete result[key];
+	}
+
+	return result as Omit<T, K>;
+};

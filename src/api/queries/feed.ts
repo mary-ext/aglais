@@ -6,6 +6,7 @@ import { createQuery } from '@mary/solid-query';
 import type { SavedGeneratorFeed } from '~/lib/preferences/account';
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
+import { omit } from '~/lib/utils/misc';
 
 import { isDid, makeAtUri, parseAtUri } from '../utils/strings';
 
@@ -43,7 +44,8 @@ export const createFeedMetaQuery = (feedUri: () => string) => {
 					});
 
 					if (found) {
-						modifyMutable(found.info, reconcile(data.view, { merge: true }));
+						const persisted = omit(data.view, ['likeCount']);
+						modifyMutable(found.info, reconcile(persisted, { merge: true }));
 					}
 				}
 

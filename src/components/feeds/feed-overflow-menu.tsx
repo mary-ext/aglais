@@ -7,6 +7,7 @@ import { parseAtUri } from '~/api/utils/strings';
 import { useModalContext } from '~/globals/modals';
 
 import { useSession } from '~/lib/states/session';
+import { omit } from '~/lib/utils/misc';
 
 import LinkOutlinedIcon from '~/components/icons-central/link-outline';
 import OpenInNewOutlinedIcon from '~/components/icons-central/open-in-new-outline';
@@ -57,7 +58,7 @@ const FeedOverflowMenu = (props: FeedOverflowMenuProps) => {
 							feeds.push({
 								type: 'generator',
 								pinned: false,
-								info: feed,
+								info: omit(feed, ['likeCount']),
 							});
 						}
 					}}
