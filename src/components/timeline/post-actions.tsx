@@ -14,6 +14,7 @@ import RepeatOutlinedIcon from '../icons-central/repeat-outline';
 import ReplyOutlinedIcon from '../icons-central/reply-outline';
 import ShareOutlinedIcon from '../icons-central/share-outline';
 
+import PostShareMenu from './post-share-menu';
 import RepostMenu from './repost-menu';
 
 export interface PostActionsProps {
@@ -132,7 +133,15 @@ const PostActions = (props: PostActionsProps) => {
 			</div>
 
 			<div class="shrink-0">
-				<button class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed">
+				<button
+					onClick={(ev) => {
+						const anchor = ev.currentTarget;
+						const $post = post();
+
+						openModal(() => <PostShareMenu anchor={anchor} post={$post} />);
+					}}
+					class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed"
+				>
 					<ShareOutlinedIcon />
 				</button>
 			</div>

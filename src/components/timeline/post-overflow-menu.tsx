@@ -18,7 +18,6 @@ import AddPostToFolderDialogLazy from '../bookmarks/add-post-to-folder-dialog-la
 import BookmarkCheckOutlinedIcon from '../icons-central/bookmark-check-outline';
 import BookmarkOutlinedIcon from '../icons-central/bookmark-outline';
 import FolderAddOutlinedIcon from '../icons-central/folder-add-outline';
-import OpenInNewOutlinedIcon from '../icons-central/open-in-new-outline';
 import PinOutlinedIcon from '../icons-central/pin-outline';
 import TrashOutlinedIcon from '../icons-central/trash-outline';
 import * as Menu from '../menu';
@@ -126,17 +125,6 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 				onClick={() => {
 					close();
 					openModal(() => <AddPostToFolderDialogLazy post={post} />);
-				}}
-			/>
-
-			<Menu.Item
-				icon={OpenInNewOutlinedIcon}
-				label="Open in Bluesky app"
-				onClick={() => {
-					const uri = `https://bsky.app/profile/${post.author.did}/post/${parseAtUri(post.uri).rkey}`;
-
-					close();
-					window.open(uri, '_blank');
 				}}
 			/>
 		</Menu.Container>

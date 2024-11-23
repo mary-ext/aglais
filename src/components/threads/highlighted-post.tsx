@@ -33,6 +33,7 @@ import ModerationAlerts from '../moderation/moderation-alerts';
 import RichText from '../rich-text';
 import TimeAgo from '../time-ago';
 import PostOverflowMenu from '../timeline/post-overflow-menu';
+import PostShareMenu from '../timeline/post-share-menu';
 import RepostMenu from '../timeline/repost-menu';
 
 import PostTranslation from './post-translation';
@@ -225,6 +226,12 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 				</button>
 
 				<button
+					onClick={(ev) => {
+						const anchor = ev.currentTarget;
+						const $post = post();
+
+						openModal(() => <PostShareMenu anchor={anchor} post={$post} />);
+					}}
 					class={`flex h-9 w-9 items-center justify-center rounded-full text-xl hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed`}
 				>
 					<ShareOutlinedIcon />
