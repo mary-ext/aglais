@@ -128,6 +128,10 @@ const routes: RouteDefinition[] = [
 		path: '/likes',
 		component: lazy(() => import('./views/likes')),
 	},
+	{
+		path: '/lists',
+		component: lazy(() => import('./views/lists')),
+	},
 
 	{
 		path: '/bluemoji/emotes',
