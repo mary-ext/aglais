@@ -43,7 +43,7 @@ export const createFeedMetaQuery = (feedUri: () => string) => {
 					});
 
 					if (found) {
-						modifyMutable(found.info, reconcile(data.view));
+						modifyMutable(found.info, reconcile(data.view, { merge: true }));
 					}
 				}
 
