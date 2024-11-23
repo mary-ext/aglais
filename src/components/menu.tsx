@@ -10,6 +10,7 @@ import { useMediaQuery } from '~/lib/hooks/media-query';
 import { useModalClose } from '~/lib/hooks/modal-close';
 import { on } from '~/lib/utils/misc';
 
+import Divider from './divider';
 import CheckOutlinedIcon from './icons-central/check-outline';
 
 export interface MenuContainerProps {
@@ -258,3 +259,13 @@ const menuItemClasses = ({ variant = 'default', disabled }: MenuItemProps) => {
 };
 
 export { MenuItem as Item };
+
+export interface MenuDividerProps {}
+
+const MenuDivider = ({}: MenuDividerProps) => {
+	const isDesktop = useMediaQuery('(width >= 688px) and (height >= 500px)');
+
+	return <Divider gutter={isDesktop() ? undefined : 'md'} class="mx-4" />;
+};
+
+export { MenuDivider as Divider };

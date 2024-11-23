@@ -4,10 +4,9 @@ import { parseAtUri } from '~/api/utils/strings';
 
 import { useModalContext } from '~/globals/modals';
 
+import ClipboardOutlinedIcon from '~/components/icons-central/clipboard-outline';
+import OpenInNewOutlinedIcon from '~/components/icons-central/open-in-new-outline';
 import * as Menu from '~/components/menu';
-
-import ClipboardOutlinedIcon from '../icons-central/clipboard-outline';
-import OpenInNewOutlinedIcon from '../icons-central/open-in-new-outline';
 
 export interface PostShareMenuProps {
 	anchor: HTMLElement;
@@ -19,7 +18,9 @@ const PostShareMenu = (props: PostShareMenuProps) => {
 	const { close } = useModalContext();
 
 	const post = props.post;
-	const uri = parseAtUri(post.uri);
+
+	const did = post.author.did;
+	const { rkey } = parseAtUri(post.uri);
 
 	return (
 		<Menu.Container anchor={props.anchor} placement="bottom-end">
@@ -27,16 +28,18 @@ const PostShareMenu = (props: PostShareMenuProps) => {
 				icon={ClipboardOutlinedIcon}
 				label="Copy link"
 				onClick={() => {
-					const url = new URL(`/${post.author.did}/${uri.rkey}`, location.href);
+					const url = new URL(`/${did}/${rkey}`, location.href);
 					navigator.clipboard.writeText(url.toString()).then(close);
 				}}
 			/>
+
+			<Menu.Divider />
 
 			<Menu.Item
 				icon={ClipboardOutlinedIcon}
 				label="Copy link to Bluesky app"
 				onClick={() => {
-					const url = `https://bsky.app/profile/${post.author.did}/post/${uri.rkey}`;
+					const url = `https://bsky.app/profile/${did}/post/${rkey}`;
 					navigator.clipboard.writeText(url).then(close);
 				}}
 			/>
@@ -45,7 +48,20 @@ const PostShareMenu = (props: PostShareMenuProps) => {
 				icon={OpenInNewOutlinedIcon}
 				label="Open in Bluesky app"
 				onClick={() => {
-					const url = `https://bsky.app/profile/${post.author.did}/post/${uri.rkey}`;
+					const url = `https://bsky.app/profile/${did}/post/${rkey}`;
+
+					close();
+					window.open(url, '_blank');
+				}}
+			/>
+
+			<Menu.Divider />
+
+			<Menu.Item
+				icon={OpenInNewOutlinedIcon}
+				label="Open in PDSls"
+				onClick={() => {
+					const url = `https://pdsls.dev/at/${did}/app.bsky.feed.post/${rkey}`;
 
 					close();
 					window.open(url, '_blank');
