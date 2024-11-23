@@ -33,16 +33,16 @@ importers:
         version: 1.0.1
       '@atcute/bluemoji':
         specifier: ^1.0.4
-        version: 1.0.4(@atcute/bluesky@1.0.8(@atcute/client@2.0.5))(@atcute/client@2.0.5)
+        version: 1.0.4(@atcute/bluesky@1.0.9(@atcute/client@2.0.6))(@atcute/client@2.0.6)
       '@atcute/bluesky':
-        specifier: ^1.0.8
-        version: 1.0.8(@atcute/client@2.0.5)
+        specifier: ^1.0.9
+        version: 1.0.9(@atcute/client@2.0.6)
       '@atcute/bluesky-richtext-parser':
         specifier: ^1.0.6
         version: 1.0.6
       '@atcute/bluesky-richtext-segmenter':
         specifier: ^1.0.5
-        version: 1.0.5(@atcute/bluesky@1.0.8(@atcute/client@2.0.5))(@atcute/client@2.0.5)
+        version: 1.0.5(@atcute/bluesky@1.0.9(@atcute/client@2.0.6))(@atcute/client@2.0.6)
       '@atcute/cbor':
         specifier: ^1.0.6
         version: 1.0.6
@@ -50,8 +50,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2
       '@atcute/client':
-        specifier: ^2.0.5
-        version: 2.0.5
+        specifier: ^2.0.6
+        version: 2.0.6
       '@atcute/oauth-browser-client':
         specifier: ^1.0.6
         version: 1.0.6
@@ -175,8 +175,8 @@ packages:
       '@atcute/bluesky': ^1.0.0
       '@atcute/client': ^1.0.0 || ^2.0.0
 
-  '@atcute/bluesky@1.0.8':
-    resolution: {integrity: sha512-XqAZHYh65ZyBBT5rRkEhP656THYaY6CE+EY0AZXkIDaXJNdIl9KINZW5dnSrVWifspJbM+gUw1QFlCv8Yrx01g==}
+  '@atcute/bluesky@1.0.9':
+    resolution: {integrity: sha512-06UbqlnREobZB5vVlstJXsJJVNBPr/RhauVVWQk9k8eIfzyiV9uxklc5olv+wULld+iBL6OQItnTEyZPv8QFLw==}
     peerDependencies:
       '@atcute/client': ^1.0.0 || ^2.0.0
 
@@ -186,8 +186,8 @@ packages:
   '@atcute/cid@1.0.2':
     resolution: {integrity: sha512-aRtt4/5pHCpKVvqtuvxWC8Koet9A7mT8t3fWspOJSj6lcP2QyKKpSUx3z0jSZ+M1Kf2UZ25eo6btcM5zmmhK3g==}
 
-  '@atcute/client@2.0.5':
-    resolution: {integrity: sha512-M0hK/bSjqKEgs1wuIwu/Q6M7VoNTbS8sX89klI4jBdw/u9xTQBkZgDGxaws/pmKqAKbDjdqvmpScAHJmZiHvRg==}
+  '@atcute/client@2.0.6':
+    resolution: {integrity: sha512-mhdqEicGUx0s5HTFOLpz91rcLS9j/g63de0nmAqv7blhU3j+xBf4le54qr2YIXNfnReZI7EwLYLX/YIBez4LGA==}
 
   '@atcute/oauth-browser-client@1.0.6':
     resolution: {integrity: sha512-O9M7YdpPTWdXfqqdGNlYFmyMwbTEwHvMz5Ew79ASiQFsrcAdFhdVywe/rMDT6jd2La6gQDhyhfLofUPMCRiDGQ==}
@@ -2881,21 +2881,21 @@ snapshots:
 
   '@atcute/base32@1.0.1': {}
 
-  '@atcute/bluemoji@1.0.4(@atcute/bluesky@1.0.8(@atcute/client@2.0.5))(@atcute/client@2.0.5)':
+  '@atcute/bluemoji@1.0.4(@atcute/bluesky@1.0.9(@atcute/client@2.0.6))(@atcute/client@2.0.6)':
     dependencies:
-      '@atcute/bluesky': 1.0.8(@atcute/client@2.0.5)
-      '@atcute/client': 2.0.5
+      '@atcute/bluesky': 1.0.9(@atcute/client@2.0.6)
+      '@atcute/client': 2.0.6
 
   '@atcute/bluesky-richtext-parser@1.0.6': {}
 
-  '@atcute/bluesky-richtext-segmenter@1.0.5(@atcute/bluesky@1.0.8(@atcute/client@2.0.5))(@atcute/client@2.0.5)':
+  '@atcute/bluesky-richtext-segmenter@1.0.5(@atcute/bluesky@1.0.9(@atcute/client@2.0.6))(@atcute/client@2.0.6)':
     dependencies:
-      '@atcute/bluesky': 1.0.8(@atcute/client@2.0.5)
-      '@atcute/client': 2.0.5
+      '@atcute/bluesky': 1.0.9(@atcute/client@2.0.6)
+      '@atcute/client': 2.0.6
 
-  '@atcute/bluesky@1.0.8(@atcute/client@2.0.5)':
+  '@atcute/bluesky@1.0.9(@atcute/client@2.0.6)':
     dependencies:
-      '@atcute/client': 2.0.5
+      '@atcute/client': 2.0.6
 
   '@atcute/cbor@1.0.6':
     dependencies:
@@ -2907,11 +2907,11 @@ snapshots:
       '@atcute/base32': 1.0.1
       '@atcute/varint': 1.0.1
 
-  '@atcute/client@2.0.5': {}
+  '@atcute/client@2.0.6': {}
 
   '@atcute/oauth-browser-client@1.0.6':
     dependencies:
-      '@atcute/client': 2.0.5
+      '@atcute/client': 2.0.6
       nanoid: 5.0.8
 
   '@atcute/tid@1.0.1': {}
