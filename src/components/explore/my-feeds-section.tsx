@@ -16,7 +16,7 @@ const MyFeedsSection = () => {
 	}
 
 	const feeds = createMemo((prev: SavedFeed[] | undefined) => {
-		return reconcile(prev, currentAccount.preferences.feeds, 'uri');
+		return reconcile(prev, currentAccount.preferences.feeds, (item) => item.info.uri);
 	});
 
 	return (
@@ -38,7 +38,7 @@ const MyFeedsSection = () => {
 
 					let href: string | undefined;
 					{
-						const uri = parseAtUri(feed.uri);
+						const uri = parseAtUri(feed.info.uri);
 						if (type === 'generator') {
 							href = `/${uri.repo}/feeds/${uri.rkey}`;
 						} else if (type === 'list') {

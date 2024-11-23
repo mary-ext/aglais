@@ -36,7 +36,7 @@ const FeedOverflowMenu = (props: FeedOverflowMenuProps) => {
 		}
 
 		const feeds = currentAccount.preferences.feeds;
-		return feeds.some((f) => f.uri === feed.uri);
+		return feeds.some((f) => f.info.uri === feed.uri);
 	});
 
 	return (
@@ -51,12 +51,11 @@ const FeedOverflowMenu = (props: FeedOverflowMenuProps) => {
 						const feeds = currentAccount.preferences.feeds;
 
 						if (isSaved()) {
-							const index = feeds.findIndex((f) => f.uri === feed.uri);
+							const index = feeds.findIndex((f) => f.info.uri === feed.uri);
 							feeds.splice(index, 1);
 						} else {
 							feeds.push({
 								type: 'generator',
-								uri: feed.uri,
 								pinned: false,
 								info: feed,
 							});

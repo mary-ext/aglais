@@ -9,13 +9,12 @@ import type { UnwrapArray } from '~/api/utils/types';
 import { useModalContext } from '~/globals/modals';
 
 import { createDerivedSignal } from '~/lib/hooks/derived-signal';
+import type { PostgateState, ThreadgateState } from '~/lib/preferences/snippets/composer';
 
 import * as Boxed from '~/components/boxed';
 import Button from '~/components/button';
 import CircularProgressView from '~/components/circular-progress-view';
 import * as Dialog from '~/components/dialog';
-
-import type { PostgateState, ThreadgateState } from '../lib/state';
 
 type ThreadRule = UnwrapArray<ThreadgateState['allow']>;
 type EmbedRule = UnwrapArray<PostgateState['embeddingRules']>;

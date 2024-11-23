@@ -35,14 +35,12 @@ export type SavedFeed = SavedGeneratorFeed | SavedListFeed;
 
 export interface SavedGeneratorFeed {
 	readonly type: 'generator';
-	readonly uri: string;
 	pinned: boolean;
 	info: AppBskyFeedDefs.GeneratorView;
 }
 
 export interface SavedListFeed {
 	readonly type: 'list';
-	readonly uri: string;
 	pinned: boolean;
 	info: AppBskyGraphDefs.ListView;
 }

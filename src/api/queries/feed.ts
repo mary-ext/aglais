@@ -39,7 +39,7 @@ export const createFeedMetaQuery = (feedUri: () => string) => {
 
 				if (currentAccount) {
 					const found = currentAccount.preferences.feeds.find((feed): feed is SavedGeneratorFeed => {
-						return feed.type === 'generator' && feed.uri === $feedUri;
+						return feed.type === 'generator' && feed.info.uri === $feedUri;
 					});
 
 					if (found) {
@@ -57,7 +57,7 @@ export const createFeedMetaQuery = (feedUri: () => string) => {
 					const $feedUri = feedUri();
 
 					const found = currentAccount.preferences.feeds.find((feed): feed is SavedGeneratorFeed => {
-						return feed.type === 'generator' && feed.uri === $feedUri;
+						return feed.type === 'generator' && feed.info.uri === $feedUri;
 					});
 
 					return found?.info;
