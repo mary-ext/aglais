@@ -1,8 +1,10 @@
 import { createMemo } from 'solid-js';
 
 import type { AppBskyGraphDefs } from '@atcute/client/lexicons';
+import { useQueryClient } from '@mary/solid-query';
 
 import { moderateGeneric } from '~/api/moderation/entities/generic';
+import { precacheList } from '~/api/queries-cache/list-precache';
 import { parseAtUri } from '~/api/utils/strings';
 
 import { history } from '~/globals/navigation';
@@ -18,6 +20,7 @@ export interface ListItemProps {
 }
 
 const ListItem = ({ item }: ListItemProps) => {
+	const queryClient = useQueryClient();
 	const moderationOptions = useModerationOptions();
 
 	const creator = item.creator;
@@ -31,6 +34,7 @@ const ListItem = ({ item }: ListItemProps) => {
 		}
 
 		ev.preventDefault();
+		precacheList(queryClient, item);
 
 		if (isElementAltClicked(ev)) {
 			window.open(href, '_blank');
@@ -48,9 +52,16 @@ const ListItem = ({ item }: ListItemProps) => {
 			class="flex cursor-pointer select-none flex-col px-4 py-3 hover:bg-contrast/sm active:bg-contrast/sm-pressed"
 		>
 			<div class="flex items-center gap-3">
-				<Avatar type="list" src={item.avatar} href={href} moderation={moderation()} size="lg" />
+				<Avatar
+					type="list"
+					src={item.avatar}
+					href={href}
+					moderation={moderation()}
+					onClick={() => precacheList(queryClient, item)}
+					size="lg"
+				/>
 
-				<a href={href} class="min-w-0 grow">
+				<a href={href} onClick={() => precacheList(queryClient, item)} class="min-w-0 grow">
 					<p class="break-words text-sm font-bold">{item.name}</p>
 					<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">
 						{/* @once */ `${getPurpose(item.purpose)} by @${creator.handle}`}
