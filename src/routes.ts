@@ -205,6 +205,13 @@ const routes: RouteDefinition[] = [
 			return isValidDid(params.did);
 		},
 	},
+	{
+		path: '/:didOrHandle/lists/:rkey',
+		component: lazy(() => import('./views/profile-list')),
+		validate(params) {
+			return isValidDidOrHandle(params.didOrHandle);
+		},
+	},
 
 	{
 		path: '/:didOrHandle/:rkey',
