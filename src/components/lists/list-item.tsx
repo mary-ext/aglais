@@ -24,7 +24,7 @@ const ListItem = ({ item }: ListItemProps) => {
 	const moderationOptions = useModerationOptions();
 
 	const creator = item.creator;
-	const href = `/${creator.did}/lists/${parseAtUri(item.uri).rkey}`;
+	const href = getUrl(item);
 
 	const moderation = createMemo(() => moderateGeneric(item, creator.did, moderationOptions()));
 
@@ -87,4 +87,18 @@ const getPurpose = (purpose: AppBskyGraphDefs.ListPurpose) => {
 	}
 
 	return `Unknown list`;
+};
+
+const getUrl = (list: AppBskyGraphDefs.ListView) => {
+	const did = list.creator.did;
+	const { rkey } = parseAtUri(list.uri);
+
+	switch (list.purpose) {
+		case 'app.bsky.graph.defs#curatelist':
+			return `/${did}/curation-lists/${rkey}`;
+		case 'app.bsky.graph.defs#modlist':
+			return `/${did}/moderation-lists/${rkey}`;
+	}
+
+	return `/${did}/lists/${rkey}`;
 };
