@@ -102,24 +102,6 @@ const RecordEmbed = (props: RecordEmbedProps) => {
 	const record = embed.record;
 	const type = record.$type;
 
-	if (type === 'app.bsky.embed.record#viewNotFound' || type === 'app.bsky.embed.record#viewBlocked') {
-		const { collection } = parseAtUri(record.uri);
-
-		if (collection === 'app.bsky.feed.post' && type === 'app.bsky.embed.record#viewBlocked') {
-			const viewer = record.author.viewer;
-
-			if (viewer?.blocking) {
-				return renderEmpty(`You blocked this user`);
-			}
-
-			if (!viewer?.blockedBy) {
-				return renderEmpty(`Blocked`);
-			}
-		}
-
-		return renderEmpty(`This post is unavailable`);
-	}
-
 	if (type === 'app.bsky.embed.record#viewRecord') {
 		return <QuoteEmbed quote={record} large={large} interactive />;
 	}
@@ -132,6 +114,26 @@ const RecordEmbed = (props: RecordEmbedProps) => {
 		return <ListEmbed list={record} interactive />;
 	}
 
+	if (type === 'app.bsky.embed.record#viewNotFound' || type === 'app.bsky.embed.record#viewBlocked') {
+		const { collection } = parseAtUri(record.uri);
+		if (collection === 'app.bsky.feed.post' && type === 'app.bsky.embed.record#viewBlocked') {
+			const viewer = record.author.viewer;
+
+			if (viewer?.blocking) {
+				return renderEmpty(`You blocked this user`);
+			}
+
+			if (!viewer?.blockedBy) {
+				return renderEmpty(`Blocked`);
+			}
+		}
+
+		const resource = collectionToLabel(collection);
+		if (resource) {
+			return renderEmpty(`This ${resource} is unavailable`);
+		}
+	}
+
 	return renderEmpty(`Unsupported record`);
 };
 
@@ -141,4 +143,21 @@ const renderEmpty = (msg: string) => {
 			<p class="text-sm text-contrast-muted">{msg}</p>
 		</div>
 	);
+};
+
+const collectionToLabel = (collection: string): string | null => {
+	switch (collection) {
+		case 'app.bsky.feed.post':
+			return 'post';
+		case 'app.bsky.feed.generator':
+			return 'feed';
+		case 'app.bsky.graph.list':
+			return 'list';
+		case 'app.bsky.graph.starterpack':
+			return 'starter pack';
+		case 'app.bsky.labeler.service':
+			return 'labeler';
+	}
+
+	return null;
 };
