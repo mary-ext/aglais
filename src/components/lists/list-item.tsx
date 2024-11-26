@@ -5,7 +5,6 @@ import { useQueryClient } from '@mary/solid-query';
 
 import { moderateGeneric } from '~/api/moderation/entities/generic';
 import { precacheList } from '~/api/queries-cache/list-precache';
-import { parseAtUri } from '~/api/utils/strings';
 
 import { history } from '~/globals/navigation';
 
@@ -13,6 +12,8 @@ import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
 import { useModerationOptions } from '~/lib/states/moderation';
 
 import Avatar from '~/components/avatar';
+
+import { getListPurposeLabel, getListUrl } from './util';
 
 export interface ListItemProps {
 	/** Expected to be static */
@@ -24,7 +25,7 @@ const ListItem = ({ item }: ListItemProps) => {
 	const moderationOptions = useModerationOptions();
 
 	const creator = item.creator;
-	const href = getUrl(item);
+	const href = getListUrl(item);
 
 	const moderation = createMemo(() => moderateGeneric(item, creator.did, moderationOptions()));
 
@@ -64,7 +65,7 @@ const ListItem = ({ item }: ListItemProps) => {
 				<a href={href} onClick={() => precacheList(queryClient, item)} class="min-w-0 grow">
 					<p class="break-words text-sm font-bold">{item.name}</p>
 					<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">
-						{/* @once */ `${getPurpose(item.purpose)} by @${creator.handle}`}
+						{/* @once */ `${getListPurposeLabel(item.purpose)} by @${creator.handle}`}
 					</p>
 				</a>
 			</div>
@@ -77,28 +78,3 @@ const ListItem = ({ item }: ListItemProps) => {
 };
 
 export default ListItem;
-
-const getPurpose = (purpose: AppBskyGraphDefs.ListPurpose) => {
-	switch (purpose) {
-		case 'app.bsky.graph.defs#curatelist':
-			return `Curation list`;
-		case 'app.bsky.graph.defs#modlist':
-			return `Moderation list`;
-	}
-
-	return `Unknown list`;
-};
-
-const getUrl = (list: AppBskyGraphDefs.ListView) => {
-	const did = list.creator.did;
-	const { rkey } = parseAtUri(list.uri);
-
-	switch (list.purpose) {
-		case 'app.bsky.graph.defs#curatelist':
-			return `/${did}/curation-lists/${rkey}`;
-		case 'app.bsky.graph.defs#modlist':
-			return `/${did}/moderation-lists/${rkey}`;
-	}
-
-	return `/${did}/lists/${rkey}`;
-};

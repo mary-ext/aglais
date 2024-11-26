@@ -3,11 +3,11 @@ import { createMemo } from 'solid-js';
 import type { AppBskyGraphDefs } from '@atcute/client/lexicons';
 
 import { moderateGeneric } from '~/api/moderation/entities/generic';
-import { parseAtUri } from '~/api/utils/strings';
 
 import { useModerationOptions } from '~/lib/states/moderation';
 
 import Avatar from '../avatar';
+import { getListPurposeLabel, getListUrl } from '../lists/util';
 
 export interface ListEmbedProps {
 	/** Expected to be static */
@@ -21,8 +21,7 @@ const ListEmbed = ({ list, interactive, onClick }: ListEmbedProps) => {
 	const moderationOptions = useModerationOptions();
 	const moderation = createMemo(() => moderateGeneric(list, list.creator.did, moderationOptions()));
 
-	const uri = parseAtUri(list.uri);
-	const href = `/${list.creator.did}/feeds/${uri.rkey}`;
+	const href = getListUrl(list);
 
 	return (
 		<a
@@ -38,7 +37,7 @@ const ListEmbed = ({ list, interactive, onClick }: ListEmbedProps) => {
 			<div class="min-w-0 grow">
 				<p class="line-clamp-2 break-words text-sm font-bold">{/* @once */ list.name}</p>
 				<p class="line-clamp-2 break-words text-de text-contrast-muted">{
-					/* @once */ `${getListLabel(list.purpose)} by @${list.creator.handle}`
+					/* @once */ `${getListPurposeLabel(list.purpose)} by @${list.creator.handle}`
 				}</p>
 			</div>
 		</a>
@@ -46,14 +45,3 @@ const ListEmbed = ({ list, interactive, onClick }: ListEmbedProps) => {
 };
 
 export default ListEmbed;
-
-const getListLabel = (type: AppBskyGraphDefs.ListPurpose) => {
-	switch (type) {
-		case 'app.bsky.graph.defs#curatelist':
-			return `Curation list`;
-		case 'app.bsky.graph.defs#modlist':
-			return `Moderation list`;
-	}
-
-	return `Unknown list`;
-};
