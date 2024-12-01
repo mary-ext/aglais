@@ -73,6 +73,10 @@ const routes: RouteDefinition[] = [
 		path: '/moderation',
 		component: lazy(() => import('./views/moderation')),
 	},
+	{
+		path: '/moderation/lists',
+		component: lazy(() => import('./views/moderation-lists')),
+	},
 
 	{
 		path: '/settings',
