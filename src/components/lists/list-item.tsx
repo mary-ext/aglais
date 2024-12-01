@@ -12,6 +12,8 @@ import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
 import { useModerationOptions } from '~/lib/states/moderation';
 
 import Avatar from '~/components/avatar';
+import BlockOutlinedIcon from '~/components/icons-central/block-outline';
+import MuteOutlinedIcon from '~/components/icons-central/mute-outline';
 
 import { getListPurposeLabel, getListUrl } from './util';
 
@@ -28,6 +30,10 @@ const ListItem = ({ item }: ListItemProps) => {
 	const href = getListUrl(item);
 
 	const moderation = createMemo(() => moderateGeneric(item, creator.did, moderationOptions()));
+
+	const viewer = item.viewer;
+	const isMuted = !!viewer?.muted;
+	const isBlocked = !!viewer?.blocked;
 
 	const handleClick = (ev: MouseEvent | KeyboardEvent) => {
 		if (!isElementClicked(ev)) {
@@ -73,6 +79,22 @@ const ListItem = ({ item }: ListItemProps) => {
 			<p class="mt-3 line-clamp-5 whitespace-pre-wrap break-words text-de empty:hidden">
 				{/* @once */ item.description || <span class="text-contrast-muted">No description set.</span>}
 			</p>
+
+			<div class="mt-3 flex flex-wrap gap-2 empty:hidden">
+				{isMuted && (
+					<div class="group flex h-5 items-center rounded-md bg-contrast/10 text-xs text-contrast/75">
+						<MuteOutlinedIcon class="ml-1 h-3 w-3" />
+						<span class="mx-1.5">Muted</span>
+					</div>
+				)}
+
+				{isBlocked && (
+					<div class="group flex h-5 items-center rounded-md bg-contrast/10 text-xs text-contrast/75">
+						<BlockOutlinedIcon class="ml-1 h-3 w-3" />
+						<span class="mx-1.5">Blocked</span>
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };
