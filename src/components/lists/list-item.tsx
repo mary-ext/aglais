@@ -50,7 +50,7 @@ const ListItem = ({ item }: ListItemProps) => {
 			onClick={handleClick}
 			onAuxClick={handleClick}
 			onKeyDown={handleClick}
-			class="flex cursor-pointer select-none flex-col px-4 py-3 hover:bg-contrast/sm active:bg-contrast/sm-pressed"
+			class="flex cursor-pointer select-none flex-col border-b border-outline px-4 py-3 hover:bg-contrast/sm active:bg-contrast/sm-pressed"
 		>
 			<div class="flex items-center gap-3">
 				<Avatar
@@ -71,7 +71,7 @@ const ListItem = ({ item }: ListItemProps) => {
 			</div>
 
 			<p class="mt-3 line-clamp-5 whitespace-pre-wrap break-words text-de empty:hidden">
-				{/* @once */ item.description}
+				{/* @once */ item.description || <span class="text-contrast-muted">No description set.</span>}
 			</p>
 		</div>
 	);
