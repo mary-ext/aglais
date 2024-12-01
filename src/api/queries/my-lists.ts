@@ -75,8 +75,6 @@ export const createMyListsQuery = (filter: MyListsFilter) => {
 			const lists: AppBskyGraphDefs.ListView[] = [];
 
 			for (const result of resultset) {
-				result.sort((a, b) => collator.compare(a.name, b.name));
-
 				for (const list of result) {
 					if (
 						(filter === 'curation' && list.purpose !== 'app.bsky.graph.defs#curatelist') ||
@@ -94,6 +92,7 @@ export const createMyListsQuery = (filter: MyListsFilter) => {
 				}
 			}
 
+			lists.sort((a, b) => collator.compare(a.name, b.name));
 			return lists;
 		},
 	}));
