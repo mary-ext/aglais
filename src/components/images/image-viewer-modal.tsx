@@ -146,6 +146,9 @@ const ImageViewerModal = (props: ImageViewerModalProps) => {
 							setLoading(loading() - 1);
 						};
 
+						// Ask for higher-quality images
+						fullsize = fullsize.replace(/(?<=@)jpeg$/, 'png');
+
 						return (
 							<div
 								ref={bindImageWrapperRef(index)}
