@@ -223,6 +223,13 @@ const routes: RouteDefinition[] = [
 			return isValidDid(params.did);
 		},
 	},
+	{
+		path: '/:did/moderation-lists/:rkey',
+		component: lazy(() => import('./views/profile-moderation-list')),
+		validate(params) {
+			return isValidDid(params.did);
+		},
+	},
 
 	{
 		path: '/:didOrHandle/:rkey',
