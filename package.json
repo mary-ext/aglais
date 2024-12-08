@@ -16,7 +16,7 @@
 		"@atcute/cbor": "^1.0.6",
 		"@atcute/cid": "^1.0.2",
 		"@atcute/client": "^2.0.6",
-		"@atcute/oauth-browser-client": "^1.0.6",
+		"@atcute/oauth-browser-client": "^1.0.7",
 		"@atcute/tid": "^1.0.1",
 		"@floating-ui/dom": "^1.6.12",
 		"@floating-ui/utils": "^0.2.8",
@@ -27,7 +27,7 @@
 		"comlink": "^4.4.2",
 		"hls.js": "^1.5.17",
 		"idb": "^8.0.0",
-		"nanoid": "^5.0.8",
+		"nanoid": "^5.0.9",
 		"solid-floating-ui": "~0.2.1",
 		"solid-js": "^1.9.3",
 		"webm-muxer": "^5.0.2"
@@ -38,15 +38,15 @@
 		"@types/dom-webcodecs": "^0.1.13",
 		"autoprefixer": "^10.4.20",
 		"babel-plugin-transform-typescript-const-enums": "^0.1.0",
-		"prettier": "^3.3.3",
+		"prettier": "^3.4.2",
 		"prettier-plugin-tailwindcss": "^0.6.9",
-		"tailwindcss": "^3.4.15",
-		"terser": "^5.36.0",
+		"tailwindcss": "^3.4.16",
+		"terser": "^5.37.0",
 		"typescript": "5.6.3",
-		"vite": "6.0.0-beta.10",
+		"vite": "6.0.3",
 		"vite-plugin-pwa": "0.21.0",
-		"vite-plugin-solid": "^2.10.2",
-		"wrangler": "^3.90.0"
+		"vite-plugin-solid": "^2.11.0",
+		"wrangler": "^3.93.0"
 	},
 	"pnpm": {
 		"patchedDependencies": {

@@ -1,13 +1,13 @@
-diff --git a/dist/node/chunks/dep-DiRA7B7B.js b/dist/node/chunks/dep-DiRA7B7B.js
-index d404fb0d27acdc3829cafab5f720d4dc1f3b91d1..75c90621f6fdbc7d31a46f8529073d857ef24c4d 100644
---- a/dist/node/chunks/dep-DiRA7B7B.js
-+++ b/dist/node/chunks/dep-DiRA7B7B.js
-@@ -50219,7 +50219,7 @@ async function resolveBuildPlugins(config) {
-       ...config.isWorker ? [webWorkerPostPlugin()] : []
-     ],
-     post: [
--      buildImportAnalysisPlugin(config),
-+      ...(config.build.modulePreload !== false ? [buildImportAnalysisPlugin(config)] : []),
-       ...config.esbuild !== false ? [buildEsbuildPlugin(config)] : [],
-       terserPlugin(config),
-       ...!config.isWorker ? [manifestPlugin(), ssrManifestPlugin(), buildReporterPlugin(config)] : [],
+diff --git a/dist/node/chunks/dep-yUJfKD1i.js b/dist/node/chunks/dep-yUJfKD1i.js
+index 57759ca8c9eb2362b67c078ea0504aafd888b44c..c5624eff5bb2469642ccaec9a4e864ca7cd737b2 100644
+--- a/dist/node/chunks/dep-yUJfKD1i.js
++++ b/dist/node/chunks/dep-yUJfKD1i.js
+@@ -46670,7 +46670,7 @@ async function resolvePlugins(config, prePlugins, normalPlugins, postPlugins) {
+     ...isBuild ? [] : [
+       clientInjectionsPlugin(config),
+       cssAnalysisPlugin(config),
+-      importAnalysisPlugin(config)
++      ...(config.build.modulePreload !== false ? importAnalysisPlugin(config) : null)
+     ]
+   ].filter(Boolean);
+ }
