@@ -4,6 +4,7 @@ import { createListMetaQuery } from '~/api/queries/list';
 
 import CircularProgress from '~/components/circular-progress';
 import ListEmbedContent from '~/components/embeds/list-embed';
+import ErrorView from '~/components/error-view';
 import IconButton from '~/components/icon-button';
 import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outline';
 
@@ -25,6 +26,14 @@ const ListEmbed = (props: ListEmbedProps) => {
 					{(data) => {
 						return <ListEmbedContent list={data} />;
 					}}
+				</Match>
+
+				<Match when={query.error}>
+					{(error) => (
+						<div class="rounded border border-outline">
+							<ErrorView error={error()} onRetry={() => query.refetch()} />
+						</div>
+					)}
 				</Match>
 
 				<Match when>

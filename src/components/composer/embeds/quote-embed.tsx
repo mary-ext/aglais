@@ -6,6 +6,7 @@ import { createPostQuery } from '~/api/queries/post';
 
 import CircularProgress from '~/components/circular-progress';
 import QuoteEmbedContent from '~/components/embeds/quote-embed';
+import ErrorView from '~/components/error-view';
 import IconButton from '~/components/icon-button';
 import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outline';
 
@@ -43,7 +44,11 @@ const QuoteEmbed = (props: QuoteEmbedProps) => {
 				</Match>
 
 				<Match when={query.error}>
-					{(error) => <div class="rounded border border-outline p-4">{'' + error()}</div>}
+					{(error) => (
+						<div class="rounded border border-outline">
+							<ErrorView error={error()} onRetry={() => query.refetch()} />
+						</div>
+					)}
 				</Match>
 
 				<Match when>

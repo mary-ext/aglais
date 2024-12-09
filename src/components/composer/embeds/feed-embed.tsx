@@ -4,6 +4,7 @@ import { createFeedMetaQuery } from '~/api/queries/feed';
 
 import CircularProgress from '~/components/circular-progress';
 import FeedEmbedContent from '~/components/embeds/feed-embed';
+import ErrorView from '~/components/error-view';
 import IconButton from '~/components/icon-button';
 import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outline';
 
@@ -25,6 +26,14 @@ const FeedEmbed = (props: FeedEmbedProps) => {
 					{(data) => {
 						return <FeedEmbedContent feed={data} />;
 					}}
+				</Match>
+
+				<Match when={query.error}>
+					{(error) => (
+						<div class="rounded border border-outline">
+							<ErrorView error={error()} onRetry={() => query.refetch()} />
+						</div>
+					)}
 				</Match>
 
 				<Match when>

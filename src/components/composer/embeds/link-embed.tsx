@@ -6,6 +6,7 @@ import { createLinkMetaQuery } from '~/api/queries/composer';
 
 import CircularProgress from '~/components/circular-progress';
 import ExternalEmbedContent from '~/components/embeds/external-embed';
+import ErrorView from '~/components/error-view';
 import IconButton from '~/components/icon-button';
 import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outline';
 
@@ -41,6 +42,14 @@ const LinkEmbed = (props: LinkEmbedProps) => {
 
 						return <ExternalEmbedContent embed={embed} />;
 					}}
+				</Match>
+
+				<Match when={query.error}>
+					{(error) => (
+						<div class="rounded border border-outline">
+							<ErrorView error={error()} onRetry={() => query.refetch()} />
+						</div>
+					)}
 				</Match>
 
 				<Match when>
