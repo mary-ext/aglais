@@ -54,7 +54,6 @@
 			"@tanstack/query-core@5.17.19": "patches/@tanstack__query-core@5.17.19.patch",
 			"solid-js": "patches/solid-js.patch",
 			"vite-plugin-pwa": "patches/vite-plugin-pwa.patch",
-			"vite": "patches/vite.patch",
 			"workbox-precaching": "patches/workbox-precaching.patch"
 		}
 	}
