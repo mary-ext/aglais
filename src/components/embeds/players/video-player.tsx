@@ -9,6 +9,8 @@ import { globalEvents } from '~/globals/events';
 import { replaceVideoCdnUrl } from '~/lib/bsky/video';
 import { useSession } from '~/lib/states/session';
 
+const isMobile = /Android|iPhone|iPad|iPod/.test(navigator.userAgent);
+
 export interface VideoPlayerProps {
 	/** Expected to be static */
 	embed: AppBskyEmbedVideo.View;
@@ -43,7 +45,7 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 				ref={(node) => {
 					hls.attachMedia(node);
 
-					if (currentAccount) {
+					if (!isMobile && currentAccount) {
 						node.volume = currentAccount.preferences.ui.mediaVolume;
 					}
 
@@ -81,7 +83,9 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 					setPlaying(false);
 				}}
 				onVolumeChange={(ev) => {
-					currentAccount!.preferences.ui.mediaVolume = ev.currentTarget.volume;
+					if (!isMobile && currentAccount) {
+						currentAccount.preferences.ui.mediaVolume = ev.currentTarget.volume;
+					}
 				}}
 				onLoadedMetadata={(ev) => {
 					const video = ev.currentTarget;
