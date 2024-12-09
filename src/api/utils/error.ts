@@ -2,7 +2,7 @@ import { XRPCError } from '@atcute/client';
 
 export const formatXRPCError = (err: XRPCError): string => {
 	const name = err.kind;
-	return (name ? name + ': ' : '') + err.message;
+	return (name ? name + ': ' : '') + err.description;
 };
 
 export const formatQueryError = (err: unknown) => {
