@@ -11,7 +11,7 @@
 		"@atcute/base32": "^1.0.1",
 		"@atcute/bluemoji": "^1.0.4",
 		"@atcute/bluesky": "^1.0.9",
-		"@atcute/bluesky-richtext-parser": "^1.0.6",
+		"@atcute/bluesky-richtext-parser": "^1.0.7",
 		"@atcute/bluesky-richtext-segmenter": "^1.0.5",
 		"@atcute/cbor": "^1.0.6",
 		"@atcute/cid": "^1.0.2",
@@ -46,7 +46,7 @@
 		"vite": "6.0.3",
 		"vite-plugin-pwa": "0.21.0",
 		"vite-plugin-solid": "^2.11.0",
-		"wrangler": "^3.93.0"
+		"wrangler": "^3.94.0"
 	},
 	"pnpm": {
 		"patchedDependencies": {
