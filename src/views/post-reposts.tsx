@@ -15,7 +15,7 @@ const PostLikesPage = () => {
 	const uri = makeAtUri(did, 'app.bsky.feed.post', rkey);
 	const reposters = createSubjectRepostersQuery(() => uri);
 
-	useTitle(() => `Users liking this post — ${import.meta.env.VITE_APP_NAME}`);
+	useTitle(() => `Users reposting this post — ${import.meta.env.VITE_APP_NAME}`);
 
 	return (
 		<>
