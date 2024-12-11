@@ -5,6 +5,8 @@
 /// <reference types="@atcute/bluemoji/lexicons" />
 
 interface ImportMetaEnv {
+	readonly VITE_APP_NAME: string;
+
 	readonly VITE_DEV_SERVER_PORT?: string;
 	readonly VITE_CLIENT_URI: string;
 	readonly VITE_OAUTH_CLIENT_ID: string;
