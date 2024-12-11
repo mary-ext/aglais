@@ -1,7 +1,7 @@
 import { createProfileQuery } from '~/api/queries/profile';
 import { createProfileListsQuery } from '~/api/queries/profile-lists';
 
-import { useParams } from '~/lib/navigation/router';
+import { useParams, useTitle } from '~/lib/navigation/router';
 
 import ListItem from '~/components/lists/list-item';
 import * as Page from '~/components/page';
@@ -12,6 +12,15 @@ const ProfileListsPage = () => {
 
 	const lists = createProfileListsQuery(() => did);
 	const profile = createProfileQuery(() => did);
+
+	useTitle(() => {
+		const data = profile.data;
+		if (data) {
+			return `Lists by @${data.handle} — ${import.meta.env.VITE_APP_NAME}`;
+		}
+
+		return `Lists by user — ${import.meta.env.VITE_APP_NAME}`;
+	});
 
 	return (
 		<>

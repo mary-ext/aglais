@@ -10,7 +10,7 @@ import { precacheProfile } from '~/api/queries-cache/profile-precache';
 import { createFeedMetaQuery } from '~/api/queries/feed';
 import { makeAtUri } from '~/api/utils/strings';
 
-import { useParams } from '~/lib/navigation/router';
+import { useParams, useTitle } from '~/lib/navigation/router';
 import { useModerationOptions } from '~/lib/states/moderation';
 
 import Avatar, { getUserAvatarType } from '~/components/avatar';
@@ -23,6 +23,15 @@ const FeedInfoPage = () => {
 
 	const uri = makeAtUri(did, 'app.bsky.feed.generator', rkey);
 	const feed = createFeedMetaQuery(() => uri);
+
+	useTitle(() => {
+		const data = feed.data;
+		if (data) {
+			return `Feed info (${data.displayName}) — ${import.meta.env.VITE_APP_NAME}`;
+		}
+
+		return `Feed info — ${import.meta.env.VITE_APP_NAME}`;
+	});
 
 	return (
 		<>

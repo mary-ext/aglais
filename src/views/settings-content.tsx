@@ -5,6 +5,7 @@ import { dequal } from '~/api/utils/dequal';
 import { openModal } from '~/globals/modals';
 
 import { LANGUAGE_CODES, getEnglishLanguageName } from '~/lib/intl/languages';
+import { useTitle } from '~/lib/navigation/router';
 import {
 	fromPersistedPostgate,
 	fromPersistedThreadgate,
@@ -20,6 +21,8 @@ import TranslateOutlinedIcon from '~/components/icons-central/translate-outline'
 import * as Page from '~/components/page';
 
 const ContentSettingsPage = () => {
+	useTitle(() => `Content settings — ${import.meta.env.VITE_APP_NAME}`);
+
 	return (
 		<>
 			<Page.Header>

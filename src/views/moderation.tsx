@@ -1,4 +1,5 @@
 import { Key } from '~/lib/keyed';
+import { useTitle } from '~/lib/navigation/router';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
 
@@ -18,6 +19,8 @@ const ModerationPage = () => {
 
 	const hydratedOptions = useModerationOptions();
 	const moderation = currentAccount!.preferences.moderation;
+
+	useTitle(() => `Moderation — ${import.meta.env.VITE_APP_NAME}`);
 
 	return (
 		<>

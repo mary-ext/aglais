@@ -6,6 +6,7 @@ import { createMutation, createQuery } from '@mary/solid-query';
 import { openModal } from '~/globals/modals';
 
 import { formatAbsDateTime } from '~/lib/intl/time';
+import { useTitle } from '~/lib/navigation/router';
 import { useAgent } from '~/lib/states/agent';
 import { reconcile } from '~/lib/utils/misc';
 
@@ -37,6 +38,8 @@ const AppPasswordsSettingsPage = () => {
 			},
 		};
 	});
+
+	useTitle(() => `App passwords — ${import.meta.env.VITE_APP_NAME}`);
 
 	return (
 		<>

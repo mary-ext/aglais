@@ -2,11 +2,15 @@ import { batch } from 'solid-js';
 
 import { openModal } from '~/globals/modals';
 
+import { useTitle } from '~/lib/navigation/router';
+
 import * as Boxed from '~/components/boxed';
 import * as Page from '~/components/page';
 import * as Prompt from '~/components/prompt';
 
 const AboutPage = () => {
+	useTitle(() => `About — ${import.meta.env.VITE_APP_NAME}`);
+
 	return (
 		<>
 			<Page.Header>

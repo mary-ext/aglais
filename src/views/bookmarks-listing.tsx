@@ -2,7 +2,7 @@ import { createSignal } from 'solid-js';
 
 import { createBookmarkFeedQuery, createBookmarkFolderMetaQuery } from '~/api/queries/bookmark-feed';
 
-import { useParams } from '~/lib/navigation/router';
+import { useParams, useTitle } from '~/lib/navigation/router';
 
 import BookmarkFeedItem from '~/components/bookmarks/bookmark-feed-item';
 import MagnifyingGlassOutlinedIcon from '~/components/icons-central/magnifying-glass-outline';
@@ -18,6 +18,19 @@ const BookmarksPage = () => {
 	const meta = tagId !== 'all' ? createBookmarkFolderMetaQuery(() => tagId) : undefined;
 	const listing = createBookmarkFeedQuery(() => tagId, search);
 
+	useTitle(() => {
+		if (tagId === 'all') {
+			return `All Bookmarks — ${import.meta.env.VITE_APP_NAME}`;
+		}
+
+		const data = meta?.data;
+		if (data) {
+			return `Bookmarks (${data.name}) — ${import.meta.env.VITE_APP_NAME}`;
+		}
+
+		return `Bookmarks — ${import.meta.env.VITE_APP_NAME}`;
+	});
+
 	return (
 		<>
 			<Page.Header>
@@ -25,7 +38,7 @@ const BookmarksPage = () => {
 					<Page.Back to="/bookmarks" />
 				</Page.HeaderAccessory>
 
-				<Page.Heading title={meta ? meta.data?.name : `All Bookmarks`} />
+				<Page.Heading title={tagId === 'all' ? `All Bookmarks` : meta?.data ? meta.data.name : `Bookmarks`} />
 			</Page.Header>
 
 			<form

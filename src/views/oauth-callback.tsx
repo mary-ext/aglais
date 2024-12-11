@@ -10,6 +10,8 @@ import {
 
 import * as preferences from '~/globals/preferences';
 
+import { useTitle } from '~/lib/navigation/router';
+
 import Button from '~/components/button';
 import CircularProgress from '~/components/circular-progress';
 
@@ -44,6 +46,8 @@ const OAuthCallbackPage = () => {
 			location.reload();
 		}
 	});
+
+	useTitle(() => import.meta.env.VITE_APP_NAME);
 
 	return (
 		<Switch>

@@ -2,7 +2,7 @@ import { createMemo } from 'solid-js';
 
 import { createProfileFollowingQuery } from '~/api/queries/profile-following';
 
-import { useParams } from '~/lib/navigation/router';
+import { useParams, useTitle } from '~/lib/navigation/router';
 
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
@@ -15,6 +15,15 @@ const ProfileFollowingPage = () => {
 
 	const following = createProfileFollowingQuery(() => did);
 	const subject = createMemo(() => following.data?.pages[0].subject);
+
+	useTitle(() => {
+		const data = subject();
+		if (data) {
+			return `People following @${data.handle} — ${import.meta.env.VITE_APP_NAME}`;
+		}
+
+		return `People following — ${import.meta.env.VITE_APP_NAME}`;
+	});
 
 	return (
 		<>

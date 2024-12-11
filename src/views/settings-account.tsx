@@ -1,5 +1,6 @@
 import { createQuery } from '@mary/solid-query';
 
+import { useTitle } from '~/lib/navigation/router';
 import { useAgent } from '~/lib/states/agent';
 
 import * as Boxed from '~/components/boxed';
@@ -23,6 +24,8 @@ const AccountSettingsPage = () => {
 			};
 		},
 	}));
+
+	useTitle(() => `Account settings — ${import.meta.env.VITE_APP_NAME}`);
 
 	return (
 		<>

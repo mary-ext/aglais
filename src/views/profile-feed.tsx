@@ -8,7 +8,7 @@ import { isDid, makeAtUri } from '~/api/utils/strings';
 import { openModal } from '~/globals/modals';
 import { history } from '~/globals/navigation';
 
-import { useParams } from '~/lib/navigation/router';
+import { useParams, useTitle } from '~/lib/navigation/router';
 
 import CircularProgressView from '~/components/circular-progress-view';
 import ErrorView from '~/components/error-view';
@@ -26,6 +26,15 @@ const FeedPage = () => {
 
 	const uri = makeAtUri(didOrHandle, 'app.bsky.feed.generator', rkey);
 	const meta = createFeedMetaQuery(() => uri);
+
+	useTitle(() => {
+		const data = meta.data;
+		if (data) {
+			return `${data.displayName} — ${import.meta.env.VITE_APP_NAME}`;
+		}
+
+		return `Feed — ${import.meta.env.VITE_APP_NAME}`;
+	});
 
 	return (
 		<>

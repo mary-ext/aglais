@@ -1,7 +1,7 @@
 import { createSubjectRepostersQuery } from '~/api/queries/subject-reposters';
 import { makeAtUri } from '~/api/utils/strings';
 
-import { useParams } from '~/lib/navigation/router';
+import { useParams, useTitle } from '~/lib/navigation/router';
 
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
@@ -14,6 +14,8 @@ const PostLikesPage = () => {
 
 	const uri = makeAtUri(did, 'app.bsky.feed.post', rkey);
 	const reposters = createSubjectRepostersQuery(() => uri);
+
+	useTitle(() => `Users liking this post — ${import.meta.env.VITE_APP_NAME}`);
 
 	return (
 		<>

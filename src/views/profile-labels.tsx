@@ -27,7 +27,7 @@ import { openModal, useModalContext } from '~/globals/modals';
 
 import { formatAbsDateTime } from '~/lib/intl/time';
 import { Key } from '~/lib/keyed';
-import { useParams } from '~/lib/navigation/router';
+import { useParams, useTitle } from '~/lib/navigation/router';
 import { useSession } from '~/lib/states/session';
 import { mapDefined } from '~/lib/utils/misc';
 
@@ -58,6 +58,15 @@ const ProfileLabelsPage = () => {
 
 		const preferences = currentAccount.preferences;
 		return preferences.moderation.labelers[did as At.DID];
+	});
+
+	useTitle(() => {
+		const data = query.data;
+		if (data) {
+			return `Label provider (@${data.profile.handle}) — ${import.meta.env.VITE_APP_NAME}`;
+		}
+
+		return `Label provider — ${import.meta.env.VITE_APP_NAME}`;
 	});
 
 	return (

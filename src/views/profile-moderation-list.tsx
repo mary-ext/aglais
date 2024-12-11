@@ -12,7 +12,7 @@ import { createListMembersQuery } from '~/api/queries/list-members';
 import { trimRichText } from '~/api/utils/richtext';
 import { makeAtUri } from '~/api/utils/strings';
 
-import { useParams } from '~/lib/navigation/router';
+import { useParams, useTitle } from '~/lib/navigation/router';
 import { useModerationOptions } from '~/lib/states/moderation';
 
 import Avatar, { getUserAvatarType } from '~/components/avatar';
@@ -33,12 +33,25 @@ const ProfileModerationListPage = () => {
 	const uri = makeAtUri(did, 'app.bsky.graph.list', rkey);
 	const query = createListMetaQuery(() => uri);
 
+	useTitle(() => {
+		const data = query.data;
+		if (data) {
+			return `${data.name} — ${import.meta.env.VITE_APP_NAME}`;
+		}
+
+		return `Moderation List — ${import.meta.env.VITE_APP_NAME}`;
+	});
+
 	return (
 		<>
 			<Page.Header>
 				<Page.HeaderAccessory>
 					<Page.Back to={`/${did}`} />
 				</Page.HeaderAccessory>
+
+				<Show when={!query.data}>
+					<Page.Heading title="Moderation List" />
+				</Show>
 
 				<Show when={query.data}>
 					{(list) => (

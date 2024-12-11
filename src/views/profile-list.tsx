@@ -7,7 +7,7 @@ import { isDid, makeAtUri } from '~/api/utils/strings';
 
 import { history } from '~/globals/navigation';
 
-import { useParams } from '~/lib/navigation/router';
+import { useParams, useTitle } from '~/lib/navigation/router';
 
 import CircularProgressView from '~/components/circular-progress-view';
 import ErrorView from '~/components/error-view';
@@ -20,6 +20,8 @@ const ListStubPage = () => {
 
 	const uri = makeAtUri(didOrHandle, 'app.bsky.graph.list', rkey);
 	const meta = createListMetaQuery(() => uri);
+
+	useTitle(() => `List — ${import.meta.env.VITE_APP_NAME}`);
 
 	return (
 		<>

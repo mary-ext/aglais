@@ -1,6 +1,7 @@
 import { For, Show, createMemo, createSignal, untrack } from 'solid-js';
 
 import { LANGUAGE_CODES, getEnglishLanguageName, getNativeLanguageName } from '~/lib/intl/languages';
+import { useTitle } from '~/lib/navigation/router';
 import { useSession } from '~/lib/states/session';
 import { mapDefined } from '~/lib/utils/misc';
 
@@ -60,6 +61,8 @@ const ContentTranslationExclusionSettingsPage = () => {
 
 		return filtered;
 	});
+
+	useTitle(() => `Content translation exclusions settings — ${import.meta.env.VITE_APP_NAME}`);
 
 	return (
 		<>

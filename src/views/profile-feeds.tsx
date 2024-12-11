@@ -1,7 +1,7 @@
 import { createProfileQuery } from '~/api/queries/profile';
 import { createProfileFeedsQuery } from '~/api/queries/profile-feeds';
 
-import { useParams } from '~/lib/navigation/router';
+import { useParams, useTitle } from '~/lib/navigation/router';
 
 import FeedItem from '~/components/feeds/feed-item';
 import * as Page from '~/components/page';
@@ -13,6 +13,15 @@ const ProfileFeedsPage = () => {
 
 	const feeds = createProfileFeedsQuery(() => did);
 	const profile = createProfileQuery(() => did);
+
+	useTitle(() => {
+		const data = profile.data;
+		if (data) {
+			return `Feeds by @${data.handle} — ${import.meta.env.VITE_APP_NAME}`;
+		}
+
+		return `Feeds — ${import.meta.env.VITE_APP_NAME}`;
+	});
 
 	return (
 		<>

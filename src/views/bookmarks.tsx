@@ -5,6 +5,7 @@ import { createBookmarkMetaQuery } from '~/api/queries/bookmark';
 import { openModal } from '~/globals/modals';
 
 import { formatCompact } from '~/lib/intl/number';
+import { useTitle } from '~/lib/navigation/router';
 
 import BookmarkFolderAvatar from '~/components/bookmarks/bookmark-folder-avatar';
 import BookmarkFolderFormDialogLazy from '~/components/bookmarks/bookmark-folder-form-dialog-lazy';
@@ -18,6 +19,8 @@ import * as Page from '~/components/page';
 
 const BookmarksPage = () => {
 	const query = createBookmarkMetaQuery();
+
+	useTitle(() => `Bookmarks — ${import.meta.env.VITE_APP_NAME}`);
 
 	return (
 		<>

@@ -1,3 +1,4 @@
+import { useTitle } from '~/lib/navigation/router';
 import { useSession } from '~/lib/states/session';
 
 import * as Page from '~/components/page';
@@ -7,6 +8,8 @@ const LikesPage = () => {
 	const { currentAccount } = useSession();
 
 	const did = currentAccount!.did;
+
+	useTitle(() => `My likes — ${import.meta.env.VITE_APP_NAME}`);
 
 	return (
 		<>

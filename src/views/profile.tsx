@@ -12,7 +12,7 @@ import { openModal } from '~/globals/modals';
 import { history } from '~/globals/navigation';
 
 import { formatCompact } from '~/lib/intl/number';
-import { useParams } from '~/lib/navigation/router';
+import { useParams, useTitle } from '~/lib/navigation/router';
 
 import CircularProgressView from '~/components/circular-progress-view';
 import Divider from '~/components/divider';
@@ -32,6 +32,20 @@ const ProfilePage = () => {
 
 	const queryClient = useQueryClient();
 	const profile = createProfileQuery(() => didOrHandle);
+
+	useTitle(() => {
+		const data = profile.data;
+		if (data) {
+			const displayName = data.displayName?.trim();
+			const handle = data.handle;
+
+			const subtitle = displayName ? `${displayName} (@${handle})` : `@${handle}`;
+
+			return `${subtitle} — ${import.meta.env.VITE_APP_NAME}`;
+		}
+
+		return `Profile — ${import.meta.env.VITE_APP_NAME}`;
+	});
 
 	return (
 		<>

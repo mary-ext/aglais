@@ -1,3 +1,5 @@
+import { useTitle } from '~/lib/navigation/router';
+
 import ComposeFAB from '~/components/composer/compose-fab';
 import IconButton from '~/components/icon-button';
 import ChevronRightOutlinedIcon from '~/components/icons-central/chevron-right-outline';
@@ -6,6 +8,8 @@ import * as Page from '~/components/page';
 import TimelineList from '~/components/timeline/timeline-list';
 
 const HomePage = () => {
+	useTitle(() => `Home — ${import.meta.env.VITE_APP_NAME}`);
+
 	return (
 		<>
 			<Page.Header>

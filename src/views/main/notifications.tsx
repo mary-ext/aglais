@@ -3,7 +3,7 @@ import { createSignal } from 'solid-js';
 import { createNotificationCountQuery } from '~/api/queries/notification-count';
 import { createNotificationFeedQuery } from '~/api/queries/notification-feed';
 
-import { onRouteEnter } from '~/lib/navigation/router';
+import { onRouteEnter, useTitle } from '~/lib/navigation/router';
 
 import ComposeFAB from '~/components/composer/compose-fab';
 import NotificationItem from '~/components/notifications/notification-item';
@@ -35,6 +35,8 @@ const NotificationsPage = () => {
 			setIsManualRefetch(false);
 		}
 	};
+
+	useTitle(() => `Notifications — ${import.meta.env.VITE_APP_NAME}`);
 
 	onRouteEnter(() => {
 		// If the user is still roughly at the top, refetch notifications directly

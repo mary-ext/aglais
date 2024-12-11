@@ -10,6 +10,7 @@ import { hasModals, openModal } from '~/globals/modals';
 import { MAX_ORIGINAL_SIZE, SUPPORTED_IMAGE_TYPES } from '~/lib/bluemoji/compress';
 import { getCdnUrl } from '~/lib/bluemoji/render';
 import { createEventListener } from '~/lib/hooks/event-listener';
+import { useTitle } from '~/lib/navigation/router';
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 import { on } from '~/lib/utils/misc';
@@ -60,6 +61,8 @@ const BluemojiEmotesPage = () => {
 		initialPageParam: undefined as string | undefined,
 		getNextPageParam: (last) => last.cursor,
 	}));
+
+	useTitle(() => `Bluemoji emotes — ${import.meta.env.VITE_APP_NAME}`);
 
 	return (
 		<>

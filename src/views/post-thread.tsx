@@ -16,7 +16,7 @@ import { history } from '~/globals/navigation';
 
 import { createEventListener } from '~/lib/hooks/event-listener';
 import { Key } from '~/lib/keyed';
-import { useParams } from '~/lib/navigation/router';
+import { useParams, useTitle } from '~/lib/navigation/router';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
 
@@ -39,6 +39,24 @@ const PostThreadPage = () => {
 
 	const uri = makeAtUri(didOrHandle, 'app.bsky.feed.post', rkey);
 	const query = usePostThreadQuery(() => uri);
+
+	useTitle(() => {
+		const data = query.data;
+		if (data && data.$type === 'app.bsky.feed.defs#threadViewPost') {
+			const post = data.post;
+			const author = post.author;
+			const record = post.record as AppBskyFeedPost.Record;
+
+			const authorTitle = author.displayName?.trim() || `@${author.handle}`;
+			const postContent = record.text?.trim();
+
+			const subtitle = `${authorTitle}: "${postContent}"`;
+
+			return `${subtitle} — ${import.meta.env.VITE_APP_NAME}`;
+		}
+
+		return `Post — ${import.meta.env.VITE_APP_NAME}`;
+	});
 
 	return (
 		<>

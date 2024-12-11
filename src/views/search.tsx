@@ -3,6 +3,7 @@ import { Match, Suspense, Switch, createMemo, createSignal, lazy } from 'solid-j
 import type { UnwrapArray } from '~/api/utils/types';
 
 import { tokenizeSearchQuery } from '~/lib/bsky/search';
+import { useTitle } from '~/lib/navigation/router';
 
 import CircularProgressView from '~/components/circular-progress-view';
 import IconButton from '~/components/icon-button';
@@ -35,6 +36,8 @@ const SearchPage = () => {
 		// via app history causes this page to get reinstantiated.
 		history.replaceState(history.state, '', location.pathname + `?` + searchParams.toString());
 	};
+
+	useTitle(() => `Search — ${import.meta.env.VITE_APP_NAME}`);
 
 	return (
 		<>

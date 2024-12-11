@@ -1,9 +1,13 @@
 import { openModal } from '~/globals/modals';
 
+import { useTitle } from '~/lib/navigation/router';
+
 import Button from '~/components/button';
 import SignInDialogLazy from '~/components/main/sign-in-dialog-lazy';
 
 const SignedOutPage = () => {
+	useTitle(() => import.meta.env.VITE_APP_NAME);
+
 	return (
 		<>
 			<div class="flex grow flex-col items-center justify-center gap-1">

@@ -1,5 +1,7 @@
 import { history } from '~/globals/navigation';
 
+import { useTitle } from '~/lib/navigation/router';
+
 import MyFeedsSection from '~/components/explore/my-feeds-section';
 import IconButton from '~/components/icon-button';
 import GearOutlinedIcon from '~/components/icons-central/gear-outline';
@@ -7,6 +9,8 @@ import SearchBar from '~/components/main/search-bar';
 import * as Page from '~/components/page';
 
 const ExplorePage = () => {
+	useTitle(() => `Explore — ${import.meta.env.VITE_APP_NAME}`);
+
 	return (
 		<>
 			<Page.Header>

@@ -1,5 +1,6 @@
 import * as preferences from '~/globals/preferences';
 
+import { useTitle } from '~/lib/navigation/router';
 import { useSession } from '~/lib/states/session';
 
 import * as Boxed from '~/components/boxed';
@@ -10,6 +11,8 @@ const AppearanceSettingsPage = () => {
 
 	const uiPrefs = preferences.global.ui;
 	const threadViewPrefs = currentAccount!.preferences.threadView;
+
+	useTitle(() => `Appearance settings — ${import.meta.env.VITE_APP_NAME}`);
 
 	return (
 		<>

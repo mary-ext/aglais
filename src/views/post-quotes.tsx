@@ -1,7 +1,7 @@
 import { createPostQuotesQuery } from '~/api/queries/post-quotes';
 import { makeAtUri } from '~/api/utils/strings';
 
-import { useParams } from '~/lib/navigation/router';
+import { useParams, useTitle } from '~/lib/navigation/router';
 
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
@@ -13,6 +13,8 @@ const PostQuotesPage = () => {
 
 	const uri = makeAtUri(did, 'app.bsky.feed.post', rkey);
 	const quotes = createPostQuotesQuery(() => uri);
+
+	useTitle(() => `Users quoting this post — ${import.meta.env.VITE_APP_NAME}`);
 
 	return (
 		<>

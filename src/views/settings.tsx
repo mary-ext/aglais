@@ -1,3 +1,5 @@
+import { useTitle } from '~/lib/navigation/router';
+
 import * as Boxed from '~/components/boxed';
 import CircleInfoOutlinedIcon from '~/components/icons-central/circle-info-outline';
 import ColorPaletteOutlinedIcon from '~/components/icons-central/color-palette-outline';
@@ -7,6 +9,8 @@ import ShieldOutlinedIcon from '~/components/icons-central/shield-outline';
 import * as Page from '~/components/page';
 
 const SettingsPage = () => {
+	useTitle(() => `Settings — ${import.meta.env.VITE_APP_NAME}`);
+
 	return (
 		<>
 			<Page.Header>

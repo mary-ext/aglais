@@ -1,8 +1,12 @@
 import { history, logger } from '~/globals/navigation';
 
+import { useTitle } from '~/lib/navigation/router';
+
 import Button from '~/components/button';
 
 const NotFoundPage = () => {
+	useTitle(() => `Page not found — ${import.meta.env.VITE_APP_NAME}`);
+
 	return (
 		<>
 			<div class="p-4">

@@ -1,5 +1,7 @@
 import { createMyListsQuery } from '~/api/queries/my-lists';
 
+import { useTitle } from '~/lib/navigation/router';
+
 import IconButton from '~/components/icon-button';
 import AddOutlinedIcon from '~/components/icons-central/add-outline';
 import List from '~/components/list';
@@ -8,6 +10,8 @@ import * as Page from '~/components/page';
 
 const ModerationListsPage = () => {
 	const lists = createMyListsQuery('moderation');
+
+	useTitle(() => `My moderation lists — ${import.meta.env.VITE_APP_NAME}`);
 
 	return (
 		<>

@@ -3,7 +3,7 @@ import { Match, Switch } from 'solid-js';
 import { createListMetaQuery } from '~/api/queries/list';
 import { makeAtUri } from '~/api/utils/strings';
 
-import { useParams } from '~/lib/navigation/router';
+import { useParams, useTitle } from '~/lib/navigation/router';
 
 import CircularProgressView from '~/components/circular-progress-view';
 import ErrorView from '~/components/error-view';
@@ -15,6 +15,15 @@ const CurationListPage = () => {
 
 	const uri = makeAtUri(did, 'app.bsky.graph.list', rkey);
 	const meta = createListMetaQuery(() => uri);
+
+	useTitle(() => {
+		const data = meta.data;
+		if (data) {
+			return `${data.name} — ${import.meta.env.VITE_APP_NAME}`;
+		}
+
+		return `List — ${import.meta.env.VITE_APP_NAME}`;
+	});
 
 	return (
 		<>

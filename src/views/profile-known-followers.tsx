@@ -2,7 +2,7 @@ import { createMemo } from 'solid-js';
 
 import { createProfileKnownFollowersQuery } from '~/api/queries/profile-known-followers';
 
-import { useParams } from '~/lib/navigation/router';
+import { useParams, useTitle } from '~/lib/navigation/router';
 
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
@@ -15,6 +15,15 @@ const ProfileKnownFollowersPage = () => {
 
 	const followers = createProfileKnownFollowersQuery(() => did);
 	const subject = createMemo(() => followers.data?.pages[0].subject);
+
+	useTitle(() => {
+		const data = subject();
+		if (data) {
+			return `Followers of @${data.handle} that you know — ${import.meta.env.VITE_APP_NAME}`;
+		}
+
+		return `Followers that you know — ${import.meta.env.VITE_APP_NAME}`;
+	});
 
 	return (
 		<>
