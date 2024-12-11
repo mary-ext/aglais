@@ -5,6 +5,7 @@ import {
 	type JSX,
 	type Owner,
 	createContext,
+	createEffect,
 	createMemo,
 	createRoot,
 	createSignal,
@@ -273,6 +274,24 @@ export const onRouteEnter = (cb: () => void) => {
 
 	cb();
 	onCleanup(routerEvents.on(route.id, (e) => e.enter && cb()));
+};
+
+export const createFocusEffect = (cb: () => void) => {
+	const { route } = useViewContext();
+	const [active, setActive] = createSignal(true);
+
+	onCleanup(routerEvents.on(route.id, (e) => setActive(e.focus)));
+	createEffect(() => {
+		if (active()) {
+			cb();
+		}
+	});
+};
+
+export const useTitle = (cb: () => string) => {
+	createFocusEffect(() => {
+		document.title = cb();
+	});
 };
 
 export interface RouterViewProps {
