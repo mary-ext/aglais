@@ -1,18 +1,21 @@
 import { createSignal } from 'solid-js';
 
 import { createNotificationCountQuery } from '~/api/queries/notification-count';
-import { createNotificationFeedQuery } from '~/api/queries/notification-feed';
+import { type NotificationsFilter, createNotificationFeedQuery } from '~/api/queries/notification-feed';
 
 import { onRouteEnter, useTitle } from '~/lib/navigation/router';
 
 import ComposeFAB from '~/components/composer/compose-fab';
+import FilterBar from '~/components/filter-bar';
 import NotificationItem from '~/components/notifications/notification-item';
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
 import VirtualItem from '~/components/virtual-item';
 
 const NotificationsPage = () => {
-	const { feed, reset, firstFetchedAt } = createNotificationFeedQuery();
+	const [tab, setTab] = createSignal<NotificationsFilter>('all');
+
+	const { feed, reset, firstFetchedAt } = createNotificationFeedQuery(tab);
 	const unread = createNotificationCountQuery();
 
 	// We want to differentiate a refetch done by the user and one that's done
@@ -56,6 +59,21 @@ const NotificationsPage = () => {
 			</Page.Header>
 
 			<ComposeFAB />
+
+			<FilterBar
+				value={tab()}
+				onChange={setTab}
+				options={[
+					{
+						value: 'all',
+						label: `All`,
+					},
+					{
+						value: 'mentions',
+						label: `Mentions`,
+					},
+				]}
+			/>
 
 			<PagedList
 				data={feed.data?.pages.map((page) => page.slices)}
