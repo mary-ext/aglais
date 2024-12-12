@@ -9,7 +9,6 @@ export const findAllPosts = (uri: string, includeQuote = false): CacheMatcher<Ap
 	return {
 		filter: {
 			queryKey: ['notification', 'feed'],
-			exact: true,
 		},
 		*iterate(data: InfiniteData<NotificationFeedReturn>) {
 			for (const page of data.pages) {
@@ -44,7 +43,6 @@ export const findAllProfiles = (
 	return {
 		filter: {
 			queryKey: ['notification', 'feed'],
-			exact: true,
 		},
 		*iterate(data: InfiniteData<NotificationFeedReturn>) {
 			for (const page of data.pages) {
