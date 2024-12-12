@@ -7,6 +7,8 @@ import { onRouteEnter, useTitle } from '~/lib/navigation/router';
 
 import ComposeFAB from '~/components/composer/compose-fab';
 import FilterBar from '~/components/filter-bar';
+import IconButton from '~/components/icon-button';
+import GearOutlinedIcon from '~/components/icons-central/gear-outline';
 import NotificationItem from '~/components/notifications/notification-item';
 import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
@@ -56,6 +58,10 @@ const NotificationsPage = () => {
 				</Page.HeaderAccessory>
 
 				<Page.Heading title="Notifications" />
+
+				<Page.HeaderAccessory>
+					<IconButton disabled title="Notification settings" icon={GearOutlinedIcon} />
+				</Page.HeaderAccessory>
 			</Page.Header>
 
 			<ComposeFAB />
