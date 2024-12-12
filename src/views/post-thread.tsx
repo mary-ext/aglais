@@ -19,6 +19,7 @@ import { Key } from '~/lib/keyed';
 import { useParams, useTitle } from '~/lib/navigation/router';
 import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
+import { truncateMiddle } from '~/lib/utils/strings';
 
 import CircularProgress from '~/components/circular-progress';
 import CircularProgressView from '~/components/circular-progress-view';
@@ -47,7 +48,7 @@ const PostThreadPage = () => {
 			const author = post.author;
 			const record = post.record as AppBskyFeedPost.Record;
 
-			const authorTitle = author.displayName?.trim() || `@${author.handle}`;
+			const authorTitle = `@${truncateMiddle(author.handle, 29)}`;
 			const postContent = record.text?.trim();
 
 			const subtitle = `${authorTitle}: "${postContent}"`;
