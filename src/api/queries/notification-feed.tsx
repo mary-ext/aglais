@@ -272,7 +272,6 @@ export const createNotificationFeedQuery = () => {
 
 	const reset = async () => {
 		resetInfiniteData(queryClient, ['notification', 'feed']);
-		await feed.refetch();
 	};
 
 	return { feed, reset, firstFetchedAt };

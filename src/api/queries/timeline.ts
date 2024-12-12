@@ -251,7 +251,6 @@ export const useTimelineQuery = (_params: () => TimelineParams) => {
 		const params = untrack(getParams);
 
 		resetInfiniteData(queryClient, ['timeline', params]);
-		timeline.refetch();
 	};
 
 	const isStale = () => {

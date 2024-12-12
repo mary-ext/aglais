@@ -5,8 +5,8 @@ import {
 	type QueryKey,
 } from '@mary/solid-query';
 
-export const resetInfiniteData = (client: QueryClient, key: QueryKey) => {
-	client.setQueryData<InfiniteData<unknown>>(key, (data) => {
+export const resetInfiniteData = (client: QueryClient, queryKey: QueryKey) => {
+	client.setQueriesData<InfiniteData<unknown>>({ queryKey }, (data) => {
 		if (data && data.pages.length > 1) {
 			return {
 				pages: data.pages.slice(0, 1),
@@ -16,6 +16,8 @@ export const resetInfiniteData = (client: QueryClient, key: QueryKey) => {
 
 		return data;
 	});
+
+	client.invalidateQueries({ queryKey });
 };
 
 const errorMap = new WeakMap<WeakKey, { pageParam: any; direction: 'forward' | 'backward' }>();
