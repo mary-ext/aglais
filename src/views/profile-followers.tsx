@@ -19,10 +19,10 @@ const ProfileFollowersPage = () => {
 	useTitle(() => {
 		const data = subject();
 		if (data) {
-			return `People followed by @${data.handle} — ${import.meta.env.VITE_APP_NAME}`;
+			return `Users followed by @${data.handle} — ${import.meta.env.VITE_APP_NAME}`;
 		}
 
-		return `People followed by — ${import.meta.env.VITE_APP_NAME}`;
+		return `Users followed by — ${import.meta.env.VITE_APP_NAME}`;
 	});
 
 	return (

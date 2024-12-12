@@ -57,7 +57,7 @@ const AppearanceSettingsPage = () => {
 						/>
 
 						<Boxed.ToggleItem
-							label="Prioritize replies from people you follow"
+							label="Prioritize replies from users you follow"
 							enabled={threadViewPrefs.followsFirst}
 							onChange={(next) => (threadViewPrefs.followsFirst = next)}
 						/>
