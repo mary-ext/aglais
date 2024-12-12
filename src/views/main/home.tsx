@@ -27,7 +27,7 @@ const HomePage = () => {
 				</div>
 
 				<Page.HeaderAccessory>
-					<IconButton title="Home settings" icon={GearOutlinedIcon} />
+					<IconButton disabled title="Home settings" icon={GearOutlinedIcon} />
 				</Page.HeaderAccessory>
 			</Page.Header>
 
