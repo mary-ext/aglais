@@ -1,4 +1,4 @@
-import Hls from 'hls.js';
+import Hls from 'hls.js/dist/hls.light.js';
 import { nanoid } from 'nanoid/non-secure';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 
