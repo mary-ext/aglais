@@ -180,8 +180,8 @@ packages:
   '@atcute/client@2.0.6':
     resolution: {integrity: sha512-mhdqEicGUx0s5HTFOLpz91rcLS9j/g63de0nmAqv7blhU3j+xBf4le54qr2YIXNfnReZI7EwLYLX/YIBez4LGA==}
 
-  '@atcute/multibase@1.0.0':
-    resolution: {integrity: sha512-6S7Qt1vywsPOi5j+CT7H60kpIe0LTuRxeY3xslhI+ghetZtMwrW/Bz6GdYERenH/43iyCxYdc43FgbJwjH6Lbg==}
+  '@atcute/multibase@1.0.1':
+    resolution: {integrity: sha512-lOVNX+pKwxn/OKCEyM7D/LCBPhnW0Ex0JcDRRTwuuI3w2GbrCut41rUF8uZUsrbrplNLMoj7xZkz9EDku/5mvQ==}
 
   '@atcute/oauth-browser-client@1.0.8':
     resolution: {integrity: sha512-G9rFRdKeyQJp0yW9twF22kwU55ldvYH77cBQu21vf5+FQrHi1D0qx8CxxpgdZWbXmipmmjSI1PQEkJPYFh5e8A==}
@@ -2881,16 +2881,16 @@ snapshots:
   '@atcute/cbor@1.0.7':
     dependencies:
       '@atcute/cid': 1.0.3
-      '@atcute/multibase': 1.0.0
+      '@atcute/multibase': 1.0.1
 
   '@atcute/cid@1.0.3':
     dependencies:
-      '@atcute/multibase': 1.0.0
+      '@atcute/multibase': 1.0.1
       '@atcute/varint': 1.0.1
 
   '@atcute/client@2.0.6': {}
 
-  '@atcute/multibase@1.0.0': {}
+  '@atcute/multibase@1.0.1': {}
 
   '@atcute/oauth-browser-client@1.0.8':
     dependencies:
