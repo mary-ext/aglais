@@ -206,7 +206,7 @@ const ComposerInput = (props: ComposerInputProps) => {
 	});
 
 	return (
-		<div class="group relative z-0 text-base">
+		<div class="group relative z-1 text-base">
 			<div
 				ref={(node) => {
 					renderer = node;
