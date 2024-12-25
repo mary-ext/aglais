@@ -25,9 +25,6 @@ importers:
 
   .:
     dependencies:
-      '@atcute/base32':
-        specifier: ^1.0.1
-        version: 1.0.1
       '@atcute/bluemoji':
         specifier: ^1.0.4
         version: 1.0.4(@atcute/bluesky@1.0.11(@atcute/client@2.0.6))(@atcute/client@2.0.6)
@@ -41,11 +38,11 @@ importers:
         specifier: ^1.0.5
         version: 1.0.5(@atcute/bluesky@1.0.11(@atcute/client@2.0.6))(@atcute/client@2.0.6)
       '@atcute/cbor':
-        specifier: ^1.0.6
-        version: 1.0.6
+        specifier: ^1.0.7
+        version: 1.0.7
       '@atcute/cid':
-        specifier: ^1.0.2
-        version: 1.0.2
+        specifier: ^1.0.3
+        version: 1.0.3
       '@atcute/client':
         specifier: ^2.0.6
         version: 2.0.6
@@ -154,9 +151,6 @@ packages:
     peerDependencies:
       ajv: '>=8'
 
-  '@atcute/base32@1.0.1':
-    resolution: {integrity: sha512-oHnrPXDlkLd4283rz5C4KLnL46/D9mjpFgK17iTPU7OooyNSz+elr8kXN9ReZgzgnjWZHIr8Dp2splEm9hjNhg==}
-
   '@atcute/bluemoji@1.0.4':
     resolution: {integrity: sha512-Rzujybon6EFuycWPID5bzjYIVdPPWWjVfPqELhByJTLe2vq3SlEubUCmz3VfhDu/Bb8wlBP2tIT5w4oq3vJLrg==}
     peerDependencies:
@@ -177,14 +171,17 @@ packages:
     peerDependencies:
       '@atcute/client': ^1.0.0 || ^2.0.0
 
-  '@atcute/cbor@1.0.6':
-    resolution: {integrity: sha512-ONqrK37COOTkp92gzmxI5a3per9DLPJf60SSlK3Z9vIps7sYEnTq+mL5PLYzbP8l+/V3GVdzpULLphj37eNuXg==}
+  '@atcute/cbor@1.0.7':
+    resolution: {integrity: sha512-z3chucgCqjAN36ySvUVl1VSwtGME4CDS173eaaEfiTSpRIQ6ewKpKlkzapLUNqtLU9iBx884b9c2j6kjEyn1XA==}
 
-  '@atcute/cid@1.0.2':
-    resolution: {integrity: sha512-aRtt4/5pHCpKVvqtuvxWC8Koet9A7mT8t3fWspOJSj6lcP2QyKKpSUx3z0jSZ+M1Kf2UZ25eo6btcM5zmmhK3g==}
+  '@atcute/cid@1.0.3':
+    resolution: {integrity: sha512-BZbs+Xt0yMci0I2dLqqYsN76ua8lkMk/HQfEIKr7g2XMBlSc0XNCXfZdbAWPwiCK/NuGaPBocYMRwApd4dF2Qg==}
 
   '@atcute/client@2.0.6':
     resolution: {integrity: sha512-mhdqEicGUx0s5HTFOLpz91rcLS9j/g63de0nmAqv7blhU3j+xBf4le54qr2YIXNfnReZI7EwLYLX/YIBez4LGA==}
+
+  '@atcute/multibase@1.0.0':
+    resolution: {integrity: sha512-6S7Qt1vywsPOi5j+CT7H60kpIe0LTuRxeY3xslhI+ghetZtMwrW/Bz6GdYERenH/43iyCxYdc43FgbJwjH6Lbg==}
 
   '@atcute/oauth-browser-client@1.0.8':
     resolution: {integrity: sha512-G9rFRdKeyQJp0yW9twF22kwU55ldvYH77cBQu21vf5+FQrHi1D0qx8CxxpgdZWbXmipmmjSI1PQEkJPYFh5e8A==}
@@ -2865,8 +2862,6 @@ snapshots:
       jsonpointer: 5.0.1
       leven: 3.1.0
 
-  '@atcute/base32@1.0.1': {}
-
   '@atcute/bluemoji@1.0.4(@atcute/bluesky@1.0.11(@atcute/client@2.0.6))(@atcute/client@2.0.6)':
     dependencies:
       '@atcute/bluesky': 1.0.11(@atcute/client@2.0.6)
@@ -2883,17 +2878,19 @@ snapshots:
     dependencies:
       '@atcute/client': 2.0.6
 
-  '@atcute/cbor@1.0.6':
+  '@atcute/cbor@1.0.7':
     dependencies:
-      '@atcute/base32': 1.0.1
-      '@atcute/cid': 1.0.2
+      '@atcute/cid': 1.0.3
+      '@atcute/multibase': 1.0.0
 
-  '@atcute/cid@1.0.2':
+  '@atcute/cid@1.0.3':
     dependencies:
-      '@atcute/base32': 1.0.1
+      '@atcute/multibase': 1.0.0
       '@atcute/varint': 1.0.1
 
   '@atcute/client@2.0.6': {}
+
+  '@atcute/multibase@1.0.0': {}
 
   '@atcute/oauth-browser-client@1.0.8':
     dependencies:
