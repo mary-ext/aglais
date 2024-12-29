@@ -85,7 +85,7 @@ const ImageViewerModal = (props: ImageViewerModalProps) => {
 
 			const next = current + delta;
 
-			const children = [...scrollRef.childNodes];
+			const children = [...scrollRef!.childNodes];
 
 			if (next < 0 || next > children.length - 1) {
 				return;
@@ -98,7 +98,7 @@ const ImageViewerModal = (props: ImageViewerModalProps) => {
 	};
 
 	onMount(() => {
-		const children = [...scrollRef.childNodes];
+		const children = [...scrollRef!.childNodes];
 		const child = children[active()] as HTMLElement;
 
 		child.scrollIntoView({ inline: 'center', behavior: 'instant' });
