@@ -23,6 +23,8 @@ export interface ImageViewerModalProps {
 	images: Image[];
 }
 
+const isCloseWatcherAvailable = typeof CloseWatcher !== 'undefined';
+
 const enum GalleryNav {
 	PREV,
 	NEXT,
@@ -71,7 +73,7 @@ const ImageViewerModal = (props: ImageViewerModalProps) => {
 	};
 
 	const handleImageWrapperClick = (_ev: MouseEvent) => {
-		if (isPointerCoarse()) {
+		if (isCloseWatcherAvailable && isPointerCoarse()) {
 			setHidden(!hidden());
 		} else {
 			close();
