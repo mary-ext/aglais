@@ -8,78 +8,132 @@ export interface ImageGridEmbedProps {
 	borderless?: boolean;
 }
 
-const enum RenderMode {
-	MULTIPLE,
-	MULTIPLE_SQUARE,
-	STANDALONE,
-}
-
 const ImageGridEmbed = (props: ImageGridEmbedProps) => {
 	const { embed, borderless } = props;
 
 	const images = embed.images;
 	const length = images.length;
 
-	const render = (index: number, mode: RenderMode) => {
-		const { alt, thumb } = images[index];
-
-		let cn: string | undefined;
-
-		if (mode === RenderMode.MULTIPLE) {
-			cn = `min-h-0 grow basis-0 overflow-hidden`;
-		} else if (mode === RenderMode.MULTIPLE_SQUARE) {
-			cn = !borderless ? `aspect-square overflow-hidden` : `aspect-video overflow-hidden`;
-		} else if (mode === RenderMode.STANDALONE) {
-			cn = `aspect-video overflow-hidden`;
-		}
+	const render = (index: number) => {
+		const image = images[index];
 
 		return (
-			<div class={`relative bg-background ` + cn}>
-				<img
-					src={thumb}
-					title={alt}
-					class={
-						`h-full w-full object-contain text-[0px]` +
-						// prettier-ignore
-						(props.blur ? ` scale-125` + (!borderless ? ` blur` : ` blur-lg`) : ``)
-					}
-				/>
-			</div>
+			<img
+				loading="lazy"
+				src={/* @once */ image.thumb}
+				alt={/* @once */ image.alt}
+				class={
+					`absolute inset-0 h-full w-full bg-background text-[0px]` +
+					(length === 1 ? ` object-contain` : ` object-cover`) +
+					(props.blur ? ` scale-125 ${borderless ? `blur-xl` : `blur`}` : ``)
+				}
+			/>
 		);
 	};
 
 	return (
-		<div class={`` + (!borderless ? ` overflow-hidden rounded-md border border-outline` : ``)}>
+		<div>
 			{length === 4 ? (
 				<div class="flex gap-0.5">
-					<div class="flex grow basis-0 flex-col gap-0.5">
-						{/* @once */ render(0, RenderMode.MULTIPLE_SQUARE)}
-						{/* @once */ render(2, RenderMode.MULTIPLE_SQUARE)}
+					<div class="flex shrink-0 grow flex-col gap-0.5">
+						<div
+							class={
+								`relative aspect-[1.5] shrink-0 grow overflow-hidden` +
+								(!borderless ? ` rounded-tl-md border border-outline` : ``)
+							}
+						>
+							{/* @once */ render(0)}
+						</div>
+						<div
+							class={
+								`relative aspect-[1.5] shrink-0 grow overflow-hidden` +
+								(!borderless ? ` rounded-bl-md border border-outline` : ``)
+							}
+						>
+							{/* @once */ render(2)}
+						</div>
 					</div>
-
-					<div class="flex grow basis-0 flex-col gap-0.5">
-						{/* @once */ render(1, RenderMode.MULTIPLE_SQUARE)}
-						{/* @once */ render(3, RenderMode.MULTIPLE_SQUARE)}
+					<div class="flex shrink-0 grow flex-col gap-0.5">
+						<div
+							class={
+								`relative aspect-[1.5] shrink-0 grow overflow-hidden` +
+								(!borderless ? ` rounded-tr-md border border-outline` : ``)
+							}
+						>
+							{/* @once */ render(1)}
+						</div>
+						<div
+							class={
+								`relative aspect-[1.5] shrink-0 grow overflow-hidden` +
+								(!borderless ? ` rounded-br-md border border-outline` : ``)
+							}
+						>
+							{/* @once */ render(3)}
+						</div>
 					</div>
 				</div>
 			) : length === 3 ? (
 				<div class="flex gap-0.5">
-					<div class="flex aspect-square grow-2 basis-0 flex-col gap-0.5">
-						{/* @once */ render(0, RenderMode.MULTIPLE)}
+					<div class="flex aspect-square shrink-0 grow flex-col gap-0.5">
+						<div
+							class={
+								`relative flex-shrink-0 flex-grow overflow-hidden` +
+								(!borderless ? ` rounded-bl-md rounded-tl-md border border-outline` : ``)
+							}
+						>
+							{/* @once */ render(0)}
+						</div>
 					</div>
-
-					<div class="flex grow basis-0 flex-col gap-0.5">
-						{/* @once */ render(1, RenderMode.MULTIPLE_SQUARE)}
-						{/* @once */ render(2, RenderMode.MULTIPLE_SQUARE)}
+					<div class="flex aspect-square shrink-0 grow flex-col gap-0.5">
+						<div
+							class={
+								`relative flex-shrink-0 flex-grow overflow-hidden` +
+								(!borderless ? ` rounded-tr-md border border-outline` : ``)
+							}
+						>
+							{/* @once */ render(1)}
+						</div>
+						<div
+							class={
+								`relative flex-shrink-0 flex-grow overflow-hidden` +
+								(!borderless ? ` rounded-br-md border border-outline` : ``)
+							}
+						>
+							{/* @once */ render(2)}
+						</div>
 					</div>
 				</div>
 			) : length === 2 ? (
-				<div class="flex aspect-video gap-0.5">
-					<div class="flex grow basis-0 flex-col gap-0.5">{/* @once */ render(0, RenderMode.MULTIPLE)}</div>
-					<div class="flex grow basis-0 flex-col gap-0.5">{/* @once */ render(1, RenderMode.MULTIPLE)}</div>
+				<div class="flex gap-0.5">
+					<div class="flex flex-1 flex-col gap-0.5">
+						<div
+							class={
+								`relative aspect-square flex-shrink-0 flex-grow overflow-hidden` +
+								(!borderless ? ` rounded-bl-md rounded-tl-md border border-outline` : ``)
+							}
+						>
+							{/* @once */ render(0)}
+						</div>
+					</div>
+					<div class="flex flex-1 flex-col gap-0.5">
+						<div
+							class={
+								`relative aspect-square flex-shrink-0 flex-grow overflow-hidden` +
+								(!borderless ? ` rounded-br-md rounded-tr-md border border-outline` : ``)
+							}
+						>
+							{/* @once */ render(1)}
+						</div>
+					</div>
 				</div>
 			) : length === 1 ? (
-				<>{/* @once */ render(0, RenderMode.STANDALONE)}</>
+				<div
+					class={
+						`relative aspect-video overflow-hidden` + (!borderless ? ` rounded-md border border-outline` : ``)
+					}
+				>
+					{/* @once */ render(0)}
+				</div>
 			) : null}
 		</div>
 	);
