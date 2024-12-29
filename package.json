@@ -54,6 +54,11 @@
 			"solid-js": "patches/solid-js.patch",
 			"vite-plugin-pwa": "patches/vite-plugin-pwa.patch",
 			"workbox-precaching": "patches/workbox-precaching.patch"
+		},
+		"overrides": {
+			"is-core-module": "npm:@nolyfill/is-core-module@^1",
+			"safe-buffer": "npm:@nolyfill/safe-buffer@^1",
+			"string.prototype.matchall": "npm:@nolyfill/string.prototype.matchall@^1"
 		}
 	}
 }
