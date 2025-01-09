@@ -157,7 +157,7 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 							}}
 							class="overflow-hidden text-ellipsis break-words text-left hover:underline"
 						>
-							{'@' + data().handle}
+							{'@' + data().handle.toLowerCase()}
 						</button>
 
 						{(() => {
