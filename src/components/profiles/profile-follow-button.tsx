@@ -50,7 +50,7 @@ const ProfileFollowButton = (props: ProfileFollowButtonProps) => {
 					if (isFollowing()) {
 						openModal(() => (
 							<Prompt.Confirm
-								title={`Unfollow @${profile().handle}`}
+								title={`Unfollow @${profile().handle.toLowerCase()}`}
 								description={<>Their posts will no longer show in your timeline.</>}
 								onConfirm={() => mutateFollow(false)}
 							/>

@@ -104,7 +104,7 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 
 					<p class="ml-3 mr-2 overflow-hidden text-ellipsis">
 						<span class="whitespace-nowrap font-semibold text-contrast hover:underline">
-							{author().handle}
+							{author().handle.toLowerCase()}
 						</span>
 					</p>
 				</a>

@@ -44,7 +44,7 @@ const renderLabelService = (source: ModerationLabeler) => {
 	const profile = source.profile;
 
 	if (profile) {
-		return profile.displayName || `@${profile.handle}`;
+		return profile.displayName || `@${profile.handle.toLowerCase()}`;
 	}
 
 	return source.did;

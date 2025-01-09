@@ -231,7 +231,7 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 												let arr: JSX.Element[] = [];
 
 												for (const profile of followers) {
-													const handle = truncateMiddle(profile.handle, 29);
+													const handle = truncateMiddle(profile.handle, 29).toLowerCase();
 
 													arr.push(<span class="font-semibold">{handle}</span>);
 												}

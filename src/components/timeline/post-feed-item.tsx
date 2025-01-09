@@ -155,7 +155,7 @@ const renderReason = (reason: UiTimelineItem['reason']) => {
 					</div>
 					<a href={`/${did}`} class="flex min-w-0 hover:underline">
 						<span dir="auto" class="overflow-hidden text-ellipsis whitespace-nowrap font-semibold">
-							{/* @once */ by.handle}
+							{/* @once */ by.handle.toLocaleLowerCase()}
 						</span>
 						<span class="shrink-0 whitespace-pre"> reposted</span>
 					</a>

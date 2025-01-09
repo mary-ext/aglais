@@ -71,7 +71,8 @@ const ListItem = ({ item }: ListItemProps) => {
 				<a href={href} onClick={() => precacheList(queryClient, item)} class="min-w-0 grow">
 					<p class="break-words text-sm font-bold">{item.name}</p>
 					<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">
-						{/* @once */ `${getListPurposeLabel(item.purpose)} by @${creator.handle}`}
+						{/* @once */ `${getListPurposeLabel(item.purpose)} by `}
+						<span class="lowercase">{/* @once */ `@${creator.handle}`}</span>
 					</p>
 				</a>
 			</div>

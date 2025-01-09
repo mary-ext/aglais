@@ -64,9 +64,9 @@ const FeedItem = ({ item }: FeedItemProps) => {
 
 				<a href={href} onClick={() => precacheFeed(queryClient, item)} class="min-w-0 grow">
 					<p class="break-words text-sm font-bold">{item.displayName}</p>
-					<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">{
-						/* @once */ `Feed by @${creator.handle}`
-					}</p>
+					<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">
+						Feed by <span class="lowercase">{/* @once */ `@${creator.handle}`}</span>
+					</p>
 				</a>
 			</div>
 

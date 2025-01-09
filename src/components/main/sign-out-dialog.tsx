@@ -10,7 +10,7 @@ const SignOutDialog = () => {
 
 	return (
 		<Prompt.Confirm
-			title={`Sign out of ${profile.data ? `@${profile.data.handle}` : `this account`}?`}
+			title={`Sign out of ${profile.data ? `@${profile.data.handle.toLowerCase()}` : `this account`}?`}
 			description={getAccounts().length > 1 ? <>You'll still be signed in to your other accounts.</> : <></>}
 			confirmLabel="Sign out"
 			onConfirm={() => logout()}

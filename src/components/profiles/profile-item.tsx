@@ -68,7 +68,7 @@ const ProfileItem = (props: ProfileItemProps) => {
 				<div class="my-auto flex h-10 items-center justify-between gap-3">
 					<a href={href} onClick={() => precacheProfile(queryClient, profile)} class="min-w-0 text-sm">
 						<p class="overflow-hidden text-ellipsis whitespace-nowrap font-semibold">
-							{/* @once */ profile.handle}
+							{/* @once */ profile.handle.toLowerCase()}
 						</p>
 						<p class="overflow-hidden text-ellipsis whitespace-nowrap text-contrast-muted">
 							{/* @once */ profile.displayName}

@@ -19,7 +19,9 @@ const ProfileFollowersPage = () => {
 	useTitle(() => {
 		const data = subject();
 		if (data) {
-			return `Users followed by @${data.handle} — ${import.meta.env.VITE_APP_NAME}`;
+			const handle = data.handle.toLowerCase();
+
+			return `Users followed by @${handle} — ${import.meta.env.VITE_APP_NAME}`;
 		}
 
 		return `Users followed by — ${import.meta.env.VITE_APP_NAME}`;
@@ -37,7 +39,7 @@ const ProfileFollowersPage = () => {
 					subtitle={(() => {
 						const $subject = subject();
 						if ($subject) {
-							return '@' + $subject.handle;
+							return '@' + $subject.handle.toLowerCase();
 						}
 					})()}
 				/>

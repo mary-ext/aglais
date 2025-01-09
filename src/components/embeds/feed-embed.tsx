@@ -39,9 +39,9 @@ const FeedEmbed = ({ feed, interactive }: FeedEmbedProps) => {
 
 			<div class="min-w-0 grow">
 				<p class="line-clamp-2 break-words text-sm font-bold">{/* @once */ feed.displayName}</p>
-				<p class="line-clamp-2 break-words text-de text-contrast-muted">{
-					/* @once */ `Feed by @${feed.creator.handle}`
-				}</p>
+				<p class="line-clamp-2 break-words text-de text-contrast-muted">
+					Feed by <span class="lowercase">{/* @once */ `@${feed.creator.handle}`}</span>
+				</p>
 			</div>
 		</a>
 	);

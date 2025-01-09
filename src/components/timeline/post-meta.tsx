@@ -23,8 +23,6 @@ const PostMeta = ({ post, authorHref, href, gutterBottom }: PostMetaProps) => {
 	const queryClient = useQueryClient();
 
 	const author = post.author;
-
-	const handle = author.handle;
 	const indexedAt = post.indexedAt;
 
 	return (
@@ -37,7 +35,9 @@ const PostMeta = ({ post, authorHref, href, gutterBottom }: PostMetaProps) => {
 					onClick={() => precacheProfile(queryClient, author)}
 					class="overflow-hidden text-ellipsis whitespace-nowrap"
 				>
-					<span class="font-semibold text-contrast hover:underline">{handle}</span>
+					<span class="font-semibold text-contrast hover:underline">
+						{/* @once */ author.handle.toLowerCase()}
+					</span>
 				</a>
 
 				<span class="pl-2"> </span>

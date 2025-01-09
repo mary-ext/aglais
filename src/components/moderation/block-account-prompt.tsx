@@ -79,7 +79,7 @@ const BlockPrompt = ({ profile }: BlockAccountPrompt) => {
 
 	return (
 		<Prompt.Container maxWidth="md" disabled={mutation.isPending}>
-			<Prompt.Title>{/* @once */ `Block @${profile.handle}?`}</Prompt.Title>
+			<Prompt.Title>{/* @once */ `Block @${profile.handle.toLowerCase()}?`}</Prompt.Title>
 
 			<Prompt.Description>Here's what happens if you do:</Prompt.Description>
 
@@ -161,7 +161,7 @@ const BlockedByList = ({ profile }: BlockAccountPrompt) => {
 
 	return (
 		<Prompt.Container>
-			<Prompt.Title>{/* @once */ `Can't unblock @${profile.handle}`}</Prompt.Title>
+			<Prompt.Title>{/* @once */ `Can't unblock @${profile.handle.toLowerCase()}`}</Prompt.Title>
 			<Prompt.Description>
 				You've currently opted to block all accounts that are in this moderation list:
 			</Prompt.Description>

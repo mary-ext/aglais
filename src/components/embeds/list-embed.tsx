@@ -36,9 +36,10 @@ const ListEmbed = ({ list, interactive, onClick }: ListEmbedProps) => {
 
 			<div class="min-w-0 grow">
 				<p class="line-clamp-2 break-words text-sm font-bold">{/* @once */ list.name}</p>
-				<p class="line-clamp-2 break-words text-de text-contrast-muted">{
-					/* @once */ `${getListPurposeLabel(list.purpose)} by @${list.creator.handle}`
-				}</p>
+				<p class="line-clamp-2 break-words text-de text-contrast-muted">
+					{/* @once */ `${getListPurposeLabel(list.purpose)} by `}
+					<span>{/* @once */ `@${list.creator.handle}`}</span>
+				</p>
 			</div>
 		</a>
 	);

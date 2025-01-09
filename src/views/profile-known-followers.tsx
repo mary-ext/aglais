@@ -19,7 +19,9 @@ const ProfileKnownFollowersPage = () => {
 	useTitle(() => {
 		const data = subject();
 		if (data) {
-			return `Followers of @${data.handle} that you know — ${import.meta.env.VITE_APP_NAME}`;
+			const handle = data.handle.toLowerCase();
+
+			return `Followers of @${handle} that you know — ${import.meta.env.VITE_APP_NAME}`;
 		}
 
 		return `Followers that you know — ${import.meta.env.VITE_APP_NAME}`;
@@ -37,7 +39,7 @@ const ProfileKnownFollowersPage = () => {
 					subtitle={(() => {
 						const $subject = subject();
 						if ($subject) {
-							return '@' + $subject.handle;
+							return '@' + $subject.handle.toLowerCase();
 						}
 					})()}
 				/>

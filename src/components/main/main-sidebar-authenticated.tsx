@@ -168,7 +168,7 @@ const AuthenticatedHeader = () => {
 									{profile().displayName}
 								</p>
 								<p class="overflow-hidden break-words text-sm text-contrast-muted">
-									{'@' + profile().handle}
+									{'@' + profile().handle.toLowerCase()}
 								</p>
 							</div>
 

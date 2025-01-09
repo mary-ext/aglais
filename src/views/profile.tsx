@@ -37,7 +37,7 @@ const ProfilePage = () => {
 		const data = profile.data;
 		if (data) {
 			const displayName = data.displayName?.trim();
-			const handle = data.handle;
+			const handle = data.handle.toLowerCase();
 
 			const subtitle = displayName ? `${displayName} (@${handle})` : `@${handle}`;
 

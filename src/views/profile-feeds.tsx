@@ -17,7 +17,9 @@ const ProfileFeedsPage = () => {
 	useTitle(() => {
 		const data = profile.data;
 		if (data) {
-			return `Feeds by @${data.handle} — ${import.meta.env.VITE_APP_NAME}`;
+			const handle = data.handle.toLowerCase();
+
+			return `Feeds by @${handle} — ${import.meta.env.VITE_APP_NAME}`;
 		}
 
 		return `Feeds — ${import.meta.env.VITE_APP_NAME}`;
@@ -35,7 +37,7 @@ const ProfileFeedsPage = () => {
 					subtitle={(() => {
 						const subject = profile.data;
 						if (subject) {
-							return '@' + subject.handle;
+							return '@' + subject.handle.toLowerCase();
 						}
 					})()}
 				/>

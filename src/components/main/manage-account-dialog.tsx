@@ -78,7 +78,7 @@ const CurrentAccountItem = () => {
 					{profile.data?.displayName}
 				</p>
 				<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">
-					{'@' + profile.data?.handle}
+					{'@' + profile.data?.handle.toLowerCase()}
 				</p>
 			</div>
 

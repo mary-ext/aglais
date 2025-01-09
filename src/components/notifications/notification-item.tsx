@@ -187,7 +187,7 @@ const renderText = (data: FollowNotificationSlice | LikeNotificationSlice | Repo
 		const item = items[idx];
 		const author = item.author;
 
-		const handle = truncateMiddle(author.handle, 29);
+		const handle = truncateMiddle(author.handle, 29).toLowerCase();
 
 		if (sliced > 1) {
 			if (remaining < 1 && idx === sliced - 1) {

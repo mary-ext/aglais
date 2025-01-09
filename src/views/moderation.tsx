@@ -143,7 +143,7 @@ const ModerationPage = () => {
 												{profile().displayName}
 											</p>
 											<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">
-												{'@' + profile().handle}
+												{'@' + profile().handle.toLowerCase()}
 											</p>
 										</div>
 

@@ -42,7 +42,10 @@ const AccountSettingsPage = () => {
 					<Boxed.GroupHeader>Account information</Boxed.GroupHeader>
 
 					<Boxed.List>
-						<Boxed.ButtonItem label="Handle" blurb={'@' + (repo.data?.handle ?? 'handle.invalid')} />
+						<Boxed.ButtonItem
+							label="Handle"
+							blurb={'@' + (repo.data?.handle.toLowerCase() ?? 'handle.invalid')}
+						/>
 						<Boxed.StaticItem
 							label="Data server"
 							description={repo.data ? formatPdsHost(repo.data.pds) : '-'}

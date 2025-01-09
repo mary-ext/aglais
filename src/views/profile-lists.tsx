@@ -16,7 +16,9 @@ const ProfileListsPage = () => {
 	useTitle(() => {
 		const data = profile.data;
 		if (data) {
-			return `Lists by @${data.handle} — ${import.meta.env.VITE_APP_NAME}`;
+			const handle = data.handle.toLowerCase();
+
+			return `Lists by @${handle} — ${import.meta.env.VITE_APP_NAME}`;
 		}
 
 		return `Lists by user — ${import.meta.env.VITE_APP_NAME}`;
@@ -34,7 +36,7 @@ const ProfileListsPage = () => {
 					subtitle={(() => {
 						const subject = profile.data;
 						if (subject) {
-							return '@' + subject.handle;
+							return '@' + subject.handle.toLowerCase();
 						}
 					})()}
 				/>

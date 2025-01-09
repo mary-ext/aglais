@@ -20,11 +20,12 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 		if (parent) {
 			const author = parent.author;
 			const did = author.did;
-			const handle = author.handle;
 
 			if (did === currentAccount?.did) {
 				return <div class="mb-0.5 flex text-de text-contrast-muted">Replying to you</div>;
 			}
+
+			const handle = author.handle.toLowerCase();
 
 			return (
 				<div class="mb-0.5 flex text-de text-contrast-muted">
@@ -61,7 +62,7 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 							href={`/${did}`}
 							class="overflow-hidden text-ellipsis whitespace-nowrap font-semibold hover:underline"
 						>
-							{profile.data.handle}
+							{profile.data.handle.toLowerCase()}
 						</a>
 					) : (
 						'...'

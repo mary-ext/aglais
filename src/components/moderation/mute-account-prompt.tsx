@@ -70,7 +70,7 @@ const MutePrompt = ({ profile }: MuteAccountPromptProps) => {
 
 	return (
 		<Prompt.Container maxWidth="md" disabled={mutation.isPending}>
-			<Prompt.Title>{/* @once */ `Mute @${profile.handle}?`}</Prompt.Title>
+			<Prompt.Title>{/* @once */ `Mute @${profile.handle.toLowerCase()}?`}</Prompt.Title>
 
 			<Prompt.Description>Here's what happens if you do:</Prompt.Description>
 
@@ -153,7 +153,7 @@ const MutedByListPrompt = ({ profile }: MuteAccountPromptProps) => {
 
 	return (
 		<Prompt.Container>
-			<Prompt.Title>{/* @once */ `Can't unmute @${profile.handle}`}</Prompt.Title>
+			<Prompt.Title>{/* @once */ `Can't unmute @${profile.handle.toLowerCase()}`}</Prompt.Title>
 			<Prompt.Description>
 				You've currently opted to mute all accounts that are in this moderation list:
 			</Prompt.Description>

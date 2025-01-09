@@ -63,7 +63,9 @@ const ProfileLabelsPage = () => {
 	useTitle(() => {
 		const data = query.data;
 		if (data) {
-			return `Label provider (@${data.profile.handle}) — ${import.meta.env.VITE_APP_NAME}`;
+			const handle = data.profile.handle.toLowerCase();
+
+			return `Label provider (@${handle}) — ${import.meta.env.VITE_APP_NAME}`;
 		}
 
 		return `Label provider — ${import.meta.env.VITE_APP_NAME}`;
@@ -85,7 +87,7 @@ const ProfileLabelsPage = () => {
 										onClick={() => {
 											openModal(() => (
 												<Prompt.Confirm
-													title={`Subscribe to @${labeler().profile.handle}?`}
+													title={`Subscribe to @${labeler().profile.handle.toLowerCase()}?`}
 													description="Labels applied to accounts and posts by this label provider will begin to take effect, and some content may be hidden as a result"
 													confirmLabel="Subscribe"
 													onConfirm={() => {
@@ -126,7 +128,7 @@ const ProfileLabelsPage = () => {
 												onUnsubscribe={() => {
 													openModal(() => (
 														<Prompt.Confirm
-															title={`Unsubscribe from @${labeler().profile.handle}?`}
+															title={`Unsubscribe from @${labeler().profile.handle.toLowerCase()}?`}
 															description="Labels applied to accounts and posts by this label provider no longer take effect. Saved preferences for this label provider will be lost."
 															confirmLabel="Unsubscribe"
 															danger
@@ -216,7 +218,9 @@ const LabelerView = (props: {
 					<p class="overflow-hidden text-ellipsis text-base font-bold empty:hidden">
 						{profile().displayName}
 					</p>
-					<p class="overflow-hidden text-ellipsis text-sm text-contrast-muted">{'@' + profile().handle}</p>
+					<p class="overflow-hidden text-ellipsis text-sm text-contrast-muted">
+						{'@' + profile().handle.toLowerCase()}
+					</p>
 				</div>
 			</div>
 

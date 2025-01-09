@@ -21,7 +21,7 @@ const HandleOverflowMenu = (props: HandleOverflowMenuProps) => {
 
 	const did = profile.did;
 	const handle = profile.handle;
-	const truncatedHandle = truncateMiddle(handle, 29);
+	const truncatedHandle = truncateMiddle(handle, 29).toLowerCase();
 
 	const isHandleInvalid = handle === 'handle.invalid';
 

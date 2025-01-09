@@ -48,7 +48,7 @@ const PostThreadPage = () => {
 			const author = post.author;
 			const record = post.record as AppBskyFeedPost.Record;
 
-			const authorTitle = `@${truncateMiddle(author.handle, 29)}`;
+			const authorTitle = `@${truncateMiddle(author.handle, 29).toLowerCase()}`;
 			const postContent = record.text?.trim();
 
 			const subtitle = `${authorTitle}: "${postContent}"`;

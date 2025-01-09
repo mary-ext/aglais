@@ -359,11 +359,11 @@ const ComposerInput = (props: ComposerInputProps) => {
 													<Avatar type={/* @once */ getUserAvatarType(user)} src={/* @once */ user.avatar} />
 
 													<div class="flex grow flex-col">
-														<span class="line-clamp-1 break-all text-sm font-bold">
-															{/* @once */ user.displayName || user.handle}
+														<span class="line-clamp-1 break-all text-sm font-bold empty:hidden">
+															{/* @once */ user.displayName}
 														</span>
 														<span class="line-clamp-1 shrink-0 break-all text-de text-contrast-muted">
-															@{/* @once */ user.handle}
+															{/* @once */ `@${user.handle.toLowerCase()}`}
 														</span>
 													</div>
 												</div>

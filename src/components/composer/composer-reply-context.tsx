@@ -28,7 +28,6 @@ const ComposerReplyContext = (props: ComposerReplyContextProps) => {
 	const moderation = createMemo(() => moderatePost(post, moderationOptions()));
 	const shouldBlurImage = () => getModerationUI(moderation(), ContextContentMedia).b.length !== 0;
 
-	const handle = author.handle;
 	const image = getPostImage(post.embed);
 
 	return (
@@ -48,7 +47,9 @@ const ComposerReplyContext = (props: ComposerReplyContextProps) => {
 				<div class="mb-0.5 flex items-center justify-between gap-4 text-contrast-muted">
 					<div class="flex items-center overflow-hidden text-sm">
 						<span class="overflow-hidden text-ellipsis">
-							<span class="font-semibold text-contrast hover:underline">{handle}</span>
+							<span class="font-semibold text-contrast hover:underline">
+								{/* @once */ author.handle.toLowerCase()}
+							</span>
 						</span>
 
 						<span class="pl-2"> </span>
