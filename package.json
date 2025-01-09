@@ -12,13 +12,13 @@
 		"@atcute/bluesky": "^1.0.11",
 		"@atcute/bluesky-richtext-parser": "^1.0.7",
 		"@atcute/bluesky-richtext-segmenter": "^1.0.5",
-		"@atcute/cbor": "^2.0.1",
-		"@atcute/cid": "^2.0.1",
+		"@atcute/cbor": "^2.1.1",
+		"@atcute/cid": "^2.1.0",
 		"@atcute/client": "^2.0.6",
 		"@atcute/oauth-browser-client": "^1.0.9",
 		"@atcute/tid": "^1.0.2",
-		"@floating-ui/dom": "^1.6.12",
-		"@floating-ui/utils": "^0.2.8",
+		"@floating-ui/dom": "^1.6.13",
+		"@floating-ui/utils": "^0.2.9",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
 		"@mary/exif-rm": "npm:@jsr/mary__exif-rm@^0.2.1",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
@@ -28,7 +28,7 @@
 		"idb": "^8.0.1",
 		"nanoid": "^5.0.9",
 		"solid-floating-ui": "~0.2.1",
-		"solid-js": "^1.9.3",
+		"solid-js": "^1.9.4",
 		"webm-muxer": "^5.0.3"
 	},
 	"devDependencies": {
@@ -45,7 +45,7 @@
 		"vite": "6.0.5",
 		"vite-plugin-pwa": "0.21.0",
 		"vite-plugin-solid": "^2.11.0",
-		"wrangler": "^3.99.0"
+		"wrangler": "^3.100.0"
 	},
 	"pnpm": {
 		"patchedDependencies": {
