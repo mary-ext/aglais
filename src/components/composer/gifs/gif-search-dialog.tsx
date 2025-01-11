@@ -133,9 +133,9 @@ const getGifMedia = (gif: Gif): GifMedia => {
 
 		// AAAAM -> tinygif
 		gifUrl: `https://media.tenor.com/${id.replace(/AAAAC$/, 'AAAAM')}/${file}.gif`,
-		// AAAP3 -> tinywebm
-		videoUrl: `https://t.gifs.bsky.app/${id.replace(/AAAAC$/, 'AAAP3')}/${file}.webm`,
-		// AAAAF -> tinygifpreview
-		thumbUrl: `https://t.gifs.bsky.app/${id.replace(/AAAAC$/, 'AAAAF')}/${file}.png`,
+		// AAAPs -> webm
+		videoUrl: `https://t.gifs.bsky.app/${id.replace(/AAAAC$/, 'AAAPs')}/${file}.webm`,
+		// AAAAe -> gifpreview
+		thumbUrl: `https://t.gifs.bsky.app/${id.replace(/AAAAC$/, 'AAAAe')}/${file}.png`,
 	};
 };
