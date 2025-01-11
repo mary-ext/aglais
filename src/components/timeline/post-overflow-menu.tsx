@@ -1,6 +1,6 @@
-import { createMemo } from 'solid-js';
+import { createMemo, createSignal } from 'solid-js';
 
-import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedPost, At } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { updatePostShadow, usePostShadow } from '~/api/cache/post-shadow';
@@ -10,11 +10,14 @@ import { parseAtUri } from '~/api/utils/strings';
 
 import { openModal, useModalContext } from '~/globals/modals';
 
+import { modelChecked } from '~/lib/input-refs';
 import { useAgent } from '~/lib/states/agent';
 import { useBookmarks } from '~/lib/states/bookmarks';
 import { useSession } from '~/lib/states/session';
 
 import AddPostToFolderDialogLazy from '../bookmarks/add-post-to-folder-dialog-lazy';
+import CheckboxInput from '../checkbox-input';
+import ComposerDialogLazy from '../composer/composer-dialog-lazy';
 import BookmarkCheckOutlinedIcon from '../icons-central/bookmark-check-outline';
 import BookmarkOutlinedIcon from '../icons-central/bookmark-outline';
 import FolderAddOutlinedIcon from '../icons-central/folder-add-outline';
@@ -25,17 +28,125 @@ import * as Prompt from '../prompt';
 
 import PinPostPromptLazy from './pin-post-prompt-lazy';
 
+export interface DeletePromptProps {
+	post: AppBskyFeedDefs.PostView;
+	onPostDelete?: () => void;
+	onReplyPublish?: () => void;
+}
+
+const DeletePrompt = (props: DeletePromptProps) => {
+	const post = props.post;
+	const queryClient = useQueryClient();
+	const { currentAccount } = useSession();
+	const { rpc } = useAgent();
+
+	const [redraft, setRedraft] = createSignal(false);
+
+	const deletePost = () => {
+		const onPostDelete = props.onPostDelete;
+
+		const uri = parseAtUri(post.uri);
+		const promise = deleteRecord(rpc, {
+			repo: currentAccount!.did,
+			collection: 'app.bsky.feed.post',
+			rkey: uri.rkey,
+		});
+
+		updatePostShadow(queryClient, post.uri, { deleted: true });
+
+		if (onPostDelete) {
+			promise.then(onPostDelete);
+		}
+	};
+
+	const redraftPost = () => {
+		const record = post.record as AppBskyFeedPost.Record;
+		const replyUri: At.Uri | undefined = record.reply?.parent?.uri;
+		const quoteUri: At.Uri | undefined =
+			(post.embed?.$type === 'app.bsky.embed.record#view' && post.embed.record.uri) ||
+			(post.embed?.$type === 'app.bsky.embed.recordWithMedia#view' && post.embed.record.record.uri) ||
+			undefined;
+
+		const relatedPostUris = [];
+		if (replyUri) relatedPostUris.push(replyUri);
+		if (quoteUri) relatedPostUris.push(quoteUri);
+		const relatedPostsPromise =
+			relatedPostUris.length === 0
+				? Promise.resolve({ reply: undefined, quote: undefined })
+				: rpc
+						.get('app.bsky.feed.getPosts', { params: { uris: relatedPostUris } })
+						.then(({ data: { posts } }) => ({
+							reply: replyUri ? posts.shift() : undefined,
+							quote: quoteUri ? posts.shift() : undefined,
+						}));
+
+		relatedPostsPromise.then(({ reply, quote }) => {
+			openModal(() => (
+				<ComposerDialogLazy
+					params={{ reply, quote, text: record.text, languages: record.langs }}
+					initialComposerState={(_state) => {
+						const origEmbed = post.embed;
+						if (origEmbed?.$type === 'app.bsky.embed.images#view') {
+							// TODO: reuse the embed cid instead of needing to reup them
+							// by creating the record before deleting the old one, we avoid pds blob gc :)
+							// state.posts[0].embed.media = { type: "image", images: ... };
+						}
+					}}
+					onPublish={() => {
+						props.onReplyPublish?.();
+						deletePost();
+					}}
+				/>
+			));
+		});
+	};
+
+	return (
+		<Prompt.Container>
+			<Prompt.Title>Delete this post?</Prompt.Title>
+			<Prompt.Description>
+				This can't be undone, the post will be removed from your profile, timeline of your followers, and
+				search results.
+			</Prompt.Description>
+
+			<div class="mt-2">
+				<CheckboxInput
+					ref={(node) => {
+						modelChecked(node, redraft, setRedraft);
+					}}
+					label="Redraft this post before deleting"
+				/>
+			</div>
+			<Prompt.Actions>
+				<Prompt.Action
+					variant="danger"
+					onClick={() => {
+						if (redraft()) {
+							redraftPost();
+							// TODO
+						} else {
+							deletePost();
+						}
+					}}
+				>
+					Delete
+				</Prompt.Action>
+			</Prompt.Actions>
+		</Prompt.Container>
+	);
+};
+
 export interface PostOverflowMenuProps {
 	anchor: HTMLElement;
 	/** Expected to be static */
 	post: AppBskyFeedDefs.PostView;
 	onPostDelete?: () => void;
+	onReplyPublish?: () => void;
 }
 
 const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 	const { close } = useModalContext();
 	const { currentAccount } = useSession();
-	const { rpc } = useAgent();
 
 	const bookmarks = useBookmarks();
 	const queryClient = useQueryClient();
@@ -59,27 +170,10 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 						onClick={() => {
 							close();
 							openModal(() => (
-								<Prompt.Confirm
-									title="Delete this post?"
-									description="This can't be undone, the post will be removed from your profile, timeline of your followers, and search results."
-									danger
-									confirmLabel="Delete"
-									onConfirm={() => {
-										const onPostDelete = props.onPostDelete;
-
-										const uri = parseAtUri(post.uri);
-										const promise = deleteRecord(rpc, {
-											repo: currentAccount!.did,
-											collection: 'app.bsky.feed.post',
-											rkey: uri.rkey,
-										});
-
-										updatePostShadow(queryClient, post.uri, { deleted: true });
-
-										if (onPostDelete) {
-											promise.then(onPostDelete);
-										}
-									}}
+								<DeletePrompt
+									post={props.post}
+									onPostDelete={props.onPostDelete}
+									onReplyPublish={props.onReplyPublish}
 								/>
 							));
 						}}

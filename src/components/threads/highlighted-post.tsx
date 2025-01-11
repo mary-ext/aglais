@@ -115,8 +115,16 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 							const anchor = ev.currentTarget;
 							const $post = post();
 							const onPostDelete = props.onPostDelete;
+							const onReplyPublish = props.onReplyPublish;
 
-							openModal(() => <PostOverflowMenu anchor={anchor} post={$post} onPostDelete={onPostDelete} />);
+							openModal(() => (
+								<PostOverflowMenu
+									anchor={anchor}
+									post={$post}
+									onPostDelete={onPostDelete}
+									onReplyPublish={onReplyPublish}
+								/>
+							));
 						}}
 						class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed"
 					>

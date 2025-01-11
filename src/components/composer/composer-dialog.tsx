@@ -86,6 +86,7 @@ import {
 export interface ComposerDialogProps {
 	/** This is static, meant for initializing the composer state */
 	params?: CreateComposerStateOptions;
+	initialComposerState?: (state: ComposerState) => void;
 	onPublish?: () => void;
 }
 
@@ -128,6 +129,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 	};
 
 	const state = createMutable(createComposerState(props.params, currentAccount!.preferences.composer));
+	props.initialComposerState?.(state);
 
 	const showAddPostButton = () => {
 		var reply = state.reply;
