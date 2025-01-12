@@ -3,14 +3,11 @@ import { createMemo } from 'solid-js';
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
-import { updatePostShadow, usePostShadow } from '~/api/cache/post-shadow';
+import { usePostShadow } from '~/api/cache/post-shadow';
 import { createBookmarkEntryQuery } from '~/api/queries/bookmark-entry';
-import { deleteRecord } from '~/api/utils/records';
-import { parseAtUri } from '~/api/utils/strings';
 
 import { openModal, useModalContext } from '~/globals/modals';
 
-import { useAgent } from '~/lib/states/agent';
 import { useBookmarks } from '~/lib/states/bookmarks';
 import { useSession } from '~/lib/states/session';
 
@@ -21,8 +18,8 @@ import FolderAddOutlinedIcon from '../icons-central/folder-add-outline';
 import PinOutlinedIcon from '../icons-central/pin-outline';
 import TrashOutlinedIcon from '../icons-central/trash-outline';
 import * as Menu from '../menu';
-import * as Prompt from '../prompt';
 
+import DeletePostPrompt from './delete-post-prompt';
 import PinPostPromptLazy from './pin-post-prompt-lazy';
 
 export interface PostOverflowMenuProps {
@@ -35,7 +32,6 @@ export interface PostOverflowMenuProps {
 const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 	const { close } = useModalContext();
 	const { currentAccount } = useSession();
-	const { rpc } = useAgent();
 
 	const bookmarks = useBookmarks();
 	const queryClient = useQueryClient();
@@ -58,30 +54,7 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 						variant="danger"
 						onClick={() => {
 							close();
-							openModal(() => (
-								<Prompt.Confirm
-									title="Delete this post?"
-									description="This can't be undone, the post will be removed from your profile, timeline of your followers, and search results."
-									danger
-									confirmLabel="Delete"
-									onConfirm={() => {
-										const onPostDelete = props.onPostDelete;
-
-										const uri = parseAtUri(post.uri);
-										const promise = deleteRecord(rpc, {
-											repo: currentAccount!.did,
-											collection: 'app.bsky.feed.post',
-											rkey: uri.rkey,
-										});
-
-										updatePostShadow(queryClient, post.uri, { deleted: true });
-
-										if (onPostDelete) {
-											promise.then(onPostDelete);
-										}
-									}}
-								/>
-							));
+							openModal(() => <DeletePostPrompt post={post} onPostDelete={props.onPostDelete} />);
 						}}
 					/>
 
