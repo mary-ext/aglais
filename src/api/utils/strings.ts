@@ -63,7 +63,6 @@ export const safeUrlParse = _parse
 
 const TRIM_HOST_RE = /^www\./;
 const TRIM_URLTEXT_RE = /^\s*(https?:\/\/)?(?:www\.)?/;
-// const PATH_MAX_LENGTH = 18;
 
 export const isLinkValid = (uri: string, text: string) => {
 	const url = safeUrlParse(uri);
