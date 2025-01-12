@@ -64,7 +64,7 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 					class="mr-2"
 				/>
 
-				<span class="overflow-hidden text-ellipsis">
+				<span class="overflow-hidden text-ellipsis whitespace-nowrap">
 					<span class="font-semibold text-contrast">{/* @once */ author.handle.toLowerCase()}</span>
 				</span>
 
