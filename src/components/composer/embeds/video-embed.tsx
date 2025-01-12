@@ -18,12 +18,14 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 	const { currentAccount } = useSession();
 
 	return (
-		<div class="relative self-start">
+		<div class="relative max-w-full self-start">
 			<Keyed value={props.embed.source}>
 				{(source) => {
+					const aspectRatio = source.aspectRatio;
+					const ratio = aspectRatio ? `${aspectRatio.width}/${aspectRatio.height}` : '16/9';
+
 					let videoUrl: string;
 					let mimeType: string | undefined;
-					let aspectRatio: string | undefined;
 
 					switch (source.type) {
 						case 'local': {
@@ -34,8 +36,6 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 							break;
 						}
 						case 'remote': {
-							const ratio = source.aspectRatio;
-
 							const did = currentAccount!.did;
 							const cid = source.blob.ref.$link;
 
@@ -43,10 +43,6 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 
 							videoUrl = new URL(`/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${cid}`, pdsUrl).toString();
 							mimeType = source.blob.mimeType;
-
-							if (ratio) {
-								aspectRatio = `${ratio.width}/${ratio.height}`;
-							}
 							break;
 						}
 					}
@@ -54,7 +50,7 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 					return (
 						<div
 							class="max-h-80 min-h-16 min-w-16 max-w-full overflow-hidden rounded-md border border-outline"
-							style={{ 'aspect-ratio': aspectRatio }}
+							style={{ 'aspect-ratio': ratio }}
 						>
 							<video
 								ref={(node) => {

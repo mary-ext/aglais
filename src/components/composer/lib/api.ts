@@ -31,7 +31,6 @@ import { isDid, makeAtUri, parseAtUri } from '~/api/utils/strings';
 import { getUtf8Length } from '~/api/utils/unicode';
 
 import { compressPostImage } from '~/lib/bsky/image';
-import { getVideoMetadata } from '~/lib/bsky/video-upload';
 import type { AgentContext } from '~/lib/states/agent';
 import { assert, assertUnreachable } from '~/lib/utils/invariant';
 
@@ -337,9 +336,6 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 				const videoRpc = new XRPC({ handler: simpleFetchHandler({ service: 'https://video.bsky.app' }) });
 
-				// Get the aspect ratio now
-				const metadata = await getVideoMetadata(blob);
-
 				// Get upload limit status
 				{
 					log?.(`Checking video upload limits`);
@@ -506,10 +502,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 					$type: 'app.bsky.embed.video',
 					video: result,
 					alt: embed.alt,
-					aspectRatio: {
-						width: metadata.width,
-						height: metadata.height,
-					},
+					aspectRatio: source.aspectRatio,
 				};
 			}
 

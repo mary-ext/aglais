@@ -629,6 +629,10 @@ const PostAction = (props: {
 					source: {
 						type: 'local',
 						blob: video,
+						aspectRatio: {
+							height: metadata.height,
+							width: metadata.width,
+						},
 					},
 					alt: '',
 					labels: [],
