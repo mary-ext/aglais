@@ -19,7 +19,7 @@ import PinOutlinedIcon from '../icons-central/pin-outline';
 import TrashOutlinedIcon from '../icons-central/trash-outline';
 import * as Menu from '../menu';
 
-import DeletePostPrompt from './delete-post-prompt';
+import DeletePostPromptLazy from './delete-post-prompt-lazy';
 import PinPostPromptLazy from './pin-post-prompt-lazy';
 
 export interface PostOverflowMenuProps {
@@ -54,7 +54,7 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 						variant="danger"
 						onClick={() => {
 							close();
-							openModal(() => <DeletePostPrompt post={post} onPostDelete={props.onPostDelete} />);
+							openModal(() => <DeletePostPromptLazy post={post} onPostDelete={props.onPostDelete} />);
 						}}
 					/>
 
