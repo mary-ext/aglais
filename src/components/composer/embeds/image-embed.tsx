@@ -2,6 +2,8 @@ import { For, onCleanup } from 'solid-js';
 
 import { openModal } from '~/globals/modals';
 
+import { useSession } from '~/lib/states/session';
+
 import AltButton from '../../alt-button';
 import IconButton from '../../icon-button';
 import CrossLargeOutlinedIcon from '../../icons-central/cross-large-outline';
@@ -15,6 +17,8 @@ export interface ImageEmbedProps {
 }
 
 const ImageEmbed = (props: ImageEmbedProps) => {
+	const { currentAccount } = useSession();
+
 	return (
 		<div
 			tabindex={!props.active ? -1 : undefined}
@@ -22,8 +26,25 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 		>
 			<For each={props.embed.images}>
 				{(image, index) => {
-					const thumbUrl = URL.createObjectURL(image.blob);
-					onCleanup(() => URL.revokeObjectURL(thumbUrl));
+					const source = image.source;
+
+					let thumbUrl: string;
+
+					switch (source.type) {
+						case 'local': {
+							onCleanup(() => URL.revokeObjectURL(thumbUrl));
+
+							thumbUrl = URL.createObjectURL(source.blob);
+							break;
+						}
+						case 'remote': {
+							const did = currentAccount!.did;
+							const cid = source.blob.ref.$link;
+
+							thumbUrl = `https://cdn.bsky.app/img/feed_fullsize/plain/${did}/${cid}@png`;
+							break;
+						}
+					}
 
 					return (
 						<div class="relative shrink-0 snap-end snap-always scroll-m-4 overflow-hidden rounded border border-outline">
@@ -54,7 +75,7 @@ const ImageEmbed = (props: ImageEmbedProps) => {
 									onClick={() => {
 										openModal(() => (
 											<ImageAltDialogLazy
-												image={image.blob}
+												source={image.source}
 												value={image.alt}
 												onChange={(next) => {
 													image.alt = next;

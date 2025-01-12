@@ -6,33 +6,47 @@ import { graphemeLen } from '~/api/utils/unicode';
 import { useModalContext } from '~/globals/modals';
 
 import { autofocusNode, modelText } from '~/lib/input-refs';
+import { useSession } from '~/lib/states/session';
 
 import Button from '../../button';
 import * as Dialog from '../../dialog';
 import Divider from '../../divider';
 import CharCounterAccessory from '../../input/char-counter-accessory';
 import TextareaInput from '../../textarea-input';
+import type { LocalImageSource, RemoteImageSource } from '../lib/state';
 
 export interface ImageAltDialogProps {
-	image: Blob;
+	source: LocalImageSource | RemoteImageSource;
 	value: string;
 	onChange: (next: string) => void;
 }
 
 const ImageAltDialog = (props: ImageAltDialogProps) => {
 	const { close } = useModalContext();
+	const { currentAccount } = useSession();
 
 	const [text, setText] = createSignal(props.value);
 
 	const length = createMemo(() => graphemeLen(text()));
 	const isEqual = () => text() === props.value;
 
-	const blobUrl = createMemo(() => {
-		const blob = props.image;
-		const url = URL.createObjectURL(blob);
+	const thumbUrl = createMemo((): string => {
+		const source = props.source;
 
-		onCleanup(() => URL.revokeObjectURL(url));
-		return url;
+		switch (source.type) {
+			case 'local': {
+				const thumbUrl = URL.createObjectURL(source.blob);
+				onCleanup(() => URL.revokeObjectURL(thumbUrl));
+
+				return thumbUrl;
+			}
+			case 'remote': {
+				const did = currentAccount!.did;
+				const cid = source.blob.ref.$link;
+
+				return `https://cdn.bsky.app/img/feed_fullsize/plain/${did}/${cid}@png`;
+			}
+		}
 	});
 
 	return (
@@ -63,7 +77,10 @@ const ImageAltDialog = (props: ImageAltDialogProps) => {
 
 				<Dialog.Body unpadded class="flex flex-col">
 					<div class="grow bg-contrast/sm-pressed p-4">
-						<div class="h-full w-full" style={`background: url(${blobUrl()}) center/contain no-repeat`}></div>
+						<div
+							class="h-full w-full"
+							style={`background: url(${thumbUrl()}) center/contain no-repeat`}
+						></div>
 					</div>
 
 					<Divider />

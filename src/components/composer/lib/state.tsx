@@ -1,6 +1,7 @@
 import { unwrap } from 'solid-js/store';
 
 import { type Token as RichToken, tokenize } from '@atcute/bluesky-richtext-parser';
+import type { AppBskyEmbedDefs, At } from '@atcute/client/lexicons';
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 
 import { graphemeLen } from '~/api/utils/unicode';
@@ -26,8 +27,20 @@ export interface PostGifEmbed {
 	alt?: string;
 }
 
-export interface PostImage {
+export interface LocalImageSource {
+	type: 'local';
 	blob: Blob;
+	aspectRatio?: AppBskyEmbedDefs.AspectRatio;
+}
+
+export interface RemoteImageSource {
+	type: 'remote';
+	blob: At.Blob;
+	aspectRatio?: AppBskyEmbedDefs.AspectRatio;
+}
+
+export interface PostImage {
+	source: LocalImageSource | RemoteImageSource;
 	alt: string;
 }
 

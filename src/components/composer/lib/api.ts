@@ -32,12 +32,13 @@ import { getUtf8Length } from '~/api/utils/unicode';
 import { compressPostImage } from '~/lib/bsky/image';
 import { getVideoMetadata } from '~/lib/bsky/video-upload';
 import type { AgentContext } from '~/lib/states/agent';
-import { assert } from '~/lib/utils/invariant';
+import { assert, assertUnreachable } from '~/lib/utils/invariant';
 
 import {
 	type ComposerState,
 	type ParsedRichText,
 	type PostEmbed,
+	type PostImage,
 	type PostLinkEmbed,
 	type PostMediaEmbed,
 	type PostRecordEmbed,
@@ -229,9 +230,17 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				log?.(`Compressing images`);
 
 				const compressed = await Promise.all(
-					embed.images.map(async (image) => {
-						const result = await compressPostImage(image.blob);
-						return { ...image, ...result };
+					embed.images.map(async (image): Promise<PostImage> => {
+						const source = image.source;
+
+						switch (source.type) {
+							case 'local': {
+								const { blob, aspectRatio } = await compressPostImage(source.blob);
+								return { ...image, source: { type: 'local', blob, aspectRatio } };
+							}
+						}
+
+						return image;
 					}),
 				);
 
@@ -239,13 +248,28 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 				const images = await Promise.all(
 					compressed.map(async (image): Promise<AppBskyEmbedImages.Image> => {
-						const uploaded = await uploadBlob(rpc, image.blob);
+						const source = image.source;
 
-						return {
-							image: uploaded,
-							alt: image.alt,
-							aspectRatio: image.ratio,
-						};
+						switch (source.type) {
+							case 'local': {
+								const uploaded = await uploadBlob(rpc, source.blob);
+
+								return {
+									image: uploaded,
+									alt: image.alt,
+									aspectRatio: source.aspectRatio,
+								};
+							}
+							case 'remote': {
+								return {
+									image: source.blob,
+									alt: image.alt,
+									aspectRatio: source.aspectRatio,
+								};
+							}
+						}
+
+						assertUnreachable(source, `unknown source type`);
 					}),
 				);
 

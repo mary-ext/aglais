@@ -1,3 +1,4 @@
+import type { AppBskyEmbedDefs } from '@atcute/client/lexicons';
 import { remove as removeExif } from '@mary/exif-rm';
 
 const MAX_SIZE = 1_000_000; // 1 MB
@@ -7,10 +8,7 @@ const POST_MAX_WIDTH = 2_000;
 
 export interface CompressResult {
 	blob: Blob;
-	ratio: {
-		width: number;
-		height: number;
-	};
+	aspectRatio: AppBskyEmbedDefs.AspectRatio;
 }
 
 export const compressPostImage = async (blob: Blob): Promise<CompressResult> => {
@@ -26,7 +24,10 @@ export const compressPostImage = async (blob: Blob): Promise<CompressResult> => 
 	const image = await getImageFromBlob(blob);
 
 	if (blob.size <= MAX_SIZE) {
-		return { blob: blob, ratio: { width: image.naturalWidth, height: image.naturalHeight } };
+		return {
+			blob: blob,
+			aspectRatio: { width: image.naturalWidth, height: image.naturalHeight },
+		};
 	}
 
 	// We went over the maximum size, resize and compress to fit.
@@ -47,7 +48,7 @@ export const compressPostImage = async (blob: Blob): Promise<CompressResult> => 
 
 		const result: CompressResult = {
 			blob: blob,
-			ratio: { width: width, height: height },
+			aspectRatio: { width: width, height: height },
 		};
 
 		if (blob.size === MAX_SIZE) {
@@ -88,7 +89,7 @@ export const compressProfileImage = async (
 
 	// Profile avatars only accepts either JPEG or PNG
 	if ((type === 'image/jpeg' || type === 'image/png') && blob.size <= MAX_SIZE) {
-		return { blob: blob, ratio: { width: image.naturalWidth, height: image.naturalHeight } };
+		return { blob: blob, aspectRatio: { width: image.naturalWidth, height: image.naturalHeight } };
 	}
 
 	// We went over the maximum size or format is unsupported, resize and compress to fit.
@@ -110,7 +111,7 @@ export const compressProfileImage = async (
 
 		const result: CompressResult = {
 			blob: blob,
-			ratio: { width: width, height: height },
+			aspectRatio: { width: width, height: height },
 		};
 
 		if (blob.size === MAX_SIZE) {

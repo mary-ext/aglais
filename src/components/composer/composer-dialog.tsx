@@ -75,6 +75,7 @@ import { getRecordEmbedFromLink } from './lib/link-detection';
 import {
 	type ComposerState,
 	type CreateComposerStateOptions,
+	type LocalImageSource,
 	type PostEmbed,
 	type PostState,
 	createComposerState,
@@ -670,20 +671,23 @@ const PostAction = (props: {
 			return;
 		}
 
-		const images = blobs.filter((blob) => SUPPORTED_IMAGE_FORMATS.includes(blob.type));
+		const images = blobs
+			.filter((blob) => SUPPORTED_IMAGE_FORMATS.includes(blob.type))
+			.map((blob): LocalImageSource => ({ type: 'local', blob }));
+
 		if (images.length) {
 			let next = post.embed.media;
 			if (!next) {
 				onError();
 				next = {
 					type: 'image',
-					images: images.slice(0, MAX_IMAGES).map((blob) => ({ blob, alt: '' })),
+					images: images.slice(0, MAX_IMAGES).map((source) => ({ source, alt: '' })),
 					labels: [],
 				};
 			} else if (next.type === 'image') {
 				onError();
 				next.images = next.images.concat(
-					images.slice(0, MAX_IMAGES - next.images.length).map((blob) => ({ blob, alt: '' })),
+					images.slice(0, MAX_IMAGES - next.images.length).map((source) => ({ source, alt: '' })),
 				);
 			}
 
