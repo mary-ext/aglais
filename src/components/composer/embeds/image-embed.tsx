@@ -4,9 +4,10 @@ import { openModal } from '~/globals/modals';
 
 import { useSession } from '~/lib/states/session';
 
-import AltButton from '../../alt-button';
-import IconButton from '../../icon-button';
-import CrossLargeOutlinedIcon from '../../icons-central/cross-large-outline';
+import AltButton from '~/components/alt-button';
+import IconButton from '~/components/icon-button';
+import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outline';
+
 import ImageAltDialogLazy from '../dialogs/image-alt-dialog-lazy';
 import type { PostImageEmbed } from '../lib/state';
 

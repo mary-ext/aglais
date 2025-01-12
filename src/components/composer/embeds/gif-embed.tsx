@@ -1,11 +1,12 @@
 import { openModal } from '~/globals/modals';
 
-import AltButton from '../../alt-button';
-import { type BlueskyGifSnippet, SnippetType } from '../../embeds/lib/snippet';
-import { GifEmbed as GifEmbedContent } from '../../embeds/supports/gif-embed';
-import IconButton from '../../icon-button';
-import CrossLargeOutlinedIcon from '../../icons-central/cross-large-outline';
-import Keyed from '../../keyed';
+import AltButton from '~/components/alt-button';
+import { type BlueskyGifSnippet, SnippetType } from '~/components/embeds/lib/snippet';
+import { GifEmbed as GifEmbedContent } from '~/components/embeds/supports/gif-embed';
+import IconButton from '~/components/icon-button';
+import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outline';
+import Keyed from '~/components/keyed';
+
 import GifAltDialogLazy from '../dialogs/gif-alt-dialog-lazy';
 import type { PostGifEmbed } from '../lib/state';
 

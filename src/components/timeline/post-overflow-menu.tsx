@@ -11,14 +11,14 @@ import { openModal, useModalContext } from '~/globals/modals';
 import { useBookmarks } from '~/lib/states/bookmarks';
 import { useSession } from '~/lib/states/session';
 
-import AddPostToFolderDialogLazy from '../bookmarks/add-post-to-folder-dialog-lazy';
-import BookmarkCheckOutlinedIcon from '../icons-central/bookmark-check-outline';
-import BookmarkOutlinedIcon from '../icons-central/bookmark-outline';
-import FolderAddOutlinedIcon from '../icons-central/folder-add-outline';
-import PinOutlinedIcon from '../icons-central/pin-outline';
-import StepBackOutlinedIcon from '../icons-central/step-back-outline';
-import TrashOutlinedIcon from '../icons-central/trash-outline';
-import * as Menu from '../menu';
+import AddPostToFolderDialogLazy from '~/components/bookmarks/add-post-to-folder-dialog-lazy';
+import BookmarkCheckOutlinedIcon from '~/components/icons-central/bookmark-check-outline';
+import BookmarkOutlinedIcon from '~/components/icons-central/bookmark-outline';
+import FolderAddOutlinedIcon from '~/components/icons-central/folder-add-outline';
+import PinOutlinedIcon from '~/components/icons-central/pin-outline';
+import StepBackOutlinedIcon from '~/components/icons-central/step-back-outline';
+import TrashOutlinedIcon from '~/components/icons-central/trash-outline';
+import * as Menu from '~/components/menu';
 
 import DeletePostPromptLazy from './delete-post-prompt-lazy';
 import PinPostPromptLazy from './pin-post-prompt-lazy';

@@ -7,12 +7,12 @@ import { openModal } from '~/globals/modals';
 
 import { formatCompact } from '~/lib/intl/number';
 
-import ComposerDialogLazy from '../composer/composer-dialog-lazy';
-import HeartOutlinedIcon from '../icons-central/heart-outline';
-import HeartSolidIcon from '../icons-central/heart-solid';
-import RepeatOutlinedIcon from '../icons-central/repeat-outline';
-import ReplyOutlinedIcon from '../icons-central/reply-outline';
-import ShareOutlinedIcon from '../icons-central/share-outline';
+import ComposerDialogLazy from '~/components/composer/composer-dialog-lazy';
+import HeartOutlinedIcon from '~/components/icons-central/heart-outline';
+import HeartSolidIcon from '~/components/icons-central/heart-solid';
+import RepeatOutlinedIcon from '~/components/icons-central/repeat-outline';
+import ReplyOutlinedIcon from '~/components/icons-central/reply-outline';
+import ShareOutlinedIcon from '~/components/icons-central/share-outline';
 
 import PostShareMenu from './post-share-menu';
 import RepostMenu from './repost-menu';
