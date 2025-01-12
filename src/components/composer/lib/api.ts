@@ -312,7 +312,18 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 			}
 
 			if (embed.type === 'video') {
-				const blob = embed.blob;
+				const source = embed.source;
+
+				if (source.type === 'remote') {
+					return {
+						$type: 'app.bsky.embed.video',
+						video: source.blob,
+						alt: embed.alt,
+						aspectRatio: source.aspectRatio,
+					};
+				}
+
+				const blob = source.blob;
 
 				const videoRpc = new XRPC({ handler: simpleFetchHandler({ service: 'https://video.bsky.app' }) });
 

@@ -13,10 +13,10 @@ import * as Dialog from '../../dialog';
 import Divider from '../../divider';
 import CharCounterAccessory from '../../input/char-counter-accessory';
 import TextareaInput from '../../textarea-input';
-import type { LocalImageSource, RemoteImageSource } from '../lib/state';
+import type { MediaSource } from '../lib/state';
 
 export interface ImageAltDialogProps {
-	source: LocalImageSource | RemoteImageSource;
+	source: MediaSource;
 	value: string;
 	onChange: (next: string) => void;
 }

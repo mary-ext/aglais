@@ -27,20 +27,22 @@ export interface PostGifEmbed {
 	alt?: string;
 }
 
-export interface LocalImageSource {
+export interface LocalMediaSource {
 	type: 'local';
 	blob: Blob;
 	aspectRatio?: AppBskyEmbedDefs.AspectRatio;
 }
 
-export interface RemoteImageSource {
+export interface RemoteMediaSource {
 	type: 'remote';
 	blob: At.Blob;
 	aspectRatio?: AppBskyEmbedDefs.AspectRatio;
 }
 
+export type MediaSource = LocalMediaSource | RemoteMediaSource;
+
 export interface PostImage {
-	source: LocalImageSource | RemoteImageSource;
+	source: MediaSource;
 	alt: string;
 }
 
@@ -52,7 +54,7 @@ export interface PostImageEmbed {
 
 export interface PostVideoEmbed {
 	type: 'video';
-	blob: Blob;
+	source: MediaSource;
 	alt: string;
 	labels: string[];
 }

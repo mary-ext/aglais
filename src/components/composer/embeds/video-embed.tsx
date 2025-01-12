@@ -1,7 +1,6 @@
-import { createEffect } from 'solid-js';
+import { createEffect, onCleanup } from 'solid-js';
 
 import { useSession } from '~/lib/states/session';
-import { convertBlobToUrl } from '~/lib/utils/blob';
 
 import IconButton from '~/components/icon-button';
 import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outline';
@@ -20,9 +19,31 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 
 	return (
 		<div class="relative self-start">
-			<Keyed value={props.embed.blob}>
-				{(blob) => {
-					const blobUrl = convertBlobToUrl(blob);
+			<Keyed value={props.embed.source}>
+				{(source) => {
+					// const blobUrl = convertBlobToUrl(source);
+					let videoUrl: string;
+					let mimeType: string | undefined;
+
+					switch (source.type) {
+						case 'local': {
+							onCleanup(() => URL.revokeObjectURL(videoUrl));
+
+							videoUrl = URL.createObjectURL(source.blob);
+							mimeType = source.blob.type;
+							break;
+						}
+						case 'remote': {
+							const did = currentAccount!.did;
+							const cid = source.blob.ref.$link;
+
+							const pdsUrl = currentAccount!.agent!.session.info.aud;
+
+							videoUrl = new URL(`/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${cid}`, pdsUrl).toString();
+							mimeType = source.blob.mimeType;
+							break;
+						}
+					}
 
 					return (
 						<video
@@ -35,7 +56,6 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 									}
 								});
 							}}
-							src={blobUrl}
 							inert={!props.active}
 							controls={props.active}
 							onVolumeChange={(ev) => {
@@ -55,7 +75,9 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 								video.loop = !hasAudio || video.duration <= 6;
 							}}
 							class="h-full max-h-80 min-h-16 w-full min-w-16 max-w-full rounded-md border border-outline"
-						/>
+						>
+							<source src={videoUrl} type={mimeType} />
+						</video>
 					);
 				}}
 			</Keyed>
