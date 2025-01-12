@@ -1,8 +1,13 @@
 import { unwrap } from 'solid-js/store';
 
 import { type Token as RichToken, tokenize } from '@atcute/bluesky-richtext-parser';
-import type { AppBskyEmbedDefs, At } from '@atcute/client/lexicons';
-import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+import type {
+	AppBskyEmbedDefs,
+	AppBskyEmbedExternal,
+	AppBskyFeedDefs,
+	At,
+	Brand,
+} from '@atcute/client/lexicons';
 
 import { graphemeLen } from '~/api/utils/unicode';
 import { toShortUrl } from '~/api/utils/url';
@@ -242,6 +247,7 @@ export interface CreateComposerStateOptions {
 export interface ComposerState {
 	active: number;
 	replyUri: string | undefined;
+	redraftUri: string | undefined;
 	posts: PostState[];
 	threadgate: ThreadgateState;
 	postgate: PostgateState;
@@ -254,6 +260,7 @@ export function createComposerState(
 	return {
 		active: 0,
 		replyUri: replyUri,
+		redraftUri: undefined,
 		posts: [
 			createPostState({
 				text,

@@ -2,7 +2,7 @@ import type { AppBskyFeedPostgate, AppBskyFeedThreadgate } from '@atcute/client/
 
 import type { PersistedPostgate, PersistedThreadgate } from '../account';
 
-export type ThreadgateState = Pick<AppBskyFeedThreadgate.Record, 'allow'>;
+export type ThreadgateState = Pick<AppBskyFeedThreadgate.Record, 'allow' | 'hiddenReplies'>;
 export type PostgateState = Pick<AppBskyFeedPostgate.Record, 'detachedEmbeddingUris' | 'embeddingRules'>;
 
 export const toPersistedThreadgate = (gate: ThreadgateState): PersistedThreadgate => {

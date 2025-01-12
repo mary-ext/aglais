@@ -61,7 +61,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 	const did = agent.did!;
 
 	const now = new Date();
-	const writes: Brand.Union<ComAtprotoRepoApplyWrites.Create>[] = [];
+	const writes: ComAtprotoRepoApplyWrites.Input['writes'] = [];
 
 	let reply: AppBskyFeedPost.ReplyRef | undefined;
 	let rkey: string | undefined;
@@ -110,6 +110,16 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 			root: root ?? ref,
 			parent: ref,
 		};
+	}
+
+	if (state.redraftUri) {
+		const uri = parseAtUri(state.redraftUri);
+
+		writes.push({
+			$type: 'com.atproto.repo.applyWrites#delete',
+			collection: 'app.bsky.feed.post',
+			rkey: uri.rkey,
+		});
 	}
 
 	for (let idx = 0, len = state.posts.length; idx < len; idx++) {
