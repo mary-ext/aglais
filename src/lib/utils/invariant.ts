@@ -14,6 +14,6 @@ export function assertStrong(condition: any, message?: string): asserts conditio
 	}
 }
 
-export function assertUnreachable(condition: never, message?: string): never {
+export function assertUnreachable(_: never, message?: string): never {
 	assertStrong(false, message);
 }
