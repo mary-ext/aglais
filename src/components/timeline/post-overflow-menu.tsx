@@ -16,11 +16,13 @@ import BookmarkCheckOutlinedIcon from '../icons-central/bookmark-check-outline';
 import BookmarkOutlinedIcon from '../icons-central/bookmark-outline';
 import FolderAddOutlinedIcon from '../icons-central/folder-add-outline';
 import PinOutlinedIcon from '../icons-central/pin-outline';
+import StepBackOutlinedIcon from '../icons-central/step-back-outline';
 import TrashOutlinedIcon from '../icons-central/trash-outline';
 import * as Menu from '../menu';
 
 import DeletePostPromptLazy from './delete-post-prompt-lazy';
 import PinPostPromptLazy from './pin-post-prompt-lazy';
+import RevisePostPromptLazy from './revise-post-prompt-lazy';
 
 export interface PostOverflowMenuProps {
 	anchor: HTMLElement;
@@ -55,6 +57,15 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 						onClick={() => {
 							close();
 							openModal(() => <DeletePostPromptLazy post={post} onPostDelete={props.onPostDelete} />);
+						}}
+					/>
+
+					<Menu.Item
+						icon={StepBackOutlinedIcon}
+						label="Revise"
+						onClick={() => {
+							close();
+							openModal(() => <RevisePostPromptLazy post={post} onPostRevise={props.onPostDelete} />);
 						}}
 					/>
 

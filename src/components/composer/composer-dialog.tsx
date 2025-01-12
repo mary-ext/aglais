@@ -219,10 +219,10 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 							)}
 
 							<Button disabled={!canSubmit()} onClick={handleSubmit} variant="primary">
-								{state.replyUri
-									? `Reply`
-									: state.redraftUri
-										? `Repost`
+								{state.redraftUri
+									? `Revise`
+									: state.replyUri
+										? `Reply`
 										: state.posts.length > 1
 											? `Post all`
 											: `Post`}
