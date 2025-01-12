@@ -50,7 +50,6 @@ import PeopleOutlinedIcon from '../icons-central/people-outline';
 import ShieldCheckOutlinedIcon from '../icons-central/shield-check-outline';
 import ShieldOutlinedIcon from '../icons-central/shield-outline';
 import TranslateOutlinedIcon from '../icons-central/translate-outline';
-import Keyed from '../keyed';
 import * as Prompt from '../prompt';
 
 import ComposerInput from './composer-input';
@@ -208,7 +207,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 
 					{!pending() ? (
 						<Dialog.HeaderAccessory>
-							{!state.reply && !isCloseGuarded() && (
+							{!state.replyUri && !isCloseGuarded() && (
 								<Button
 									onClick={() => {
 										openModal(() => <DraftListDialogLazy />);
@@ -238,15 +237,9 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 				) : null}
 
 				<Dialog.Body unpadded class="z-1 min-h-[9.75rem] pb-6">
-					<Keyed value={state.reply}>
-						{(reply) => {
-							if (!reply) {
-								return;
-							}
-
-							return <ComposerReplyContext post={reply} pending={pending()} />;
-						}}
-					</Keyed>
+					<Show when={state.replyUri} keyed>
+						{(replyUri) => <ComposerReplyContext replyUri={replyUri} pending={pending()} />}
+					</Show>
 
 					<For each={state.posts}>
 						{(post, idx) => (
@@ -263,7 +256,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 					</For>
 				</Dialog.Body>
 
-				{!state.reply && <GateAction state={state} />}
+				{!state.replyUri && <GateAction state={state} />}
 
 				<PostAction
 					disabled={false}
@@ -347,7 +340,7 @@ const Post = ({
 	return (
 		<div class="relative flex gap-3 px-4">
 			<div class="flex shrink-0 flex-col items-center pt-3">
-				{(hasPrevious() || state.reply) && (
+				{(hasPrevious() || state.replyUri) && (
 					<div class="absolute top-0 h-2 border-l-2 border-outline-md"></div>
 				)}
 
@@ -375,7 +368,7 @@ const Post = ({
 					}}
 					onSubmit={onSubmit}
 					placeholder={
-						!hasPrevious() ? (state.reply ? `Write your reply` : `What's up?`) : `Write another post`
+						!hasPrevious() ? (state.replyUri ? `Write your reply` : `What's up?`) : `Write another post`
 					}
 					minRows={isActive() ? 2 : 1}
 				/>
@@ -766,15 +759,15 @@ const PostAction = (props: {
 						variant="accent"
 					/>
 
-							<div class="my-2 self-stretch border-l border-outline opacity-70"></div>
+					<div class="my-2 self-stretch border-l border-outline opacity-70"></div>
 
-							<IconButton
-								icon={AddOutlinedIcon}
-								title="Add post"
-								disabled={!canAddPost()}
-								onClick={props.onAddPost}
-								variant="accent"
-							/>
+					<IconButton
+						icon={AddOutlinedIcon}
+						title="Add post"
+						disabled={!canAddPost()}
+						onClick={props.onAddPost}
+						variant="accent"
+					/>
 				</div>
 			</div>
 

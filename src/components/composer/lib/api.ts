@@ -24,9 +24,10 @@ import type { QueryClient } from '@mary/solid-query';
 
 import { uploadBlob } from '~/api/queries/blob';
 import type { LinkMeta } from '~/api/queries/composer';
+import { resolveHandle } from '~/api/queries/handle';
 import { getRecord } from '~/api/utils/records';
 import { trimRichText } from '~/api/utils/richtext';
-import { makeAtUri } from '~/api/utils/strings';
+import { isDid, makeAtUri, parseAtUri } from '~/api/utils/strings';
 import { getUtf8Length } from '~/api/utils/unicode';
 
 import { compressPostImage } from '~/lib/bsky/image';
@@ -65,10 +66,41 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 	let reply: AppBskyFeedPost.ReplyRef | undefined;
 	let rkey: string | undefined;
 
-	if (state.reply) {
-		const post = state.reply;
-		const root = (post.record as AppBskyFeedPost.Record).reply?.root;
+	if (state.replyUri) {
+		log?.(`Retrieving reply`);
 
+		const replyUri = state.replyUri;
+		const post = await queryClient.fetchQuery({
+			queryKey: ['post', replyUri],
+			staleTime: 30_000,
+			async queryFn(ctx) {
+				const uri = parseAtUri(replyUri);
+
+				let did: At.DID;
+				if (isDid(uri.repo)) {
+					did = uri.repo;
+				} else {
+					did = await resolveHandle(rpc, uri.repo, ctx.signal);
+				}
+
+				const { data } = await rpc.get('app.bsky.feed.getPosts', {
+					signal: ctx.signal,
+					params: {
+						uris: [makeAtUri(did, uri.collection, uri.rkey)],
+					},
+				});
+
+				const post = data.posts[0];
+
+				if (!post) {
+					throw new Error(`Post not found`);
+				}
+
+				return post;
+			},
+		});
+
+		const root = (post.record as AppBskyFeedPost.Record).reply?.root;
 		const ref: ComAtprotoRepoStrongRef.Main = {
 			uri: post.uri,
 			cid: post.cid,

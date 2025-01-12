@@ -63,9 +63,9 @@ const PostActions = (props: PostActionsProps) => {
 							return;
 						}
 
-						const $post = post();
+						const replyUri = post().uri;
 						const onReplyPublish = props.onReplyPublish;
-						openModal(() => <ComposerDialogLazy params={{ reply: $post }} onPublish={onReplyPublish} />);
+						openModal(() => <ComposerDialogLazy params={{ replyUri }} onPublish={onReplyPublish} />);
 					}}
 					class={`group flex max-w-full grow basis-0 items-end gap-2.5 hover:text-accent`}
 				>

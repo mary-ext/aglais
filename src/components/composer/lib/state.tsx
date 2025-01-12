@@ -219,7 +219,7 @@ export function createPostState({
 
 // Composer state
 export interface CreateComposerStateOptions {
-	reply?: AppBskyFeedDefs.PostView;
+	replyUri?: string;
 	text?: string;
 	quote?: AppBskyFeedDefs.PostView;
 	languages?: string[];
@@ -227,19 +227,19 @@ export interface CreateComposerStateOptions {
 
 export interface ComposerState {
 	active: number;
-	reply: AppBskyFeedDefs.PostView | undefined;
+	replyUri: string | undefined;
 	posts: PostState[];
 	threadgate: ThreadgateState;
 	postgate: PostgateState;
 }
 
 export function createComposerState(
-	{ reply, text, quote }: CreateComposerStateOptions = {},
+	{ replyUri, text, quote }: CreateComposerStateOptions = {},
 	{ language, threadgate, postgate }: ComposerPreferences,
 ): ComposerState {
 	return {
 		active: 0,
-		reply: reply,
+		replyUri: replyUri,
 		posts: [
 			createPostState({
 				text,

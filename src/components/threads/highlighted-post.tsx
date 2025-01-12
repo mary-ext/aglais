@@ -181,9 +181,9 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 							return;
 						}
 
-						const $post = post();
+						const replyUri = post().uri;
 						const onPublishReply = props.onReplyPublish;
-						openModal(() => <ComposerDialogLazy params={{ reply: $post }} onPublish={onPublishReply} />);
+						openModal(() => <ComposerDialogLazy params={{ replyUri }} onPublish={onPublishReply} />);
 					}}
 					class={`flex h-9 w-9 items-center justify-center rounded-full text-xl hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed`}
 				>
