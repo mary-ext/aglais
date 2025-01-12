@@ -28,7 +28,7 @@ export const serializeRichText = (text: string, facets: AppBskyRichtextFacet.Mai
 					const uri = feature.uri;
 
 					substitute = !isLinkValid(uri, subtext)
-						? `[${text.replace(MDLINK_ESCAPE_RE, '\\$1')}](${uri})`
+						? `[${subtext.replace(MDLINK_ESCAPE_RE, '\\$1')}](${uri})`
 						: uri;
 				} else if (
 					type === 'app.bsky.richtext.facet#mention' ||
