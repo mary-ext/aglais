@@ -1,5 +1,6 @@
-import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 
+import { serializeRichText } from '~/api/utils/richtext-stringify';
 import { parseAtUri } from '~/api/utils/strings';
 
 import { useModalContext } from '~/globals/modals';
@@ -30,6 +31,17 @@ const PostShareMenu = (props: PostShareMenuProps) => {
 				onClick={() => {
 					const url = new URL(`/${did}/${rkey}`, location.href);
 					navigator.clipboard.writeText(url.toString()).then(close);
+				}}
+			/>
+
+			<Menu.Item
+				icon={ClipboardOutlinedIcon}
+				label="Copy post text"
+				onClick={() => {
+					const record = post.record as AppBskyFeedPost.Record;
+					const serialized = serializeRichText(record.text, record.facets);
+
+					navigator.clipboard.writeText(serialized).then(close);
 				}}
 			/>
 
