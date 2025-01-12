@@ -4,6 +4,8 @@ import type { AppBskyEmbedExternal } from '@atcute/client/lexicons';
 
 import { createLinkMetaQuery } from '~/api/queries/composer';
 
+import { useSession } from '~/lib/states/session';
+
 import CircularProgress from '~/components/circular-progress';
 import ExternalEmbedContent from '~/components/embeds/external-embed';
 import ErrorView from '~/components/error-view';
@@ -19,23 +21,36 @@ export interface LinkEmbedProps {
 }
 
 const LinkEmbed = (props: LinkEmbedProps) => {
-	const query = createLinkMetaQuery(() => props.embed.uri);
+	const { currentAccount } = useSession();
 
 	return (
 		<div class="relative">
 			<Switch>
-				<Match when={query.data} keyed>
-					{(data) => {
-						const thumbUrl = data.thumb && URL.createObjectURL(data.thumb);
-						if (thumbUrl) {
-							onCleanup(() => URL.revokeObjectURL(thumbUrl));
+				<Match
+					when={(() => {
+						const source = props.embed.source;
+						if (source.type === 'remote') {
+							return source.state;
+						}
+					})()}
+					keyed
+				>
+					{(state) => {
+						const meta = state.external;
+
+						let thumbUrl: string | undefined;
+						if (meta.thumb) {
+							const did = currentAccount!.did;
+							const cid = meta.thumb.ref.$link;
+
+							thumbUrl = `https://cdn.bsky.app/img/feed_fullsize/plain/${did}/${cid}@png`;
 						}
 
 						const embed: AppBskyEmbedExternal.View = {
 							external: {
-								title: data.title,
-								description: data.description,
-								uri: data.uri,
+								title: meta.title,
+								description: meta.description,
+								uri: meta.uri,
 								thumb: thumbUrl,
 							},
 						};
@@ -44,18 +59,56 @@ const LinkEmbed = (props: LinkEmbedProps) => {
 					}}
 				</Match>
 
-				<Match when={query.error}>
-					{(error) => (
-						<div class="rounded border border-outline">
-							<ErrorView error={error()} onRetry={() => query.refetch()} />
-						</div>
-					)}
-				</Match>
+				<Match
+					when={(() => {
+						const source = props.embed.source;
+						if (source.type === 'uri') {
+							return source.uri;
+						}
+					})()}
+					keyed
+				>
+					{(uri) => {
+						const query = createLinkMetaQuery(() => uri);
 
-				<Match when>
-					<div class="grid place-items-center rounded border border-outline p-4">
-						<CircularProgress />
-					</div>
+						return (
+							<Switch>
+								<Match when={query.data} keyed>
+									{(data) => {
+										const thumbUrl = data.thumb && URL.createObjectURL(data.thumb);
+										if (thumbUrl) {
+											onCleanup(() => URL.revokeObjectURL(thumbUrl));
+										}
+
+										const embed: AppBskyEmbedExternal.View = {
+											external: {
+												title: data.title,
+												description: data.description,
+												uri: data.uri,
+												thumb: thumbUrl,
+											},
+										};
+
+										return <ExternalEmbedContent embed={embed} />;
+									}}
+								</Match>
+
+								<Match when={query.error}>
+									{(error) => (
+										<div class="rounded border border-outline">
+											<ErrorView error={error()} onRetry={() => query.refetch()} />
+										</div>
+									)}
+								</Match>
+
+								<Match when>
+									<div class="grid place-items-center rounded border border-outline p-4">
+										<CircularProgress />
+									</div>
+								</Match>
+							</Switch>
+						);
+					}}
 				</Match>
 			</Switch>
 

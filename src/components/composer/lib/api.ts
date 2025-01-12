@@ -540,8 +540,14 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 		}
 
 		async function resolveLinkEmbed(link: PostLinkEmbed): Promise<AppBskyEmbedRecordWithMedia.Main['media']> {
+			const source = link.source;
+
+			if (source.type === 'remote') {
+				return source.state;
+			}
+
 			const meta = await queryClient.fetchQuery<LinkMeta>({
-				queryKey: ['link-meta', link.uri],
+				queryKey: ['link-meta', source.uri],
 			});
 
 			// compress... upload...

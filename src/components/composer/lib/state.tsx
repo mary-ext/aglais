@@ -79,8 +79,20 @@ export interface PostQuoteEmbed {
 
 export type PostRecordEmbed = PostFeedEmbed | PostListEmbed | PostQuoteEmbed;
 
-export interface PostLinkEmbed {
+export interface UriLinkSource {
+	type: 'uri';
 	uri: string;
+}
+
+export interface RemoteLinkSource {
+	type: 'remote';
+	state: Brand.Union<AppBskyEmbedExternal.Main>;
+}
+
+export type LinkSource = UriLinkSource | RemoteLinkSource;
+
+export interface PostLinkEmbed {
+	source: LinkSource;
 	labels: string[];
 }
 

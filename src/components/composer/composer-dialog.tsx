@@ -401,7 +401,7 @@ const Post = ({
 										}
 									} else {
 										if (!embed.link) {
-											embed.link = { uri: token.url, labels: [] };
+											embed.link = { source: { type: 'uri', uri: token.url }, labels: [] };
 										}
 									}
 								};
