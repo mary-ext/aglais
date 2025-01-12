@@ -55,8 +55,8 @@ const ComposerReplyContext = (props: ComposerReplyContextProps) => {
 							<div class={`min-w-0 grow pb-3` + (props.pending ? ` opacity-50` : ``)}>
 								<div class="mb-0.5 flex items-center justify-between gap-4 text-contrast-muted">
 									<div class="flex items-center overflow-hidden text-sm">
-										<span class="overflow-hidden text-ellipsis">
-											<span class="font-semibold text-contrast hover:underline">
+										<span class="overflow-hidden text-ellipsis whitespace-nowrap">
+											<span class="font-semibold text-contrast">
 												{/* @once */ author.handle.toLowerCase()}
 											</span>
 										</span>
