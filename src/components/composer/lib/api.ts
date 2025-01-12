@@ -22,6 +22,7 @@ import type {
 import * as TID from '@atcute/tid';
 import type { QueryClient } from '@mary/solid-query';
 
+import { updatePostShadow } from '~/api/cache/post-shadow';
 import { uploadBlob } from '~/api/queries/blob';
 import type { LinkMeta } from '~/api/queries/composer';
 import { resolveHandle } from '~/api/queries/handle';
@@ -231,6 +232,10 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 			writes: writes,
 		},
 	});
+
+	if (state.redraftUri) {
+		updatePostShadow(queryClient, state.redraftUri, { deleted: true });
+	}
 
 	return writes;
 
