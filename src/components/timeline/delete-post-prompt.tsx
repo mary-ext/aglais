@@ -127,7 +127,7 @@ const DeletePostPrompt = ({ post, onPostDelete }: DeletePostPromptProps) => {
 
 			<Prompt.Actions>
 				<Prompt.Action
-					variant="danger"
+					variant={isRedrafting() ? 'primary' : 'danger'}
 					onClick={() => {
 						if (isRedrafting()) {
 							onRedraft();
@@ -136,7 +136,7 @@ const DeletePostPrompt = ({ post, onPostDelete }: DeletePostPromptProps) => {
 						}
 					}}
 				>
-					Delete
+					{isRedrafting() ? `Redraft` : `Delete`}
 				</Prompt.Action>
 
 				<Prompt.Action>Cancel</Prompt.Action>
