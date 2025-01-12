@@ -13,3 +13,7 @@ export function assertStrong(condition: any, message?: string): asserts conditio
 		throw new Error(`Assertion failed`);
 	}
 }
+
+export function assertUnreachable(condition: never, message?: string): never {
+	assertStrong(false, message);
+}
