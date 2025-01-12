@@ -17,9 +17,11 @@ export interface PostMetaProps {
 	href: string;
 	compact?: boolean;
 	gutterBottom?: boolean;
+	onPostDelete?: () => void;
+	onPostRedraft?: () => void;
 }
 
-const PostMeta = ({ post, authorHref, href, gutterBottom }: PostMetaProps) => {
+const PostMeta = ({ post, authorHref, href, gutterBottom, onPostDelete, onPostRedraft }: PostMetaProps) => {
 	const queryClient = useQueryClient();
 
 	const author = post.author;
@@ -55,7 +57,14 @@ const PostMeta = ({ post, authorHref, href, gutterBottom }: PostMetaProps) => {
 				<button
 					onClick={(ev) => {
 						const anchor = ev.currentTarget;
-						openModal(() => <PostOverflowMenu anchor={anchor} post={post} />);
+						openModal(() => (
+							<PostOverflowMenu
+								anchor={anchor}
+								post={post}
+								onPostDelete={onPostDelete}
+								onPostRedraft={onPostRedraft}
+							/>
+						));
 					}}
 					class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed"
 				>

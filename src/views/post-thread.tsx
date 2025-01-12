@@ -145,7 +145,7 @@ const PostThreadPage = () => {
 										data={result()}
 										isPlaceholderData={query.isPlaceholderData}
 										onReplyPublish={() => query.refetch()}
-										onPostDelete={() => {
+										onMainPostDelete={() => {
 											queryClient.resetQueries({
 												exact: true,
 												queryKey: ['post-thread', result().post.uri],
@@ -174,7 +174,7 @@ const ThreadView = (props: {
 	data: Brand.Union<AppBskyFeedDefs.ThreadViewPost>;
 	isPlaceholderData: boolean;
 	onReplyPublish?: () => void;
-	onPostDelete?: () => void;
+	onMainPostDelete?: () => void;
 }) => {
 	const { currentAccount } = useSession();
 	const moderationOptions = useModerationOptions();
@@ -285,7 +285,8 @@ const ThreadView = (props: {
 						translate={showTl()}
 						onTranslate={() => setShowTl(true)}
 						onReplyPublish={/* @once */ props.onReplyPublish}
-						onPostDelete={/* @once */ props.onPostDelete}
+						onPostRedraft={/* @once */ props.onReplyPublish}
+						onPostDelete={/* @once */ props.onMainPostDelete}
 					/>
 				</VirtualItem>
 
@@ -300,7 +301,11 @@ const ThreadView = (props: {
 									if (type === 'post') {
 										return (
 											<VirtualItem estimateHeight={98}>
-												<PostThreadItem item={item() as PostDescendantItem} treeView={treeView} />
+												<PostThreadItem
+													item={item() as PostDescendantItem}
+													treeView={treeView}
+													onPostRedraft={/* @once */ props.onReplyPublish}
+												/>
 											</VirtualItem>
 										);
 									}

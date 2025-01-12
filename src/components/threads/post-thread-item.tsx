@@ -31,6 +31,8 @@ export interface PostThreadItemProps {
 	item: PostAncestorItem | PostDescendantItem;
 	/** Expected to be static */
 	treeView: boolean;
+	onPostDelete?: () => void;
+	onPostRedraft?: () => void;
 	onReplyPublish?: () => void;
 }
 
@@ -107,7 +109,14 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 
 				<DeletedGate bypass={!isOurPost} deleted={shadow().deleted} treeView={treeView}>
 					<div class="min-w-0 grow py-3">
-						<PostMeta post={/* @once */ post()} href={href} authorHref={authorHref} gutterBottom />
+						<PostMeta
+							post={/* @once */ post()}
+							href={href}
+							authorHref={authorHref}
+							gutterBottom
+							onPostRedraft={/* @once */ props.onPostRedraft}
+							onPostDelete={/* @once */ props.onPostDelete}
+						/>
 
 						<ContentHider
 							ui={getModerationUI(moderation(), ContextContentList)}

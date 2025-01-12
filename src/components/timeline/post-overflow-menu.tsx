@@ -29,6 +29,7 @@ export interface PostOverflowMenuProps {
 	/** Expected to be static */
 	post: AppBskyFeedDefs.PostView;
 	onPostDelete?: () => void;
+	onPostRedraft?: () => void;
 }
 
 const PostOverflowMenu = (props: PostOverflowMenuProps) => {
@@ -65,7 +66,7 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 						label="Revise"
 						onClick={() => {
 							close();
-							openModal(() => <RevisePostPromptLazy post={post} onPostRevise={props.onPostDelete} />);
+							openModal(() => <RevisePostPromptLazy post={post} onPostRevise={props.onPostRedraft} />);
 						}}
 					/>
 

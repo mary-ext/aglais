@@ -45,6 +45,7 @@ export interface HighlightedPostProps {
 	prev?: boolean;
 	onTranslate?: () => void;
 	onPostDelete?: () => void;
+	onPostRedraft?: () => void;
 	onReplyPublish?: () => void;
 }
 
@@ -113,10 +114,20 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 					<button
 						onClick={(ev) => {
 							const anchor = ev.currentTarget;
-							const $post = post();
-							const onPostDelete = props.onPostDelete;
 
-							openModal(() => <PostOverflowMenu anchor={anchor} post={$post} onPostDelete={onPostDelete} />);
+							const onPostDelete = props.onPostDelete;
+							const onPostRedraft = props.onPostRedraft;
+
+							const $post = post();
+
+							openModal(() => (
+								<PostOverflowMenu
+									anchor={anchor}
+									post={$post}
+									onPostDelete={onPostDelete}
+									onPostRedraft={onPostRedraft}
+								/>
+							));
 						}}
 						class="-mx-2 -my-1.5 flex h-8 w-8 items-center justify-center rounded-full text-base hover:bg-accent/md hover:text-accent active:bg-accent/md-pressed"
 					>
