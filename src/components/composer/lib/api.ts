@@ -158,7 +158,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 		});
 
 		// If this is the first post, and we have a threadgate set, create one now.
-		if (idx === 0 && state.threadgate.allow) {
+		if (idx === 0 && !reply && state.threadgate.allow) {
 			const threadgateRecord: AppBskyFeedThreadgate.Record = {
 				$type: 'app.bsky.feed.threadgate',
 				createdAt: now.toISOString(),
