@@ -21,9 +21,9 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 		<div class="relative self-start">
 			<Keyed value={props.embed.source}>
 				{(source) => {
-					// const blobUrl = convertBlobToUrl(source);
 					let videoUrl: string;
 					let mimeType: string | undefined;
+					let aspectRatio: string | undefined;
 
 					switch (source.type) {
 						case 'local': {
@@ -34,6 +34,8 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 							break;
 						}
 						case 'remote': {
+							const ratio = source.aspectRatio;
+
 							const did = currentAccount!.did;
 							const cid = source.blob.ref.$link;
 
@@ -41,43 +43,55 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 
 							videoUrl = new URL(`/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${cid}`, pdsUrl).toString();
 							mimeType = source.blob.mimeType;
+
+							if (ratio) {
+								aspectRatio = `${ratio.width}/${ratio.height}`;
+							}
 							break;
 						}
 					}
 
 					return (
-						<video
-							ref={(node) => {
-								node.volume = currentAccount!.preferences.ui.mediaVolume;
-
-								createEffect(() => {
-									if (!props.active) {
-										node.pause();
-									}
-								});
-							}}
-							inert={!props.active}
-							controls={props.active}
-							onVolumeChange={(ev) => {
-								currentAccount!.preferences.ui.mediaVolume = ev.currentTarget.volume;
-							}}
-							onLoadedMetadata={(ev) => {
-								const video = ev.currentTarget;
-
-								const hasAudio =
-									// @ts-expect-error: Mozilla-specific
-									video.mozHasAudio ||
-									// @ts-expect-error: WebKit/Blink-specific
-									!!video.webkitAudioDecodedByteCount ||
-									// @ts-expect-error: WebKit-specific
-									!!(video.audioTracks && video.audioTracks.length);
-
-								video.loop = !hasAudio || video.duration <= 6;
-							}}
-							class="h-full max-h-80 min-h-16 w-full min-w-16 max-w-full rounded-md border border-outline"
+						<div
+							class="max-h-80 min-h-16 min-w-16 max-w-full overflow-hidden rounded-md border border-outline"
+							style={{ 'aspect-ratio': aspectRatio }}
 						>
-							<source src={videoUrl} type={mimeType} />
-						</video>
+							<video
+								ref={(node) => {
+									node.volume = currentAccount!.preferences.ui.mediaVolume;
+
+									createEffect(() => {
+										if (!props.active) {
+											node.pause();
+										}
+									});
+								}}
+								inert={!props.active}
+								controls={props.active}
+								onVolumeChange={(ev) => {
+									currentAccount!.preferences.ui.mediaVolume = ev.currentTarget.volume;
+								}}
+								onLoadedMetadata={(ev) => {
+									const video = ev.currentTarget;
+
+									const hasAudio =
+										// @ts-expect-error: Mozilla-specific
+										video.mozHasAudio ||
+										// @ts-expect-error: WebKit/Blink-specific
+										!!video.webkitAudioDecodedByteCount ||
+										// @ts-expect-error: WebKit-specific
+										!!(video.audioTracks && video.audioTracks.length);
+
+									video.loop = !hasAudio || video.duration <= 6;
+								}}
+								class="h-full w-full"
+							>
+								<source src={videoUrl} type={mimeType} />
+							</video>
+
+							{/* Hack */}
+							<div class="h-screen w-screen"></div>
+						</div>
 					);
 				}}
 			</Keyed>
