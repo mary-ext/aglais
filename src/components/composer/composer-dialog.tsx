@@ -13,13 +13,12 @@ import {
 } from 'solid-js';
 import { createMutable, unwrap } from 'solid-js/store';
 
-import type { AppBskyActorDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 import { type CreateQueryResult, useQueryClient } from '@mary/solid-query';
 
 import { GLOBAL_LABELS, getLocalizedLabel } from '~/api/moderation';
 import { createProfileQuery } from '~/api/queries/profile';
 import { formatQueryError } from '~/api/utils/error';
-import { parseAtUri } from '~/api/utils/strings';
 
 import { globalEvents } from '~/globals/events';
 import { openModal, useModalContext } from '~/globals/modals';
@@ -135,26 +134,6 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 			? { ...props.initialState }
 			: createComposerState(props.params, currentAccount!.preferences.composer),
 	);
-
-	const showAddPostButton = () => {
-		var reply = state.reply;
-		if (reply) {
-			var ref = (reply.record as AppBskyFeedPost.Record).reply?.root;
-
-			if (ref) {
-				var uri = parseAtUri(ref.uri);
-				if (uri.repo !== currentAccount!.did) {
-					return false;
-				}
-			} else {
-				if (reply.author.did !== currentAccount!.did) {
-					return false;
-				}
-			}
-		}
-
-		return true;
-	};
 
 	const addPost = () => {
 		const currentPosts = state.posts;
@@ -290,7 +269,6 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 					disabled={false}
 					post={state.posts[state.active]}
 					canAddPost={state.posts.length < MAX_POSTS}
-					showAddPost={showAddPostButton()}
 					onAddPost={addPost}
 					onError={setError}
 				/>
@@ -602,7 +580,6 @@ const PostAction = (props: {
 	disabled: boolean;
 	post: PostState;
 	canAddPost: boolean;
-	showAddPost: boolean;
 	onAddPost: () => void;
 	onError: (message?: string) => void;
 }) => {
@@ -789,8 +766,6 @@ const PostAction = (props: {
 						variant="accent"
 					/>
 
-					{props.showAddPost && (
-						<>
 							<div class="my-2 self-stretch border-l border-outline opacity-70"></div>
 
 							<IconButton
@@ -800,8 +775,6 @@ const PostAction = (props: {
 								onClick={props.onAddPost}
 								variant="accent"
 							/>
-						</>
-					)}
 				</div>
 			</div>
 
