@@ -207,7 +207,7 @@ const ComposerDialog = (props: ComposerDialogProps) => {
 
 					{!pending() ? (
 						<Dialog.HeaderAccessory>
-							{!state.replyUri && !isCloseGuarded() && (
+							{!state.redraftUri && !state.replyUri && !isCloseGuarded() && (
 								<Button
 									onClick={() => {
 										openModal(() => <DraftListDialogLazy />);
