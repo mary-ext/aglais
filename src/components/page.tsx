@@ -51,7 +51,7 @@ export { PageHeading as Heading };
 export interface PageHeaderAccessoryProps extends ParentProps {}
 
 const PageHeaderAccessory = (props: PageHeaderAccessoryProps) => {
-	return <div class="flex shrink-0 gap-2 empty:hidden">{props.children}</div>;
+	return <div class="flex shrink-0 items-center gap-2 empty:hidden">{props.children}</div>;
 };
 
 export { PageHeaderAccessory as HeaderAccessory };
