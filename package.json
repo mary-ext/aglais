@@ -24,7 +24,7 @@
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
 		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.5",
 		"comlink": "^4.4.2",
-		"hls.js": "^1.5.18",
+		"hls.js": "^1.5.19",
 		"idb": "^8.0.1",
 		"nanoid": "^5.0.9",
 		"solid-floating-ui": "~0.2.1",
@@ -45,7 +45,7 @@
 		"vite": "6.0.5",
 		"vite-plugin-pwa": "0.21.0",
 		"vite-plugin-solid": "^2.11.0",
-		"wrangler": "^3.100.0"
+		"wrangler": "^3.102.0"
 	},
 	"pnpm": {
 		"patchedDependencies": {
