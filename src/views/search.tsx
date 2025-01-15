@@ -1,8 +1,7 @@
-import { Match, Suspense, Switch, createMemo, createSignal, lazy } from 'solid-js';
-
-import type { UnwrapArray } from '~/api/utils/types';
+import { Match, Suspense, Switch, createMemo, lazy } from 'solid-js';
 
 import { tokenizeSearchQuery } from '~/lib/bsky/search';
+import { asString, asStringUnion, useSearchParams } from '~/lib/hooks/search-params';
 import { useTitle } from '~/lib/navigation/router';
 
 import CircularProgressView from '~/components/circular-progress-view';
@@ -17,25 +16,14 @@ const SearchPostsLazy = lazy(() => import('~/components/search/search-posts'));
 const SearchProfilesLazy = lazy(() => import('~/components/search/search-profiles'));
 
 const SearchPage = () => {
-	const searchParams = new URLSearchParams(location.search);
-
-	const [search, setSearch] = createSignal(coerceString(searchParams.get('q')));
-	const [type, setType] = createSignal(
-		coerceStringArray(searchParams.get('t'), ['top_posts', 'latest_posts', 'users', 'feeds']),
-	);
-
-	const transformedSearch = createMemo(() => {
-		return transformSearchQuery(search());
+	const [params, setParams] = useSearchParams({
+		q: asString.withDefault(''),
+		t: asStringUnion(['top_posts', 'latest_posts', 'users', 'feeds']).withDefault('top_posts'),
 	});
 
-	const updateHistoryEntry = () => {
-		searchParams.set('q', search());
-		searchParams.set('t', type());
-
-		// We are intentionally altering global history, replacing the history entry
-		// via app history causes this page to get reinstantiated.
-		history.replaceState(history.state, '', location.pathname + `?` + searchParams.toString());
-	};
+	const transformedSearch = createMemo(() => {
+		return transformSearchQuery(params.q);
+	});
 
 	useTitle(() => `Search — ${import.meta.env.VITE_APP_NAME}`);
 
@@ -47,14 +35,13 @@ const SearchPage = () => {
 				</Page.HeaderAccessory>
 
 				<SearchBar
-					value={search()}
+					value={params.q}
 					onEnter={(next) => {
 						if (next.trim() === '') {
 							return;
 						}
 
-						setSearch(next);
-						updateHistoryEntry();
+						setParams({ q: next });
 					}}
 				/>
 
@@ -64,11 +51,8 @@ const SearchPage = () => {
 			</Page.Header>
 
 			<TabBar
-				value={type()}
-				onChange={(next) => {
-					setType(next);
-					updateHistoryEntry();
-				}}
+				value={params.t}
+				onChange={(next) => setParams({ t: next })}
 				items={[
 					{ value: 'top_posts', label: `Top` },
 					{ value: 'latest_posts', label: `Latest` },
@@ -79,19 +63,19 @@ const SearchPage = () => {
 
 			<Suspense fallback={<CircularProgressView />}>
 				<Switch>
-					<Match when={type() === 'top_posts'}>
+					<Match when={params.t === 'top_posts'}>
 						<SearchPostsLazy q={transformedSearch()} sort="top" />
 					</Match>
 
-					<Match when={type() === 'latest_posts'}>
+					<Match when={params.t === 'latest_posts'}>
 						<SearchPostsLazy q={transformedSearch()} sort="latest" />
 					</Match>
 
-					<Match when={type() === 'users'}>
+					<Match when={params.t === 'users'}>
 						<SearchProfilesLazy q={transformedSearch()} />
 					</Match>
 
-					<Match when={type() === 'feeds'}>
+					<Match when={params.t === 'feeds'}>
 						<SearchFeedsLazy q={transformedSearch()} />
 					</Match>
 				</Switch>
@@ -102,19 +86,7 @@ const SearchPage = () => {
 
 export default SearchPage;
 
-const coerceString = (val: string | null): string => {
-	return typeof val === 'string' ? val : '';
-};
-
-const coerceStringArray = <const T extends [string, ...string[]]>(
-	val: string | null,
-	values: T,
-): UnwrapArray<T> => {
-	return (val === null || !values.includes(val as any) ? values[0] : val) as UnwrapArray<T>;
-};
-
 const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
-
 const transformSearchQuery = (q: string): string => {
 	const tokens = tokenizeSearchQuery(q);
 	const collator = new Intl.Collator('en');
