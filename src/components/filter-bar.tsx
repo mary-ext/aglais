@@ -9,7 +9,7 @@ export interface FilterOption<T> {
 
 export interface FilterBarProps<T> {
 	value: T;
-	options: FilterOption<T>[];
+	options: FilterOption<NoInfer<T>>[];
 	onChange: (next: T) => void;
 }
 
