@@ -1,4 +1,4 @@
-import { Match, Show, Switch, createSignal } from 'solid-js';
+import { Match, Show, Switch } from 'solid-js';
 
 import { XRPCError } from '@atcute/client';
 import type { AppBskyActorDefs } from '@atcute/client/lexicons';
@@ -11,6 +11,7 @@ import { isDid } from '~/api/utils/strings';
 import { openModal } from '~/globals/modals';
 import { history } from '~/globals/navigation';
 
+import { asStringUnion, useSearchParams } from '~/lib/hooks/search-params';
 import { formatCompact } from '~/lib/intl/number';
 import { useParams, useTitle } from '~/lib/navigation/router';
 
@@ -168,14 +169,10 @@ export default ProfilePage;
 
 type ProfileData = AppBskyActorDefs.ProfileViewDetailed;
 
-const enum PostFilter {
-	POSTS = 'posts',
-	POSTS_WITH_REPLIES = 'replies',
-	MEDIA = 'media',
-}
-
 const ProfileView = (props: { data: ProfileData; isPlaceholderData?: boolean }) => {
-	const [filter, setFilter] = createSignal(PostFilter.POSTS);
+	const [params, setParams] = useSearchParams({
+		tab: asStringUnion(['posts', 'replies', 'media']).withDefault('posts'),
+	});
 
 	const shadow = useProfileShadow(() => props.data);
 	const did = props.data.did;
@@ -208,19 +205,19 @@ const ProfileView = (props: { data: ProfileData; isPlaceholderData?: boolean }) 
 						<Divider />
 
 						<FilterBar
-							value={filter()}
-							onChange={setFilter}
+							value={params.tab}
+							onChange={(next) => setParams({ tab: next })}
 							options={[
 								{
-									value: PostFilter.POSTS,
+									value: 'posts',
 									label: `Posts`,
 								},
 								{
-									value: PostFilter.POSTS_WITH_REPLIES,
+									value: 'replies',
 									label: `Posts and replies`,
 								},
 								{
-									value: PostFilter.MEDIA,
+									value: 'media',
 									label: `Media`,
 								},
 							]}
@@ -231,7 +228,7 @@ const ProfileView = (props: { data: ProfileData; isPlaceholderData?: boolean }) 
 							params={{
 								type: 'profile',
 								actor: did,
-								tab: filter(),
+								tab: params.tab,
 							}}
 						/>
 					</Match>
