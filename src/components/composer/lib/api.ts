@@ -345,8 +345,20 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				{
 					log?.(`Checking video upload limits`);
 
-					// Create an access token to the video CDN, allowing it to verify that
-					// we're asking about upload limits for ourselves.
+					// Create an access token to the video service, allowing it to verify
+					// that we're asking about upload limits for ourselves.
+					//
+					// Ideally we should've been able to tell the PDS to make a request to
+					// getUploadLimits, by using the `atproto-proxy` header to point the
+					// PDS to the correct endpoint, but the video service doesn't seem to
+					// be serving a DID document, unlike the chat service
+					//
+					// See: https://api.bsky.chat/.well-known/did.json
+					//
+					// You'd make requests to the chat service by adding in this header
+					//
+					// atproto-proxy: did:web:api.bsky.chat#bsky_chat
+					//
 					const { data: tokenData } = await rpc.get('com.atproto.server.getServiceAuth', {
 						params: {
 							aud: 'did:web:video.bsky.app',
@@ -393,10 +405,11 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 					const session = agent.handler!.session;
 
-					// Create an access token *to the PDS*, allowing the video CDN to
+					// Create an access token *to the PDS*, allowing the video service to
 					// upload the final blobs to our repository on our behalf.
 					const { data: tokenData } = await rpc.get('com.atproto.server.getServiceAuth', {
 						params: {
+							// `did:web:porcini.us-east.host.bsky.network`
 							aud: `did:web:${new URL(session.info.aud).host}`,
 							lxm: 'com.atproto.repo.uploadBlob',
 							exp: Date.now() / 1000 + 60 * 30, // 30 minutes
