@@ -345,6 +345,8 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				{
 					log?.(`Checking video upload limits`);
 
+					// Create an access token to the video CDN, allowing it to verify that
+					// we're asking about upload limits for ourselves.
 					const { data: tokenData } = await rpc.get('com.atproto.server.getServiceAuth', {
 						params: {
 							aud: 'did:web:video.bsky.app',
@@ -391,6 +393,8 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 					const session = agent.handler!.session;
 
+					// Create an access token *to the PDS*, allowing the video CDN to
+					// upload the final blobs to our repository on our behalf.
 					const { data: tokenData } = await rpc.get('com.atproto.server.getServiceAuth', {
 						params: {
 							aud: `did:web:${new URL(session.info.aud).host}`,
