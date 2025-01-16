@@ -355,8 +355,9 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 					//
 					// See: https://api.bsky.chat/.well-known/did.json
 					//
-					// You'd make requests to the chat service by adding in this header
+					// You'd then make requests like so:
 					//
+					// GET https://porcini.us-east.host.bsky.network/xrpc/chat.bsky.convo.getLog
 					// atproto-proxy: did:web:api.bsky.chat#bsky_chat
 					//
 					const { data: tokenData } = await rpc.get('com.atproto.server.getServiceAuth', {
