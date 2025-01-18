@@ -2,8 +2,11 @@ import { Match, Suspense, Switch, batch, createEffect, createMemo, lazy, onClean
 
 import { Freeze, ShowFreeze } from '@mary/solid-freeze';
 
+import { hasModals } from '~/globals/modals';
+
 import { tokenizeSearchQuery } from '~/lib/bsky/search';
 import { createDerivedSignal } from '~/lib/hooks/derived-signal';
+import { useModalClose } from '~/lib/hooks/modal-close';
 import { asString, asStringUnion, useSearchParams } from '~/lib/hooks/search-params';
 import { createFocusEffect, useTitle } from '~/lib/navigation/router';
 
@@ -39,6 +42,12 @@ const SearchPage = () => {
 		createEffect(() => {
 			if (isInputFocused()) {
 				window.scrollTo({ top: 0, behavior: 'instant' });
+
+				useModalClose(
+					null,
+					() => setIsInputFocused(false),
+					() => !hasModals(),
+				);
 			}
 		});
 
@@ -70,11 +79,6 @@ const SearchPage = () => {
 						setIsInputFocused(true);
 					}}
 					onClick={() => setIsInputFocused(true)}
-					onKeyDown={(ev) => {
-						if (ev.key === 'Escape') {
-							setIsInputFocused(false);
-						}
-					}}
 					onSubmit={() => {
 						const $query = query();
 						if ($query.trim() === '') {

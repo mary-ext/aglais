@@ -2,8 +2,10 @@ import { createEffect, createSignal, onCleanup } from 'solid-js';
 
 import { Freeze } from '@mary/solid-freeze';
 
+import { hasModals } from '~/globals/modals';
 import { history } from '~/globals/navigation';
 
+import { useModalClose } from '~/lib/hooks/modal-close';
 import { createFocusEffect, useTitle } from '~/lib/navigation/router';
 
 import MyFeedsSection from '~/components/explore/my-feeds-section';
@@ -28,6 +30,12 @@ const ExplorePage = () => {
 		createEffect(() => {
 			if (isInputFocused()) {
 				window.scrollTo({ top: 0, behavior: 'instant' });
+
+				useModalClose(
+					null,
+					() => setIsInputFocused(false),
+					() => !hasModals(),
+				);
 			}
 		});
 
@@ -59,11 +67,6 @@ const ExplorePage = () => {
 						setIsInputFocused(true);
 					}}
 					onClick={() => setIsInputFocused(true)}
-					onKeyDown={(ev) => {
-						if (ev.key === 'Escape') {
-							setIsInputFocused(false);
-						}
-					}}
 					onSubmit={() => {
 						const $query = query();
 						if ($query.trim() === '') {
