@@ -3,6 +3,14 @@ import { For, Match, Show, Switch } from 'solid-js';
 import { Freeze, ShowFreeze } from '@mary/solid-freeze';
 import { createQuery, keepPreviousData } from '@mary/solid-query';
 
+import { safeUrlParse } from '~/api/utils/strings';
+
+import {
+	BSKY_FEED_LINK_RE,
+	BSKY_LIST_LINK_RE,
+	BSKY_POST_LINK_RE,
+	BSKY_PROFILE_LINK_RE,
+} from '~/lib/bsky/link-detection';
 import { useIsFocused } from '~/lib/navigation/router';
 import { useAgent } from '~/lib/states/agent';
 import { mapDefined } from '~/lib/utils/misc';
@@ -143,19 +151,30 @@ const AutocompleteSection = (props: SearchSuggestionsViewProps) => {
 	return (
 		<div class="flex flex-col">
 			<button
-				class="break-words p-4 py-3 text-left text-sm outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+				class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
 				onClick={() => onSearch(props.query)}
 			>
-				Search for <span class="whitespace-pre-wrap">"{props.query}"</span>
+				Search for <span class="font-medium text-contrast">{props.query}</span>
 			</button>
 
 			<Show when={LIKELY_HANDLE_RE.exec(props.query)?.[0]}>
 				{(handle) => (
 					<a
 						href={`/${handle()}`}
-						class="break-words p-4 py-3 text-left text-sm outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+						class="break-words p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
 					>
-						Go to @{handle()}
+						Go to <span class="font-medium text-contrast">@{handle()}</span>
+					</a>
+				)}
+			</Show>
+
+			<Show when={findLinkRedirect(props.query)}>
+				{(redirect) => (
+					<a
+						href={redirect()}
+						class="break-words p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+					>
+						Open URL in app
 					</a>
 				)}
 			</Show>
@@ -165,4 +184,36 @@ const AutocompleteSection = (props: SearchSuggestionsViewProps) => {
 			<For each={profiles.data?.actors}>{(profile) => <ProfileItem item={profile} />}</For>
 		</div>
 	);
+};
+
+const findLinkRedirect = (uri: string): string | null => {
+	const url = safeUrlParse(uri);
+
+	if (url === null) {
+		return null;
+	}
+
+	const host = url.host;
+	const pathname = url.pathname;
+	let match: RegExpExecArray | null | undefined;
+
+	if (host === 'bsky.app') {
+		if ((match = BSKY_PROFILE_LINK_RE.exec(pathname))) {
+			return `/${match[1]}`;
+		}
+
+		if ((match = BSKY_POST_LINK_RE.exec(pathname))) {
+			return `/${match[1]}/${match[2]}`;
+		}
+
+		if ((match = BSKY_LIST_LINK_RE.exec(pathname))) {
+			return `/${match[1]}/lists/${match[2]}`;
+		}
+
+		if ((match = BSKY_FEED_LINK_RE.exec(pathname))) {
+			return `/${match[1]}/feeds/${match[2]}`;
+		}
+	}
+
+	return null;
 };
