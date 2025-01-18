@@ -51,7 +51,7 @@ const ProfileItem = (props: ProfileItemProps) => {
 			onClick={handleClick}
 			onAuxClick={handleClick}
 			onKeyDown={handleClick}
-			class="flex cursor-pointer gap-3 px-4 py-3 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm focus:outline active:bg-contrast/sm-pressed"
+			class="flex cursor-pointer gap-3 px-4 py-3 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm focus-visible:outline active:bg-contrast/sm-pressed"
 		>
 			<div class="shrink-0">
 				<Avatar
