@@ -51,10 +51,11 @@ const ProfileItem = (props: ProfileItemProps) => {
 			onClick={handleClick}
 			onAuxClick={handleClick}
 			onKeyDown={handleClick}
-			class="flex cursor-pointer gap-3 px-4 py-3 hover:bg-contrast/sm active:bg-contrast/sm-pressed"
+			class="flex cursor-pointer gap-3 px-4 py-3 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm focus:outline active:bg-contrast/sm-pressed"
 		>
 			<div class="shrink-0">
 				<Avatar
+					tabindex={-1}
 					type={/* @once */ getUserAvatarType(profile)}
 					src={/* @once */ profile.avatar}
 					href={href}
@@ -66,7 +67,12 @@ const ProfileItem = (props: ProfileItemProps) => {
 
 			<div class="flex min-w-0 grow flex-col gap-1">
 				<div class="my-auto flex h-10 items-center justify-between gap-3">
-					<a href={href} onClick={() => precacheProfile(queryClient, profile)} class="min-w-0 text-sm">
+					<a
+						tabindex={-1}
+						href={href}
+						onClick={() => precacheProfile(queryClient, profile)}
+						class="min-w-0 text-sm"
+					>
 						<p class="overflow-hidden text-ellipsis whitespace-nowrap font-semibold">
 							{/* @once */ profile.handle.toLowerCase()}
 						</p>

@@ -22,6 +22,7 @@ export interface AvatarProps {
 	src?: string;
 	moderation?: ModerationCause[];
 	modContext?: ModerationContext;
+	tabindex?: number;
 	title?: string;
 	disabled?: boolean;
 	href?: string;
@@ -52,7 +53,13 @@ const Avatar = (props: AvatarProps) => {
 		<Switch>
 			<Match when={!props.disabled && props.href}>
 				{(href) => (
-					<a href={href()} title={props.title} onClick={props.onClick} class={avatarClassNames(props, true)}>
+					<a
+						tabindex={props.tabindex}
+						href={href()}
+						title={props.title}
+						onClick={props.onClick}
+						class={avatarClassNames(props, true)}
+					>
 						{renderAvatar(props.type, props.src, shouldBlurAvatar)}
 					</a>
 				)}
@@ -60,7 +67,12 @@ const Avatar = (props: AvatarProps) => {
 
 			<Match when={!props.disabled && props.onClick} keyed>
 				{(onClick) => (
-					<button title={props.title} onClick={onClick} class={avatarClassNames(props, true)}>
+					<button
+						tabindex={props.tabindex}
+						title={props.title}
+						onClick={onClick}
+						class={avatarClassNames(props, true)}
+					>
 						{renderAvatar(props.type, props.src, shouldBlurAvatar)}
 					</button>
 				)}
