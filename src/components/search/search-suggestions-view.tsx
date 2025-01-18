@@ -99,7 +99,7 @@ const TrendingSection = () => {
 							{data().map((topic) => (
 								<a
 									href={/* @once */ topic.href}
-									class="select-none rounded-full border border-outline px-3 py-1 text-sm font-medium text-contrast/85 hover:bg-contrast/md hover:text-contrast/100"
+									class="select-none overflow-hidden text-ellipsis whitespace-nowrap rounded-full border border-outline px-3 py-1 text-sm font-medium text-contrast/85 hover:bg-contrast/md hover:text-contrast/100"
 								>
 									{/* @once */ topic.name}
 								</a>
