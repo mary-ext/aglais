@@ -18,7 +18,7 @@ export interface PageHeaderProps extends ParentProps {}
 const PageHeader = (props: PageHeaderProps) => {
 	return (
 		<>
-			<div class="sticky top-0 z-2 flex h-13 w-full shrink-0 items-center justify-between gap-4 border-b border-outline bg-background px-2.5">
+			<div class="sticky top-0 z-2 flex h-13 w-full shrink-0 items-center justify-between gap-4 bg-background px-2.5">
 				{props.children}
 			</div>
 		</>
