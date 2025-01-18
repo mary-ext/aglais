@@ -1,14 +1,19 @@
-import { Match, Suspense, Switch, createMemo, lazy } from 'solid-js';
+import { Match, Suspense, Switch, batch, createEffect, createMemo, lazy, onCleanup } from 'solid-js';
+
+import { Freeze, ShowFreeze } from '@mary/solid-freeze';
 
 import { tokenizeSearchQuery } from '~/lib/bsky/search';
+import { createDerivedSignal } from '~/lib/hooks/derived-signal';
 import { asString, asStringUnion, useSearchParams } from '~/lib/hooks/search-params';
-import { useTitle } from '~/lib/navigation/router';
+import { createFocusEffect, useTitle } from '~/lib/navigation/router';
 
 import CircularProgressView from '~/components/circular-progress-view';
 import IconButton from '~/components/icon-button';
+import ArrowLeftOutlinedIcon from '~/components/icons-central/arrow-left-outline';
 import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
 import SearchBar from '~/components/main/search-bar';
 import * as Page from '~/components/page';
+import SearchSuggestionsView from '~/components/search/search-suggestions-view';
 import TabBar from '~/components/tab-bar';
 
 const SearchFeedsLazy = lazy(() => import('~/components/search/search-feeds'));
@@ -25,61 +30,115 @@ const SearchPage = () => {
 		return transformSearchQuery(params.q);
 	});
 
+	const [query, setQuery] = createDerivedSignal(() => params.q);
+	const [isInputFocused, setIsInputFocused] = createDerivedSignal(() => (params.q, false));
+
 	useTitle(() => `Search — ${import.meta.env.VITE_APP_NAME}`);
+
+	createFocusEffect(() => {
+		createEffect(() => {
+			if (isInputFocused()) {
+				window.scrollTo({ top: 0, behavior: 'instant' });
+			}
+		});
+
+		onCleanup(() => {
+			setQuery(params.q);
+			setIsInputFocused(false);
+		});
+	});
 
 	return (
 		<>
 			<Page.Header>
 				<Page.HeaderAccessory>
-					<Page.Back to="/explore" />
+					{!isInputFocused() ? (
+						<Page.Back to="/explore" />
+					) : (
+						<IconButton
+							title="Close search"
+							icon={ArrowLeftOutlinedIcon}
+							onClick={() => setIsInputFocused(false)}
+						/>
+					)}
 				</Page.HeaderAccessory>
 
 				<SearchBar
-					value={params.q}
-					onEnter={(next) => {
-						if (next.trim() === '') {
+					value={query()}
+					onChange={(next) => {
+						setQuery(next);
+						setIsInputFocused(true);
+					}}
+					onClick={() => setIsInputFocused(true)}
+					onKeyDown={(ev) => {
+						if (ev.key === 'Escape') {
+							setIsInputFocused(false);
+						}
+					}}
+					onSubmit={() => {
+						const $query = query();
+						if ($query.trim() === '') {
 							return;
 						}
 
-						setParams({ q: next });
+						batch(() => {
+							setParams({ q: $query });
+							setIsInputFocused(false);
+						});
 					}}
 				/>
 
-				<Page.HeaderAccessory>
-					<IconButton icon={MoreHorizOutlinedIcon} title="Search actions" />
-				</Page.HeaderAccessory>
+				{!isInputFocused() && (
+					<Page.HeaderAccessory>
+						<IconButton icon={MoreHorizOutlinedIcon} title="Search actions" />
+					</Page.HeaderAccessory>
+				)}
 			</Page.Header>
 
-			<TabBar
-				value={params.t}
-				onChange={(next) => setParams({ t: next })}
-				items={[
-					{ value: 'top_posts', label: `Top` },
-					{ value: 'latest_posts', label: `Latest` },
-					{ value: 'users', label: `People` },
-					{ value: 'feeds', label: `Feeds` },
-				]}
-			/>
+			<ShowFreeze when={isInputFocused()}>
+				<SearchSuggestionsView
+					query={query()}
+					onSearch={(term) => {
+						batch(() => {
+							setParams({ q: term });
+							setIsInputFocused(false);
+						});
+					}}
+				/>
+			</ShowFreeze>
 
-			<Suspense fallback={<CircularProgressView />}>
-				<Switch>
-					<Match when={params.t === 'top_posts'}>
-						<SearchPostsLazy q={transformedSearch()} sort="top" />
-					</Match>
+			<Freeze freeze={isInputFocused()}>
+				<TabBar
+					value={params.t}
+					onChange={(next) => setParams({ t: next })}
+					items={[
+						{ value: 'top_posts', label: `Top` },
+						{ value: 'latest_posts', label: `Latest` },
+						{ value: 'users', label: `People` },
+						{ value: 'feeds', label: `Feeds` },
+					]}
+				/>
 
-					<Match when={params.t === 'latest_posts'}>
-						<SearchPostsLazy q={transformedSearch()} sort="latest" />
-					</Match>
+				<Suspense fallback={<CircularProgressView />}>
+					<Switch>
+						<Match when={params.t === 'top_posts'}>
+							<SearchPostsLazy q={transformedSearch()} sort="top" />
+						</Match>
 
-					<Match when={params.t === 'users'}>
-						<SearchProfilesLazy q={transformedSearch()} />
-					</Match>
+						<Match when={params.t === 'latest_posts'}>
+							<SearchPostsLazy q={transformedSearch()} sort="latest" />
+						</Match>
 
-					<Match when={params.t === 'feeds'}>
-						<SearchFeedsLazy q={transformedSearch()} />
-					</Match>
-				</Switch>
-			</Suspense>
+						<Match when={params.t === 'users'}>
+							<SearchProfilesLazy q={transformedSearch()} />
+						</Match>
+
+						<Match when={params.t === 'feeds'}>
+							<SearchFeedsLazy q={transformedSearch()} />
+						</Match>
+					</Switch>
+				</Suspense>
+			</Freeze>
 		</>
 	);
 };

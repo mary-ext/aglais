@@ -1,20 +1,23 @@
 import { createSignal } from 'solid-js';
 
-import { createDerivedSignal } from '~/lib/hooks/derived-signal';
-
 import CrossLargeOutlinedIcon from '../icons-central/cross-large-outline';
 import MagnifyingGlassOutlinedIcon from '../icons-central/magnifying-glass-outline';
 
 export interface SearchBarProps {
 	value?: string;
-	onEnter?: (next: string, reset: () => void) => void;
+	onChange?: (next: string) => void;
+	onClick?: () => void;
+	onKeyDown?: (ev: KeyboardEvent) => void;
+	onSubmit?: () => void;
 }
 
 const SearchBar = (props: SearchBarProps) => {
-	const [search, setSearch] = createDerivedSignal(() => props.value ?? '');
-	const [focused, setFocused] = createSignal(false);
+	const onChange = props.onChange;
+	const onClick = props.onClick;
+	const onKeyDown = props.onKeyDown;
+	const onSubmit = props.onSubmit;
 
-	const reset = () => setSearch(props.value ?? '');
+	const [focused, setFocused] = createSignal(false);
 
 	let inputEl: HTMLInputElement;
 
@@ -22,7 +25,7 @@ const SearchBar = (props: SearchBarProps) => {
 		<form
 			onSubmit={(ev) => {
 				ev.preventDefault();
-				props.onEnter?.(search(), reset);
+				onSubmit?.();
 			}}
 			class="relative grow"
 		>
@@ -35,18 +38,20 @@ const SearchBar = (props: SearchBarProps) => {
 					ref={(el) => {
 						inputEl = el;
 					}}
-					value={search()}
-					onInput={(ev) => setSearch(ev.target.value)}
+					value={props.value ?? ''}
+					onInput={onChange && ((ev) => onChange(ev.target.value.trimStart()))}
+					onClick={onClick}
+					onKeyDown={onKeyDown}
 					placeholder="Search"
 					class="grow self-stretch bg-transparent text-sm text-contrast outline-none placeholder:text-contrast-muted"
 				/>
 
-				{focused() && search() ? (
+				{onChange && focused() && props.value ? (
 					<button
 						type="button"
 						tabindex={-1}
 						onClick={() => {
-							setSearch('');
+							onChange('');
 							inputEl!.focus();
 						}}
 						class="text-contrast-muted outline-none hover:text-contrast"

@@ -1,5 +1,6 @@
 /* @refresh reload */
 import {
+	type Accessor,
 	type Component,
 	For,
 	type JSX,
@@ -274,6 +275,14 @@ export const onRouteEnter = (cb: () => void) => {
 
 	cb();
 	onCleanup(routerEvents.on(route.id, (e) => e.enter && cb()));
+};
+
+export const useIsFocused = (): Accessor<boolean> => {
+	const { route } = useViewContext();
+	const [active, setActive] = createSignal(true);
+
+	onCleanup(routerEvents.on(route.id, (e) => setActive(e.focus)));
+	return active;
 };
 
 export const createFocusEffect = (cb: () => void) => {

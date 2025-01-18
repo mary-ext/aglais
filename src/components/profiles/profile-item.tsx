@@ -15,7 +15,7 @@ import Avatar, { getUserAvatarType } from '../avatar';
 
 export interface ProfileItemProps {
 	/** Expected to be static */
-	item: AppBskyActorDefs.ProfileView;
+	item: AppBskyActorDefs.ProfileView | AppBskyActorDefs.ProfileViewBasic;
 	AsideComponent?: JSX.Element;
 	FooterComponent?: JSX.Element;
 }
