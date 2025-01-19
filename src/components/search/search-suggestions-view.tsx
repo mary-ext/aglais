@@ -77,7 +77,7 @@ const AutocompletionView = () => {
 			if (!q || MAYBE_HANDLE_RE.test(q)) {
 				return {
 					type: SuggestType.ACTOR,
-					op: 'mentions',
+					op: 'to',
 					tok: tok,
 					q,
 				};
