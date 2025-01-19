@@ -23,7 +23,9 @@ const FromActorAutocompletionView = (props: {
 	const match = () => props.match;
 
 	const profiles = createQuery(() => {
-		const $match = match();
+		const $match = match()
+			.replace(/^@|[.]+$/g, '')
+			.toLowerCase();
 
 		return {
 			queryKey: ['profile-autocomplete', $match],
