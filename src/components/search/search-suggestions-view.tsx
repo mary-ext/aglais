@@ -69,6 +69,19 @@ const AutocompletionView = () => {
 			}
 		}
 
+		if (tok.value.startsWith('to:')) {
+			const q = tok.value.slice(3);
+
+			if (!q || MAYBE_HANDLE_RE.test(q)) {
+				return {
+					type: SuggestType.ACTOR,
+					op: 'mentions',
+					tok: tok,
+					q,
+				};
+			}
+		}
+
 		if (tok.value.startsWith('mentions:')) {
 			const q = tok.value.slice(9);
 
