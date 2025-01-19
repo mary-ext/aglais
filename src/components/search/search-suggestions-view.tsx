@@ -61,16 +61,18 @@ const AutocompletionView = () => {
 			return;
 		}
 
-		if (tok.value.startsWith('from:')) {
-			const q = tok.value.slice(5);
+		const word = tok.value;
+
+		if (word.startsWith('from:')) {
+			const q = word.slice(5);
 
 			if (!q || MAYBE_HANDLE_RE.test(q)) {
 				return { type: SuggestType.ACTOR, tok, op: 'from', q };
 			}
 		}
 
-		if (tok.value.startsWith('to:')) {
-			const q = tok.value.slice(3);
+		if (word.startsWith('to:')) {
+			const q = word.slice(3);
 
 			if (!q || MAYBE_HANDLE_RE.test(q)) {
 				return {
@@ -82,8 +84,8 @@ const AutocompletionView = () => {
 			}
 		}
 
-		if (tok.value.startsWith('mentions:')) {
-			const q = tok.value.slice(9);
+		if (word.startsWith('mentions:')) {
+			const q = word.slice(9);
 
 			if (!q || MAYBE_HANDLE_RE.test(q)) {
 				return {
