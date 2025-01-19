@@ -7,7 +7,7 @@ import { useSearchBar } from '../context';
 import FromActorAutocompletionView from './from-actor-autocompletion-view';
 import SearchAutocompletionView from './search-autocompletion-view';
 
-const MAYBE_HANDLE_RE = /^[a-zA-Z0-9-.]+$/;
+const MAYBE_HANDLE_RE = /^@?[a-zA-Z0-9-.]+$/;
 
 const enum SuggestType {
 	ACTOR,
