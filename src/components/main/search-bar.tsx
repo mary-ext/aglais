@@ -54,8 +54,10 @@ const SearchBar = () => {
 						type="button"
 						tabindex={-1}
 						onClick={() => {
-							setQuery('');
-							inputEl!.focus();
+							inputEl.focus();
+
+							inputEl.setSelectionRange(0, inputEl.value.length);
+							document.execCommand('insertText', false, '');
 						}}
 						class="text-contrast-muted outline-none hover:text-contrast"
 					>
