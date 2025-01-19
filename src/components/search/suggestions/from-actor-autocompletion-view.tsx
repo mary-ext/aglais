@@ -1,9 +1,12 @@
-import { For } from 'solid-js';
+import { For, Show } from 'solid-js';
 
 import { createQuery, keepPreviousData } from '@mary/solid-query';
 
+import { createProfileQuery } from '~/api/queries/profile';
+
 import { useIsFocused } from '~/lib/navigation/router';
 import { useAgent } from '~/lib/states/agent';
+import { useSession } from '~/lib/states/session';
 
 import ProfileItemPressable from '~/components/profiles/profile-item-pressable';
 
@@ -12,21 +15,25 @@ const FromActorAutocompletionView = (props: {
 	match: string;
 	onCompletion: (next: string) => void;
 }) => {
+	const { currentAccount } = useSession();
+
 	const { rpc } = useAgent();
 	const isFocused = useIsFocused();
 
+	const match = () => props.match;
+
 	const profiles = createQuery(() => {
-		const match = props.match;
+		const $match = match();
 
 		return {
-			queryKey: ['profile-autocomplete', match],
-			enabled: match !== '' && isFocused(),
+			queryKey: ['profile-autocomplete', $match],
+			enabled: $match !== '' && isFocused(),
 			placeholderData: keepPreviousData,
 			async queryFn({ signal }) {
 				const { data } = await rpc.get('app.bsky.actor.searchActorsTypeahead', {
 					signal,
 					params: {
-						q: match,
+						q: $match,
 						limit: 10,
 					},
 				});
@@ -48,6 +55,18 @@ const FromActorAutocompletionView = (props: {
 					{props.type === 'mentions' ? `Mentioning user` : `From user`}
 				</span>
 			</div>
+
+			<Show when={currentAccount} keyed>
+				{(account) => {
+					const profile = createProfileQuery(() => account.did);
+
+					return (
+						<Show when={match() === '' && profile.data} keyed>
+							{(me) => <ProfileItemPressable item={me} onClick={() => props.onCompletion('me')} />}
+						</Show>
+					);
+				}}
+			</Show>
 
 			<For each={profiles.data?.actors}>
 				{(profile) => (

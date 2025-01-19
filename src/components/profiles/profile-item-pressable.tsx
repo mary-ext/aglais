@@ -11,7 +11,10 @@ import Avatar, { getUserAvatarType } from '../avatar';
 
 export interface ProfileItemPressableProps {
 	/** Expected to be static */
-	item: AppBskyActorDefs.ProfileView | AppBskyActorDefs.ProfileViewBasic;
+	item:
+		| AppBskyActorDefs.ProfileView
+		| AppBskyActorDefs.ProfileViewBasic
+		| AppBskyActorDefs.ProfileViewDetailed;
 	onClick: () => void;
 	AsideComponent?: JSX.Element;
 	FooterComponent?: JSX.Element;
