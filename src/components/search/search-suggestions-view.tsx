@@ -40,7 +40,7 @@ type SuggestMatch =
 	| { type: SuggestType.DATE; tok: Token; op: string };
 
 const AutocompletionView = () => {
-	const { query, inputEl, setQuery } = useSearchBar();
+	const { query, inputEl } = useSearchBar();
 
 	const tokens = createMemo(() => tokenize(query()));
 
@@ -96,13 +96,17 @@ const AutocompletionView = () => {
 		}
 
 		const [tokenIndex, start, end] = position;
+		const nextToken = $tokens[tokenIndex + 1];
 
-		if (!$tokens[tokenIndex + 1] || $tokens[tokenIndex + 1].type !== 'whitespace') {
-			replacement += ' ';
+		let extra = 0;
+		if (nextToken && nextToken.type === 'whitespace') {
+			extra = nextToken.value.length;
 		}
 
+		replacement += ' ';
+
 		$inputEl.focus();
-		$inputEl.setSelectionRange(start, end);
+		$inputEl.setSelectionRange(start, end + extra);
 
 		document.execCommand('insertText', false, replacement);
 	};
