@@ -84,23 +84,27 @@ const AutocompletionView = () => {
 	});
 
 	const replace = (token: Token, replacement: string) => {
-		let $tokens = tokens();
-
-		const tokenIndex = $tokens.indexOf(token);
-		if (tokenIndex === -1) {
+		const $inputEl = inputEl();
+		if (!$inputEl) {
 			return;
 		}
 
-		const spliced: Token[] = [{ type: 'word', value: replacement }];
-
-		if (!$tokens[tokenIndex + 1] || $tokens[tokenIndex + 1].type !== 'whitespace') {
-			spliced.push({ type: 'whitespace', value: ' ' });
+		const $tokens = tokens();
+		const position = getTokenTextPosition($tokens, token);
+		if (!position) {
+			return;
 		}
 
-		$tokens = $tokens.toSpliced(tokenIndex, 1, ...spliced);
+		const [tokenIndex, start, end] = position;
 
-		setQuery($tokens.map((token) => token.value).join(''));
-		inputEl()!.focus();
+		if (!$tokens[tokenIndex + 1] || $tokens[tokenIndex + 1].type !== 'whitespace') {
+			replacement += ' ';
+		}
+
+		$inputEl.focus();
+		$inputEl.setSelectionRange(start, end);
+
+		document.execCommand('insertText', false, replacement);
 	};
 
 	return (
@@ -146,4 +150,20 @@ const findTokenAtIndex = (tokens: Token[], index: number): Token | null => {
 	}
 
 	return null; // Index not within any token
+};
+
+const getTokenTextPosition = (
+	tokens: Token[],
+	targetToken: Token,
+): [tokenIndex: number, start: number, end: number] | null => {
+	const tokenIndex = tokens.indexOf(targetToken);
+	if (tokenIndex === -1) return null;
+
+	let start = 0;
+	for (let i = 0; i < tokenIndex; i++) {
+		start += tokens[i].value.length;
+	}
+	const end = start + targetToken.value.length;
+
+	return [tokenIndex, start, end];
 };
