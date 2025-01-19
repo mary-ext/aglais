@@ -1,7 +1,9 @@
 import { createSignal } from 'solid-js';
 
-import CrossLargeOutlinedIcon from '../icons-central/cross-large-outline';
-import MagnifyingGlassOutlinedIcon from '../icons-central/magnifying-glass-outline';
+import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outline';
+import MagnifyingGlassOutlinedIcon from '~/components/icons-central/magnifying-glass-outline';
+
+import { useSearchBar } from '../search/context';
 
 export interface SearchBarProps {
 	value?: string;
@@ -11,11 +13,8 @@ export interface SearchBarProps {
 	onSubmit?: () => void;
 }
 
-const SearchBar = (props: SearchBarProps) => {
-	const onChange = props.onChange;
-	const onClick = props.onClick;
-	const onKeyDown = props.onKeyDown;
-	const onSubmit = props.onSubmit;
+const SearchBar = () => {
+	const { query, setInputEl, setQuery, onFocus, onSearch } = useSearchBar();
 
 	const [focused, setFocused] = createSignal(false);
 
@@ -24,8 +23,13 @@ const SearchBar = (props: SearchBarProps) => {
 	return (
 		<form
 			onSubmit={(ev) => {
+				const $query = query();
+
 				ev.preventDefault();
-				onSubmit?.();
+
+				if ($query.trim()) {
+					onSearch($query);
+				}
 			}}
 			class="relative grow"
 		>
@@ -36,22 +40,21 @@ const SearchBar = (props: SearchBarProps) => {
 			>
 				<input
 					ref={(el) => {
-						inputEl = el;
+						setInputEl((inputEl = el));
 					}}
-					value={props.value ?? ''}
-					onInput={onChange && ((ev) => onChange(ev.target.value.trimStart()))}
-					onClick={onClick}
-					onKeyDown={onKeyDown}
+					value={query()}
+					onInput={(ev) => setQuery(ev.target.value.trimStart())}
+					onClick={onFocus}
 					placeholder="Search"
 					class="grow self-stretch bg-transparent text-sm text-contrast outline-none placeholder:text-contrast-muted"
 				/>
 
-				{onChange && focused() && props.value ? (
+				{focused() && query() ? (
 					<button
 						type="button"
 						tabindex={-1}
 						onClick={() => {
-							onChange('');
+							setQuery('');
 							inputEl!.focus();
 						}}
 						class="text-contrast-muted outline-none hover:text-contrast"

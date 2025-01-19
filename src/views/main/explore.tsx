@@ -14,15 +14,12 @@ import ArrowLeftOutlinedIcon from '~/components/icons-central/arrow-left-outline
 import GearOutlinedIcon from '~/components/icons-central/gear-outline';
 import SearchBar from '~/components/main/search-bar';
 import * as Page from '~/components/page';
+import { SearchBarProvider } from '~/components/search/context';
 import SearchSuggestionsView from '~/components/search/search-suggestions-view';
 
 const ExplorePage = () => {
 	const [query, setQuery] = createSignal('');
 	const [isInputFocused, setIsInputFocused] = createSignal(false);
-
-	const onSearch = (term: string) => {
-		history.navigate(`/search?q=${encodeURIComponent(term)}`);
-	};
 
 	useTitle(() => `Explore — ${import.meta.env.VITE_APP_NAME}`);
 
@@ -46,7 +43,19 @@ const ExplorePage = () => {
 	});
 
 	return (
-		<>
+		<SearchBarProvider
+			query={query()}
+			onFocus={() => {
+				setIsInputFocused(true);
+			}}
+			onQueryChange={(next) => {
+				setQuery(next);
+				setIsInputFocused(true);
+			}}
+			onSearch={(term) => {
+				history.navigate(`/search?q=${encodeURIComponent(term)}`);
+			}}
+		>
 			<Page.Header>
 				<Page.HeaderAccessory>
 					{!isInputFocused() ? (
@@ -60,22 +69,7 @@ const ExplorePage = () => {
 					)}
 				</Page.HeaderAccessory>
 
-				<SearchBar
-					value={query()}
-					onChange={(next) => {
-						setQuery(next);
-						setIsInputFocused(true);
-					}}
-					onClick={() => setIsInputFocused(true)}
-					onSubmit={() => {
-						const $query = query();
-						if ($query.trim() === '') {
-							return;
-						}
-
-						onSearch($query);
-					}}
-				/>
+				<SearchBar />
 
 				{!isInputFocused() && (
 					<Page.HeaderAccessory>
@@ -85,14 +79,14 @@ const ExplorePage = () => {
 			</Page.Header>
 
 			<Freeze freeze={!isInputFocused()}>
-				<SearchSuggestionsView query={query()} onSearch={onSearch} />
+				<SearchSuggestionsView />
 			</Freeze>
 
 			<Freeze freeze={isInputFocused()}>
 				<MyFeedsSection />
 				<div class="mt-4"></div>
 			</Freeze>
-		</>
+		</SearchBarProvider>
 	);
 };
 

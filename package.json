@@ -12,6 +12,7 @@
 		"@atcute/bluesky": "^1.0.12",
 		"@atcute/bluesky-richtext-parser": "^1.0.7",
 		"@atcute/bluesky-richtext-segmenter": "^1.0.5",
+		"@atcute/bluesky-search-parser": "^0.1.0",
 		"@atcute/cbor": "^2.1.1",
 		"@atcute/cid": "^2.1.0",
 		"@atcute/client": "^2.0.7",

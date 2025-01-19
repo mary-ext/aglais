@@ -16,6 +16,7 @@ import ArrowLeftOutlinedIcon from '~/components/icons-central/arrow-left-outline
 import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
 import SearchBar from '~/components/main/search-bar';
 import * as Page from '~/components/page';
+import { SearchBarProvider } from '~/components/search/context';
 import SearchSuggestionsView from '~/components/search/search-suggestions-view';
 import TabBar from '~/components/tab-bar';
 
@@ -58,7 +59,22 @@ const SearchPage = () => {
 	});
 
 	return (
-		<>
+		<SearchBarProvider
+			query={query()}
+			onFocus={() => {
+				setIsInputFocused(true);
+			}}
+			onQueryChange={(next) => {
+				setQuery(next);
+				setIsInputFocused(true);
+			}}
+			onSearch={(term) => {
+				batch(() => {
+					setParams({ q: term });
+					setIsInputFocused(false);
+				});
+			}}
+		>
 			<Page.Header>
 				<Page.HeaderAccessory>
 					{!isInputFocused() ? (
@@ -72,25 +88,7 @@ const SearchPage = () => {
 					)}
 				</Page.HeaderAccessory>
 
-				<SearchBar
-					value={query()}
-					onChange={(next) => {
-						setQuery(next);
-						setIsInputFocused(true);
-					}}
-					onClick={() => setIsInputFocused(true)}
-					onSubmit={() => {
-						const $query = query();
-						if ($query.trim() === '') {
-							return;
-						}
-
-						batch(() => {
-							setParams({ q: $query });
-							setIsInputFocused(false);
-						});
-					}}
-				/>
+				<SearchBar />
 
 				{!isInputFocused() && (
 					<Page.HeaderAccessory>
@@ -100,15 +98,7 @@ const SearchPage = () => {
 			</Page.Header>
 
 			<ShowFreeze when={isInputFocused()}>
-				<SearchSuggestionsView
-					query={query()}
-					onSearch={(term) => {
-						batch(() => {
-							setParams({ q: term });
-							setIsInputFocused(false);
-						});
-					}}
-				/>
+				<SearchSuggestionsView />
 			</ShowFreeze>
 
 			<Freeze freeze={isInputFocused()}>
@@ -143,7 +133,7 @@ const SearchPage = () => {
 					</Switch>
 				</Suspense>
 			</Freeze>
-		</>
+		</SearchBarProvider>
 	);
 };
 
