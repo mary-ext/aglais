@@ -18,7 +18,6 @@ import ProfileItem from '~/components/profiles/profile-item';
 import { useSearchBar } from '../context';
 
 const HAS_FILTER_RE = /[a-z]:/;
-const LIKELY_HANDLE_RE = /\b[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,})\b/;
 
 const SearchAutocompletionView = () => {
 	const { query, onSearch } = useSearchBar();
@@ -63,13 +62,24 @@ const SearchAutocompletionView = () => {
 				Search for <span class="font-medium text-contrast">{query()}</span>
 			</button>
 
-			<Show when={LIKELY_HANDLE_RE.exec(query())?.[0]}>
+			<Show when={maybeMatchHandle(query())}>
 				{(handle) => (
 					<a
 						href={`/${handle()}`}
-						class="break-words p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+						class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
 					>
-						Go to <span class="font-medium text-contrast">@{handle()}</span>
+						Go to <span class="font-medium text-contrast">{'@' + handle()}</span>
+					</a>
+				)}
+			</Show>
+
+			<Show when={maybeMatchDid(query())}>
+				{(did) => (
+					<a
+						href={`/${did()}`}
+						class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+					>
+						Go to <span class="font-medium text-contrast">{did()}</span>
 					</a>
 				)}
 			</Show>
@@ -78,7 +88,7 @@ const SearchAutocompletionView = () => {
 				{(redirect) => (
 					<a
 						href={redirect()}
-						class="break-words p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+						class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
 					>
 						Open URL in app
 					</a>
@@ -93,6 +103,28 @@ const SearchAutocompletionView = () => {
 };
 
 export default SearchAutocompletionView;
+
+const LIKELY_HANDLE_RE = /\b[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,})\b/;
+const maybeMatchHandle = (query: string): string | null => {
+	const match = LIKELY_HANDLE_RE.exec(query);
+
+	if (match) {
+		return match[0];
+	}
+
+	return null;
+};
+
+const LIKELY_DID_RE = /\bdid:[a-z]+:[a-zA-Z0-9._:%-]*[a-zA-Z0-9._-]\b/;
+const maybeMatchDid = (query: string): string | null => {
+	const match = LIKELY_DID_RE.exec(query);
+
+	if (match) {
+		return match[0];
+	}
+
+	return null;
+};
 
 const findLinkRedirect = (uri: string): string | null => {
 	const url = safeUrlParse(uri);
