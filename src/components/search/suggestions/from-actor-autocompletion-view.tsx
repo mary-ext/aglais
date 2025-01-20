@@ -54,7 +54,16 @@ const FromActorAutocompletionView = (props: {
 		<div class="flex flex-col">
 			<div class="px-4 pb-1 pt-3">
 				<span class="text-xs font-bold uppercase text-contrast/75">
-					{props.type === 'mentions' ? `Mentioning user` : `From user`}
+					{(() => {
+						switch (props.type) {
+							case 'from':
+								return `From user`;
+							case 'to':
+								return `To user`;
+							case 'mentions':
+								return `Mentioning user`;
+						}
+					})()}
 				</span>
 			</div>
 
