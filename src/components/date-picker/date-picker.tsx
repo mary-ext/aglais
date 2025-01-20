@@ -15,7 +15,6 @@ import {
 	getDate,
 	isBefore,
 	isSameDate,
-	isSameMonth,
 	startOfMonth,
 	startOfWeek,
 } from './utils/date';
@@ -38,16 +37,11 @@ const enum NavigationAction {
 
 const monthYearFormatter = new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric' });
 
-const monthFormatter = new Intl.DateTimeFormat('en', { month: 'long' });
 const weekdayLongFormatter = new Intl.DateTimeFormat('en', { weekday: 'long' });
 const weekdayShortFormatter = new Intl.DateTimeFormat('en', { weekday: 'short' });
 
-const formatDayLabel = (date: Date, sameMonth: boolean) => {
-	if (sameMonth) {
-		return `${date.getDate()}, ${weekdayLongFormatter.format(date)}`;
-	} else {
-		return `${monthFormatter.format(date)} ${date.getDate()}, ${weekdayLongFormatter.format(date)}`;
-	}
+const formatDayLabel = (date: Date) => {
+	return `${date.getDate()}, ${weekdayLongFormatter.format(date)}`;
 };
 
 const DatePicker = (props: DatePickerProps) => {
@@ -55,7 +49,7 @@ const DatePicker = (props: DatePickerProps) => {
 
 	const today = new Date();
 
-	const [cursor, setDate] = createDerivedSignal(() => {
+	const [cursor, setCursor] = createDerivedSignal(() => {
 		return clamp(props.value ?? today, props.minDate, props.maxDate);
 	});
 
@@ -63,11 +57,15 @@ const DatePicker = (props: DatePickerProps) => {
 		equals: isDateEqual,
 	});
 
-	const weeks = createMemo(() => {
+	const grid = createMemo((): { offset: number; weeks: Date[][] } => {
 		const $date = startMonth();
 
-		const start = startOfWeek($date);
-		const end = endOfWeek(endOfMonth($date));
+		const start = $date;
+		const end = endOfMonth($date);
+
+		const startWeek = startOfWeek(start);
+		const firstWeekend = 7 - start.getDay();
+		const offset = start.getDay() - startWeek.getDay();
 
 		const days: Date[] = [];
 		for (let curr = start; isBefore(curr, end); ) {
@@ -75,24 +73,24 @@ const DatePicker = (props: DatePickerProps) => {
 			curr = addDays(curr, 1);
 		}
 
-		const chunks = chunked(days, 7);
-		while (chunks.length < 6) {
-			chunks.push([]);
+		const weeks = [days.slice(0, firstWeekend), ...chunked(days.slice(firstWeekend), 7)];
+		while (weeks.length < 6) {
+			weeks.push([]);
 		}
 
-		return chunks;
+		return { offset, weeks };
 	});
 
 	const navigate = (action: NavigationAction) => {
-		setDate(addMonths(startMonth(), action));
+		setCursor(addMonths(startMonth(), action));
 	};
 
 	return (
-		<div class="flex w-max flex-col gap-4 text-contrast/90">
-			<div class="flex items-center gap-2">
+		<div class="flex w-max flex-col text-contrast/85">
+			<div class="mb-4 flex items-center gap-2">
 				<button
 					onClick={() => navigate(NavigationAction.Previous)}
-					class="grid h-10 w-10 shrink-0 place-items-center rounded-full hover:bg-contrast-hinted/md active:bg-contrast-hinted/md-pressed"
+					class="grid h-10 w-10 shrink-0 place-items-center rounded-full outline-2 -outline-offset-2 outline-accent hover:bg-contrast-hinted/md focus-visible:outline active:bg-contrast-hinted/md-pressed"
 				>
 					<ChevronRightOutlinedIcon class="rotate-180 text-xl" />
 				</button>
@@ -101,48 +99,96 @@ const DatePicker = (props: DatePickerProps) => {
 
 				<button
 					onClick={() => navigate(NavigationAction.Next)}
-					class="grid h-10 w-10 shrink-0 place-items-center rounded-full hover:bg-contrast-hinted/md active:bg-contrast-hinted/md-pressed"
+					class="grid h-10 w-10 shrink-0 place-items-center rounded-full outline-2 -outline-offset-2 outline-accent hover:bg-contrast-hinted/md focus-visible:outline active:bg-contrast-hinted/md-pressed"
 				>
 					<ChevronRightOutlinedIcon class="text-xl" />
 				</button>
 			</div>
 
 			<div class="grid grid-cols-7 gap-2 text-center">
-				{
-					/* @once */ weeks()[0].map((day) => {
-						return (
-							<div class="text-xs text-contrast-muted">{/* @once */ weekdayShortFormatter.format(day)}</div>
-						);
-					})
-				}
+				<div class="contents">
+					{(() => {
+						return grid().weeks[1].map((day) => {
+							return (
+								<div class="text-xs text-contrast-muted">{/* @once */ weekdayShortFormatter.format(day)}</div>
+							);
+						});
+					})()}
+				</div>
 
 				<div
 					class="contents"
 					onKeyDown={(ev) => {
-						//
+						const current = cursor();
+						let next: Date | undefined;
+
+						switch (ev.key) {
+							case 'ArrowLeft': {
+								next = addDays(current, -1);
+								break;
+							}
+							case 'ArrowRight': {
+								next = addDays(current, 1);
+								break;
+							}
+							case 'ArrowUp': {
+								next = addDays(current, -7);
+								break;
+							}
+							case 'ArrowDown': {
+								next = addDays(current, 7);
+								break;
+							}
+							case 'Home': {
+								next = startOfWeek(current);
+								break;
+							}
+							case 'End': {
+								next = endOfWeek(current);
+								break;
+							}
+						}
+
+						if (next) {
+							ev.preventDefault();
+
+							setCursor(clamp(next, props.minDate, props.maxDate));
+
+							const button = ev.currentTarget.querySelector<HTMLButtonElement>('button[tabindex="0"]');
+							button?.focus();
+						}
 					}}
 				>
-					{weeks().map((week) => {
-						return week.map((day) => {
-							const isInside = isSameMonth(day, startMonth());
-							const isToday = isSameDate(day, today);
+					{(() => {
+						const { offset, weeks } = grid();
 
-							return (
-								<button
-									tabindex={isSameDate(day, cursor()) ? 0 : -1}
-									aria-label={/* @once */ formatDayLabel(day, isInside)}
-									class={
-										`h-10 w-10 rounded-full hover:bg-contrast/md active:bg-contrast/md-pressed` +
-										(!isInside ? ` text-contrast-muted` : ``) +
-										(isToday ? ` border-2 border-accent font-bold` : ``)
-									}
-									onClick={onChange && (() => onChange(day))}
-								>
-									{/* @once */ getDate(day)}
-								</button>
-							);
+						return weeks.map((week, i) => {
+							if (week.length === 0) {
+								return [<div class="col-span-7 h-10"></div>];
+							}
+
+							return week.map((day, j) => {
+								const isToday = isSameDate(day, today);
+
+								const date = getDate(day);
+
+								return (
+									<button
+										tabindex={isSameDate(day, cursor()) ? 0 : -1}
+										aria-label={/* @once */ formatDayLabel(day)}
+										class={
+											`h-10 w-10 rounded-full outline-2 -outline-offset-2 outline-accent hover:bg-contrast/md focus-visible:outline active:bg-contrast/md-pressed` +
+											(isToday ? ` border border-outline-lg font-medium text-contrast` : ``)
+										}
+										style={{ 'grid-column-start': i == 0 && j === 0 ? offset + 1 : '' }}
+										onClick={onChange && (() => onChange(day))}
+									>
+										{date}
+									</button>
+								);
+							});
 						});
-					})}
+					})()}
 				</div>
 			</div>
 		</div>
