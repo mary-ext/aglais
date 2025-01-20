@@ -4,6 +4,7 @@ import { type Token, tokenize } from '@atcute/bluesky-search-parser';
 
 import { useSearchBar } from '../context';
 
+import { DateAutocompletionView } from './date-autocompletion-view';
 import FromActorAutocompletionView from './from-actor-autocompletion-view';
 import SearchAutocompletionView from './search-autocompletion-view';
 
@@ -75,6 +76,22 @@ const AutocompletionView = () => {
 				};
 			}
 		}
+
+		if (word.startsWith('since:')) {
+			return {
+				type: SuggestType.DATE,
+				op: 'since',
+				tok: tok,
+			};
+		}
+
+		if (word.startsWith('until:')) {
+			return {
+				type: SuggestType.DATE,
+				op: 'until',
+				tok: tok,
+			};
+		}
 	});
 
 	const replace = (token: Token, replacement: string) => {
@@ -122,6 +139,24 @@ const AutocompletionView = () => {
 						onCompletion={(handle) => {
 							const m = match();
 							replace(m.tok, `${m.op}:${handle}`);
+						}}
+					/>
+				)}
+			</Match>
+
+			<Match
+				when={(() => {
+					const match = matcher();
+					if (match?.type === SuggestType.DATE) {
+						return match;
+					}
+				})()}
+			>
+				{(match) => (
+					<DateAutocompletionView
+						onCompletion={(next) => {
+							const m = match();
+							replace(m.tok, `${m.op}:${next}`);
 						}}
 					/>
 				)}
