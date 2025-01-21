@@ -1,15 +1,7 @@
-import { For, Show } from 'solid-js';
+import { For } from 'solid-js';
 
 import { createQuery, keepPreviousData } from '@mary/solid-query';
 
-import { safeUrlParse } from '~/api/utils/strings';
-
-import {
-	BSKY_FEED_LINK_RE,
-	BSKY_LIST_LINK_RE,
-	BSKY_POST_LINK_RE,
-	BSKY_PROFILE_LINK_RE,
-} from '~/lib/bsky/link-detection';
 import { useIsFocused } from '~/lib/navigation/router';
 import { useAgent } from '~/lib/states/agent';
 
@@ -20,7 +12,7 @@ import { useSearchBar } from '../context';
 const HAS_FILTER_RE = /[a-z]:/;
 
 const SearchAutocompletionView = () => {
-	const { query, onSearch } = useSearchBar();
+	const { query } = useSearchBar();
 
 	const { rpc } = useAgent();
 	const isFocused = useIsFocused();
@@ -54,106 +46,11 @@ const SearchAutocompletionView = () => {
 	});
 
 	return (
-		<div class="flex flex-col">
-			<button
-				class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
-				onClick={() => onSearch(query())}
-			>
-				Search for <span class="font-medium text-contrast">{query()}</span>
-			</button>
-
-			<Show when={maybeMatchHandle(query())}>
-				{(handle) => (
-					<a
-						href={`/${handle()}`}
-						class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
-					>
-						Go to <span class="font-medium text-contrast">{'@' + handle()}</span>
-					</a>
-				)}
-			</Show>
-
-			<Show when={maybeMatchDid(query())}>
-				{(did) => (
-					<a
-						href={`/${did()}`}
-						class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
-					>
-						Go to <span class="font-medium text-contrast">{did()}</span>
-					</a>
-				)}
-			</Show>
-
-			<Show when={findLinkRedirect(query())}>
-				{(redirect) => (
-					<a
-						href={redirect()}
-						class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
-					>
-						Open URL in app
-					</a>
-				)}
-			</Show>
-
-			<hr class="mx-4 my-1 border-outline" />
-
+		<div hidden={!profiles.data?.actors.length}>
+			<hr class="mx-4 my-3 border-outline" />
 			<For each={profiles.data?.actors}>{(profile) => <ProfileItem item={profile} />}</For>
 		</div>
 	);
 };
 
 export default SearchAutocompletionView;
-
-const LIKELY_HANDLE_RE = /\b[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,})\b/;
-const maybeMatchHandle = (query: string): string | null => {
-	const match = LIKELY_HANDLE_RE.exec(query);
-
-	if (match) {
-		return match[0];
-	}
-
-	return null;
-};
-
-const LIKELY_DID_RE = /\bdid:[a-z]+:[a-zA-Z0-9._:%-]*[a-zA-Z0-9._-]\b/;
-const maybeMatchDid = (query: string): string | null => {
-	const match = LIKELY_DID_RE.exec(query);
-
-	if (match) {
-		return match[0];
-	}
-
-	return null;
-};
-
-const findLinkRedirect = (uri: string): string | null => {
-	const url = safeUrlParse(uri);
-
-	if (url === null) {
-		return null;
-	}
-
-	const host = url.host;
-	const pathname = url.pathname;
-	let match: RegExpExecArray | null | undefined;
-
-	if (host === 'bsky.app') {
-		if ((match = BSKY_PROFILE_LINK_RE.exec(pathname))) {
-			return `/${match[1]}`;
-		}
-
-		if ((match = BSKY_POST_LINK_RE.exec(pathname))) {
-			return `/${match[1]}/${match[2]}`;
-		}
-
-		if ((match = BSKY_LIST_LINK_RE.exec(pathname))) {
-			return `/${match[1]}/lists/${match[2]}`;
-		}
-
-		if ((match = BSKY_FEED_LINK_RE.exec(pathname))) {
-			return `/${match[1]}/feeds/${match[2]}`;
-		}
-	}
-
-	return null;
-};

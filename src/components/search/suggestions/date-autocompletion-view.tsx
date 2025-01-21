@@ -9,7 +9,7 @@ const isoDateFormatter = new Intl.DateTimeFormat('sv-SE', {
 
 export const DateAutocompletionView = (props: { onCompletion: (next: string) => void }) => {
 	return (
-		<div class="flex flex-col">
+		<>
 			<div class="self-center py-4">
 				<DatePicker
 					onChange={(next) => {
@@ -17,6 +17,6 @@ export const DateAutocompletionView = (props: { onCompletion: (next: string) => 
 					}}
 				/>
 			</div>
-		</div>
+		</>
 	);
 };

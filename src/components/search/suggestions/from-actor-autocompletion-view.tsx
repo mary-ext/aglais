@@ -51,7 +51,7 @@ const FromActorAutocompletionView = (props: {
 	});
 
 	return (
-		<div class="flex flex-col">
+		<>
 			<div class="px-4 pb-1 pt-3">
 				<span class="text-xs font-bold uppercase text-contrast/75">
 					{(() => {
@@ -84,7 +84,7 @@ const FromActorAutocompletionView = (props: {
 					<ProfileItemPressable item={profile} onClick={() => props.onCompletion(profile.handle)} />
 				)}
 			</For>
-		</div>
+		</>
 	);
 };
 
