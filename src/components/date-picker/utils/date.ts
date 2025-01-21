@@ -76,15 +76,27 @@ export const isBefore = (date: Date, dateToCompare: Date): boolean => {
 };
 
 export const isSameYear = (a: Date, b: Date): boolean => {
+	if (a === b) {
+		return true;
+	}
+
 	return a.getFullYear() === b.getFullYear();
 };
 
 export const isSameMonth = (a: Date, b: Date): boolean => {
-	return a.getMonth() === b.getMonth() && isSameYear(a, b);
+	if (a === b) {
+		return true;
+	}
+
+	return a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear();
 };
 
 export const isSameDate = (a: Date, b: Date): boolean => {
-	return a.getDate() === b.getDate() && isSameMonth(a, b);
+	if (a === b) {
+		return true;
+	}
+
+	return a.getDate() === b.getDate() && a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear();
 };
 
 export const getDate = (date: Date): number => {
