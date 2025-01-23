@@ -1,6 +1,7 @@
 import { For, Match, Show, Switch, createMemo } from 'solid-js';
 
 import { type Token, tokenize } from '@atcute/bluesky-search-parser';
+import { min } from '@mary/date-fns';
 
 import { safeUrlParse } from '~/api/utils/strings';
 
@@ -14,12 +15,13 @@ import {
 import MagnifyingGlassOutlinedIcon from '../icons-central/magnifying-glass-outline';
 
 import { useSearchBar } from './context';
-import { DateAutocompletionView } from './suggestions/date-autocompletion-view';
+import DateAutocompletionView from './suggestions/date-autocompletion-view';
 import FromActorAutocompletionView from './suggestions/from-actor-autocompletion-view';
 import SearchAutocompletionView from './suggestions/search-autocompletion-view';
+import { parseEndDate, parseStartDate } from './utils/date';
 
 const MAYBE_HANDLE_RE = /^@?[a-zA-Z0-9-.]*$/;
-const MAYBE_DATE_RE = /^[\d-]*$/;
+const MAYBE_DATE_RE = /^[\d\-+.:Z]*$/;
 
 const enum SuggestType {
 	ACTOR,
@@ -204,14 +206,59 @@ const SearchSuggestionsView = () => {
 						}
 					})()}
 				>
-					{(match) => (
-						<DateAutocompletionView
-							onCompletion={(next) => {
-								const m = match();
-								replaceCurrentToken(`${m.op}:${next} `);
-							}}
-						/>
-					)}
+					{(match) => {
+						const today = new Date();
+
+						const cursor = createMemo((prev: Date | undefined) => {
+							const parsed = parseStartDate(match().q);
+							return parsed ?? prev;
+						}, undefined);
+
+						const constraints = createMemo(() => {
+							const ctok = currentToken()?.token;
+							const cop = match().op;
+
+							let minDate: Date | undefined;
+							let maxDate: Date | undefined;
+
+							for (const token of tokens()) {
+								if (token === ctok || token.type !== 'word') {
+									continue;
+								}
+
+								const [op, q] = split(token.value, ':', 2);
+								if (q === undefined || op !== (cop === 'since' ? 'until' : 'since')) {
+									continue;
+								}
+
+								if (op === 'since') {
+									minDate = parseEndDate(q) ?? undefined;
+									break;
+								}
+								if (op === 'until') {
+									maxDate = parseStartDate(q) ?? undefined;
+									break;
+								}
+							}
+
+							return {
+								min: minDate,
+								max: maxDate ? min(maxDate, today) : today,
+							};
+						});
+
+						return (
+							<DateAutocompletionView
+								initialCursor={cursor()}
+								minDate={constraints().min}
+								maxDate={constraints().max}
+								onCompletion={(next) => {
+									const m = match();
+									replaceCurrentToken(`${m.op}:${next} `);
+								}}
+							/>
+						);
+					}}
 				</Match>
 
 				<Match when>

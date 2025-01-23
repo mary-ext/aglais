@@ -1,33 +1,38 @@
 import { createMemo } from 'solid-js';
 
-import { chunked } from '~/api/utils/misc';
-
-import { createDerivedSignal } from '~/lib/hooks/derived-signal';
-
-import ChevronRightOutlinedIcon from '../icons-central/chevron-right-outline';
-
 import {
 	addDays,
 	addMonths,
 	clamp,
+	endOfDay,
 	endOfMonth,
 	endOfWeek,
-	getDate,
-	isBefore,
+	getDayOfMonth,
+	getDayOfWeek,
+	isAfterDate,
+	isBeforeDate,
+	isSameCalendarDate,
 	isSameDate,
 	startOfMonth,
 	startOfWeek,
-} from './utils/date';
+} from '@mary/date-fns';
+
+import { chunked } from '~/api/utils/misc';
+
+import { createDerivedSignal } from '~/lib/hooks/derived-signal';
+
+import ChevronRightOutlinedIcon from '~/components/icons-central/chevron-right-outline';
 
 export interface DatePickerProps {
 	value?: Date;
+	initialCursor?: Date;
 	minDate?: Date;
 	maxDate?: Date;
 	onChange?: (next: Date) => void;
 }
 
 const isDateEqual = (a: Date | undefined, b: Date | undefined) => {
-	return a?.getTime() === b?.getTime();
+	return a && b ? isSameDate(a, b) : a === b;
 };
 
 const enum NavigationAction {
@@ -41,7 +46,7 @@ const weekdayLongFormatter = new Intl.DateTimeFormat('en', { weekday: 'long' });
 const weekdayShortFormatter = new Intl.DateTimeFormat('en', { weekday: 'short' });
 
 const formatDayLabel = (date: Date) => {
-	return `${date.getDate()}, ${weekdayLongFormatter.format(date)}`;
+	return `${getDayOfMonth(date)}, ${weekdayLongFormatter.format(date)}`;
 };
 
 const DatePicker = (props: DatePickerProps) => {
@@ -50,25 +55,22 @@ const DatePicker = (props: DatePickerProps) => {
 	const today = new Date();
 
 	const [cursor, setCursor] = createDerivedSignal(() => {
-		return clamp(props.value ?? today, props.minDate, props.maxDate);
+		const day = props.initialCursor ?? props.value ?? props.minDate ?? today;
+		return clamp(day, props.minDate, props.maxDate);
 	});
 
-	const startMonth = createMemo(() => startOfMonth(cursor()), undefined, {
-		equals: isDateEqual,
-	});
+	const startMonth = createMemo(() => startOfMonth(cursor()), undefined, { equals: isDateEqual });
 
 	const grid = createMemo((): { offset: number; weeks: Date[][] } => {
-		const $date = startMonth();
-
-		const start = $date;
-		const end = endOfMonth($date);
+		const start = startMonth();
+		const end = endOfMonth(start);
 
 		const startWeek = startOfWeek(start);
-		const firstWeekend = 7 - start.getDay();
-		const offset = start.getDay() - startWeek.getDay();
+		const firstWeekend = 7 - getDayOfWeek(start);
+		const offset = getDayOfWeek(start) - getDayOfWeek(startWeek);
 
 		const days: Date[] = [];
-		for (let curr = start; isBefore(curr, end); ) {
+		for (let curr = start; isBeforeDate(curr, end); ) {
 			days.push(curr);
 			curr = addDays(curr, 1);
 		}
@@ -89,8 +91,12 @@ const DatePicker = (props: DatePickerProps) => {
 		<div class="flex w-max flex-col text-contrast/85">
 			<div class="mb-4 flex items-center gap-2">
 				<button
+					disabled={(() => {
+						const minDate = props.minDate;
+						return minDate !== undefined && isBeforeDate(startMonth(), minDate);
+					})()}
 					onClick={() => navigate(NavigationAction.Previous)}
-					class="grid h-10 w-10 shrink-0 place-items-center rounded-full outline-2 -outline-offset-2 outline-accent hover:bg-contrast-hinted/md focus-visible:outline active:bg-contrast-hinted/md-pressed"
+					class="grid h-10 w-10 shrink-0 place-items-center rounded-full outline-2 -outline-offset-2 outline-accent hover:bg-contrast-hinted/md focus-visible:outline active:bg-contrast-hinted/md-pressed disabled:pointer-events-none disabled:opacity-50"
 				>
 					<ChevronRightOutlinedIcon class="rotate-180 text-xl" />
 				</button>
@@ -98,8 +104,12 @@ const DatePicker = (props: DatePickerProps) => {
 				<div class="grow text-center font-medium">{monthYearFormatter.format(startMonth())}</div>
 
 				<button
+					disabled={(() => {
+						const maxDate = props.maxDate;
+						return maxDate !== undefined && isAfterDate(endOfMonth(startMonth()), maxDate);
+					})()}
 					onClick={() => navigate(NavigationAction.Next)}
-					class="grid h-10 w-10 shrink-0 place-items-center rounded-full outline-2 -outline-offset-2 outline-accent hover:bg-contrast-hinted/md focus-visible:outline active:bg-contrast-hinted/md-pressed"
+					class="grid h-10 w-10 shrink-0 place-items-center rounded-full outline-2 -outline-offset-2 outline-accent hover:bg-contrast-hinted/md focus-visible:outline active:bg-contrast-hinted/md-pressed disabled:pointer-events-none disabled:opacity-50"
 				>
 					<ChevronRightOutlinedIcon class="text-xl" />
 				</button>
@@ -168,20 +178,31 @@ const DatePicker = (props: DatePickerProps) => {
 							}
 
 							return week.map((day, j) => {
-								const isToday = isSameDate(day, today);
+								const isToday = isSameCalendarDate(day, today);
 
-								const date = getDate(day);
+								const date = getDayOfMonth(day);
 
 								return (
 									<button
-										tabindex={isSameDate(day, cursor()) ? 0 : -1}
+										tabindex={isSameCalendarDate(day, cursor()) ? 0 : -1}
 										aria-label={/* @once */ formatDayLabel(day)}
+										data-date={day.toISOString()}
+										disabled={(() => {
+											const minDate = props.minDate;
+											const maxDate = props.maxDate;
+
+											return (
+												(minDate !== undefined && isBeforeDate(endOfDay(day), minDate)) ||
+												(maxDate !== undefined && isAfterDate(day, maxDate))
+											);
+										})()}
 										class={
-											`h-10 w-10 rounded-full outline-2 -outline-offset-2 outline-accent hover:bg-contrast/md focus-visible:outline active:bg-contrast/md-pressed` +
+											`h-10 w-10 rounded-full outline-2 -outline-offset-2 outline-accent hover:bg-contrast/md focus-visible:outline active:bg-contrast/md-pressed disabled:pointer-events-none disabled:opacity-50` +
 											(isToday ? ` border border-outline-lg font-medium text-contrast` : ``)
 										}
 										style={{ 'grid-column-start': i == 0 && j === 0 ? offset + 1 : '' }}
-										onClick={onChange && (() => onChange(day))}
+										onFocus={() => !isSameCalendarDate(day, cursor()) && setCursor(day)}
+										onClick={onChange && (() => onChange(clamp(day, props.minDate, props.maxDate)))}
 									>
 										{date}
 									</button>

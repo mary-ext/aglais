@@ -7,11 +7,21 @@ const isoDateFormatter = new Intl.DateTimeFormat('sv-SE', {
 	day: '2-digit',
 });
 
-export const DateAutocompletionView = (props: { onCompletion: (next: string) => void }) => {
+export interface DateAutocompletionViewProps {
+	initialCursor?: Date;
+	minDate?: Date;
+	maxDate?: Date;
+	onCompletion: (next: string) => void;
+}
+
+const DateAutocompletionView = (props: DateAutocompletionViewProps) => {
 	return (
 		<>
 			<div class="self-center py-4">
 				<DatePicker
+					initialCursor={props.initialCursor}
+					minDate={props.minDate}
+					maxDate={props.maxDate}
 					onChange={(next) => {
 						props.onCompletion(isoDateFormatter.format(next));
 					}}
@@ -20,3 +30,5 @@ export const DateAutocompletionView = (props: { onCompletion: (next: string) => 
 		</>
 	);
 };
+
+export default DateAutocompletionView;
