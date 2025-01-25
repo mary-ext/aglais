@@ -108,7 +108,7 @@ const NavBar = ({
 			const from = active();
 
 			if (from === to) {
-				window.scrollTo({ top: 0, behavior: 'smooth' });
+				window.scrollTo({ top: 0, behavior: 'instant' });
 				globalEvents.emit('softreset');
 				return;
 			}
