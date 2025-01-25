@@ -58,6 +58,7 @@ interface MatchedRoute {
 
 export interface MatchedRouteState extends MatchedRoute {
 	readonly id: string;
+	scrollPos: { x: number; y: number } | undefined;
 }
 
 interface RouterState {
@@ -106,7 +107,11 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 			const nextKey = matched.id || _entry.key;
 
 			const isSingle = !!matched.id;
-			const matchedState: MatchedRouteState = { ...matched, id: nextKey };
+			const matchedState: MatchedRouteState = {
+				...matched,
+				id: nextKey,
+				scrollPos: undefined,
+			};
 
 			const next: Record<string, MatchedRouteState> = { [nextKey]: matchedState };
 
@@ -141,7 +146,11 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 					let isNew = false;
 
 					const nextId = matched.id || nextEntry.key;
-					const matchedState: MatchedRouteState = { ...matched, id: nextId };
+					const matchedState: MatchedRouteState = {
+						...matched,
+						id: nextId,
+						scrollPos: undefined,
+					};
 
 					let nextViews: typeof views | undefined;
 
@@ -185,19 +194,36 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 						views = nextViews;
 					}
 
+					// Persist scroll position
+					{
+						const prev = current.views[current.active] || current.singles[current.active];
+						if (prev) {
+							prev.scrollPos = { x: window.scrollX, y: window.scrollY };
+						}
+					}
+
 					routerEvents.emit(current.active, { focus: false, enter: false });
 					setState({ active: nextId, views: views, singles: singles });
 
-					if (!isNew) {
+					if (isNew) {
+						// Scroll to top if we're pushing or replacing, it's a new page.
+						if (!matched.id && (action === 'push' || action === 'replace')) {
+							window.scrollTo({ top: 0, behavior: 'instant' });
+						}
+					} else {
+						// Restore scroll position for the activated route
+						{
+							const newRoute = views[nextId] || singles[nextId];
+							if (newRoute?.scrollPos) {
+								const { x, y } = newRoute.scrollPos;
+								window.scrollTo(x, y);
+							}
+						}
+
 						routerEvents.emit(nextId, {
 							focus: true,
 							enter: action !== 'traverse' || nextEntry.index > currentEntry.index,
 						});
-					}
-
-					// Scroll to top if we're pushing or replacing, it's a new page.
-					if (!matched.id && (action === 'push' || action === 'replace')) {
-						window.scrollTo({ top: 0, behavior: 'instant' });
 					}
 				}
 			}),
@@ -311,7 +337,6 @@ export const RouterView = (props: RouterViewProps) => {
 	const render = props.render;
 
 	const renderView = (matched: MatchedRouteState) => {
-		const def = matched.def;
 		const id = matched.id;
 
 		const active = createMemo((): boolean => state().active === id);
@@ -320,20 +345,6 @@ export const RouterView = (props: RouterViewProps) => {
 			owner: getOwner(),
 			route: matched,
 		};
-
-		if (def.single) {
-			let storedHeight: number | undefined;
-
-			onCleanup(
-				routerEvents.on(id, (ev) => {
-					if (!ev.focus) {
-						storedHeight = document.documentElement.scrollTop;
-					} else if (storedHeight !== undefined) {
-						window.scrollTo({ top: storedHeight, behavior: 'instant' });
-					}
-				}),
-			);
-		}
 
 		return (
 			<Freeze freeze={!active()}>

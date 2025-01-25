@@ -92,5 +92,7 @@ const App = () => {
 	);
 };
 
+history.scrollRestoration = 'manual';
+
 // Render the app
 render(App, document.body);
