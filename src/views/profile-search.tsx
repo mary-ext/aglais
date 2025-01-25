@@ -63,6 +63,7 @@ const ProfileSearchPage = () => {
 			</Page.Header>
 
 			<SearchSuggestionsView
+				hideProfileSearch
 				excludedOperators={['from']}
 				placeholderMessage={(() => {
 					const data = profile.data;

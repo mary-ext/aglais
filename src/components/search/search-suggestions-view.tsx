@@ -86,6 +86,7 @@ const operators: Operator[] = [
 
 export interface SearchSuggestionsViewProps {
 	placeholderMessage?: JSX.Element;
+	hideProfileSearch?: boolean;
 	excludedOperators?: string[];
 }
 
@@ -128,6 +129,11 @@ const SearchSuggestionsView = (props: SearchSuggestionsViewProps) => {
 
 		const [op, q] = split(tok.value, ':', 2);
 		if (q === undefined) {
+			return;
+		}
+
+		const excluded = props.excludedOperators;
+		if (excluded?.includes(op)) {
 			return;
 		}
 
@@ -356,7 +362,9 @@ const SearchSuggestionsView = (props: SearchSuggestionsViewProps) => {
 							)}
 						</Show>
 
-						<SearchAutocompletionView />
+						<Show when={!props.hideProfileSearch}>
+							<SearchAutocompletionView />
+						</Show>
 					</Show>
 
 					{operatorSuggestions().length !== 0 && (
