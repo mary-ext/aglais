@@ -145,6 +145,8 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 					let singles = current.singles;
 					let isNew = false;
 
+					const prevId = current.active;
+
 					const nextId = matched.id || nextEntry.key;
 					const matchedState: MatchedRouteState = {
 						...matched,
@@ -193,29 +195,26 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 						views = nextViews;
 					}
 
-					// Persist scroll position
 					{
-						const prev = current.views[current.active] || current.singles[current.active];
+						const prev = current.views[prevId] || current.singles[prevId];
 						if (prev) {
 							prev.scrollPos = { x: window.scrollX, y: window.scrollY };
 						}
 					}
 
-					routerEvents.emit(current.active, { focus: false, enter: false });
+					routerEvents.emit(prevId, { focus: false, enter: false });
+
 					setState({ active: nextId, views: views, singles: singles });
 
 					if (isNew) {
 						// Scroll to top if we're pushing or replacing, it's a new page.
-						if (!matched.id) {
-							window.scrollTo(0, 0);
-						}
+						window.scrollTo(0, 0);
 					} else {
-						// Restore scroll position for the activated route
 						{
-							const newRoute = views[nextId] || singles[nextId];
-							if (newRoute?.scrollPos) {
-								const { x, y } = newRoute.scrollPos;
-								window.scrollTo(x, y);
+							const next = views[nextId] || singles[nextId];
+							if (next?.scrollPos) {
+								const pos = next.scrollPos;
+								window.scrollTo(pos.x, pos.y);
 							}
 						}
 
