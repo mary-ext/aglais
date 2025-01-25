@@ -151,6 +151,14 @@ const routes: RouteDefinition[] = [
 	},
 
 	{
+		path: '/:didOrHandle/search',
+		component: lazy(() => import('./views/profile-search')),
+		validate(params) {
+			return isValidDidOrHandle(params.didOrHandle);
+		},
+	},
+
+	{
 		path: '/:did/following',
 		component: lazy(() => import('./views/profile-following')),
 		validate(params) {

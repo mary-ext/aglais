@@ -17,7 +17,7 @@ const Context = createContext<SearchBarContext>();
 
 export interface SearchBarProviderProps {
 	query: string;
-	onFocus: () => void;
+	onFocus?: () => void;
 	onQueryChange: (next: string) => void;
 	onSearch: (next: string) => void;
 	children: JSX.Element;
@@ -36,7 +36,7 @@ export const SearchBarProvider = (props: SearchBarProviderProps) => {
 		setQuery: props.onQueryChange,
 
 		onSearch: props.onSearch,
-		onFocus: props.onFocus,
+		onFocus: props.onFocus ?? (() => {}),
 	};
 
 	return <Context.Provider value={context}>{props.children}</Context.Provider>;

@@ -1,4 +1,4 @@
-import { For, Match, Show, Switch, createMemo } from 'solid-js';
+import { For, type JSX, Match, Show, Switch, createMemo } from 'solid-js';
 
 import { type Token, tokenize } from '@atcute/bluesky-search-parser';
 import { min } from '@mary/date-fns';
@@ -11,6 +11,7 @@ import {
 	BSKY_POST_LINK_RE,
 	BSKY_PROFILE_LINK_RE,
 } from '~/lib/bsky/link-detection';
+import { splitFilters } from '~/lib/bsky/search';
 
 import MagnifyingGlassOutlinedIcon from '../icons-central/magnifying-glass-outline';
 
@@ -43,23 +44,49 @@ interface TokenPosition {
 interface Operator {
 	name: string;
 	type: SuggestType;
-	visible: boolean;
+	hidden?: boolean;
+	hideOn?: string[];
 }
 
 const operators: Operator[] = [
-	{ name: 'from', type: SuggestType.ACTOR, visible: true },
-	{ name: 'to', type: SuggestType.ACTOR, visible: false },
-	{ name: 'mentions', type: SuggestType.ACTOR, visible: true },
+	{
+		name: 'from',
+		type: SuggestType.ACTOR,
+	},
+	{
+		name: 'to',
+		type: SuggestType.ACTOR,
+		hidden: true,
+		hideOn: ['mentions'],
+	},
+	{
+		name: 'mentions',
+		type: SuggestType.ACTOR,
+		hideOn: ['to'],
+	},
 
-	{ name: 'since', type: SuggestType.DATE, visible: true },
-	{ name: 'until', type: SuggestType.DATE, visible: true },
+	{
+		name: 'since',
+		type: SuggestType.DATE,
+	},
+	{
+		name: 'until',
+		type: SuggestType.DATE,
+	},
 
-	{ name: 'lang', type: SuggestType.LANGUAGE, visible: true },
-	{ name: 'domain', type: SuggestType.DOMAIN, visible: true },
+	{
+		name: 'lang',
+		type: SuggestType.LANGUAGE,
+	},
+	{
+		name: 'domain',
+		type: SuggestType.DOMAIN,
+	},
 ];
 
 export interface SearchSuggestionsViewProps {
-	placeholderMessage?: string;
+	placeholderMessage?: JSX.Element;
+	excludedOperators?: string[];
 }
 
 const SearchSuggestionsView = (props: SearchSuggestionsViewProps) => {
@@ -130,20 +157,27 @@ const SearchSuggestionsView = (props: SearchSuggestionsViewProps) => {
 	const operatorSuggestions = createMemo(() => {
 		const token = currentToken()?.token;
 
-		if (!token || token.type === 'whitespace') {
-			return operators;
-		} else if (token.type !== 'word') {
+		if (token?.type === 'quoted') {
 			return [];
 		}
 
-		const word = token.value;
+		const [, present] = splitFilters(tokens());
+		const excluded = props.excludedOperators;
 
-		return operators.filter((def) => {
-			if (!def.visible) {
+		return operators.filter(({ name, hidden, hideOn }) => {
+			if (hidden || excluded?.includes(name)) {
 				return false;
 			}
 
-			return def.name.includes(word);
+			if (present.has(name)) {
+				return false;
+			}
+
+			if (hideOn?.some((x) => present.has(x))) {
+				return false;
+			}
+
+			return !token || token.type !== 'word' || name.includes(token.value);
 		});
 	});
 
@@ -274,9 +308,11 @@ const SearchSuggestionsView = (props: SearchSuggestionsViewProps) => {
 					<Show
 						when={query() !== ''}
 						fallback={
-							<div class="flex flex-col items-center justify-center gap-4 py-8 text-contrast-muted">
+							<div class="flex flex-col items-center justify-center gap-4 p-8 text-contrast-muted">
 								<MagnifyingGlassOutlinedIcon class="text-5xl" />
-								<p class="text-sm">{props.placeholderMessage ?? `Search for posts and users on Bluesky`}</p>
+								<p class="text-pretty text-center text-sm">
+									{props.placeholderMessage ?? `Search for posts and users on Bluesky`}
+								</p>
 							</div>
 						}
 					>

@@ -1,4 +1,4 @@
-import { createSignal } from 'solid-js';
+import { createSignal, onMount } from 'solid-js';
 
 import CrossLargeOutlinedIcon from '~/components/icons-central/cross-large-outline';
 import MagnifyingGlassOutlinedIcon from '~/components/icons-central/magnifying-glass-outline';
@@ -6,14 +6,10 @@ import MagnifyingGlassOutlinedIcon from '~/components/icons-central/magnifying-g
 import { useSearchBar } from '../search/context';
 
 export interface SearchBarProps {
-	value?: string;
-	onChange?: (next: string) => void;
-	onClick?: () => void;
-	onKeyDown?: (ev: KeyboardEvent) => void;
-	onSubmit?: () => void;
+	autofocus?: boolean;
 }
 
-const SearchBar = () => {
+const SearchBar = (props: SearchBarProps) => {
 	const { query, setInputEl, setQuery, onFocus, onSearch } = useSearchBar();
 
 	const [focused, setFocused] = createSignal(false);
@@ -41,6 +37,12 @@ const SearchBar = () => {
 				<input
 					ref={(el) => {
 						setInputEl((inputEl = el));
+
+						onMount(() => {
+							if (props.autofocus) {
+								el.focus();
+							}
+						});
 					}}
 					value={query()}
 					onInput={(ev) => setQuery(ev.target.value.trimStart())}

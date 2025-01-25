@@ -20,6 +20,7 @@ import Divider from '~/components/divider';
 import ErrorView from '~/components/error-view';
 import FilterBar from '~/components/filter-bar';
 import IconButton from '~/components/icon-button';
+import MagnifyingGlassOutlinedIcon from '~/components/icons-central/magnifying-glass-outline';
 import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
 import ShieldOutlinedIcon from '~/components/icons-central/shield-outline';
 import * as Page from '~/components/page';
@@ -79,6 +80,15 @@ const ProfilePage = () => {
 											}}
 										/>
 									</Show>
+
+									<IconButton
+										icon={MagnifyingGlassOutlinedIcon}
+										title="Search"
+										disabled={profile.isPlaceholderData}
+										onClick={() => {
+											history.navigate(`/${data().did}/search`);
+										}}
+									/>
 
 									<IconButton
 										icon={MoreHorizOutlinedIcon}
