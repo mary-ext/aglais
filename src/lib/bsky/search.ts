@@ -1,3 +1,5 @@
+import type { Token } from '@atcute/bluesky-search-parser';
+
 // https://github.com/golang/go/blob/519f6a00e4dabb871eadaefc8ac295c09fd9b56f/src/strings/strings.go#L377-L425
 export const fieldsfunc = (str: string, fn: (rune: number) => boolean): string[] => {
 	const slices: string[] = [];
@@ -36,4 +38,46 @@ export const tokenizeSearchQuery = (query: string): string[] => {
 	});
 
 	return tokens;
+};
+
+const OPERATOR_RE = /^([a-z-]+):(.*)$/;
+
+export const splitFilters = (tokens: Token[]): [query: string, filters: Map<string, string>] => {
+	const filters = new Map<string, string>();
+	let query = '';
+
+	for (let idx = 0, len = tokens.length; idx < len; idx++) {
+		const token = tokens[idx];
+
+		switch (token.type) {
+			case 'word': {
+				const match = OPERATOR_RE.exec(token.value);
+				if (match) {
+					filters.set(match[1], match[2]);
+					break;
+				}
+
+				query += token.value;
+				break;
+			}
+			case 'whitespace': {
+				query += ' ';
+				break;
+			}
+			case 'quoted': {
+				query += token.value;
+				break;
+			}
+		}
+	}
+
+	return [query, filters];
+};
+
+export const joinFilters = (query: string, filters: Map<string, string>) => {
+	for (const [op, value] of filters) {
+		query += ` ${op}:${value}`;
+	}
+
+	return query;
 };

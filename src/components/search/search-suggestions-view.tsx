@@ -26,6 +26,8 @@ const MAYBE_DATE_RE = /^[\d\-+.:Z]*$/;
 const enum SuggestType {
 	ACTOR,
 	DATE,
+	LANGUAGE,
+	DOMAIN,
 }
 
 type SuggestMatch =
@@ -51,9 +53,16 @@ const operators: Operator[] = [
 
 	{ name: 'since', type: SuggestType.DATE, visible: true },
 	{ name: 'until', type: SuggestType.DATE, visible: true },
+
+	{ name: 'lang', type: SuggestType.LANGUAGE, visible: true },
+	{ name: 'domain', type: SuggestType.DOMAIN, visible: true },
 ];
 
-const SearchSuggestionsView = () => {
+export interface SearchSuggestionsViewProps {
+	placeholderMessage?: string;
+}
+
+const SearchSuggestionsView = (props: SearchSuggestionsViewProps) => {
 	const { query, inputEl, onSearch } = useSearchBar();
 
 	const tokens = createMemo(() => tokenize(query()));
@@ -262,94 +271,103 @@ const SearchSuggestionsView = () => {
 				</Match>
 
 				<Match when>
-					{query() === '' && (
-						<div class="flex flex-col items-center justify-center gap-4 py-8 text-contrast-muted">
-							<MagnifyingGlassOutlinedIcon class="text-5xl" />
-							<p class="text-sm">Search for posts and users on Bluesky</p>
+					<Show
+						when={query() !== ''}
+						fallback={
+							<div class="flex flex-col items-center justify-center gap-4 py-8 text-contrast-muted">
+								<MagnifyingGlassOutlinedIcon class="text-5xl" />
+								<p class="text-sm">{props.placeholderMessage ?? `Search for posts and users on Bluesky`}</p>
+							</div>
+						}
+					>
+						<button
+							class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+							onClick={() => onSearch(query())}
+						>
+							Search for <span class="font-medium text-contrast">{query()}</span>
+						</button>
+
+						<Show when={maybeMatchHandle(query())}>
+							{(handle) => (
+								<a
+									href={`/${handle()}`}
+									class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+								>
+									Go to <span class="font-medium text-contrast">{'@' + handle()}</span>
+								</a>
+							)}
+						</Show>
+
+						<Show when={maybeMatchDid(query())}>
+							{(did) => (
+								<a
+									href={`/${did()}`}
+									class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+								>
+									Go to <span class="font-medium text-contrast">{did()}</span>
+								</a>
+							)}
+						</Show>
+
+						<Show when={findLinkRedirect(query())}>
+							{(redirect) => (
+								<a
+									href={redirect()}
+									class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+								>
+									Open URL in app
+								</a>
+							)}
+						</Show>
+
+						<SearchAutocompletionView />
+					</Show>
+
+					{operatorSuggestions().length !== 0 && (
+						<div class="flex flex-col">
+							<hr class="mx-4 my-3 border-outline" />
+
+							<div class="mx-4">
+								<span class="text-xs font-bold uppercase text-contrast/75">Search options</span>
+							</div>
+
+							<For each={operatorSuggestions()}>
+								{({ name, type }) => {
+									let typeWord = '';
+									switch (type) {
+										case SuggestType.ACTOR: {
+											typeWord = '@user';
+											break;
+										}
+										case SuggestType.DATE: {
+											typeWord = 'yyyy-mm-dd';
+											break;
+										}
+										case SuggestType.LANGUAGE: {
+											typeWord = 'en';
+											break;
+										}
+										case SuggestType.DOMAIN: {
+											typeWord = 'example.com';
+											break;
+										}
+									}
+
+									return (
+										<button
+											onClick={() => {
+												replaceCurrentToken(`${name}:`);
+											}}
+											class="flex gap-2 overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+										>
+											<span>{`${name}:`}</span>
+											<span class="text-contrast-muted">{typeWord}</span>
+										</button>
+									);
+								}}
+							</For>
 						</div>
 					)}
-
-					{query() !== '' && (
-						<>
-							<button
-								class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
-								onClick={() => onSearch(query())}
-							>
-								Search for <span class="font-medium text-contrast">{query()}</span>
-							</button>
-
-							<Show when={maybeMatchHandle(query())}>
-								{(handle) => (
-									<a
-										href={`/${handle()}`}
-										class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
-									>
-										Go to <span class="font-medium text-contrast">{'@' + handle()}</span>
-									</a>
-								)}
-							</Show>
-
-							<Show when={maybeMatchDid(query())}>
-								{(did) => (
-									<a
-										href={`/${did()}`}
-										class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
-									>
-										Go to <span class="font-medium text-contrast">{did()}</span>
-									</a>
-								)}
-							</Show>
-
-							<Show when={findLinkRedirect(query())}>
-								{(redirect) => (
-									<a
-										href={redirect()}
-										class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
-									>
-										Open URL in app
-									</a>
-								)}
-							</Show>
-						</>
-					)}
-
-					<div hidden={operatorSuggestions().length === 0} class="flex flex-col">
-						<hr class="mx-4 my-3 border-outline" />
-
-						<div class="mx-4">
-							<span class="text-xs font-bold uppercase text-contrast/75">Search options</span>
-						</div>
-
-						<For each={operatorSuggestions()}>
-							{({ name, type }) => {
-								let typeWord = '';
-								switch (type) {
-									case SuggestType.ACTOR: {
-										typeWord = 'user';
-										break;
-									}
-									case SuggestType.DATE: {
-										typeWord = 'specific date';
-										break;
-									}
-								}
-
-								return (
-									<button
-										onClick={() => {
-											replaceCurrentToken(`${name}:`);
-										}}
-										class="flex gap-2 overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
-									>
-										<span>{`${name}:`}</span>
-										<span class="text-contrast-muted">{typeWord}</span>
-									</button>
-								);
-							}}
-						</For>
-					</div>
-
-					{query() !== '' && <SearchAutocompletionView />}
 				</Match>
 			</Switch>
 		</div>
