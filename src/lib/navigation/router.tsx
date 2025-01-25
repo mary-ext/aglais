@@ -173,17 +173,16 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 					}
 
 					if (!matched.id) {
-						// Add this view, if it's already present, set `shouldCall` to true
 						if (!(nextId in views)) {
 							if (nextViews) {
 								nextViews[nextId] = matchedState;
+								isNew = true;
 							} else {
 								nextViews = { ...views, [nextId]: matchedState };
 								isNew = true;
 							}
 						}
 					} else {
-						// Add this view, if it's already present, set `shouldCall` to true
 						if (!(nextId in singles)) {
 							singles = { ...singles, [nextId]: matchedState };
 							isNew = true;
@@ -207,8 +206,8 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 
 					if (isNew) {
 						// Scroll to top if we're pushing or replacing, it's a new page.
-						if (!matched.id && (action === 'push' || action === 'replace')) {
-							window.scrollTo({ top: 0, behavior: 'instant' });
+						if (!matched.id) {
+							window.scrollTo(0, 0);
 						}
 					} else {
 						// Restore scroll position for the activated route
