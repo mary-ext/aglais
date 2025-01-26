@@ -323,7 +323,7 @@ const SearchSuggestionsView = (props: SearchSuggestionsViewProps) => {
 						}
 					>
 						<button
-							class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+							class="select-none overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
 							onClick={() => onSearch(query())}
 						>
 							Search for <span class="font-medium text-contrast">{query()}</span>
@@ -333,7 +333,7 @@ const SearchSuggestionsView = (props: SearchSuggestionsViewProps) => {
 							{(handle) => (
 								<a
 									href={`/${handle()}`}
-									class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+									class="select-none overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
 								>
 									Go to <span class="font-medium text-contrast">{'@' + handle()}</span>
 								</a>
@@ -344,7 +344,7 @@ const SearchSuggestionsView = (props: SearchSuggestionsViewProps) => {
 							{(did) => (
 								<a
 									href={`/${did()}`}
-									class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+									class="select-none overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
 								>
 									Go to <span class="font-medium text-contrast">{did()}</span>
 								</a>
@@ -355,7 +355,7 @@ const SearchSuggestionsView = (props: SearchSuggestionsViewProps) => {
 							{(redirect) => (
 								<a
 									href={redirect()}
-									class="overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+									class="select-none overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
 								>
 									Open URL in app
 								</a>
@@ -402,7 +402,7 @@ const SearchSuggestionsView = (props: SearchSuggestionsViewProps) => {
 											onClick={() => {
 												replaceCurrentToken(`${name}:`);
 											}}
-											class="flex gap-2 overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
+											class="flex select-none gap-2 overflow-hidden text-ellipsis whitespace-nowrap p-4 py-3 text-left text-sm text-contrast/85 outline-2 -outline-offset-2 outline-accent hover:bg-contrast/sm-pressed focus-visible:outline active:bg-contrast/md"
 										>
 											<span>{`${name}:`}</span>
 											<span class="text-contrast-muted">{typeWord}</span>
