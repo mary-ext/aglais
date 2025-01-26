@@ -1,12 +1,13 @@
-import { createEffect, createSignal, onCleanup } from 'solid-js';
+import { batch, createEffect, createSignal, onCleanup } from 'solid-js';
 
 import { Freeze } from '@mary/solid-freeze';
 
+import { globalEvents } from '~/globals/events';
 import { hasModals } from '~/globals/modals';
 import { history } from '~/globals/navigation';
 
 import { useModalClose } from '~/lib/hooks/modal-close';
-import { createFocusEffect, useTitle } from '~/lib/navigation/router';
+import { createFocusEffect, useIsFocused, useTitle } from '~/lib/navigation/router';
 
 import MyFeedsSection from '~/components/explore/my-feeds-section';
 import IconButton from '~/components/icon-button';
@@ -18,6 +19,8 @@ import { SearchBarProvider } from '~/components/search/context';
 import SearchSuggestionsView from '~/components/search/search-suggestions-view';
 
 const ExplorePage = () => {
+	const isFocused = useIsFocused();
+
 	const [query, setQuery] = createSignal('');
 	const [isInputFocused, setIsInputFocused] = createSignal(false);
 
@@ -69,7 +72,20 @@ const ExplorePage = () => {
 					)}
 				</Page.HeaderAccessory>
 
-				<SearchBar />
+				<SearchBar
+					ref={(node) => {
+						onCleanup(
+							globalEvents.on('softreset', () => {
+								if (isFocused()) {
+									batch(() => {
+										node.focus();
+										setIsInputFocused(true);
+									});
+								}
+							}),
+						);
+					}}
+				/>
 
 				{!isInputFocused() && (
 					<Page.HeaderAccessory>

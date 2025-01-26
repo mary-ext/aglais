@@ -6,6 +6,7 @@ import MagnifyingGlassOutlinedIcon from '~/components/icons-central/magnifying-g
 import { useSearchBar } from '../search/context';
 
 export interface SearchBarProps {
+	ref?: (node: HTMLInputElement) => void;
 	autofocus?: boolean;
 }
 
@@ -37,6 +38,8 @@ const SearchBar = (props: SearchBarProps) => {
 				<input
 					ref={(el) => {
 						setInputEl((inputEl = el));
+
+						props.ref?.(el);
 
 						onMount(() => {
 							if (props.autofocus) {
