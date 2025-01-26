@@ -1,3 +1,4 @@
+import type * as h from 'hls.js';
 import Hls from 'hls.js/dist/hls.light.js';
 import { nanoid } from 'nanoid/non-secure';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
@@ -44,6 +45,7 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 			<video
 				ref={(node) => {
 					hls.attachMedia(node);
+					setupFragmentFlush(node, hls);
 
 					if (!isMobile && currentAccount) {
 						node.volume = currentAccount.preferences.ui.mediaVolume;
@@ -107,3 +109,50 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 };
 
 export default VideoPlayer;
+
+// https://github.com/bluesky-social/social-app/blob/355c50fc0fe97feb8b4ec4e29d47b725252088c7/src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb.tsx#L158
+const setupFragmentFlush = (video: HTMLVideoElement, hls: Hls) => {
+	let lowQualityFragments: h.Fragment[] = [];
+
+	hls.on(Hls.Events.FRAG_BUFFERED, (_event, { frag }) => {
+		if (frag.level === 0) {
+			lowQualityFragments.push(frag);
+		}
+	});
+
+	hls.on(Hls.Events.FRAG_CHANGED, (_event, { frag }) => {
+		if (hls.nextAutoLevel > 0) {
+			const flushed: h.Fragment[] = [];
+
+			for (const lowQualFrag of lowQualityFragments) {
+				if (Math.abs(frag.start - lowQualFrag.start) < 0.1) {
+					continue;
+				}
+
+				hls.trigger(Hls.Events.BUFFER_FLUSHING, {
+					startOffset: lowQualFrag.start,
+					endOffset: lowQualFrag.end,
+					type: 'video',
+				});
+
+				flushed.push(lowQualFrag);
+			}
+
+			lowQualityFragments = lowQualityFragments.filter((f) => !flushed.includes(f));
+		}
+	});
+
+	video.addEventListener('ended', () => {
+		if (hls.nextAutoLevel > 0 && lowQualityFragments.length === 1 && lowQualityFragments[0].start === 0) {
+			const lowQualFrag = lowQualityFragments[0];
+
+			hls.trigger(Hls.Events.BUFFER_FLUSHING, {
+				startOffset: lowQualFrag.start,
+				endOffset: lowQualFrag.end,
+				type: 'video',
+			});
+
+			lowQualityFragments = [];
+		}
+	});
+};
