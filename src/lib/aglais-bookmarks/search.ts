@@ -11,14 +11,14 @@ export const createSearchPredicate = (tokens: Token[]) => {
 	const [substrings, filters] = splitFilters(tokens);
 	const predicates: ((post: AppBskyFeedDefs.PostView) => boolean)[] = [];
 
-	if (filters.has('before') || filters.has('until')) {
-		let before: number | undefined;
+	if (filters.has('since') || filters.has('until')) {
+		let since: number | undefined;
 		let until: number | undefined;
 
 		{
-			const raw = filters.get('before');
+			const raw = filters.get('since');
 			const parsed = raw ? parseStartDate(raw) : null;
-			before = parsed?.getTime();
+			since = parsed?.getTime();
 		}
 
 		{
@@ -27,14 +27,14 @@ export const createSearchPredicate = (tokens: Token[]) => {
 			until = parsed?.getTime();
 		}
 
-		if (before !== undefined || until !== undefined) {
+		if (since !== undefined || until !== undefined) {
 			predicates.push((post) => {
 				const date = new Date(post.indexedAt).getTime();
 				if (Number.isNaN(date)) {
 					return false;
 				}
 
-				return (before === undefined || date >= before) && (until === undefined || date <= until);
+				return (since === undefined || date >= since) && (until === undefined || date <= until);
 			});
 		}
 	}

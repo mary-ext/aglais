@@ -145,11 +145,11 @@ const transformSearchQuery = (q: string): string => {
 
 	const [substrings, filters] = splitFilters(tokens);
 
-	if (filters.has('before')) {
-		const raw = filters.get('before');
+	if (filters.has('since')) {
+		const raw = filters.get('since');
 		const parsed = raw ? parseStartDate(raw) : null;
 
-		filters.set('before', parsed ? parsed.toISOString() : 'null');
+		filters.set('since', parsed ? parsed.toISOString() : 'null');
 	}
 
 	if (filters.has('until')) {
