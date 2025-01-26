@@ -1,95 +1,91 @@
+import type { Token } from '@atcute/bluesky-search-parser';
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 
 import { DID_RE, HANDLE_RE } from '~/api/utils/strings';
 
-const SIMPLE_DATE_RE = /^\d{4}-[01]\d-[0-3]\d$/;
+import { parseEndDate, parseStartDate, splitFilters } from '../bsky/search';
+import { mapDefined } from '../utils/misc';
+import { escapeRegex } from '../utils/regex';
 
-export const createSearchPredicate = (tokens: string[]) => {
-	const filters: ((post: AppBskyFeedDefs.PostView) => boolean)[] = [];
+export const createSearchPredicate = (tokens: Token[]) => {
+	const [substrings, filters] = splitFilters(tokens);
+	const predicates: ((post: AppBskyFeedDefs.PostView) => boolean)[] = [];
 
-	const substrings: string[] = [];
-	let from: string | undefined;
-	let before: number | undefined;
-	let until: number | undefined;
+	if (filters.has('before') || filters.has('until')) {
+		let before: number | undefined;
+		let until: number | undefined;
 
-	for (let idx = 0, len = tokens.length; idx < len; idx++) {
-		const token = tokens[idx];
-
-		if (token[0] === '"') {
-			let end = token.length;
-			if (token[end - 1] === '"') {
-				end--;
-			}
-
-			substrings.push(token.slice(1, end));
-			continue;
+		{
+			const raw = filters.get('before');
+			const parsed = raw ? parseStartDate(raw) : null;
+			before = parsed?.getTime();
 		}
 
-		const [op, value] = token.split(':');
-		if (!value) {
-			substrings.push(token);
-			continue;
+		{
+			const raw = filters.get('until');
+			const parsed = raw ? parseEndDate(raw) : null;
+			until = parsed?.getTime();
 		}
 
-		if (op === 'before' || op === 'until') {
-			let date: Date;
-
-			if (SIMPLE_DATE_RE.test(value)) {
-				const [year, month, day] = value.split('-');
-
-				if (op === 'before') {
-					date = new Date(+year, +month - 1, +day);
-				} else {
-					date = new Date(+year, +month - 1, +day, 23, 59, 59, 999);
+		if (before !== undefined || until !== undefined) {
+			predicates.push((post) => {
+				const date = new Date(post.indexedAt).getTime();
+				if (Number.isNaN(date)) {
+					return false;
 				}
-			} else {
-				date = new Date(value);
-			}
 
-			const time = date.getTime();
-			const coerced = !Number.isNaN(time) ? time : undefined;
-
-			if (op === 'before') {
-				before = coerced;
-			} else {
-				until = coerced;
-			}
-		} else if (op === 'from') {
-			from = HANDLE_RE.test(value) ? value : undefined;
-		} else if (op === 'did') {
-			from = DID_RE.test(value) ? value : undefined;
-		} else {
-			substrings.push(token);
+				return (before === undefined || date >= before) && (until === undefined || date <= until);
+			});
 		}
 	}
 
-	if (from !== undefined) {
-		filters.push((post) => {
-			const author = post.author;
-			return author.handle === from || author.did === from;
-		});
-	}
+	if (filters.has('from') || filters.has('did')) {
+		let from: string | undefined;
 
-	if (before !== undefined || until !== undefined) {
-		filters.push((post) => {
-			const date = new Date(post.indexedAt).getTime();
-
-			if (Number.isNaN(date)) {
-				return false;
+		{
+			const raw = filters.get('from');
+			if (raw && HANDLE_RE.test(raw)) {
+				from = raw;
 			}
+		}
 
-			return (before === undefined || date >= before) && (until === undefined || date <= until);
+		{
+			const raw = filters.get('did');
+			if (raw && DID_RE.test(raw)) {
+				from = raw;
+			}
+		}
+
+		if (from !== undefined) {
+			predicates.push((post) => {
+				const author = post.author;
+				return author.handle === from || author.did === from;
+			});
+		}
+	}
+
+	if (substrings.length > 0) {
+		const values = mapDefined(substrings, (token) => {
+			switch (token.type) {
+				case 'word': {
+					return escapeRegex(token.value);
+				}
+				case 'quoted': {
+					const quote = token.value;
+					let end = quote.length;
+
+					if (quote.charCodeAt(end - 1) === 34) {
+						end--;
+					}
+
+					return escapeRegex(quote.slice(1, end));
+				}
+			}
 		});
+
+		const re = new RegExp('\\b' + values.join('|') + '\\b', 'i');
+		predicates.push((post) => re.test((post.record as AppBskyFeedPost.Record).text));
 	}
 
-	if (substrings.length !== 0) {
-		const re = new RegExp('\\b' + substrings.map(escape).join('|') + '\\b', 'i');
-		filters.push((post) => re.test((post.record as AppBskyFeedPost.Record).text));
-	}
-
-	return (post: AppBskyFeedDefs.PostView) => filters.every((fn) => fn(post));
-};
-
-const escape = (str: string) => {
-	return str.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
+	return (post: AppBskyFeedDefs.PostView) => predicates.every((fn) => fn(post));
 };

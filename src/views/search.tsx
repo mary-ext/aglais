@@ -1,10 +1,11 @@
 import { Match, Suspense, Switch, batch, createEffect, createMemo, lazy, onCleanup } from 'solid-js';
 
+import { tokenize } from '@atcute/bluesky-search-parser';
 import { Freeze, ShowFreeze } from '@mary/solid-freeze';
 
 import { hasModals } from '~/globals/modals';
 
-import { tokenizeSearchQuery } from '~/lib/bsky/search';
+import { parseEndDate, parseStartDate, splitFilters, stringifySearch } from '~/lib/bsky/search';
 import { createDerivedSignal } from '~/lib/hooks/derived-signal';
 import { useModalClose } from '~/lib/hooks/modal-close';
 import { asString, asStringUnion, useSearchParams } from '~/lib/hooks/search-params';
@@ -139,46 +140,27 @@ const SearchPage = () => {
 
 export default SearchPage;
 
-const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
 const transformSearchQuery = (q: string): string => {
-	const tokens = tokenizeSearchQuery(q);
-	const collator = new Intl.Collator('en');
+	const tokens = tokenize(q);
 
-	tokens.sort((a, b) => collator.compare(a, b));
+	const [substrings, filters] = splitFilters(tokens);
 
-	for (let idx = 0, len = tokens.length; idx < len; idx++) {
-		const tok = tokens[idx];
+	if (filters.has('before')) {
+		const raw = filters.get('before');
+		const parsed = raw ? parseStartDate(raw) : null;
 
-		if (tok.charCodeAt(0) === 34) {
-			continue;
-		}
-
-		const colon_index = tok.indexOf(':');
-		if (colon_index === -1) {
-			continue;
-		}
-
-		const operator = tok.slice(0, colon_index);
-		const value = tok.slice(colon_index + 1);
-
-		if (operator === 'since' || operator === 'until') {
-			const match = DATE_RE.exec(value);
-			if (match === null) {
-				continue;
-			}
-
-			const s = operator === 'since';
-
-			const [, year, month, day] = match;
-			const date = new Date(+year, +month - 1, +day, s ? 0 : 23, s ? 0 : 59, s ? 0 : 59, s ? 0 : 999);
-
-			if (Number.isNaN(date.getTime())) {
-				continue;
-			}
-
-			tokens[idx] = `${operator}:${date.toISOString()}`;
-		}
+		filters.set('before', parsed ? parsed.toISOString() : 'null');
 	}
 
-	return tokens.join(' ');
+	if (filters.has('until')) {
+		const raw = filters.get('until');
+		const parsed = raw ? parseEndDate(raw) : null;
+
+		filters.set('until', parsed ? parsed.toISOString() : 'null');
+	}
+
+	const collator = new Intl.Collator('en');
+	substrings.sort((a, b) => collator.compare(a.value, b.value));
+
+	return stringifySearch(substrings, filters);
 };

@@ -11,7 +11,7 @@ import {
 	BSKY_POST_LINK_RE,
 	BSKY_PROFILE_LINK_RE,
 } from '~/lib/bsky/link-detection';
-import { splitFilters } from '~/lib/bsky/search';
+import { parseEndDate, parseStartDate, splitFilters } from '~/lib/bsky/search';
 
 import MagnifyingGlassOutlinedIcon from '../icons-central/magnifying-glass-outline';
 
@@ -19,7 +19,6 @@ import { useSearchBar } from './context';
 import DateAutocompletionView from './suggestions/date-autocompletion-view';
 import FromActorAutocompletionView from './suggestions/from-actor-autocompletion-view';
 import SearchAutocompletionView from './suggestions/search-autocompletion-view';
-import { parseEndDate, parseStartDate } from './utils/date';
 
 const MAYBE_HANDLE_RE = /^@?[a-zA-Z0-9-.]*$/;
 const MAYBE_DATE_RE = /^[\d\-+.:Z]*$/;

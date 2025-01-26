@@ -1,45 +1,5 @@
 import type { Token } from '@atcute/bluesky-search-parser';
 
-// https://github.com/golang/go/blob/519f6a00e4dabb871eadaefc8ac295c09fd9b56f/src/strings/strings.go#L377-L425
-export const fieldsfunc = (str: string, fn: (rune: number) => boolean): string[] => {
-	const slices: string[] = [];
-
-	let start = -1;
-	for (let pos = 0, len = str.length; pos < len; pos++) {
-		if (fn(str.charCodeAt(pos))) {
-			if (start !== -1) {
-				slices.push(str.slice(start, pos));
-				start = -1;
-			}
-		} else {
-			if (start === -1) {
-				start = pos;
-			}
-		}
-	}
-
-	if (start !== -1) {
-		slices.push(str.slice(start));
-	}
-
-	return slices;
-};
-
-export const tokenizeSearchQuery = (query: string): string[] => {
-	// https://github.com/bluesky-social/indigo/blob/421e4da5307f4fcba51f25b5c5982c8b9841f7f6/search/parse_query.go#L15-L21
-	let quoted = false;
-
-	const tokens = fieldsfunc(query, (rune) => {
-		if (rune === 34) {
-			quoted = !quoted;
-		}
-
-		return rune === 32 && !quoted;
-	});
-
-	return tokens;
-};
-
 const OPERATOR_RE = /^([a-z-]+):(.*)$/;
 
 export const splitFilters = (tokens: Token[]): [remains: Token[], filters: Map<string, string>] => {
@@ -88,4 +48,63 @@ export const stringifySearch = (tokens: Token[], filters?: Map<string, string>):
 	}
 
 	return query;
+};
+
+const PARTIAL_DATE_RE =
+	/^((?!0{3})\d{4})(?:-(0[1-9]|1[0-2])(?:-(0[1-9]|[12]\d|3[01])(?:T([01]\d|2[0-3]):([0-5]\d)(?::([0-5]\d)(?:\.(\d+))?)?(Z|(?!-00:00)[+-](?:[01]\d|2[0-3]):(?:[0-5]\d))?)?)?)?$/;
+
+export const parseStartDate = (str: string): Date | null => {
+	const match = PARTIAL_DATE_RE.exec(str);
+	if (match === null) {
+		return null;
+	}
+
+	const [
+		_,
+		year,
+		month = '01',
+		day = '01',
+		hour = '23',
+		minutes = '59',
+		seconds = '59',
+		miliseconds = '999',
+		tz = '',
+	] = match;
+
+	// if timezone is empty, local time is assumed.
+	const d = new Date(`${year}-${month}-${day}T${hour}:${minutes}:${seconds}.${miliseconds}${tz}`);
+
+	return d;
+};
+
+export const parseEndDate = (str: string): Date | null => {
+	const match = PARTIAL_DATE_RE.exec(str);
+	if (match === null) {
+		return null;
+	}
+
+	const [
+		_,
+		year,
+		month = undefined,
+		day = undefined,
+		hour = '23',
+		minutes = '59',
+		seconds = '59',
+		miliseconds = '999',
+		tz = '',
+	] = match;
+
+	// if timezone is empty, local time is assumed.
+	const d = new Date(`${year}-01-01T${hour}:${minutes}:${seconds}.${miliseconds}${tz}`);
+
+	if (month === undefined) {
+		d.setMonth(11, 31);
+	} else if (day === undefined) {
+		d.setMonth(+month, 0);
+	} else {
+		d.setMonth(+month - 1, +day);
+	}
+
+	return d;
 };

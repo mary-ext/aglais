@@ -1,12 +1,13 @@
+import { tokenize } from '@atcute/bluesky-search-parser';
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 import { createInfiniteQuery, createQuery } from '@mary/solid-query';
 
 import type { BookmarkItem, HydratedBookmarkItem } from '~/lib/aglais-bookmarks/db';
 import { createSearchPredicate } from '~/lib/aglais-bookmarks/search';
 import { filter, map, take, toArray } from '~/lib/async-iterators';
-import { tokenizeSearchQuery } from '~/lib/bsky/search';
 import { useAgent } from '~/lib/states/agent';
 import { useBookmarks } from '~/lib/states/bookmarks';
+import { mapDefined } from '~/lib/utils/misc';
 
 export const createBookmarkFolderMetaQuery = (tagId: () => string) => {
 	const bookmarks = useBookmarks();
@@ -43,11 +44,20 @@ export const createBookmarkFeedQuery = (tagId: () => string, search: () => strin
 
 	const listing = createInfiniteQuery(() => {
 		const $tagId = tagId();
-		const $tokens = tokenizeSearchQuery(search());
 		const limit = 25;
 
+		const tokens = tokenize(search());
+		const tokenKey = mapDefined(tokens, (token) => {
+			switch (token.type) {
+				case 'word':
+				case 'quoted': {
+					return token.value;
+				}
+			}
+		}).sort();
+
 		return {
-			queryKey: ['bookmarks-feed', $tagId, $tokens],
+			queryKey: ['bookmarks-feed', $tagId, tokenKey],
 			async queryFn(ctx): Promise<BookmarkFeedReturn> {
 				const pageParam = ctx.pageParam;
 
@@ -69,8 +79,8 @@ export const createBookmarkFeedQuery = (tagId: () => string, search: () => strin
 					if ($tagId !== 'all') {
 						iterator = filter(iterator, (entry) => entry.tags.includes($tagId));
 					}
-					if ($tokens.length !== 0) {
-						const predicate = createSearchPredicate($tokens);
+					if (tokens.length !== 0) {
+						const predicate = createSearchPredicate(tokens);
 						iterator = filter(iterator, (entry) => predicate(entry.view));
 					}
 
