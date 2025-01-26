@@ -42,9 +42,9 @@ export const tokenizeSearchQuery = (query: string): string[] => {
 
 const OPERATOR_RE = /^([a-z-]+):(.*)$/;
 
-export const splitFilters = (tokens: Token[]): [query: string, filters: Map<string, string>] => {
+export const splitFilters = (tokens: Token[]): [remains: Token[], filters: Map<string, string>] => {
 	const filters = new Map<string, string>();
-	let query = '';
+	const remaining: Token[] = [];
 
 	for (let idx = 0, len = tokens.length; idx < len; idx++) {
 		const token = tokens[idx];
@@ -57,26 +57,34 @@ export const splitFilters = (tokens: Token[]): [query: string, filters: Map<stri
 					break;
 				}
 
-				query += token.value;
+				remaining.push(token);
 				break;
 			}
 			case 'whitespace': {
-				query += ' ';
+				remaining.push(token);
 				break;
 			}
 			case 'quoted': {
-				query += token.value;
+				remaining.push(token);
 				break;
 			}
 		}
 	}
 
-	return [query, filters];
+	return [remaining, filters];
 };
 
-export const joinFilters = (query: string, filters: Map<string, string>) => {
-	for (const [op, value] of filters) {
-		query += ` ${op}:${value}`;
+export const stringifySearch = (tokens: Token[], filters?: Map<string, string>): string => {
+	let query = '';
+
+	for (const token of tokens) {
+		query += token.value;
+	}
+
+	if (filters !== undefined) {
+		for (const [op, value] of filters) {
+			query += ` ${op}:${value}`;
+		}
 	}
 
 	return query;
