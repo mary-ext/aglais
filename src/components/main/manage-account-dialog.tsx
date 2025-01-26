@@ -7,11 +7,14 @@ import { closeAllModals, openModal } from '~/globals/modals';
 import type { AccountData } from '~/lib/preferences/sessions';
 import { useSession } from '~/lib/states/session';
 
-import Avatar, { getUserAvatarType } from '../avatar';
-import * as Dialog from '../dialog';
-import Divider from '../divider';
-import CircleCheckSolidIcon from '../icons-central/circle-check-solid';
+import Avatar, { getUserAvatarType } from '~/components/avatar';
+import * as Dialog from '~/components/dialog';
+import Divider from '~/components/divider';
+import IconButton from '~/components/icon-button';
+import CircleCheckSolidIcon from '~/components/icons-central/circle-check-solid';
+import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
 
+import AccountOverflowMenu from './account-overflow-menu';
 import SignInDialogLazy from './sign-in-dialog-lazy';
 
 const ManageAccountDialog = () => {
@@ -41,7 +44,7 @@ const ManageAccountDialog = () => {
 						</For>
 					</div>
 
-					<Divider gutterTop="md" />
+					<Divider gutterTop="md" gutterBottom="sm" />
 
 					<div class="flex flex-col">
 						<button
@@ -93,23 +96,36 @@ const AccountItem = ({ account, onClick }: { account: AccountData; onClick?: () 
 	const profile = () => account.profile;
 
 	return (
-		<button
-			onClick={onClick}
-			class="flex gap-4 px-4 py-3 text-left hover:bg-contrast/md active:bg-contrast/sm-pressed"
-		>
-			<Avatar type={getUserAvatarType(profile())} src={profile().avatar} class="mt-0.5" />
+		<div class="relative flex flex-col">
+			<button
+				onClick={onClick}
+				class="flex gap-4 px-4 py-3 pr-11 text-left hover:bg-contrast/md active:bg-contrast/sm-pressed"
+			>
+				<Avatar type={getUserAvatarType(profile())} src={profile().avatar} class="mt-0.5" />
 
-			<div class="min-w-0 grow self-center text-sm">
-				<p class="overflow-hidden text-ellipsis whitespace-nowrap font-bold empty:hidden">
-					{profile().displayName}
-				</p>
-				<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">
-					{(() => {
-						const handle = profile().handle;
-						return handle !== 'handle.invalid' ? '@' + handle : account.did;
-					})()}
-				</p>
-			</div>
-		</button>
+				<div class="min-w-0 grow self-center text-sm">
+					<p class="overflow-hidden text-ellipsis whitespace-nowrap font-bold empty:hidden">
+						{profile().displayName}
+					</p>
+					<p class="overflow-hidden text-ellipsis whitespace-nowrap text-de text-contrast-muted">
+						{(() => {
+							const handle = profile().handle;
+							return handle !== 'handle.invalid' ? '@' + handle : account.did;
+						})()}
+					</p>
+				</div>
+			</button>
+
+			<IconButton
+				icon={MoreHorizOutlinedIcon}
+				title="Actions"
+				class="absolute right-2 top-1/2 -translate-y-1/2"
+				onClick={(ev) => {
+					const anchor = ev.currentTarget;
+
+					openModal(() => <AccountOverflowMenu anchor={anchor} account={account} />);
+				}}
+			/>
+		</div>
 	);
 };
