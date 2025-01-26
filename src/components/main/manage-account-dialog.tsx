@@ -55,10 +55,6 @@ const ManageAccountDialog = () => {
 						>
 							Add new account
 						</button>
-
-						<button class="px-4 py-3 text-left text-sm text-error hover:bg-error/md active:bg-error/md-pressed">
-							Sign out of all accounts
-						</button>
 					</div>
 				</Dialog.Body>
 			</Dialog.Container>
