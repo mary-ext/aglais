@@ -74,16 +74,18 @@ const ExplorePage = () => {
 
 				<SearchBar
 					ref={(node) => {
-						onCleanup(
-							globalEvents.on('softreset', () => {
-								if (isFocused()) {
-									batch(() => {
-										node.focus();
-										setIsInputFocused(true);
-									});
-								}
-							}),
-						);
+						createEffect(() => {
+							if (isFocused()) {
+								onCleanup(
+									globalEvents.on('softreset', () => {
+										batch(() => {
+											node.focus();
+											setIsInputFocused(true);
+										});
+									}),
+								);
+							}
+						});
 					}}
 				/>
 
