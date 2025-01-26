@@ -15,7 +15,7 @@ import Avatar from '~/components/avatar';
 import BlockOutlinedIcon from '~/components/icons-central/block-outline';
 import MuteOutlinedIcon from '~/components/icons-central/mute-outline';
 
-import { getListPurposeLabel, getListUrl } from './util';
+import { getListPurposeLabel, getListUrl } from './lib/utils';
 
 export interface ListItemProps {
 	/** Expected to be static */

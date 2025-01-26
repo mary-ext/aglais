@@ -6,8 +6,8 @@ import { moderateGeneric } from '~/api/moderation/entities/generic';
 
 import { useModerationOptions } from '~/lib/states/moderation';
 
-import Avatar from '../avatar';
-import { getListPurposeLabel, getListUrl } from '../lists/util';
+import Avatar from '~/components/avatar';
+import { getListPurposeLabel, getListUrl } from '~/components/lists/lib/utils';
 
 export interface ListEmbedProps {
 	/** Expected to be static */
