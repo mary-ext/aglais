@@ -1,7 +1,7 @@
 import { Match, Switch, onMount } from 'solid-js';
 
 import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
-import { createMutation } from '@mary/solid-query';
+import { QueryClient, createMutation } from '@mary/solid-query';
 
 import { updateProfileShadow, useProfileShadow } from '~/api/cache/profile-shadow';
 import { createListMetaQuery } from '~/api/queries/list';
@@ -71,6 +71,10 @@ const BlockPrompt = ({ profile }: BlockAccountPrompt) => {
 		onSuccess(ret) {
 			close();
 			updateProfileShadow(queryClient, profile.did, { blockUri: ret.uri });
+
+			setTimeout(() => {
+				resetThreadQueries(queryClient, profile.did);
+			}, 1_500);
 		},
 		onError() {
 			close();
@@ -136,6 +140,10 @@ const UnblockPrompt = ({ profile }: BlockAccountPrompt) => {
 		onSuccess() {
 			close();
 			updateProfileShadow(queryClient, profile.did, { blockUri: undefined });
+
+			setTimeout(() => {
+				resetThreadQueries(queryClient, profile.did);
+			}, 1_500);
 		},
 		onError() {
 			close();
@@ -185,4 +193,16 @@ const BlockedByList = ({ profile }: BlockAccountPrompt) => {
 			</Prompt.Actions>
 		</Prompt.Container>
 	);
+};
+
+const resetThreadQueries = (queryClient: QueryClient, did: At.DID) => {
+	const substring = `at://${did}/`;
+
+	queryClient.resetQueries({
+		queryKey: ['post-thread'],
+		predicate(query) {
+			const [, uri] = query.queryKey as ['post-thread', string];
+			return uri.startsWith(substring);
+		},
+	});
 };
