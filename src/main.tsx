@@ -16,6 +16,7 @@ import { SessionProvider, useSession } from '~/lib/states/session';
 import { ThemeProvider } from '~/lib/states/theme';
 import { on } from '~/lib/utils/misc';
 
+import CircularProgress from '~/components/circular-progress';
 import ModalRenderer from '~/components/main/modal-renderer';
 
 import routes from './routes';
@@ -65,7 +66,11 @@ const InnerApp = () => {
 
 	return on(ready, ($ready) => {
 		if (!$ready) {
-			return;
+			return (
+				<div class="grid min-h-dvh place-items-center">
+					<CircularProgress />
+				</div>
+			);
 		}
 
 		return (
