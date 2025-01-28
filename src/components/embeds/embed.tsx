@@ -17,6 +17,7 @@ import ExternalEmbed from './external-embed';
 import FeedEmbed from './feed-embed';
 import ImageStandaloneEmbed from './image-standalone-embed';
 import ListEmbed from './list-embed';
+import QuoteBlockedEmbed from './quote-blocked-embed';
 import QuoteEmbed from './quote-embed';
 import VideoEmbed from './video-embed';
 
@@ -115,20 +116,13 @@ const RecordEmbed = (props: RecordEmbedProps) => {
 	}
 
 	if (type === 'app.bsky.embed.record#viewNotFound' || type === 'app.bsky.embed.record#viewBlocked') {
-		const { collection } = parseAtUri(record.uri);
-		if (collection === 'app.bsky.feed.post' && type === 'app.bsky.embed.record#viewBlocked') {
-			const viewer = record.author.viewer;
+		const uri = parseAtUri(record.uri);
 
-			if (viewer?.blocking) {
-				return renderEmpty(`You blocked this user`);
-			}
-
-			if (!viewer?.blockedBy) {
-				return renderEmpty(`Blocked`);
-			}
+		if (type === 'app.bsky.embed.record#viewBlocked' && uri.collection === 'app.bsky.feed.post') {
+			return <QuoteBlockedEmbed embed={record} uri={uri} />;
 		}
 
-		const resource = collectionToLabel(collection);
+		const resource = collectionToLabel(uri.collection);
 		if (resource) {
 			return renderEmpty(`This ${resource} is unavailable`);
 		}
