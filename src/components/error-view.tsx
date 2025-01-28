@@ -2,6 +2,7 @@ import { Match, Switch } from 'solid-js';
 
 import { XRPCError } from '@atcute/client';
 import type { AppBskyActorDefs } from '@atcute/client/lexicons';
+import { TokenRefreshError } from '@atcute/oauth-browser-client';
 import { useQueryClient } from '@mary/solid-query';
 
 import { formatQueryError } from '~/api/utils/error';
@@ -64,5 +65,5 @@ const ErrorView = (props: ErrorViewProps) => {
 export default ErrorView;
 
 const isInvalidTokenError = (err: unknown): boolean => {
-	return err instanceof XRPCError && err.kind === 'invalid_token';
+	return err instanceof TokenRefreshError || (err instanceof XRPCError && err.kind === 'invalid_token');
 };
