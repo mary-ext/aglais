@@ -72,9 +72,10 @@ const ContentHider = (props: ContentHiderProps) => {
 					onClick={() => setOverride((next) => !next)}
 					class="flex h-11 w-full items-center gap-3 self-stretch rounded-md border border-outline px-3 text-contrast hover:bg-contrast/sm active:bg-contrast/sm-pressed"
 				>
-					<div class="shrink-0 text-lg text-contrast-muted">
+					<div class="grid w-5 shrink-0 place-items-center text-lg text-contrast-muted">
 						<Icon />
 					</div>
+
 					<span class="grow overflow-hidden text-ellipsis whitespace-nowrap text-left text-sm font-medium">
 						{title}
 					</span>
