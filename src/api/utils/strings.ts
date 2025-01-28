@@ -21,7 +21,7 @@ export interface AtUri {
 
 export const parseAtUri = (str: string): AtUri => {
 	const match = ATURI_RE.exec(str);
-	assert(match !== null, `Failed to parse AT URI for ${str}`);
+	assert(match !== null, `failed to parse at-uri for ${str}`);
 
 	return {
 		repo: match[1] as At.DID,
