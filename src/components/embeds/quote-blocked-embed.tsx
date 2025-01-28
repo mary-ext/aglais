@@ -28,7 +28,7 @@ const QuoteBlockedEmbed = ({ embed, uri }: QuoteBlockedEmbedProps) => {
 				{blockedBy
 					? `You're blocked by this user`
 					: blocking
-						? `You're blocking this user`
+						? `You've blocked this account`
 						: `Interaction blocked`}
 			</span>
 

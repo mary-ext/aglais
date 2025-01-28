@@ -1,4 +1,4 @@
-import { Match, Show, Switch } from 'solid-js';
+import { Match, Show, Switch, createMemo } from 'solid-js';
 
 import { XRPCError } from '@atcute/client';
 import type { AppBskyActorDefs } from '@atcute/client/lexicons';
@@ -14,6 +14,7 @@ import { history } from '~/globals/navigation';
 import { asStringUnion, useSearchParams } from '~/lib/hooks/search-params';
 import { formatCompact } from '~/lib/intl/number';
 import { useParams, useTitle } from '~/lib/navigation/router';
+import { truncateMiddle } from '~/lib/utils/strings';
 
 import CircularProgressView from '~/components/circular-progress-view';
 import Divider from '~/components/divider';
@@ -184,8 +185,10 @@ const ProfileView = (props: { data: ProfileData; isPlaceholderData?: boolean }) 
 		tab: asStringUnion(['posts', 'replies', 'media']).withDefault('posts'),
 	});
 
-	const shadow = useProfileShadow(() => props.data);
-	const did = props.data.did;
+	const data = () => props.data;
+	const did = data().did;
+
+	const shadow = useProfileShadow(data);
 
 	return (
 		<>
@@ -198,17 +201,29 @@ const ProfileView = (props: { data: ProfileData; isPlaceholderData?: boolean }) 
 			<div hidden={props.isPlaceholderData}>
 				<Switch>
 					<Match when={props.data.viewer?.blockedBy}>
-						<div class="mx-auto my-8 w-full max-w-80 p-4">
-							<p class="text-xl font-bold">You've been blocked by this account</p>
-							<p class="mt-2 text-sm text-contrast-muted">You can no longer view this account's posts</p>
-						</div>
+						{(_blockedBy) => {
+							const handle = createMemo(() => truncateMiddle(data().handle, 29));
+
+							return (
+								<div class="mx-auto my-8 w-full max-w-80 p-4">
+									<p class="text-xl font-bold">{`@${handle()} blocked you`}</p>
+									<p class="mt-2 text-sm text-contrast-muted">{`You are blocked from following @${handle()} and viewing @${handle()}'s posts.`}</p>
+								</div>
+							);
+						}}
 					</Match>
 
 					<Match when={shadow().blockUri}>
-						<div class="mx-auto my-8 w-full max-w-80 p-4">
-							<p class="text-xl font-bold">You've blocked this account</p>
-							<p class="mt-2 text-sm text-contrast-muted">You can no longer view this account's posts</p>
-						</div>
+						{(_blockedBy) => {
+							const handle = createMemo(() => truncateMiddle(data().handle, 29));
+
+							return (
+								<div class="mx-auto my-8 w-full max-w-80 p-4">
+									<p class="text-xl font-bold">{`@${handle()} is blocked`}</p>
+									<p class="mt-2 text-sm text-contrast-muted">{`You can no longer view @${handle()}'s posts.`}</p>
+								</div>
+							);
+						}}
 					</Match>
 
 					<Match when>

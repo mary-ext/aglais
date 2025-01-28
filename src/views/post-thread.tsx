@@ -10,6 +10,7 @@ import {
 	createThreadData,
 } from '~/api/models/post-thread';
 import { usePostThreadQuery } from '~/api/queries/post-thread';
+import { createProfileQuery } from '~/api/queries/profile';
 import { isDid, makeAtUri } from '~/api/utils/strings';
 
 import { history } from '~/globals/navigation';
@@ -21,6 +22,7 @@ import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
 import { truncateMiddle } from '~/lib/utils/strings';
 
+import Button from '~/components/button';
 import CircularProgress from '~/components/circular-progress';
 import CircularProgressView from '~/components/circular-progress-view';
 import Divider from '~/components/divider';
@@ -123,13 +125,57 @@ const PostThreadPage = () => {
 							<Match
 								when={(() => {
 									const data = accessor();
-									if (data.$type === 'app.bsky.feed.defs#blockedPost' && data.author.viewer?.blocking) {
+									if (data.$type === 'app.bsky.feed.defs#blockedPost') {
 										return data.author;
 									}
 								})()}
 								keyed
 							>
-								{null}
+								{(raw) => {
+									const did = raw.did;
+									const blockedBy = raw.viewer?.blockedBy;
+
+									const profile = createProfileQuery(() => did);
+
+									return (
+										<Switch>
+											<Match when={profile.data}>
+												{(data) => {
+													const handle = createMemo(() => truncateMiddle(data().handle, 29));
+
+													return (
+														<div class="p-4">
+															<div class="mb-4 text-sm">
+																<p class="font-bold">
+																	{blockedBy ? `@${handle()} blocked you` : `@${handle()} is blocked`}
+																</p>
+																<p class="text-pretty text-contrast-muted empty:hidden">
+																	{blockedBy
+																		? `You are blocked from viewing @${handle()}'s posts.`
+																		: `You can no longer view @${handle()}'s posts, you need to unblock to continue viewing.`}
+																</p>
+															</div>
+
+															<div class="flex flex-wrap gap-4">
+																<Button href={`/${did}`} variant="primary">
+																	View profile
+																</Button>
+															</div>
+														</div>
+													);
+												}}
+											</Match>
+
+											<Match when={profile.error}>
+												{(err) => <ErrorView error={err()} onRetry={() => profile.refetch()} />}
+											</Match>
+
+											<Match when>
+												<CircularProgressView />
+											</Match>
+										</Switch>
+									);
+								}}
 							</Match>
 
 							<Match
@@ -154,8 +200,6 @@ const PostThreadPage = () => {
 									/>
 								)}
 							</Match>
-
-							<Match when>{null}</Match>
 						</Switch>
 					)}
 				</Match>
