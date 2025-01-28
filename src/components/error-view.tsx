@@ -27,7 +27,7 @@ const ErrorView = (props: ErrorViewProps) => {
 		<div class="p-4">
 			<div class="mb-4 text-sm">
 				<p class="font-bold">Something went wrong</p>
-				<p class="text-muted-fg">{formatQueryError(props.error)}</p>
+				<p class="text-pretty text-contrast-muted">{formatQueryError(props.error)}</p>
 			</div>
 
 			<div class="flex flex-wrap gap-4">
