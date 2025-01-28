@@ -169,9 +169,14 @@ export const SessionProvider = (props: ParentProps) => {
 
 			try {
 				const session = await getSession(did, { allowStale: true });
+				const expiresAt = session.token.expires_at;
 
 				agent = new OAuthUserAgent(session);
 				handler = agent;
+
+				if (expiresAt !== undefined && expiresAt - Date.now() <= 10 * 60 * 1000) {
+					agent.getSession({ noCache: true });
+				}
 			} catch {
 				// Dirty hack to account for the fact that we aren't dumping the user
 				// directly to the login modal.
