@@ -1,4 +1,4 @@
-import { Match, Switch, onMount } from 'solid-js';
+import { Match, Switch } from 'solid-js';
 
 import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { QueryClient, createMutation } from '@mary/solid-query';
@@ -15,7 +15,6 @@ import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
 import CircularProgress from '../circular-progress';
-import CircularProgressView from '../circular-progress-view';
 import ListEmbed from '../embeds/list-embed';
 import EyeOpenOutlinedIcon from '../icons-central/eye-open-outline';
 import MegaphoneOutlinedIcon from '../icons-central/megaphone-outline';
@@ -150,13 +149,44 @@ const UnblockPrompt = ({ profile }: BlockAccountPrompt) => {
 		},
 	}));
 
-	onMount(() => {
-		mutation.mutate();
-	});
-
 	return (
-		<Prompt.Container disabled={mutation.isPending}>
-			<CircularProgressView />
+		<Prompt.Container maxWidth="md" disabled={mutation.isPending}>
+			<Prompt.Title>{/* @once */ `Unblock @${profile.handle.toLowerCase()}?`}</Prompt.Title>
+
+			<Prompt.Description>Here's what happens if you do:</Prompt.Description>
+
+			<div class="mt-3 flex flex-col gap-3 text-sm">
+				<div class="flex items-start gap-3">
+					<div class="grid h-8 w-8 shrink-0 place-items-center">
+						<MegaphoneOutlinedIcon class="text-xl text-contrast-muted" />
+					</div>
+
+					<p class="mt-1.5">They can see they're unblocked</p>
+				</div>
+
+				<div class="flex items-start gap-3">
+					<div class="grid h-8 w-8 shrink-0 place-items-center">
+						<EyeOpenOutlinedIcon class="text-xl text-contrast-muted" />
+					</div>
+
+					<p class="mt-1.5">They can see your posts, and you'll see theirs and any replies to them</p>
+				</div>
+
+				<div class="flex items-start gap-3">
+					<div class="grid h-8 w-8 shrink-0 place-items-center">
+						<ReplyOutlinedIcon class="text-xl text-contrast-muted" />
+					</div>
+
+					<p class="mt-1.5">They can mention you or reply to your posts</p>
+				</div>
+			</div>
+
+			<Prompt.Actions>
+				<Prompt.Action onClick={() => mutation.mutate()} noClose variant="primary">
+					Unblock
+				</Prompt.Action>
+				<Prompt.Action>Cancel</Prompt.Action>
+			</Prompt.Actions>
 		</Prompt.Container>
 	);
 };
