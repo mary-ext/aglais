@@ -55,8 +55,8 @@ importers:
         specifier: ^2.0.7
         version: 2.0.7
       '@atcute/oauth-browser-client':
-        specifier: ^1.0.11
-        version: 1.0.11
+        specifier: ^1.0.12
+        version: 1.0.12
       '@atcute/tid':
         specifier: ^1.0.2
         version: 1.0.2
@@ -197,8 +197,8 @@ packages:
   '@atcute/multibase@1.1.2':
     resolution: {integrity: sha512-KFX+c7a/u2jSNcRw0rLaUHG/XEKf1A1c8XF5soHnsb1JMCShihf/anfZ1kJ4no/IlIp9HEHV3PQRQO2sWL6ASQ==}
 
-  '@atcute/oauth-browser-client@1.0.11':
-    resolution: {integrity: sha512-UKyfiYWVR0r96tJLFLsthFciGHxfsC3hOHvOC08/mbonxjzKjhpfv1+iLlDRTJYkqLtadkawI4SREteDRrGmyA==}
+  '@atcute/oauth-browser-client@1.0.12':
+    resolution: {integrity: sha512-U0CsI6dZz52flhtdQbgh310raVSD/gA0tSqIGGfUBYiK0M2vLjUUiHtSNsfZ5baImN2P5GgDdQJis66Je7UeSA==}
 
   '@atcute/tid@1.0.2':
     resolution: {integrity: sha512-ahmjroNyeDPJhtuf3+HTJropaH04HmJ8fhntDu73Gpz/RkAF7+nkz6kcP2QTgfvMCgMPAJUdskAAP82GPDTY9w==}
@@ -2581,7 +2581,7 @@ snapshots:
     dependencies:
       '@atcute/uint8array': 1.0.1
 
-  '@atcute/oauth-browser-client@1.0.11':
+  '@atcute/oauth-browser-client@1.0.12':
     dependencies:
       '@atcute/client': 2.0.7
 
