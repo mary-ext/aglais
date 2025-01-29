@@ -174,7 +174,7 @@ export const SessionProvider = (props: ParentProps) => {
 				agent = new OAuthUserAgent(session);
 				handler = agent;
 
-				if (expiresAt !== undefined && expiresAt - Date.now() <= 10 * 60 * 1000) {
+				if (expiresAt !== undefined && expiresAt - Date.now() <= 5 * 60 * 1000) {
 					agent.getSession({ noCache: true });
 				}
 			} catch {
