@@ -16,7 +16,7 @@
 		"@atcute/cbor": "^2.1.1",
 		"@atcute/cid": "^2.1.0",
 		"@atcute/client": "^2.0.7",
-		"@atcute/oauth-browser-client": "^1.0.9",
+		"@atcute/oauth-browser-client": "^1.0.11",
 		"@atcute/tid": "^1.0.2",
 		"@floating-ui/dom": "^1.6.13",
 		"@floating-ui/utils": "^0.2.9",
@@ -34,7 +34,7 @@
 		"webm-muxer": "^5.0.3"
 	},
 	"devDependencies": {
-		"@trivago/prettier-plugin-sort-imports": "^5.2.1",
+		"@trivago/prettier-plugin-sort-imports": "^5.2.2",
 		"@types/dom-close-watcher": "^1.0.0",
 		"@types/dom-webcodecs": "^0.1.13",
 		"autoprefixer": "^10.4.20",
@@ -47,7 +47,7 @@
 		"vite": "6.0.5",
 		"vite-plugin-pwa": "0.21.0",
 		"vite-plugin-solid": "^2.11.0",
-		"wrangler": "^3.105.0"
+		"wrangler": "^3.106.0"
 	},
 	"pnpm": {
 		"patchedDependencies": {
