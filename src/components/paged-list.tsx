@@ -3,6 +3,7 @@ import { For, type JSX, Match, Switch } from 'solid-js';
 import { getQueryErrorInfo } from '~/api/utils/query';
 
 import { ifIntersect } from '~/lib/element-refs';
+import { useIsFocused } from '~/lib/navigation/router';
 
 import CircularProgress from './circular-progress';
 import EndOfListView from './end-of-list-view';
@@ -93,9 +94,14 @@ const PagedList = <T,>(props: PagedListProps<T>) => {
 					<div
 						ref={(node) => {
 							if (onEndReached) {
-								ifIntersect(node, () => !props.isFetchingNextPage && props.hasNextPage, onEndReached, {
-									rootMargin: `150% 0%`,
-								});
+								const isFocused = useIsFocused();
+
+								ifIntersect(
+									node,
+									() => !props.isFetchingNextPage && !props.isRefreshing && props.hasNextPage && isFocused(),
+									onEndReached,
+									{ rootMargin: '150% 0%' },
+								);
 							}
 						}}
 						class="grid h-13 shrink-0 place-items-center"
