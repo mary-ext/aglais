@@ -66,6 +66,9 @@ importers:
       '@floating-ui/utils':
         specifier: ^0.2.9
         version: 0.2.9(patch_hash=1cf283fbaa686f96f7b3029bbc0955bff698af6f4a75ba6c276ad1a7a7c40aea)
+      '@mary/async-iterator-fns':
+        specifier: npm:@jsr/mary__async-iterator-fns@^0.1.1
+        version: '@jsr/mary__async-iterator-fns@0.1.1'
       '@mary/date-fns':
         specifier: npm:@jsr/mary__date-fns@^0.1.2
         version: '@jsr/mary__date-fns@0.1.2'
@@ -1078,6 +1081,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
+
+  '@jsr/mary__async-iterator-fns@0.1.1':
+    resolution: {integrity: sha512-ef/TDpu6yGTAb4fbGEjSFPO7u49WrxJeXa9T6fvmjlpEfR84qxrjTR6MEUQ1hMySD0+O9yQKvBl/KL5x7K9+iA==, tarball: https://npm.jsr.io/~/11/@jsr/mary__async-iterator-fns/0.1.1.tgz}
 
   '@jsr/mary__date-fns@0.1.2':
     resolution: {integrity: sha512-tRBbtJfgESGkP3p2qLG1IexQT2u0gdsB4o346Uu9fGpiqmG9Tte5tldEBLaAo8IdFnOsA44Pi2P6iSDTgsVCMg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__date-fns/0.1.2.tgz}
@@ -3467,6 +3473,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@jsr/mary__async-iterator-fns@0.1.1': {}
 
   '@jsr/mary__date-fns@0.1.2': {}
 

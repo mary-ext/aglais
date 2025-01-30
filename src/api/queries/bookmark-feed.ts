@@ -1,10 +1,10 @@
 import { tokenize } from '@atcute/bluesky-search-parser';
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+import { filter, map, take, toArray } from '@mary/async-iterator-fns';
 import { createInfiniteQuery, createQuery } from '@mary/solid-query';
 
 import type { BookmarkItem, HydratedBookmarkItem } from '~/lib/aglais-bookmarks/db';
 import { createSearchPredicate } from '~/lib/aglais-bookmarks/search';
-import { filter, map, take, toArray } from '~/lib/async-iterators';
 import { useAgent } from '~/lib/states/agent';
 import { useBookmarks } from '~/lib/states/bookmarks';
 import { mapDefined } from '~/lib/utils/misc';
