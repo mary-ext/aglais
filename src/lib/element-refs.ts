@@ -1,4 +1,4 @@
-import { createEffect } from 'solid-js';
+import { createEffect, onCleanup } from 'solid-js';
 
 import { intersectionCallback } from './observer';
 
@@ -17,19 +17,10 @@ export const ifIntersect = (
 		}
 	};
 
-	createEffect((setup: boolean) => {
+	createEffect(() => {
 		if (enabled()) {
-			if (!setup) {
-				observer.observe(node);
-				return true;
-			}
-		} else {
-			if (setup) {
-				observer.unobserve(node);
-				return false;
-			}
+			observer.observe(node);
+			onCleanup(() => observer.disconnect());
 		}
-
-		return setup;
-	}, false);
+	});
 };
