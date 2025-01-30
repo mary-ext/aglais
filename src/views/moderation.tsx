@@ -1,3 +1,6 @@
+import { GLOBAL_LABELS, getLocalizedLabel } from '~/api/moderation';
+import { FlagsHidden, PreferenceHide, PreferenceIgnore, PreferenceWarn } from '~/api/moderation/constants';
+
 import { Key } from '~/lib/keyed';
 import { useTitle } from '~/lib/navigation/router';
 import { useModerationOptions } from '~/lib/states/moderation';
@@ -64,61 +67,29 @@ const ModerationPage = () => {
 					<Boxed.GroupHeader>Content filters</Boxed.GroupHeader>
 
 					<Boxed.List>
-						<Boxed.SelectItem
-							label="Adult content"
-							description="Erotic nudity or explicit sexual activity"
-							value={'warn'}
-							onChange={(next) => {
-								//
-							}}
-							options={[
-								{ value: 'off', label: 'Warn' },
-								{ value: 'warn', label: 'Warn' },
-								{ value: 'hide', label: 'Hide' },
-							]}
-						/>
+						{Object.entries(GLOBAL_LABELS).map(([label, def]) => {
+							if (def.f & FlagsHidden) {
+								return;
+							}
 
-						<Boxed.SelectItem
-							label="Sexually suggestive"
-							description="Not pornographic but sexual in nature"
-							value={'warn'}
-							onChange={(next) => {
-								//
-							}}
-							options={[
-								{ value: 'off', label: 'Warn' },
-								{ value: 'warn', label: 'Warn' },
-								{ value: 'hide', label: 'Hide' },
-							]}
-						/>
+							const locale = getLocalizedLabel(def);
 
-						<Boxed.SelectItem
-							label="Graphic media"
-							description="Disturbing content"
-							value={'warn'}
-							onChange={(next) => {
-								//
-							}}
-							options={[
-								{ value: 'off', label: 'Warn' },
-								{ value: 'warn', label: 'Warn' },
-								{ value: 'hide', label: 'Hide' },
-							]}
-						/>
-
-						<Boxed.SelectItem
-							label="Nudity"
-							description="Artistic or non-erotic nudity"
-							value={'warn'}
-							onChange={(next) => {
-								//
-							}}
-							options={[
-								{ value: 'off', label: 'Warn' },
-								{ value: 'warn', label: 'Warn' },
-								{ value: 'hide', label: 'Hide' },
-							]}
-						/>
+							return (
+								<Boxed.SelectItem
+									label={/* @once */ locale.n}
+									description={/* @once */ locale.d}
+									value={moderation.labels[label] ?? def.d}
+									onChange={(next) => {
+										moderation.labels[label] = next;
+									}}
+									options={[
+										{ value: PreferenceIgnore, label: `Off` },
+										{ value: PreferenceWarn, label: `Warn` },
+										{ value: PreferenceHide, label: `Hide` },
+									]}
+								/>
+							);
+						})}
 					</Boxed.List>
 				</Boxed.Group>
 

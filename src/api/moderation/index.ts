@@ -13,6 +13,7 @@ import {
 	ContextProfileView,
 	FlagsAdultOnly,
 	FlagsForced,
+	FlagsHidden,
 	FlagsNoSelf,
 	FlagsNone,
 	type KeywordPreference,
@@ -75,7 +76,7 @@ export const GLOBAL_LABELS: LabelDefinitionMapping = {
 		d: PreferenceHide,
 		b: BlurForced,
 		s: SeverityNone,
-		f: FlagsForced | FlagsNoSelf,
+		f: FlagsForced | FlagsNoSelf | FlagsHidden,
 		l: [{ i: 'en', n: `Hidden by moderators`, d: `` }],
 	},
 	'!warn': {
@@ -83,7 +84,7 @@ export const GLOBAL_LABELS: LabelDefinitionMapping = {
 		d: PreferenceWarn,
 		b: BlurForced,
 		s: SeverityAlert,
-		f: FlagsNoSelf,
+		f: FlagsNoSelf | FlagsHidden,
 		l: [{ i: 'en', n: `Content warning`, d: `` }],
 	},
 	porn: {

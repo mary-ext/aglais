@@ -34,8 +34,10 @@ export const FlagsNone = 0;
 export const FlagsForced = 1 << 0;
 /** Don't apply label to self */
 export const FlagsNoSelf = 1 << 1;
-/** Label is adult-only. */
+/** Label is adult-only */
 export const FlagsAdultOnly = 1 << 2;
+/** Label is hidden */
+export const FlagsHidden = 1 << 3;
 
 /** Label is intended for content */
 export const TargetContent = 0;
