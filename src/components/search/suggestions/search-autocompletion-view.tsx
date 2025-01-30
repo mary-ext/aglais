@@ -15,10 +15,7 @@ const SearchAutocompletionView = () => {
 
 	const isFocused = useIsFocused();
 
-	const profiles = createProfileAutocompleteQuery({
-		get query() {
-			return query();
-		},
+	const profiles = createProfileAutocompleteQuery(query, {
 		get enabled() {
 			const $query = query();
 			return isFocused() && $query.length > 0 && $query.length < 128 && !HAS_FILTER_RE.test($query);
