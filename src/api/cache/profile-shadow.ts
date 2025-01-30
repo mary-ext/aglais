@@ -8,6 +8,7 @@ import { findAllProfiles as findAllProfilesInBookmarkFeed } from '../queries-cac
 import { findAllProfiles as findAllProfilesInNotificationFeed } from '../queries-cache/notification-feed';
 import { findAllProfiles as findAllProfilesInPostThread } from '../queries-cache/post-thread';
 import { findAllProfiles as findAllProfilesInProfile } from '../queries-cache/profile';
+import { findAllProfiles as findAllProfilesInProfileAutocomplete } from '../queries-cache/profile-autocomplete';
 import { findAllProfiles as findAllProfilesInListPage } from '../queries-cache/profile-list';
 import { findAllProfiles as findAllProfilesInTimeline } from '../queries-cache/timeline';
 import { EQUALS_DEQUAL } from '../utils/dequal';
@@ -79,6 +80,7 @@ export function findProfilesInCache(queryClient: QueryClient, did: At.DID): Gene
 		findAllProfilesInNotificationFeed(did),
 		findAllProfilesInPostThread(did),
 		findAllProfilesInProfile(did),
+		findAllProfilesInProfileAutocomplete(did),
 		findAllProfilesInListPage(did),
 		findAllProfilesInTimeline(did),
 	]);
