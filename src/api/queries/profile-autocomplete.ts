@@ -17,8 +17,8 @@ export const createProfileAutocompleteQuery = (
 		const isEnabled = opts?.enabled ?? true;
 
 		const trimmed = $query
-			.trimEnd()
-			.replace(/\p{P}+$/u, '')
+			.trim()
+			.replace(/^\p{P}+|\p{P}+$/gu, '')
 			.toLowerCase();
 
 		return {
