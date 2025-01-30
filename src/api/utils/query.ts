@@ -1,3 +1,5 @@
+import { batch } from 'solid-js';
+
 import {
 	type InfiniteData,
 	type QueryClient,
@@ -6,18 +8,20 @@ import {
 } from '@mary/solid-query';
 
 export const resetInfiniteData = (client: QueryClient, queryKey: QueryKey) => {
-	client.setQueriesData<InfiniteData<unknown>>({ queryKey }, (data) => {
-		if (data && data.pages.length > 1) {
-			return {
-				pages: data.pages.slice(0, 1),
-				pageParams: data.pageParams.slice(0, 1),
-			};
-		}
+	batch(() => {
+		client.setQueriesData<InfiniteData<unknown>>({ queryKey }, (data) => {
+			if (data && data.pages.length > 1) {
+				return {
+					pages: data.pages.slice(0, 1),
+					pageParams: data.pageParams.slice(0, 1),
+				};
+			}
 
-		return data;
+			return data;
+		});
+
+		client.invalidateQueries({ queryKey });
 	});
-
-	client.invalidateQueries({ queryKey });
 };
 
 const errorMap = new WeakMap<WeakKey, { pageParam: any; direction: 'forward' | 'backward' }>();
