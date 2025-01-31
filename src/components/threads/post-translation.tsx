@@ -1,6 +1,7 @@
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 
 import { XRPC, simpleFetchHandler } from '@atcute/client';
+import { sampleOne } from '@mary/array-fns';
 import { createQuery } from '@mary/solid-query';
 
 import { systemLanguages } from '~/globals/locales';
@@ -8,7 +9,6 @@ import { systemLanguages } from '~/globals/locales';
 import { createDerivedSignal } from '~/lib/hooks/derived-signal';
 import { getEnglishLanguageName } from '~/lib/intl/languages';
 import { useSession } from '~/lib/states/session';
-import { pickRandom } from '~/lib/utils/misc';
 
 import CircularProgressView from '~/components/circular-progress-view';
 
@@ -37,7 +37,7 @@ const PostTranslation = (props: PostTranslationProps) => {
 			return previous;
 		}
 
-		return pickRandom(instances);
+		return sampleOne(instances)!;
 	});
 
 	const query = createQuery(() => {

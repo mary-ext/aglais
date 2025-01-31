@@ -1,9 +1,10 @@
 import { For, Show, createMemo, createSignal, untrack } from 'solid-js';
 
+import { mapDefined } from '@mary/array-fns';
+
 import { LANGUAGE_CODES, getEnglishLanguageName, getNativeLanguageName } from '~/lib/intl/languages';
 import { useTitle } from '~/lib/navigation/router';
 import { useSession } from '~/lib/states/session';
-import { mapDefined } from '~/lib/utils/misc';
 
 import * as Boxed from '~/components/boxed';
 import EndOfListView from '~/components/end-of-list-view';

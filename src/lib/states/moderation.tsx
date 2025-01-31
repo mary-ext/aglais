@@ -2,6 +2,7 @@ import { type ParentProps, createContext, createMemo, useContext } from 'solid-j
 import { unwrap } from 'solid-js/store';
 
 import type { AppBskyLabelerDefs, At } from '@atcute/client/lexicons';
+import { mapDefined } from '@mary/array-fns';
 import { createQueries } from '@mary/solid-query';
 
 import { BLUESKY_MODERATION_DID } from '~/api/defaults';
@@ -10,7 +11,6 @@ import { interpretLabelerDefinition } from '~/api/moderation/labeler';
 
 import { createBatchedFetch } from '~/lib/utils/batch-fetch';
 import { assert } from '~/lib/utils/invariant';
-import { mapDefined } from '~/lib/utils/misc';
 
 import { useAgent } from './agent';
 import { useSession } from './session';

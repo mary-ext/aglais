@@ -1,9 +1,11 @@
 import { type JSX, createMemo } from 'solid-js';
 
+import { mapDefined } from '@mary/array-fns';
+
 import { LineType } from '~/api/models/post-thread';
 import { EQUALS_DEQUAL } from '~/api/utils/dequal';
 
-import { mapDefined, on } from '~/lib/utils/misc';
+import { on } from '~/lib/utils/misc';
 
 export interface ThreadLinesProps {
 	lines: LineType[] | undefined;

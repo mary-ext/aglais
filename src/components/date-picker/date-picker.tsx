@@ -1,5 +1,6 @@
 import { createMemo } from 'solid-js';
 
+import { chunked } from '@mary/array-fns';
 import {
 	addDays,
 	addMonths,
@@ -16,8 +17,6 @@ import {
 	startOfMonth,
 	startOfWeek,
 } from '@mary/date-fns';
-
-import { chunked } from '~/api/utils/misc';
 
 import { createDerivedSignal } from '~/lib/hooks/derived-signal';
 

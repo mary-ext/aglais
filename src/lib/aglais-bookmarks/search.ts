@@ -1,10 +1,10 @@
 import type { Token } from '@atcute/bluesky-search-parser';
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
+import { mapDefined } from '@mary/array-fns';
 
 import { DID_RE, HANDLE_RE } from '~/api/utils/strings';
 
 import { parseEndDate, parseStartDate, splitFilters } from '../bsky/search';
-import { mapDefined } from '../utils/misc';
 import { escapeRegex } from '../utils/regex';
 
 export const createSearchPredicate = (tokens: Token[]) => {

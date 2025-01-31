@@ -1,5 +1,7 @@
 import { For } from 'solid-js';
 
+import { mapDefined } from '@mary/array-fns';
+
 import { googleLanguages } from '~/api/basa/languages';
 
 import { openModal } from '~/globals/modals';
@@ -7,7 +9,6 @@ import { openModal } from '~/globals/modals';
 import { getEnglishLanguageName } from '~/lib/intl/languages';
 import { useTitle } from '~/lib/navigation/router';
 import { useSession } from '~/lib/states/session';
-import { mapDefined } from '~/lib/utils/misc';
 
 import * as Boxed from '~/components/boxed';
 import IconButton from '~/components/icon-button';

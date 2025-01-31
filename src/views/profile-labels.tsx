@@ -1,6 +1,7 @@
 import { Match, Show, Switch, createMemo } from 'solid-js';
 
 import type { At } from '@atcute/client/lexicons';
+import { mapDefined } from '@mary/array-fns';
 
 import {
 	GLOBAL_LABELS,
@@ -29,7 +30,6 @@ import { formatAbsDateTime } from '~/lib/intl/time';
 import { Key } from '~/lib/keyed';
 import { useParams, useTitle } from '~/lib/navigation/router';
 import { useSession } from '~/lib/states/session';
-import { mapDefined } from '~/lib/utils/misc';
 
 import Avatar from '~/components/avatar';
 import * as Boxed from '~/components/boxed';

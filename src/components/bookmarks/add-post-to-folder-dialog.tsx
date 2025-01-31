@@ -1,6 +1,7 @@
 import { For, createMemo } from 'solid-js';
 
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+import { intersection } from '@mary/array-fns';
 import { useQueryClient } from '@mary/solid-query';
 
 import { createBookmarkMetaQuery } from '~/api/queries/bookmark';
@@ -47,8 +48,8 @@ const AddPostToFolderDialog = ({ post, onSave }: AddPostToFolderDialogProps) => 
 		const existing = entry.data.item;
 
 		// Prune folders that we don't recognize
-		const availableFolderIds = new Set(meta.data!.tags.map((tag) => tag.id));
-		const intersect = new Set(folderIds()).intersection(availableFolderIds);
+		const availableFolderIds = meta.data!.tags.map((tag) => tag.id);
+		const intersect = intersection(folderIds(), availableFolderIds);
 
 		await db.put('bookmarks', {
 			view: post,

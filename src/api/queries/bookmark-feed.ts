@@ -1,5 +1,6 @@
 import { tokenize } from '@atcute/bluesky-search-parser';
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+import { mapDefined } from '@mary/array-fns';
 import { filter, map, take, toArray } from '@mary/async-iterator-fns';
 import { createInfiniteQuery, createQuery } from '@mary/solid-query';
 
@@ -7,7 +8,6 @@ import type { BookmarkItem, HydratedBookmarkItem } from '~/lib/aglais-bookmarks/
 import { createSearchPredicate } from '~/lib/aglais-bookmarks/search';
 import { useAgent } from '~/lib/states/agent';
 import { useBookmarks } from '~/lib/states/bookmarks';
-import { mapDefined } from '~/lib/utils/misc';
 
 export const createBookmarkFolderMetaQuery = (tagId: () => string) => {
 	const bookmarks = useBookmarks();

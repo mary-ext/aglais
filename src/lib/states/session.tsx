@@ -13,6 +13,7 @@ import {
 import { type FetchHandler, type FetchHandlerObject, XRPC, XRPCError } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
 import { OAuthUserAgent, deleteStoredSession, getSession } from '@atcute/oauth-browser-client';
+import { mapDefined } from '@mary/array-fns';
 
 import { BLUESKY_MODERATION_DID } from '~/api/defaults';
 
@@ -24,7 +25,6 @@ import { createReactiveLocalStorage } from '../hooks/local-storage';
 import type { PerAccountPreferenceSchema } from '../preferences/account';
 import type { AccountData } from '../preferences/sessions';
 import { assert } from '../utils/invariant';
-import { mapDefined } from '../utils/misc';
 
 export interface CurrentAccountState {
 	readonly did: At.DID;
@@ -87,7 +87,7 @@ export const SessionProvider = (props: ParentProps) => {
 
 				const filters = preferences.moderation.keywords;
 
-				const times = [...mapDefined(filters, (filter) => filter.expires)];
+				const times = mapDefined(filters, (filter) => filter.expires);
 
 				const nextAt = times.reduce((time, x) => (x < time ? x : time), Infinity);
 

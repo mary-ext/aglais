@@ -1,5 +1,7 @@
 import { batch } from 'solid-js';
 
+import { mapDefined } from '@mary/array-fns';
+
 import { dequal } from '~/api/utils/dequal';
 
 import { openModal } from '~/globals/modals';
@@ -13,7 +15,6 @@ import {
 	toPersistedThreadgate,
 } from '~/lib/preferences/snippets/composer';
 import { useSession } from '~/lib/states/session';
-import { mapDefined } from '~/lib/utils/misc';
 
 import * as Boxed from '~/components/boxed';
 import ComposedInteractionDialogLazy from '~/components/composer/dialogs/composed-interaction-dialog-lazy';

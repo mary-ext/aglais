@@ -8,6 +8,7 @@ import type {
 	AppBskyFeedPost,
 	At,
 } from '@atcute/client/lexicons';
+import { type FalsyValue, definite } from '@mary/array-fns';
 import { type InfiniteData, createInfiniteQuery, createQuery, useQueryClient } from '@mary/solid-query';
 
 import { globalEvents } from '~/globals/events';
@@ -412,8 +413,8 @@ const fetchPage = async (
 /// Timeline filters
 type FilterFn<T> = (data: T) => boolean;
 
-const combine = <T>(filters: Array<undefined | false | FilterFn<T>>): FilterFn<T> | undefined => {
-	const filtered = filters.filter((filter): filter is FilterFn<T> => !!filter);
+const combine = <T>(filters: Array<FalsyValue | FilterFn<T>>): FilterFn<T> | undefined => {
+	const filtered = definite(filters);
 	const len = filtered.length;
 
 	// if (len === 1) {

@@ -1,6 +1,5 @@
 import type { AppBskyLabelerDefs } from '@atcute/client/lexicons';
-
-import { mapDefined } from '~/lib/utils/misc';
+import { mapDefined } from '@mary/array-fns';
 
 import type { LabelDefinitionMapping, ModerationLabeler } from '.';
 import {
