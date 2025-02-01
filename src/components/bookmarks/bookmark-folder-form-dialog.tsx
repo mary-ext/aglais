@@ -7,7 +7,8 @@ import { useModalContext } from '~/globals/modals';
 
 import type { TagItem } from '~/lib/aglais-bookmarks/db';
 import { modelText } from '~/lib/input-refs';
-import { useBookmarks } from '~/lib/states/bookmarks';
+import { inject } from '~/lib/states/singleton';
+import BookmarksService from '~/lib/states/singletons/bookmarks';
 
 import Button from '../button';
 import * as Dialog from '../dialog';
@@ -62,7 +63,7 @@ const BookmarkFolderFormDialog = ({ folder, onSave }: BookmarkFolderFormDialogPr
 
 	const { close } = useModalContext();
 
-	const bookmarks = useBookmarks();
+	const bookmarks = inject(BookmarksService);
 	const queryClient = useQueryClient();
 
 	const [name, setName] = createSignal<string>('');

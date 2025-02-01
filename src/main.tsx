@@ -10,9 +10,9 @@ import * as preferences from '~/globals/preferences';
 
 import { configureRouter } from '~/lib/navigation/router';
 import { AgentProvider } from '~/lib/states/agent';
-import { BookmarksProvider } from '~/lib/states/bookmarks';
 import { ModerationProvider } from '~/lib/states/moderation';
 import { SessionProvider, useSession } from '~/lib/states/session';
+import { SingletonProvider } from '~/lib/states/singleton';
 import { ThemeProvider } from '~/lib/states/theme';
 import { on } from '~/lib/utils/misc';
 
@@ -77,10 +77,10 @@ const InnerApp = () => {
 			<AgentProvider>
 				{/* Anything under <AgentProvider> gets remounted on account changes */}
 				<ModerationProvider>
-					<BookmarksProvider>
+					<SingletonProvider>
 						<Shell />
 						<ModalRenderer />
-					</BookmarksProvider>
+					</SingletonProvider>
 				</ModerationProvider>
 			</AgentProvider>
 		);

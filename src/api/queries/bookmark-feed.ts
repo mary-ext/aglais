@@ -7,10 +7,11 @@ import { createInfiniteQuery, createQuery } from '@mary/solid-query';
 import type { BookmarkItem, HydratedBookmarkItem } from '~/lib/aglais-bookmarks/db';
 import { createSearchPredicate } from '~/lib/aglais-bookmarks/search';
 import { useAgent } from '~/lib/states/agent';
-import { useBookmarks } from '~/lib/states/bookmarks';
+import { inject } from '~/lib/states/singleton';
+import BookmarksService from '~/lib/states/singletons/bookmarks';
 
 export const createBookmarkFolderMetaQuery = (tagId: () => string) => {
-	const bookmarks = useBookmarks();
+	const bookmarks = inject(BookmarksService);
 
 	const query = createQuery(() => {
 		const $tagId = tagId();
@@ -39,7 +40,7 @@ export interface BookmarkFeedReturn {
 }
 
 export const createBookmarkFeedQuery = (tagId: () => string, search: () => string) => {
-	const bookmarks = useBookmarks();
+	const bookmarks = inject(BookmarksService);
 	const { rpc } = useAgent();
 
 	const listing = createInfiniteQuery(() => {

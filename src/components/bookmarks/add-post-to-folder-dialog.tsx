@@ -10,7 +10,8 @@ import { createBookmarkEntryQuery } from '~/api/queries/bookmark-entry';
 import { openModal, useModalContext } from '~/globals/modals';
 
 import { createDerivedSignal } from '~/lib/hooks/derived-signal';
-import { useBookmarks } from '~/lib/states/bookmarks';
+import { inject } from '~/lib/states/singleton';
+import BookmarksService from '~/lib/states/singletons/bookmarks';
 import { isSetEqual } from '~/lib/utils/misc';
 
 import Button from '../button';
@@ -29,7 +30,7 @@ export interface AddPostToFolderDialogProps {
 const AddPostToFolderDialog = ({ post, onSave }: AddPostToFolderDialogProps) => {
 	const { close } = useModalContext();
 
-	const bookmarks = useBookmarks();
+	const bookmarks = inject(BookmarksService);
 	const queryClient = useQueryClient();
 
 	const meta = createBookmarkMetaQuery();

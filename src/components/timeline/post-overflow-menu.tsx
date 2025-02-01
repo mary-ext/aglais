@@ -8,8 +8,9 @@ import { createBookmarkEntryQuery } from '~/api/queries/bookmark-entry';
 
 import { openModal, useModalContext } from '~/globals/modals';
 
-import { useBookmarks } from '~/lib/states/bookmarks';
 import { useSession } from '~/lib/states/session';
+import { inject } from '~/lib/states/singleton';
+import BookmarksService from '~/lib/states/singletons/bookmarks';
 
 import AddPostToFolderDialogLazy from '~/components/bookmarks/add-post-to-folder-dialog-lazy';
 import BookmarkCheckOutlinedIcon from '~/components/icons-central/bookmark-check-outline';
@@ -36,7 +37,7 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 	const { close } = useModalContext();
 	const { currentAccount } = useSession();
 
-	const bookmarks = useBookmarks();
+	const bookmarks = inject(BookmarksService);
 	const queryClient = useQueryClient();
 
 	const post = props.post;

@@ -3,7 +3,8 @@ import { useQueryClient } from '@mary/solid-query';
 import { openModal, useModalContext } from '~/globals/modals';
 
 import type { TagItem } from '~/lib/aglais-bookmarks/db';
-import { useBookmarks } from '~/lib/states/bookmarks';
+import { inject } from '~/lib/states/singleton';
+import BookmarksService from '~/lib/states/singletons/bookmarks';
 
 import PencilOutlinedIcon from '../icons-central/pencil-outline';
 import TrashOutlinedIcon from '../icons-central/trash-outline';
@@ -22,7 +23,7 @@ export interface BookmarkFolderMenuProps {
 const BookmarkFolderMenu = (props: BookmarkFolderMenuProps) => {
 	const { close } = useModalContext();
 
-	const bookmarks = useBookmarks();
+	const bookmarks = inject(BookmarksService);
 	const queryClient = useQueryClient();
 
 	const folder = props.folder;

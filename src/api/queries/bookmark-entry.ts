@@ -1,9 +1,10 @@
 import { createQuery } from '@mary/solid-query';
 
-import { useBookmarks } from '~/lib/states/bookmarks';
+import { inject } from '~/lib/states/singleton';
+import BookmarksService from '~/lib/states/singletons/bookmarks';
 
 export const createBookmarkEntryQuery = (postUri: () => string) => {
-	const bookmarks = useBookmarks();
+	const bookmarks = inject(BookmarksService);
 
 	const entry = createQuery(() => {
 		const $postUri = postUri();

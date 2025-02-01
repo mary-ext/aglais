@@ -1,14 +1,15 @@
 import { createQuery } from '@mary/solid-query';
 
 import type { TagItem } from '~/lib/aglais-bookmarks/db';
-import { useBookmarks } from '~/lib/states/bookmarks';
+import { inject } from '~/lib/states/singleton';
+import BookmarksService from '~/lib/states/singletons/bookmarks';
 
 export interface HydratedTagItem extends TagItem {
 	count: number;
 }
 
 export const createBookmarkMetaQuery = () => {
-	const bookmarks = useBookmarks();
+	const bookmarks = inject(BookmarksService);
 
 	const query = createQuery(() => {
 		return {

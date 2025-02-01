@@ -1,22 +1,28 @@
 import type { IDBPDatabase } from 'idb';
-import { type ParentProps, createContext, onCleanup, useContext } from 'solid-js';
+import { onCleanup } from 'solid-js';
 
-import type { BookmarkDBSchema } from '../aglais-bookmarks/db';
-import { assert } from '../utils/invariant';
+import type { BookmarkDBSchema } from '~/lib/aglais-bookmarks/db';
+import { assert } from '~/lib/utils/invariant';
 
-import { useSession } from './session';
+import { useSession } from '../session';
 
-export interface BookmarkContext {
-	open(): Promise<IDBPDatabase<BookmarkDBSchema>>;
-}
-
-const Context = createContext<BookmarkContext>();
-
-export const BookmarksProvider = (props: ParentProps) => {
+const BookmarksService = () => {
 	const { currentAccount } = useSession();
 
 	let promise: Promise<IDBPDatabase<BookmarkDBSchema>> | undefined;
-	const context: BookmarkContext = {
+
+	onCleanup(() => {
+		if (!promise) {
+			return;
+		}
+
+		const held = promise;
+		promise = undefined;
+
+		held.then((db) => db.close());
+	});
+
+	return {
 		open(): Promise<IDBPDatabase<BookmarkDBSchema>> {
 			if (promise !== undefined) {
 				return promise;
@@ -45,24 +51,6 @@ export const BookmarksProvider = (props: ParentProps) => {
 			})());
 		},
 	};
-
-	onCleanup(() => {
-		if (!promise) {
-			return;
-		}
-
-		const held = promise;
-		promise = undefined;
-
-		held.then((db) => db.close());
-	});
-
-	return <Context.Provider value={context}>{props.children}</Context.Provider>;
 };
 
-export const useBookmarks = (): BookmarkContext => {
-	const bookmarks = useContext(Context);
-	assert(bookmarks !== undefined, `Expected useBookmarks to be called under <BookmarksProvider>`);
-
-	return bookmarks;
-};
+export default BookmarksService;
