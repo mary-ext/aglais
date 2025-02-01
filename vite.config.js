@@ -39,8 +39,6 @@ export default defineConfig({
 						'src/globals/preferences.ts',
 
 						'src/lib/states/agent.tsx',
-						'src/lib/states/bookmarks.tsx',
-						'src/lib/states/moderation.tsx',
 						'src/lib/states/session.tsx',
 						'src/lib/states/theme.tsx',
 					],
