@@ -8,7 +8,8 @@ import { moderatePost } from '~/api/moderation/entities/post';
 import { createPostQuery } from '~/api/queries/post';
 import { formatQueryError } from '~/api/utils/error';
 
-import { useModerationOptions } from '~/lib/states/moderation';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 import Button from '../button';
@@ -23,7 +24,7 @@ export interface ComposerReplyContextProps {
 }
 
 const ComposerReplyContext = (props: ComposerReplyContextProps) => {
-	const moderationOptions = useModerationOptions();
+	const moderationOptions = inject(ModerationService);
 
 	const query = createPostQuery(() => props.replyUri);
 

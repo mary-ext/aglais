@@ -14,8 +14,9 @@ import { openModal } from '~/globals/modals';
 
 import { formatCompact } from '~/lib/intl/number';
 import type { ContentTranslationPreferences } from '~/lib/preferences/account';
-import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 import ComposerDialogLazy from '../composer/composer-dialog-lazy';
@@ -52,8 +53,9 @@ export interface HighlightedPostProps {
 const HighlightedPost = (props: HighlightedPostProps) => {
 	const post = () => props.post;
 
-	const moderationOptions = useModerationOptions();
 	const { currentAccount } = useSession();
+
+	const moderationOptions = inject(ModerationService);
 
 	const author = () => post().author;
 	const record = () => post().record as AppBskyFeedPost.Record;

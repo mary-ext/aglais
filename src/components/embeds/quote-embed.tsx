@@ -13,7 +13,8 @@ import { ContextContentMedia } from '~/api/moderation/constants';
 import { moderateQuote } from '~/api/moderation/entities/quote';
 import { parseAtUri } from '~/api/utils/strings';
 
-import { useModerationOptions } from '~/lib/states/moderation';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 import TimeAgo from '../time-ago';
@@ -31,6 +32,8 @@ export interface QuoteEmbedProps {
 }
 
 const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
+	const moderationOptions = inject(ModerationService);
+
 	const record = quote.value as AppBskyFeedPost.Record;
 	const embed = quote.embeds?.[0];
 	const author = quote.author;
@@ -42,7 +45,6 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 	const image = getPostImage(embed);
 	const video = getPostVideo(embed);
 
-	const moderationOptions = useModerationOptions();
 	const moderation = createMemo(() => moderateQuote(quote, moderationOptions()));
 
 	const shouldBlurMedia = () => getModerationUI(moderation(), ContextContentMedia).b.length !== 0;

@@ -5,7 +5,8 @@ import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 import { moderateProfile } from '~/api/moderation/entities/profile';
 
 import { isElementClicked } from '~/lib/interaction';
-import { useModerationOptions } from '~/lib/states/moderation';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 
@@ -21,7 +22,7 @@ export interface ProfileItemPressableProps {
 }
 
 const ProfileItemPressable = (props: ProfileItemPressableProps) => {
-	const moderationOptions = useModerationOptions();
+	const moderationOptions = inject(ModerationService);
 
 	const profile = props.item;
 	const onClick = props.onClick;

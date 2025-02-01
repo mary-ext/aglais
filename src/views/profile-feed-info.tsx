@@ -11,7 +11,8 @@ import { createFeedMetaQuery } from '~/api/queries/feed';
 import { makeAtUri } from '~/api/utils/strings';
 
 import { useParams, useTitle } from '~/lib/navigation/router';
-import { useModerationOptions } from '~/lib/states/moderation';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 
 import Avatar, { getUserAvatarType } from '~/components/avatar';
 import * as Boxed from '~/components/boxed';
@@ -55,8 +56,9 @@ const FeedInfoPage = () => {
 export default FeedInfoPage;
 
 const InfoView = (props: { feed: AppBskyFeedDefs.GeneratorView }) => {
-	const moderationOptions = useModerationOptions();
 	const queryClient = useQueryClient();
+
+	const moderationOptions = inject(ModerationService);
 
 	const feed = () => props.feed;
 	const creator = () => feed().creator;

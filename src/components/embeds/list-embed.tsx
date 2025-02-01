@@ -4,7 +4,8 @@ import type { AppBskyGraphDefs } from '@atcute/client/lexicons';
 
 import { moderateGeneric } from '~/api/moderation/entities/generic';
 
-import { useModerationOptions } from '~/lib/states/moderation';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 
 import Avatar from '~/components/avatar';
 import { getListPurposeLabel, getListUrl } from '~/components/lists/lib/utils';
@@ -18,7 +19,8 @@ export interface ListEmbedProps {
 }
 
 const ListEmbed = ({ list, interactive, onClick }: ListEmbedProps) => {
-	const moderationOptions = useModerationOptions();
+	const moderationOptions = inject(ModerationService);
+
 	const moderation = createMemo(() => moderateGeneric(list, list.creator.did, moderationOptions()));
 
 	const href = getListUrl(list);

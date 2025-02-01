@@ -14,8 +14,9 @@ import { parseAtUri } from '~/api/utils/strings';
 import { history } from '~/globals/navigation';
 
 import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
-import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 import Embed from '../embeds/embed';
@@ -41,8 +42,9 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 	const item = () => props.item;
 
 	const queryClient = useQueryClient();
-	const moderationOptions = useModerationOptions();
 	const { currentAccount } = useSession();
+
+	const moderationOptions = inject(ModerationService);
 
 	const post = () => item().post;
 

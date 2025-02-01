@@ -7,7 +7,8 @@ import { moderateGeneric } from '~/api/moderation/entities/generic';
 import { precacheFeed } from '~/api/queries-cache/feed-precache';
 import { parseAtUri } from '~/api/utils/strings';
 
-import { useModerationOptions } from '~/lib/states/moderation';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 
 import Avatar from '../avatar';
 
@@ -20,7 +21,8 @@ export interface FeedEmbedProps {
 
 const FeedEmbed = ({ feed, interactive }: FeedEmbedProps) => {
 	const queryClient = useQueryClient();
-	const moderationOptions = useModerationOptions();
+
+	const moderationOptions = inject(ModerationService);
 
 	const moderation = createMemo(() => moderateGeneric(feed, feed.creator.did, moderationOptions()));
 

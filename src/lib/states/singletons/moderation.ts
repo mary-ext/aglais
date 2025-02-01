@@ -1,4 +1,4 @@
-import { type ParentProps, createContext, createMemo, useContext } from 'solid-js';
+import { createMemo } from 'solid-js';
 import { unwrap } from 'solid-js/store';
 
 import type { AppBskyLabelerDefs, At } from '@atcute/client/lexicons';
@@ -10,35 +10,30 @@ import type { ModerationLabeler, ModerationOptions, ModerationPreferences } from
 import { interpretLabelerDefinition } from '~/api/moderation/labeler';
 
 import { createBatchedFetch } from '~/lib/utils/batch-fetch';
-import { assert } from '~/lib/utils/invariant';
 
-import { useAgent } from './agent';
-import { useSession } from './session';
+import { useAgent } from '../agent';
+import { useSession } from '../session';
 
 type Labeler = AppBskyLabelerDefs.LabelerViewDetailed;
 
-const DEFAULT_MODERATION_PREFERENCES: ModerationPreferences = {
-	hideReposts: [],
-	keywords: [],
-	labelers: {
-		[BLUESKY_MODERATION_DID]: {
-			redact: true,
-			privileged: true,
-			labels: {},
-		},
-	},
-	labels: {},
-};
-
-const Context = createContext<() => ModerationOptions>();
-
-export const ModerationProvider = (props: ParentProps) => {
+const ModerationService = () => {
 	const { rpc, persister } = useAgent();
 	const { currentAccount } = useSession();
 
-	const modPreferences = createMemo(() => {
+	const modPreferences = createMemo((): ModerationPreferences => {
 		if (!currentAccount) {
-			return DEFAULT_MODERATION_PREFERENCES;
+			return {
+				hideReposts: [],
+				keywords: [],
+				labelers: {
+					[BLUESKY_MODERATION_DID]: {
+						redact: true,
+						privileged: true,
+						labels: {},
+					},
+				},
+				labels: {},
+			};
 		}
 
 		return currentAccount.preferences.moderation;
@@ -94,12 +89,7 @@ export const ModerationProvider = (props: ParentProps) => {
 		};
 	});
 
-	return <Context.Provider value={modOptions}>{props.children}</Context.Provider>;
+	return modOptions;
 };
 
-export const useModerationOptions = (): (() => ModerationOptions) => {
-	const options = useContext(Context);
-	assert(options !== undefined, `Expected useModerationOptions to be used under <ModerationProvider>`);
-
-	return options;
-};
+export default ModerationService;

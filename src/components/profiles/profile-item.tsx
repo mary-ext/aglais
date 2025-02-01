@@ -9,7 +9,8 @@ import { precacheProfile } from '~/api/queries-cache/profile-precache';
 import { history } from '~/globals/navigation';
 
 import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
-import { useModerationOptions } from '~/lib/states/moderation';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 
@@ -22,7 +23,7 @@ export interface ProfileItemProps {
 
 const ProfileItem = (props: ProfileItemProps) => {
 	const queryClient = useQueryClient();
-	const moderationOptions = useModerationOptions();
+	const moderationOptions = inject(ModerationService);
 
 	const profile = props.item;
 

@@ -11,7 +11,8 @@ import { history } from '~/globals/navigation';
 
 import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
 import { formatLong } from '~/lib/intl/number';
-import { useModerationOptions } from '~/lib/states/moderation';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 
 import Avatar from '~/components/avatar';
 
@@ -22,7 +23,8 @@ export interface FeedItemProps {
 
 const FeedItem = ({ item }: FeedItemProps) => {
 	const queryClient = useQueryClient();
-	const moderationOptions = useModerationOptions();
+
+	const moderationOptions = inject(ModerationService);
 
 	const creator = item.creator;
 	const href = `/${creator.did}/feeds/${parseAtUri(item.uri).rkey}`;

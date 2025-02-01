@@ -11,8 +11,9 @@ import { parseAtUri } from '~/api/utils/strings';
 import { openModal } from '~/globals/modals';
 
 import { formatCompact } from '~/lib/intl/number';
-import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 import { truncateMiddle } from '~/lib/utils/strings';
 
 import DefaultLabelerAvatar from '~/assets/default-labeler-avatar.svg?url';
@@ -44,8 +45,9 @@ const canShowKnownFollowers = (knownFollowers: AppBskyActorDefs.KnownFollowers |
 };
 
 const ProfileViewHeader = (props: ProfileViewHeader) => {
-	const moderationOptions = useModerationOptions();
 	const { currentAccount } = useSession();
+
+	const moderationOptions = inject(ModerationService);
 
 	const data = () => props.data;
 	const viewer = () => data().viewer;

@@ -18,8 +18,9 @@ import { history } from '~/globals/navigation';
 import { createEventListener } from '~/lib/hooks/event-listener';
 import { Key } from '~/lib/keyed';
 import { useParams, useTitle } from '~/lib/navigation/router';
-import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 import { truncateMiddle } from '~/lib/utils/strings';
 
 import Button from '~/components/button';
@@ -221,7 +222,8 @@ const ThreadView = (props: {
 	onMainPostDelete?: () => void;
 }) => {
 	const { currentAccount } = useSession();
-	const moderationOptions = useModerationOptions();
+
+	const moderationOptions = inject(ModerationService);
 
 	const [showTl, setShowTl] = createSignal(false);
 

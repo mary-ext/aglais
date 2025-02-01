@@ -12,7 +12,8 @@ import { history } from '~/globals/navigation';
 
 import type { HydratedBookmarkItem } from '~/lib/aglais-bookmarks/db';
 import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
-import { useModerationOptions } from '~/lib/states/moderation';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 
 import Avatar, { getUserAvatarType } from '../avatar';
 import Embed from '../embeds/embed';
@@ -29,7 +30,7 @@ export interface BookmarkFeedItemProps {
 }
 
 const BookmarkFeedItem = ({ item }: BookmarkFeedItemProps) => {
-	const moderationOptions = useModerationOptions();
+	const moderationOptions = inject(ModerationService);
 
 	const { post, stale } = item;
 

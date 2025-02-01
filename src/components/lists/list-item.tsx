@@ -9,7 +9,8 @@ import { precacheList } from '~/api/queries-cache/list-precache';
 import { history } from '~/globals/navigation';
 
 import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
-import { useModerationOptions } from '~/lib/states/moderation';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 
 import Avatar from '~/components/avatar';
 import BlockOutlinedIcon from '~/components/icons-central/block-outline';
@@ -24,7 +25,8 @@ export interface ListItemProps {
 
 const ListItem = ({ item }: ListItemProps) => {
 	const queryClient = useQueryClient();
-	const moderationOptions = useModerationOptions();
+
+	const moderationOptions = inject(ModerationService);
 
 	const creator = item.creator;
 	const href = getListUrl(item);

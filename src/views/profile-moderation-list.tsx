@@ -13,7 +13,8 @@ import { trimRichText } from '~/api/utils/richtext';
 import { makeAtUri } from '~/api/utils/strings';
 
 import { useParams, useTitle } from '~/lib/navigation/router';
-import { useModerationOptions } from '~/lib/states/moderation';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 
 import Avatar, { getUserAvatarType } from '~/components/avatar';
 import * as Boxed from '~/components/boxed';
@@ -99,8 +100,9 @@ const ProfileModerationListPage = () => {
 export default ProfileModerationListPage;
 
 const InfoView = (props: { list: AppBskyGraphDefs.ListView }) => {
-	const moderationOptions = useModerationOptions();
 	const queryClient = useQueryClient();
+
+	const moderationOptions = inject(ModerationService);
 
 	const list = () => props.list;
 	const creator = () => list().creator;

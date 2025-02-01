@@ -10,7 +10,6 @@ import * as preferences from '~/globals/preferences';
 
 import { configureRouter } from '~/lib/navigation/router';
 import { AgentProvider } from '~/lib/states/agent';
-import { ModerationProvider } from '~/lib/states/moderation';
 import { SessionProvider, useSession } from '~/lib/states/session';
 import { SingletonProvider } from '~/lib/states/singleton';
 import { ThemeProvider } from '~/lib/states/theme';
@@ -76,12 +75,10 @@ const InnerApp = () => {
 		return (
 			<AgentProvider>
 				{/* Anything under <AgentProvider> gets remounted on account changes */}
-				<ModerationProvider>
-					<SingletonProvider>
-						<Shell />
-						<ModalRenderer />
-					</SingletonProvider>
-				</ModerationProvider>
+				<SingletonProvider>
+					<Shell />
+					<ModalRenderer />
+				</SingletonProvider>
 			</AgentProvider>
 		);
 	}) as unknown as JSX.Element;

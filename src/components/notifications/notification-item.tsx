@@ -21,8 +21,9 @@ import { parseAtUri } from '~/api/utils/strings';
 import { history } from '~/globals/navigation';
 
 import { INTERACTION_TAGS, isElementAltClicked, isElementClicked } from '~/lib/interaction';
-import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 import { assert } from '~/lib/utils/invariant';
 import { truncateMiddle } from '~/lib/utils/strings';
 
@@ -150,7 +151,8 @@ export default NotificationItem;
 
 const renderAvatars = (notifs: AppBskyNotificationListNotifications.Notification[]) => {
 	const queryClient = useQueryClient();
-	const moderationOptions = useModerationOptions();
+
+	const moderationOptions = inject(ModerationService);
 
 	const avatars = notifs.slice(0, MAX_AVATARS).map(({ author }) => {
 		const { did, avatar, displayName, handle } = author;

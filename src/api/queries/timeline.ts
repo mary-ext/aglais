@@ -14,8 +14,9 @@ import { type InfiniteData, createInfiniteQuery, createQuery, useQueryClient } f
 import { globalEvents } from '~/globals/events';
 
 import { useAgent } from '~/lib/states/agent';
-import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 import { tinyhash } from '~/lib/utils/hash';
 import { assert } from '~/lib/utils/invariant';
 
@@ -132,7 +133,8 @@ export const useTimelineQuery = (_params: () => TimelineParams) => {
 	const { rpc } = useAgent();
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
-	const moderationOptions = useModerationOptions();
+
+	const moderationOptions = inject(ModerationService);
 
 	const limit = MAX_TIMELINE_POSTS;
 

@@ -3,8 +3,9 @@ import { FlagsHidden, PreferenceHide, PreferenceIgnore, PreferenceWarn } from '~
 
 import { Key } from '~/lib/keyed';
 import { useTitle } from '~/lib/navigation/router';
-import { useModerationOptions } from '~/lib/states/moderation';
 import { useSession } from '~/lib/states/session';
+import { inject } from '~/lib/states/singleton';
+import ModerationService from '~/lib/states/singletons/moderation';
 
 import Avatar from '~/components/avatar';
 import * as Boxed from '~/components/boxed';
@@ -20,7 +21,8 @@ import * as Page from '~/components/page';
 const ModerationPage = () => {
 	const { currentAccount } = useSession();
 
-	const hydratedOptions = useModerationOptions();
+	const hydratedOptions = inject(ModerationService);
+
 	const moderation = currentAccount!.preferences.moderation;
 
 	useTitle(() => `Moderation — ${import.meta.env.VITE_APP_NAME}`);
