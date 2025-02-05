@@ -13,14 +13,14 @@
 		"@atcute/bluesky-richtext-parser": "^1.0.7",
 		"@atcute/bluesky-richtext-segmenter": "^1.0.5",
 		"@atcute/bluesky-search-parser": "^0.1.0",
-		"@atcute/cbor": "^2.1.1",
+		"@atcute/cbor": "^2.1.3",
 		"@atcute/cid": "^2.1.0",
 		"@atcute/client": "^2.0.7",
 		"@atcute/oauth-browser-client": "^1.0.12",
 		"@atcute/tid": "^1.0.2",
 		"@floating-ui/dom": "^1.6.13",
 		"@floating-ui/utils": "^0.2.9",
-		"@mary/array-fns": "npm:@jsr/mary__array-fns@^0.1.0",
+		"@mary/array-fns": "npm:@jsr/mary__array-fns@^0.1.2",
 		"@mary/async-iterator-fns": "npm:@jsr/mary__async-iterator-fns@^0.1.1",
 		"@mary/date-fns": "npm:@jsr/mary__date-fns@^0.1.2",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
@@ -29,7 +29,7 @@
 		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.5",
 		"comlink": "^4.4.2",
 		"hls.js": "^1.5.20",
-		"idb": "^8.0.1",
+		"idb": "^8.0.2",
 		"nanoid": "^5.0.9",
 		"solid-floating-ui": "~0.2.1",
 		"solid-js": "^1.9.4",
@@ -48,8 +48,8 @@
 		"typescript": "5.7.2",
 		"vite": "6.0.5",
 		"vite-plugin-pwa": "0.21.0",
-		"vite-plugin-solid": "^2.11.0",
-		"wrangler": "^3.106.0"
+		"vite-plugin-solid": "^2.11.1",
+		"wrangler": "^3.107.3"
 	},
 	"pnpm": {
 		"patchedDependencies": {
