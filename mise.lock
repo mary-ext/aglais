@@ -1,0 +1,10 @@
+[tools.node]
+version = "22.13.1"
+backend = "core:node"
+
+[tools.node.checksums]
+"node-v22.13.1-linux-x64.tar.gz" = "sha256:666148b9fe0c7e1301cc1b029e33a45e9e4a893f68d2d2bb1cc88a931a88a004"
+
+[tools.pnpm]
+version = "9.15.5"
+backend = "asdf:pnpm"
