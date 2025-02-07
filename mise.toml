@@ -1,6 +1,6 @@
 [tools]
-"aqua:pnpm/pnpm" = "latest"
 node = "lts"
+pnpm = "latest"
 
 [settings]
 experimental = true
