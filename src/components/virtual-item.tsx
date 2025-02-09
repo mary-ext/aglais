@@ -1,50 +1,10 @@
-import { type JSX, createSignal, onCleanup, runWithOwner } from 'solid-js';
+import { type JSX, createSignal, onCleanup } from 'solid-js';
 
-import { UNSAFE_routerEvents, UNSAFE_useViewContext } from '~/lib/navigation/router';
+import { useIsFocused } from '~/lib/navigation/router';
 import { intersectionCallback } from '~/lib/observer';
 import { requestIdle } from '~/lib/utils/misc';
 
 const intersectionObserver = new IntersectionObserver(intersectionCallback, { rootMargin: `106.25% 0%` });
-
-const createVirtualStore = (ctx: ReturnType<typeof UNSAFE_useViewContext>) => {
-	return runWithOwner(ctx.owner, () => {
-		let disabled = false;
-
-		onCleanup(
-			UNSAFE_routerEvents.on(ctx.route.id, (event) => {
-				disabled = !event.focus;
-			}),
-		);
-
-		return {
-			get disabled() {
-				return disabled;
-			},
-		};
-	})!;
-};
-
-const virtualStoreMap = new WeakMap<
-	ReturnType<typeof UNSAFE_useViewContext>,
-	ReturnType<typeof createVirtualStore>
->();
-
-const dummyStore: ReturnType<typeof createVirtualStore> = {
-	disabled: false,
-};
-
-const getVirtualStore = (ctx: ReturnType<typeof UNSAFE_useViewContext> | undefined) => {
-	if (ctx === undefined) {
-		return dummyStore;
-	}
-
-	let store = virtualStoreMap.get(ctx);
-	if (store === undefined) {
-		virtualStoreMap.set(ctx, (store = createVirtualStore(ctx)));
-	}
-
-	return store;
-};
 
 export interface VirtualItemProps {
 	estimateHeight?: number;
@@ -56,8 +16,7 @@ const VirtualItem = (props: VirtualItemProps) => {
 	let _height: number | undefined = props.estimateHeight;
 	let _intersecting: boolean = false;
 
-	const store = getVirtualStore(UNSAFE_useViewContext());
-
+	const isFocused = useIsFocused();
 	const [intersecting, setIntersecting] = createSignal(_intersecting);
 
 	const shouldHide = () => !intersecting() && _height !== undefined;
@@ -65,7 +24,7 @@ const VirtualItem = (props: VirtualItemProps) => {
 	const handleIntersect = (nextEntry: IntersectionObserverEntry) => {
 		_entry = undefined;
 
-		if (store.disabled) {
+		if (!isFocused()) {
 			return;
 		}
 

@@ -12,6 +12,7 @@ import {
 	createSignal,
 	getOwner,
 	onCleanup,
+	untrack,
 	useContext,
 } from 'solid-js';
 import { delegateEvents } from 'solid-js/web';
@@ -70,6 +71,7 @@ interface RouterState {
 interface ViewContextObject {
 	owner: Owner | null;
 	route: MatchedRouteState;
+	isActive: () => boolean;
 }
 
 let _entry: Location;
@@ -295,28 +297,27 @@ export const useParams = <T extends Record<string, string>>() => {
 };
 
 export const onRouteEnter = (cb: () => void) => {
-	const { route } = useViewContext();
+	const { route, isActive } = useViewContext();
 
-	cb();
+	if (untrack(isActive)) {
+		cb();
+	}
+
 	onCleanup(routerEvents.on(route.id, (e) => e.enter && cb()));
 };
 
 export const useIsFocused = (): Accessor<boolean> => {
-	const { route } = useViewContext();
-	const [active, setActive] = createSignal(true);
+	const { isActive } = useViewContext();
 
-	onCleanup(routerEvents.on(route.id, (e) => setActive(e.focus)));
-	return active;
+	return isActive;
 };
 
 export const createFocusEffect = (cb: () => void) => {
-	const { route } = useViewContext();
-	const [active, setActive] = createSignal(true);
+	const isFocused = useIsFocused();
 
-	onCleanup(routerEvents.on(route.id, (e) => setActive(e.focus)));
 	createEffect(() => {
-		if (active()) {
-			cb();
+		if (isFocused()) {
+			createEffect(cb);
 		}
 	});
 };
@@ -342,6 +343,7 @@ export const RouterView = (props: RouterViewProps) => {
 		const context: ViewContextObject = {
 			owner: getOwner(),
 			route: matched,
+			isActive: active,
 		};
 
 		return (
