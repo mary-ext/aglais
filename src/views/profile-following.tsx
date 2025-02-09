@@ -21,10 +21,10 @@ const ProfileFollowingPage = () => {
 		if (data) {
 			const handle = data.handle.toLowerCase();
 
-			return `Users following @${handle} — ${import.meta.env.VITE_APP_NAME}`;
+			return `Users followed by @${handle} — ${import.meta.env.VITE_APP_NAME}`;
 		}
 
-		return `Users following — ${import.meta.env.VITE_APP_NAME}`;
+		return `Users followed by — ${import.meta.env.VITE_APP_NAME}`;
 	});
 
 	return (
