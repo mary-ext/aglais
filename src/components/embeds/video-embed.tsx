@@ -51,7 +51,10 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 					<img
 						alt={/* @once */ embed.alt}
 						src={/* @once */ embed.thumbnail && replaceVideoCdnUrl(embed.thumbnail)}
-						class="h-full w-full object-contain"
+						class={
+							`h-full w-full object-contain` +
+							(props.blur ? ` scale-125 ${borderless ? `blur-xl` : `blur`}` : ``)
+						}
 					/>
 				) : (
 					<Show
@@ -65,7 +68,10 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 							>
 								<img
 									src={/* @once */ embed.thumbnail && replaceVideoCdnUrl(embed.thumbnail)}
-									class="h-full w-full object-contain"
+									class={
+										`h-full w-full object-contain` +
+										(props.blur ? ` scale-125 ${borderless ? `blur-xl` : `blur`}` : ``)
+									}
 								/>
 
 								<div class="absolute left-1/2 top-1/2 grid -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-p-neutral-700/60 p-3 hover:bg-p-neutral-700/80">
