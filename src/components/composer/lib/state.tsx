@@ -174,7 +174,7 @@ export const parseRichText = (text: string): ParsedRichText => {
 		if (type === 'autolink') {
 			token.raw = toShortUrl(token.url);
 		} else if (type === 'emote') {
-			token.raw = '◌';
+			token.raw = '●';
 		} else if (type === 'link') {
 			token.raw = token.text;
 		} else if (type === 'escape') {
