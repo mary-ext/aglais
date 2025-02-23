@@ -6,7 +6,7 @@ import { useQueryClient } from '@mary/solid-query';
 
 import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { createProfileQuery } from '~/api/queries/profile';
-import { isDid } from '~/api/utils/strings';
+import { isDid } from '~/api/types/identity';
 
 import { openModal } from '~/globals/modals';
 import { history } from '~/globals/navigation';

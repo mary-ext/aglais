@@ -1,7 +1,7 @@
 import { createSignal } from 'solid-js';
 
 import { createProfileQuery } from '~/api/queries/profile';
-import { isDid } from '~/api/utils/strings';
+import { isDid } from '~/api/types/identity';
 
 import { history } from '~/globals/navigation';
 

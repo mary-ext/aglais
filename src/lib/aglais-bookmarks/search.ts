@@ -2,7 +2,7 @@ import type { Token } from '@atcute/bluesky-search-parser';
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 import { mapDefined } from '@mary/array-fns';
 
-import { DID_RE, HANDLE_RE } from '~/api/utils/strings';
+import { DID_RE, HANDLE_RE } from '~/api/types/identity';
 
 import { parseEndDate, parseStartDate, splitFilters } from '../bsky/search';
 import { escapeRegex } from '../utils/regex';

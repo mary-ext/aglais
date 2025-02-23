@@ -5,7 +5,7 @@ import { useAgent } from '~/lib/states/agent';
 
 import { findPostsInCache } from '../cache/post-shadow';
 import { makeAtUri, parseAtUri } from '../types/at-uri';
-import { isDid } from '../utils/strings';
+import { isDid } from '../types/identity';
 
 import { resolveHandle } from './handle';
 

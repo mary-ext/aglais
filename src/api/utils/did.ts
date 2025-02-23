@@ -1,7 +1,7 @@
 import type { XRPC } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
 
-import { isDid } from './strings';
+import { isDid } from '../types/identity';
 
 const getDid = async (rpc: XRPC, actor: string, signal?: AbortSignal) => {
 	let did: At.DID;

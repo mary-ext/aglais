@@ -29,7 +29,7 @@ import { resolveHandle } from '~/api/queries/handle';
 import { makeAtUri, parseAtUri } from '~/api/types/at-uri';
 import { getRecord } from '~/api/utils/records';
 import { trimRichText } from '~/api/utils/richtext';
-import { isDid } from '~/api/utils/strings';
+import { isDid } from '~/api/types/identity';
 import { getUtf8Length } from '~/api/utils/unicode';
 
 import { compressPostImage } from '~/lib/bsky/image';

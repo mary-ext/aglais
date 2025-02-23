@@ -4,7 +4,7 @@ import { useQueryClient } from '@mary/solid-query';
 
 import { createFeedMetaQuery } from '~/api/queries/feed';
 import { makeAtUri } from '~/api/types/at-uri';
-import { isDid } from '~/api/utils/strings';
+import { isDid } from '~/api/types/identity';
 
 import { openModal } from '~/globals/modals';
 import { history } from '~/globals/navigation';

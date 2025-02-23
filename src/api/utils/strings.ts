@@ -1,19 +1,3 @@
-import type { At } from '@atcute/client/lexicons';
-
-export const isDid = (value: string): value is At.DID => {
-	return value.startsWith('did:');
-};
-
-export const DID_RE = /^did:([a-z]+):([a-zA-Z0-9._:%-]*[a-zA-Z0-9._-])$/;
-export const HANDLE_RE = /^[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,})$/;
-
-export interface AtUri {
-	repo: string;
-	collection: string;
-	rkey: string;
-	fragment: string | undefined;
-}
-
 const _parse = URL.parse;
 
 // Check for the existence of URL.parse and use that if available, removes the

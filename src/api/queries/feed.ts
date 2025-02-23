@@ -9,7 +9,7 @@ import { useSession } from '~/lib/states/session';
 import { omit } from '~/lib/utils/misc';
 
 import { makeAtUri, parseAtUri } from '../types/at-uri';
-import { isDid } from '../utils/strings';
+import { isDid } from '../types/identity';
 
 import { resolveHandle } from './handle';
 

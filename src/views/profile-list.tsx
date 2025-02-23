@@ -4,7 +4,7 @@ import { useQueryClient } from '@mary/solid-query';
 
 import { createListMetaQuery } from '~/api/queries/list';
 import { makeAtUri } from '~/api/types/at-uri';
-import { isDid } from '~/api/utils/strings';
+import { isDid } from '~/api/types/identity';
 
 import { history } from '~/globals/navigation';
 
