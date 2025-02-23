@@ -1,15 +1,9 @@
-import type {
-	AppBskyEmbedExternal,
-	AppBskyEmbedImages,
-	AppBskyEmbedRecord,
-	AppBskyEmbedVideo,
-	AppBskyFeedDefs,
-	Brand,
-} from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 
 import { type ModerationCause, getModerationUI } from '~/api/moderation';
 import { ContextContentMedia } from '~/api/moderation/constants';
 import { parseAtUri } from '~/api/types/at-uri';
+import { type MediaEmbedView, type RecordEmbedView, unwrapEmbedView } from '~/api/utils/bluesky/embed-view';
 
 import ContentHider from '../moderation/content-hider';
 
@@ -32,24 +26,15 @@ export interface EmbedProps {
 }
 
 const Embed = (props: EmbedProps) => {
-	const embed = props.embed;
+	const { media, record } = unwrapEmbedView(props.embed);
+
 	const gutterTop = props.gutterTop;
 	const large = props.large;
 
-	const type = embed.$type;
-
 	return (
 		<div class={`flex flex-col gap-3` + (gutterTop ? ` mt-3` : ``)}>
-			{type === 'app.bsky.embed.recordWithMedia#view' ? (
-				<>
-					<MediaEmbed embed={/* @once */ embed.media} moderation={props.moderation} />
-					<RecordEmbed embed={/* @once */ embed.record} large={large} />
-				</>
-			) : type !== 'app.bsky.embed.record#view' ? (
-				<MediaEmbed embed={embed} moderation={props.moderation} />
-			) : (
-				<RecordEmbed embed={embed} large={large} />
-			)}
+			{media && <MediaEmbed embed={media} moderation={props.moderation} />}
+			{record && <RecordEmbed embed={record} large={large} />}
 		</div>
 	);
 };
@@ -58,7 +43,7 @@ export default Embed;
 
 interface MediaEmbedProps {
 	/** Expected to be static */
-	embed: Brand.Union<AppBskyEmbedExternal.View | AppBskyEmbedImages.View | AppBskyEmbedVideo.View>;
+	embed: MediaEmbedView;
 	moderation?: ModerationCause[];
 }
 
@@ -91,7 +76,7 @@ const MediaEmbed = (props: MediaEmbedProps) => {
 
 interface RecordEmbedProps {
 	/** Expected to be static */
-	embed: AppBskyEmbedRecord.View;
+	embed: RecordEmbedView;
 	/** Expected to be static */
 	large?: boolean;
 }
@@ -100,26 +85,25 @@ const RecordEmbed = (props: RecordEmbedProps) => {
 	const embed = props.embed;
 	const large = props.large;
 
-	const record = embed.record;
-	const type = record.$type;
+	const type = embed.$type;
 
 	if (type === 'app.bsky.embed.record#viewRecord') {
-		return <QuoteEmbed quote={record} large={large} interactive />;
+		return <QuoteEmbed quote={embed} large={large} interactive />;
 	}
 
 	if (type === 'app.bsky.feed.defs#generatorView') {
-		return <FeedEmbed feed={record} interactive />;
+		return <FeedEmbed feed={embed} interactive />;
 	}
 
 	if (type === 'app.bsky.graph.defs#listView') {
-		return <ListEmbed list={record} interactive />;
+		return <ListEmbed list={embed} interactive />;
 	}
 
 	if (type === 'app.bsky.embed.record#viewNotFound' || type === 'app.bsky.embed.record#viewBlocked') {
-		const uri = parseAtUri(record.uri);
+		const uri = parseAtUri(embed.uri);
 
 		if (type === 'app.bsky.embed.record#viewBlocked' && uri.collection === 'app.bsky.feed.post') {
-			return <QuoteBlockedEmbed embed={record} uri={uri} />;
+			return <QuoteBlockedEmbed embed={embed} uri={uri} />;
 		}
 
 		const resource = collectionToLabel(uri.collection);

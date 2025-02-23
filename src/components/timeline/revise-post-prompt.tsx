@@ -1,12 +1,7 @@
-import type {
-	AppBskyEmbedRecord,
-	AppBskyEmbedRecordWithMedia,
-	AppBskyFeedDefs,
-	AppBskyFeedPost,
-	AppBskyFeedThreadgate,
-} from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/client/lexicons';
 
 import { parseAtUri } from '~/api/types/at-uri';
+import { type MediaEmbed, type RecordEmbed, unwrapEmbed } from '~/api/utils/bluesky/embed';
 import { serializeRichText } from '~/api/utils/richtext-stringify';
 
 import { openModal, useModalContext } from '~/globals/modals';
@@ -38,24 +33,15 @@ const RevisePostPrompt = ({ post, onPostRevise }: RevisePostPromptProps) => {
 
 	(async () => {
 		const record = post.record as AppBskyFeedPost.Record;
-		const embed = record.embed;
 		const threadgate = post.threadgate?.record as AppBskyFeedThreadgate.Record | undefined;
 		const embeddingDisabled = post.viewer?.embeddingDisabled;
 
-		const draftEmbeds: PostEmbed = {};
-
-		if (embed) {
-			if (embed.$type === 'app.bsky.embed.recordWithMedia') {
-				draftEmbeds.record = toRecordEmbed(embed.record);
-				draftEmbeds.media = toMediaEmbed(post, embed.media);
-				draftEmbeds.link = toLinkEmbed(post, embed.media);
-			} else if (embed.$type === 'app.bsky.embed.record') {
-				draftEmbeds.record = toRecordEmbed(embed);
-			} else {
-				draftEmbeds.media = toMediaEmbed(post, embed);
-				draftEmbeds.link = toLinkEmbed(post, embed);
-			}
-		}
+		const embeds = unwrapEmbed(record.embed);
+		const draftEmbeds: PostEmbed = {
+			link: embeds.media ? toLinkEmbed(post, embeds.media) : undefined,
+			media: embeds.media ? toMediaEmbed(post, embeds.media) : undefined,
+			record: embeds.record ? toRecordEmbed(embeds.record) : undefined,
+		};
 
 		const state: ComposerState = {
 			active: 0,
@@ -90,10 +76,7 @@ const RevisePostPrompt = ({ post, onPostRevise }: RevisePostPromptProps) => {
 
 export default RevisePostPrompt;
 
-const toMediaEmbed = (
-	post: AppBskyFeedDefs.PostView,
-	embed: AppBskyEmbedRecordWithMedia.Main['media'],
-): PostMediaEmbed | undefined => {
+const toMediaEmbed = (post: AppBskyFeedDefs.PostView, embed: MediaEmbed): PostMediaEmbed | undefined => {
 	const authorDid = post.author.did;
 
 	switch (embed.$type) {
@@ -126,10 +109,7 @@ const toMediaEmbed = (
 	}
 };
 
-const toLinkEmbed = (
-	post: AppBskyFeedDefs.PostView,
-	embed: AppBskyEmbedRecordWithMedia.Main['media'],
-): PostLinkEmbed | undefined => {
+const toLinkEmbed = (post: AppBskyFeedDefs.PostView, embed: MediaEmbed): PostLinkEmbed | undefined => {
 	const authorDid = post.author.did;
 
 	switch (embed.$type) {
@@ -149,7 +129,7 @@ const toLinkEmbed = (
 	}
 };
 
-const toRecordEmbed = (embed: AppBskyEmbedRecord.Main): PostRecordEmbed | undefined => {
+const toRecordEmbed = (embed: RecordEmbed): PostRecordEmbed | undefined => {
 	const ref = embed.record;
 
 	const uri = ref.uri;

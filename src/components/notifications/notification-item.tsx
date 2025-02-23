@@ -2,7 +2,6 @@ import { type Component, type ComponentProps, type JSX, createMemo } from 'solid
 
 import type {
 	AppBskyEmbedImages,
-	AppBskyFeedDefs,
 	AppBskyFeedPost,
 	AppBskyNotificationListNotifications,
 } from '@atcute/client/lexicons';
@@ -17,6 +16,7 @@ import type {
 	RepostNotificationSlice,
 } from '~/api/queries/notification-feed';
 import { parseAtUri } from '~/api/types/at-uri';
+import { type MediaEmbedView, unwrapMediaEmbedView } from '~/api/utils/bluesky/embed-view';
 
 import { history } from '~/globals/navigation';
 
@@ -232,8 +232,8 @@ const renderAccessory = (data: FollowNotificationSlice | LikeNotificationSlice |
 		const post = data.view;
 		const record = post.record as AppBskyFeedPost.Record;
 
-		const imageEmbed = getImageEmbed(post.embed);
-		const gifEmbed = getGifEmbed(post.embed);
+		const media = unwrapMediaEmbedView(post.embed);
+		const gif = maybeUnwrapGifEmbed(media);
 
 		return (
 			<>
@@ -241,11 +241,14 @@ const renderAccessory = (data: FollowNotificationSlice | LikeNotificationSlice |
 					{/* @once */ record.text}
 				</p>
 
-				{imageEmbed ? (
-					<ImageAccessory images={/* @once */ imageEmbed.images} />
-				) : gifEmbed ? (
-					<GifAccessory snippet={gifEmbed} />
-				) : null}
+				{
+					/* @once */ media &&
+						(media.$type === 'app.bsky.embed.images#view' ? (
+							<ImageAccessory images={/* @once */ media.images} />
+						) : gif ? (
+							<GifAccessory snippet={gif} />
+						) : null)
+				}
 			</>
 		);
 	}
@@ -279,31 +282,13 @@ const GifAccessory = ({ snippet }: { snippet: BlueskyGifSnippet }) => {
 	);
 };
 
-const getImageEmbed = (embed: AppBskyFeedDefs.PostView['embed']) => {
-	if (embed) {
-		if (embed.$type === 'app.bsky.embed.recordWithMedia#view') {
-			return getImageEmbed(embed.media);
+const maybeUnwrapGifEmbed = (embed: MediaEmbedView | undefined): BlueskyGifSnippet | undefined => {
+	if (embed?.$type === 'app.bsky.embed.external#view') {
+		const snippet = detectSnippet(embed.external);
+		if (snippet.type !== SnippetType.BLUESKY_GIF) {
+			return;
 		}
 
-		if (embed.$type === 'app.bsky.embed.images#view') {
-			return embed;
-		}
-	}
-};
-
-const getGifEmbed = (embed: AppBskyFeedDefs.PostView['embed']): BlueskyGifSnippet | undefined => {
-	if (embed) {
-		if (embed.$type === 'app.bsky.embed.recordWithMedia#view') {
-			return getGifEmbed(embed.media);
-		}
-
-		if (embed.$type === 'app.bsky.embed.external#view') {
-			const snippet = detectSnippet(embed.external);
-			if (snippet.type !== SnippetType.BLUESKY_GIF) {
-				return;
-			}
-
-			return snippet;
-		}
+		return snippet;
 	}
 };

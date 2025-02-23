@@ -1,11 +1,12 @@
 import { Match, Switch, createMemo } from 'solid-js';
 
-import type { AppBskyEmbedImages, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
+import type { AppBskyFeedPost } from '@atcute/client/lexicons';
 
 import { getModerationUI } from '~/api/moderation';
 import { ContextContentMedia } from '~/api/moderation/constants';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { createPostQuery } from '~/api/queries/post';
+import { unwrapMediaEmbedView } from '~/api/utils/bluesky/embed-view';
 import { formatQueryError } from '~/api/utils/error';
 
 import { inject } from '~/lib/states/singleton';
@@ -38,7 +39,7 @@ const ComposerReplyContext = (props: ComposerReplyContextProps) => {
 					const moderation = createMemo(() => moderatePost(post, moderationOptions()));
 					const shouldBlurImage = () => getModerationUI(moderation(), ContextContentMedia).b.length !== 0;
 
-					const image = getPostImage(post.embed);
+					const media = unwrapMediaEmbedView(post.embed);
 
 					return (
 						<div class="relative flex gap-3 px-4 pt-3">
@@ -79,11 +80,13 @@ const ComposerReplyContext = (props: ComposerReplyContextProps) => {
 										{/* @once */ record.text}
 									</div>
 
-									{image && (
-										<div class="grow basis-0">
-											<ImageGridEmbed embed={image} blur={shouldBlurImage()} />
-										</div>
-									)}
+									{
+										/* @once */ media?.$type === 'app.bsky.embed.images#view' && (
+											<div class="grow basis-0">
+												<ImageGridEmbed embed={media} blur={shouldBlurImage()} />
+											</div>
+										)
+									}
 								</div>
 							</div>
 						</div>
@@ -136,15 +139,3 @@ const ComposerReplyContext = (props: ComposerReplyContextProps) => {
 };
 
 export default ComposerReplyContext;
-
-const getPostImage = (embed: AppBskyFeedDefs.PostView['embed']): AppBskyEmbedImages.View | undefined => {
-	if (embed) {
-		if (embed.$type === 'app.bsky.embed.images#view') {
-			return embed;
-		}
-
-		if (embed.$type === 'app.bsky.embed.recordWithMedia#view') {
-			return getPostImage(embed.media);
-		}
-	}
-};

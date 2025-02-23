@@ -1,13 +1,7 @@
 import { createEffect, createMemo, createRenderEffect, onCleanup, untrack } from 'solid-js';
 
 import type { XRPC } from '@atcute/client';
-import type {
-	AppBskyEmbedRecord,
-	AppBskyFeedDefs,
-	AppBskyFeedGetTimeline,
-	AppBskyFeedPost,
-	At,
-} from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedGetTimeline, AppBskyFeedPost, At } from '@atcute/client/lexicons';
 import { type FalsyValue, definite } from '@mary/array-fns';
 import { type InfiniteData, createInfiniteQuery, createQuery, useQueryClient } from '@mary/solid-query';
 
@@ -38,6 +32,8 @@ import {
 } from '../moderation';
 import { ContextContentList, PreferenceHide, TargetContent } from '../moderation/constants';
 import { parseAtUri } from '../types/at-uri';
+import { unwrapRecordEmbed } from '../utils/bluesky/embed';
+import { unwrapRecordEmbedView } from '../utils/bluesky/embed-view';
 import { EQUALS_DEQUAL } from '../utils/dequal';
 import { unwrapPostEmbedText } from '../utils/post';
 import { resetInfiniteData, wrapQuery } from '../utils/query';
@@ -528,7 +524,7 @@ const createHideRepostsFilter = (): PostFilter => {
 const createHideQuotesFilter = (): PostFilter => {
 	return (item) => {
 		const post = item.post.record as PostRecord;
-		const record = getRecordEmbed(post.embed);
+		const record = unwrapRecordEmbed(post.embed);
 
 		return record === undefined || parseAtUri(record.record.uri).collection === 'app.bsky.feed.post';
 	};
@@ -537,7 +533,7 @@ const createHideQuotesFilter = (): PostFilter => {
 const createHideQuotesFromMutedFilter = (): PostFilter => {
 	return (item) => {
 		const post = item.post;
-		const record = getRecordEmbedView(post.embed);
+		const record = unwrapRecordEmbedView(post.embed);
 
 		return (
 			record === undefined ||
@@ -661,28 +657,4 @@ const yankReposts = (items: EnsuredTimelineItem[]): TimelineSlice[] | false => {
 
 const getReplyAuthors = (reply: EnsuredReplyRef) => {
 	return [reply.root?.author, reply.grandparentAuthor, reply.parent?.author];
-};
-
-const getRecordEmbed = (embed: PostRecord['embed']): AppBskyEmbedRecord.Main | undefined => {
-	if (embed) {
-		if (embed.$type === 'app.bsky.embed.record') {
-			return embed;
-		}
-
-		if (embed.$type === 'app.bsky.embed.recordWithMedia') {
-			return embed.record;
-		}
-	}
-};
-
-const getRecordEmbedView = (embed: AppBskyFeedDefs.PostView['embed']) => {
-	if (embed) {
-		if (embed.$type === 'app.bsky.embed.record#view') {
-			return embed.record;
-		}
-
-		if (embed.$type === 'app.bsky.embed.recordWithMedia#view') {
-			return embed.record.record;
-		}
-	}
 };

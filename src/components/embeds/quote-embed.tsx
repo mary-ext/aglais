@@ -1,17 +1,12 @@
 import { type JSX, createMemo } from 'solid-js';
 
-import type {
-	AppBskyEmbedImages,
-	AppBskyEmbedRecord,
-	AppBskyEmbedVideo,
-	AppBskyFeedDefs,
-	AppBskyFeedPost,
-} from '@atcute/client/lexicons';
+import type { AppBskyEmbedRecord, AppBskyFeedPost } from '@atcute/client/lexicons';
 
 import { getModerationUI } from '~/api/moderation';
 import { ContextContentMedia } from '~/api/moderation/constants';
 import { moderateQuote } from '~/api/moderation/entities/quote';
 import { parseAtUri } from '~/api/types/at-uri';
+import { unwrapMediaEmbedView } from '~/api/utils/bluesky/embed-view';
 
 import { inject } from '~/lib/states/singleton';
 import ModerationService from '~/lib/states/singletons/moderation';
@@ -35,15 +30,13 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 	const moderationOptions = inject(ModerationService);
 
 	const record = quote.value as AppBskyFeedPost.Record;
-	const embed = quote.embeds?.[0];
 	const author = quote.author;
 
 	const uri = parseAtUri(quote.uri);
 	const href = `/${author.did}/${uri.rkey}`;
 
 	const text = record.text.trim();
-	const image = getPostImage(embed);
-	const video = getPostVideo(embed);
+	const media = unwrapMediaEmbedView(quote.embeds?.[0]);
 
 	const moderation = createMemo(() => moderateQuote(quote, moderationOptions()));
 
@@ -81,17 +74,19 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 
 			{text ? (
 				<div class="flex items-start">
-					{!large ? (
-						image ? (
-							<div class="mb-3 ml-3 mt-2 grow basis-0">
-								<ImageGridEmbed embed={image} blur={shouldBlurMedia()} />
-							</div>
-						) : video ? (
-							<div class="mb-3 ml-3 mt-2 grow basis-0">
-								<VideoEmbed embed={video} blur={shouldBlurMedia()} />
-							</div>
+					{
+						/* @once */ !large && media ? (
+							media.$type === 'app.bsky.embed.images#view' ? (
+								<div class="mb-3 ml-3 mt-2 grow basis-0">
+									<ImageGridEmbed embed={media} blur={shouldBlurMedia()} />
+								</div>
+							) : media.$type === 'app.bsky.embed.video#view' ? (
+								<div class="mb-3 ml-3 mt-2 grow basis-0">
+									<VideoEmbed embed={media} blur={shouldBlurMedia()} />
+								</div>
+							) : null
 						) : null
-					) : null}
+					}
 
 					<div class="mx-3 mb-3 mt-2 line-clamp-6 min-w-0 grow-4 basis-0 whitespace-pre-wrap break-words text-sm empty:hidden">
 						{text}
@@ -101,39 +96,17 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 				<div class="mt-3"></div>
 			)}
 
-			{large || !text ? (
-				image ? (
-					<ImageGridEmbed embed={image} borderless blur={shouldBlurMedia()} />
-				) : video ? (
-					<VideoEmbed embed={video} borderless blur={shouldBlurMedia()} />
+			{
+				/* @once */ (large || !text) && media ? (
+					media.$type === 'app.bsky.embed.images#view' ? (
+						<ImageGridEmbed embed={media} borderless blur={shouldBlurMedia()} />
+					) : media.$type === 'app.bsky.embed.video#view' ? (
+						<VideoEmbed embed={media} borderless blur={shouldBlurMedia()} />
+					) : null
 				) : null
-			) : null}
+			}
 		</a>
 	);
 };
 
 export default QuoteEmbed;
-
-const getPostImage = (embed: AppBskyFeedDefs.PostView['embed']): AppBskyEmbedImages.View | undefined => {
-	if (embed) {
-		if (embed.$type === 'app.bsky.embed.images#view') {
-			return embed;
-		}
-
-		if (embed.$type === 'app.bsky.embed.recordWithMedia#view') {
-			return getPostImage(embed.media);
-		}
-	}
-};
-
-const getPostVideo = (embed: AppBskyFeedDefs.PostView['embed']): AppBskyEmbedVideo.View | undefined => {
-	if (embed) {
-		if (embed.$type === 'app.bsky.embed.video#view') {
-			return embed;
-		}
-
-		if (embed.$type === 'app.bsky.embed.recordWithMedia#view') {
-			return getPostVideo(embed.media);
-		}
-	}
-};
