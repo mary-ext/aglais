@@ -7,7 +7,7 @@ import { getModerationUI } from '~/api/moderation';
 import { ContextContentView } from '~/api/moderation/constants';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { createPostLikeMutation, createPostRepostMutation } from '~/api/mutations/post';
-import { parseAtUri } from '~/api/utils/strings';
+import { parseAtUri } from '~/api/types/at-uri';
 
 import { primarySystemLanguage } from '~/globals/locales';
 import { openModal } from '~/globals/modals';

@@ -5,7 +5,7 @@ import { useQueryClient } from '@mary/solid-query';
 
 import { moderateGeneric } from '~/api/moderation/entities/generic';
 import { precacheFeed } from '~/api/queries-cache/feed-precache';
-import { parseAtUri } from '~/api/utils/strings';
+import { parseAtUri } from '~/api/types/at-uri';
 
 import { inject } from '~/lib/states/singleton';
 import ModerationService from '~/lib/states/singletons/moderation';

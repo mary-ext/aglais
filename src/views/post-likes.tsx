@@ -1,5 +1,5 @@
 import { createSubjectLikersQuery } from '~/api/queries/subject-likers';
-import { makeAtUri } from '~/api/utils/strings';
+import { makeAtUri } from '~/api/types/at-uri';
 
 import { useParams, useTitle } from '~/lib/navigation/router';
 

@@ -11,7 +11,8 @@ import {
 } from '~/api/models/post-thread';
 import { usePostThreadQuery } from '~/api/queries/post-thread';
 import { createProfileQuery } from '~/api/queries/profile';
-import { isDid, makeAtUri } from '~/api/utils/strings';
+import { makeAtUri } from '~/api/types/at-uri';
+import { isDid } from '~/api/utils/strings';
 
 import { history } from '~/globals/navigation';
 

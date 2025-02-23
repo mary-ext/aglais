@@ -1,12 +1,12 @@
 import type { AppBskyEmbedRecord } from '@atcute/client/lexicons';
 
-import type { AtUri } from '~/api/utils/strings';
+import type { ParsedAtUri } from '~/api/types/at-uri';
 
 import BlockOutlinedIcon from '../icons-central/block-outline';
 
 export interface QuoteBlockedEmbedProps {
 	embed: AppBskyEmbedRecord.ViewBlocked;
-	uri: AtUri;
+	uri: ParsedAtUri;
 }
 
 const QuoteBlockedEmbed = ({ embed, uri }: QuoteBlockedEmbedProps) => {

@@ -2,7 +2,7 @@ import type { AppBskyFeedPost } from '@atcute/client/lexicons';
 
 import type { UiTimelineItem } from '~/api/models/timeline';
 import { createProfileQuery } from '~/api/queries/profile';
-import { parseAtUri } from '~/api/utils/strings';
+import { parseAtUri } from '~/api/types/at-uri';
 
 import { useSession } from '~/lib/states/session';
 

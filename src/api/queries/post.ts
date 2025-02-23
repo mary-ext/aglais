@@ -4,7 +4,8 @@ import { createQuery } from '@mary/solid-query';
 import { useAgent } from '~/lib/states/agent';
 
 import { findPostsInCache } from '../cache/post-shadow';
-import { isDid, makeAtUri, parseAtUri } from '../utils/strings';
+import { makeAtUri, parseAtUri } from '../types/at-uri';
+import { isDid } from '../utils/strings';
 
 import { resolveHandle } from './handle';
 

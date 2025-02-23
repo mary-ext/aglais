@@ -16,7 +16,7 @@ import type {
 	NotificationSlice,
 	RepostNotificationSlice,
 } from '~/api/queries/notification-feed';
-import { parseAtUri } from '~/api/utils/strings';
+import { parseAtUri } from '~/api/types/at-uri';
 
 import { history } from '~/globals/navigation';
 

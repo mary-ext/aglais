@@ -8,7 +8,7 @@ import { useAgent } from '~/lib/states/agent';
 
 import { dequal } from '../utils/dequal';
 import { resetInfiniteData } from '../utils/query';
-import { parseAtUri } from '../utils/strings';
+import { parseAtUri } from '../types/at-uri';
 
 type Notification = AppBskyNotificationListNotifications.Notification;
 

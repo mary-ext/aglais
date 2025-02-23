@@ -11,7 +11,7 @@ import type {
 import { getModerationUI } from '~/api/moderation';
 import { ContextContentMedia } from '~/api/moderation/constants';
 import { moderateQuote } from '~/api/moderation/entities/quote';
-import { parseAtUri } from '~/api/utils/strings';
+import { parseAtUri } from '~/api/types/at-uri';
 
 import { inject } from '~/lib/states/singleton';
 import ModerationService from '~/lib/states/singletons/moderation';

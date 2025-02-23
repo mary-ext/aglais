@@ -40,7 +40,7 @@ import { ContextContentList, PreferenceHide, TargetContent } from '../moderation
 import { EQUALS_DEQUAL } from '../utils/dequal';
 import { unwrapPostEmbedText } from '../utils/post';
 import { resetInfiniteData, wrapQuery } from '../utils/query';
-import { parseAtUri } from '../utils/strings';
+import { parseAtUri } from '../types/at-uri';
 
 type PostRecord = AppBskyFeedPost.Record;
 

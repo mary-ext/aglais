@@ -6,7 +6,7 @@ import { usePostShadow } from '~/api/cache/post-shadow';
 import { getModerationUI } from '~/api/moderation';
 import { ContextContentList } from '~/api/moderation/constants';
 import { moderatePost } from '~/api/moderation/entities/post';
-import { parseAtUri } from '~/api/utils/strings';
+import { parseAtUri } from '~/api/types/at-uri';
 
 import { history } from '~/globals/navigation';
 

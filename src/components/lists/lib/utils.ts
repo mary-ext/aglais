@@ -1,6 +1,6 @@
 import type { AppBskyGraphDefs } from '@atcute/client/lexicons';
 
-import { parseAtUri } from '~/api/utils/strings';
+import { parseAtUri } from '~/api/types/at-uri';
 
 export const getListPurposeLabel = (purpose: AppBskyGraphDefs.ListPurpose) => {
 	switch (purpose) {

@@ -26,9 +26,10 @@ import { updatePostShadow } from '~/api/cache/post-shadow';
 import { uploadBlob } from '~/api/queries/blob';
 import type { LinkMeta } from '~/api/queries/composer';
 import { resolveHandle } from '~/api/queries/handle';
+import { makeAtUri, parseAtUri } from '~/api/types/at-uri';
 import { getRecord } from '~/api/utils/records';
 import { trimRichText } from '~/api/utils/richtext';
-import { isDid, makeAtUri, parseAtUri } from '~/api/utils/strings';
+import { isDid } from '~/api/utils/strings';
 import { getUtf8Length } from '~/api/utils/unicode';
 
 import { compressPostImage } from '~/lib/bsky/image';

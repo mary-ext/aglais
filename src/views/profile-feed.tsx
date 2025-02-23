@@ -3,7 +3,8 @@ import { Match, Show, Switch } from 'solid-js';
 import { useQueryClient } from '@mary/solid-query';
 
 import { createFeedMetaQuery } from '~/api/queries/feed';
-import { isDid, makeAtUri } from '~/api/utils/strings';
+import { makeAtUri } from '~/api/types/at-uri';
+import { isDid } from '~/api/utils/strings';
 
 import { openModal } from '~/globals/modals';
 import { history } from '~/globals/navigation';

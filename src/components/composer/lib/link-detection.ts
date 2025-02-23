@@ -1,4 +1,5 @@
-import { makeAtUri, safeUrlParse } from '~/api/utils/strings';
+import { makeAtUri } from '~/api/types/at-uri';
+import { safeUrlParse } from '~/api/utils/strings';
 
 import { BSKY_FEED_LINK_RE, BSKY_LIST_LINK_RE, BSKY_POST_LINK_RE } from '~/lib/bsky/link-detection';
 

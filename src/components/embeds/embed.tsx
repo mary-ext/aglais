@@ -9,7 +9,7 @@ import type {
 
 import { type ModerationCause, getModerationUI } from '~/api/moderation';
 import { ContextContentMedia } from '~/api/moderation/constants';
-import { parseAtUri } from '~/api/utils/strings';
+import { parseAtUri } from '~/api/types/at-uri';
 
 import ContentHider from '../moderation/content-hider';
 

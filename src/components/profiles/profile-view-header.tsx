@@ -6,7 +6,7 @@ import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { getModerationUI } from '~/api/moderation';
 import { ContextProfileMedia, ContextProfileView } from '~/api/moderation/constants';
 import { moderateProfile } from '~/api/moderation/entities/profile';
-import { parseAtUri } from '~/api/utils/strings';
+import { parseAtUri } from '~/api/types/at-uri';
 
 import { openModal } from '~/globals/modals';
 

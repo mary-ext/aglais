@@ -2,7 +2,7 @@ import { createMemo } from 'solid-js';
 
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 
-import { parseAtUri } from '~/api/utils/strings';
+import { parseAtUri } from '~/api/types/at-uri';
 
 import { useModalContext } from '~/globals/modals';
 

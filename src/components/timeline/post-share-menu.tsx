@@ -1,7 +1,7 @@
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 
 import { serializeRichText } from '~/api/utils/richtext-stringify';
-import { parseAtUri } from '~/api/utils/strings';
+import { parseAtUri } from '~/api/types/at-uri';
 
 import { useModalContext } from '~/globals/modals';
 

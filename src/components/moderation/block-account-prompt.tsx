@@ -7,7 +7,7 @@ import { updateProfileShadow, useProfileShadow } from '~/api/cache/profile-shado
 import { createListMetaQuery } from '~/api/queries/list';
 import { getCurrentDate } from '~/api/utils/misc';
 import { createRecord, deleteRecord } from '~/api/utils/records';
-import { parseAtUri } from '~/api/utils/strings';
+import { parseAtUri } from '~/api/types/at-uri';
 
 import { useModalContext } from '~/globals/modals';
 

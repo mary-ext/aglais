@@ -1,5 +1,5 @@
 import type { OverflowAncestorItem, OverflowDescendantItem } from '~/api/models/post-thread';
-import { parseAtUri } from '~/api/utils/strings';
+import { parseAtUri } from '~/api/types/at-uri';
 
 import MoreHorizOutlinedIcon from '../icons-central/more-horiz-outline';
 

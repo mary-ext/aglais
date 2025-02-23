@@ -9,7 +9,7 @@ import { getModerationUI } from '~/api/moderation';
 import { ContextContentList } from '~/api/moderation/constants';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { precacheProfile } from '~/api/queries-cache/profile-precache';
-import { parseAtUri } from '~/api/utils/strings';
+import { parseAtUri } from '~/api/types/at-uri';
 
 import { history } from '~/globals/navigation';
 

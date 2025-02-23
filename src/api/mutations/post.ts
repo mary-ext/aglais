@@ -7,7 +7,7 @@ import { useSession } from '~/lib/states/session';
 import { type PostShadowView, updatePostShadow } from '../cache/post-shadow';
 import { getCurrentDate } from '../utils/misc';
 import { createRecord, deleteRecord } from '../utils/records';
-import { parseAtUri } from '../utils/strings';
+import { parseAtUri } from '../types/at-uri';
 import { createToggleMutationQueue } from '../utils/toggle-mutation';
 
 export const createPostLikeMutation = (

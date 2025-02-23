@@ -9,8 +9,8 @@ import { moderateProfile } from '~/api/moderation/entities/profile';
 import { precacheProfile } from '~/api/queries-cache/profile-precache';
 import { createListMetaQuery } from '~/api/queries/list';
 import { createListMembersQuery } from '~/api/queries/list-members';
+import { makeAtUri } from '~/api/types/at-uri';
 import { trimRichText } from '~/api/utils/richtext';
-import { makeAtUri } from '~/api/utils/strings';
 
 import { useParams, useTitle } from '~/lib/navigation/router';
 import { inject } from '~/lib/states/singleton';

@@ -1,6 +1,6 @@
 import { For, createMemo } from 'solid-js';
 
-import { parseAtUri } from '~/api/utils/strings';
+import { parseAtUri } from '~/api/types/at-uri';
 
 import type { SavedFeed } from '~/lib/preferences/account';
 import { useSession } from '~/lib/states/session';

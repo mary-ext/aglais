@@ -8,7 +8,7 @@ import { moderateGeneric } from '~/api/moderation/entities/generic';
 import { moderateProfile } from '~/api/moderation/entities/profile';
 import { precacheProfile } from '~/api/queries-cache/profile-precache';
 import { createFeedMetaQuery } from '~/api/queries/feed';
-import { makeAtUri } from '~/api/utils/strings';
+import { makeAtUri } from '~/api/types/at-uri';
 
 import { useParams, useTitle } from '~/lib/navigation/router';
 import { inject } from '~/lib/states/singleton';
