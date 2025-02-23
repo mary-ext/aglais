@@ -9,7 +9,6 @@ import type {
 	Brand,
 } from '@atcute/client/lexicons';
 
-import { graphemeLen } from '~/api/utils/unicode';
 import { toShortUrl } from '~/api/utils/url';
 
 import { primarySystemLanguage } from '~/globals/locales';
@@ -155,37 +154,48 @@ export function isAltTextMissing(embed: PostEmbed): boolean {
 // Rich text parser
 export interface ParsedRichText {
 	tokens: RichToken[];
+	text: string;
 	length: number;
 	empty: boolean;
 }
 
 const S_RE = /^\s+$/;
-const reduceTokenLength = (accu: number, token: RichToken) => accu + graphemeLen(token.raw);
 
-export const parseRichText = (text: string): ParsedRichText => {
-	const tokens = tokenize(text);
+export const parseRichText = (input: string): ParsedRichText => {
+	const tokens = tokenize(input);
 
-	// We're just going to make use of `raw` as our definitive source of truth
-	// since we're not using them for anything else.
+	let output = '';
 	for (let idx = 0, len = tokens.length; idx < len; idx++) {
 		const token = tokens[idx];
-		const type = token.type;
 
-		if (type === 'autolink') {
-			token.raw = toShortUrl(token.url);
-		} else if (type === 'emote') {
-			token.raw = '●';
-		} else if (type === 'link') {
-			token.raw = token.text;
-		} else if (type === 'escape') {
-			token.raw = token.escaped;
+		switch (token.type) {
+			case 'autolink': {
+				output += toShortUrl(token.url);
+				break;
+			}
+			case 'emote': {
+				output += '●';
+				break;
+			}
+			case 'link': {
+				output += token.text;
+				break;
+			}
+			case 'escape': {
+				output += token.escaped;
+				break;
+			}
+			default: {
+				output += token.raw;
+			}
 		}
 	}
 
 	return {
 		tokens: tokens,
-		length: tokens.reduce(reduceTokenLength, 0),
-		empty: text.length === 0 || S_RE.test(text),
+		text: output,
+		length: output.length,
+		empty: input.length === 0 || S_RE.test(input),
 	};
 };
 

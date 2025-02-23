@@ -648,7 +648,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 		}
 	}
 
-	async function resolveRichText({ tokens }: ParsedRichText) {
+	async function resolveRichText({ text, tokens }: ParsedRichText) {
 		const facets: AppBskyRichtextFacet.Main[] = [];
 
 		let utf8Length = 0;
@@ -762,7 +762,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 			}
 		}
 
-		return { text: tokens.reduce((accu, token) => accu + token.raw, ''), facets: facets };
+		return { text, facets: facets };
 	}
 };
 
