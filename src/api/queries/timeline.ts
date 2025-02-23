@@ -37,10 +37,10 @@ import {
 	getModerationUI,
 } from '../moderation';
 import { ContextContentList, PreferenceHide, TargetContent } from '../moderation/constants';
+import { parseAtUri } from '../types/at-uri';
 import { EQUALS_DEQUAL } from '../utils/dequal';
 import { unwrapPostEmbedText } from '../utils/post';
 import { resetInfiniteData, wrapQuery } from '../utils/query';
-import { parseAtUri } from '../types/at-uri';
 
 type PostRecord = AppBskyFeedPost.Record;
 

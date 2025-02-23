@@ -6,8 +6,8 @@ import type {
 	AppBskyFeedThreadgate,
 } from '@atcute/client/lexicons';
 
-import { serializeRichText } from '~/api/utils/richtext-stringify';
 import { parseAtUri } from '~/api/types/at-uri';
+import { serializeRichText } from '~/api/utils/richtext-stringify';
 
 import { openModal, useModalContext } from '~/globals/modals';
 

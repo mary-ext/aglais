@@ -27,9 +27,9 @@ import { uploadBlob } from '~/api/queries/blob';
 import type { LinkMeta } from '~/api/queries/composer';
 import { resolveHandle } from '~/api/queries/handle';
 import { makeAtUri, parseAtUri } from '~/api/types/at-uri';
+import { isDid } from '~/api/types/identity';
 import { getRecord } from '~/api/utils/records';
 import { trimRichText } from '~/api/utils/richtext';
-import { isDid } from '~/api/types/identity';
 import { getUtf8Length } from '~/api/utils/unicode';
 
 import { compressPostImage } from '~/lib/bsky/image';

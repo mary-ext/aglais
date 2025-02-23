@@ -2,8 +2,8 @@ import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { updatePostShadow } from '~/api/cache/post-shadow';
-import { deleteRecord } from '~/api/utils/records';
 import { parseAtUri } from '~/api/types/at-uri';
+import { deleteRecord } from '~/api/utils/records';
 
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';

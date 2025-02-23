@@ -6,9 +6,9 @@ import { type QueryFunctionContext as QC, createInfiniteQuery, useQueryClient } 
 
 import { useAgent } from '~/lib/states/agent';
 
+import { parseAtUri } from '../types/at-uri';
 import { dequal } from '../utils/dequal';
 import { resetInfiniteData } from '../utils/query';
-import { parseAtUri } from '../types/at-uri';
 
 type Notification = AppBskyNotificationListNotifications.Notification;
 

@@ -5,9 +5,9 @@ import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
 import { type ProfileShadowView, updateProfileShadow } from '../cache/profile-shadow';
+import { parseAtUri } from '../types/at-uri';
 import { getCurrentDate } from '../utils/misc';
 import { createRecord, deleteRecord } from '../utils/records';
-import { parseAtUri } from '../types/at-uri';
 import { createToggleMutationQueue } from '../utils/toggle-mutation';
 
 export const createProfileFollowMutation = (
