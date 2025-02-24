@@ -3,15 +3,10 @@ import type { JSX } from 'solid-js';
 import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 import type { AppBskyRichtextFacet } from '@atcute/client/lexicons';
 
-import { isLinkValid, safeUrlParse } from '~/api/utils/strings';
+import { isLinkValid } from '~/api/utils/strings';
 
 import { getCdnUrl } from '~/lib/bluemoji/render';
-import {
-	BSKY_FEED_LINK_RE,
-	BSKY_LIST_LINK_RE,
-	BSKY_POST_LINK_RE,
-	BSKY_PROFILE_LINK_RE,
-} from '~/lib/bsky/link-detection';
+import { redirectBskyUrl } from '~/lib/redirector';
 
 export interface RichTextProps {
 	text: string;
@@ -50,9 +45,9 @@ const RichText = (props: RichTextProps) => {
 
 						if (type === 'app.bsky.richtext.facet#link') {
 							const uri = feature.uri;
-							const redirect = findLinkRedirect(uri);
+							const redirect = redirectBskyUrl(uri);
 
-							if (redirect === null) {
+							if (redirect == null) {
 								node = renderExternalLink(uri, subtext);
 							} else {
 								node = renderInternalLink(redirect, subtext);
@@ -143,36 +138,4 @@ const handleUnsafeLinkNavigation = (ev: MouseEvent) => {
 
 	if (isLinkValid(href, anchor.textContent ?? '')) {
 	}
-};
-
-const findLinkRedirect = (uri: string): string | null => {
-	const url = safeUrlParse(uri);
-
-	if (url === null) {
-		return null;
-	}
-
-	const host = url.host;
-	const pathname = url.pathname;
-	let match: RegExpExecArray | null | undefined;
-
-	if (host === 'bsky.app') {
-		if ((match = BSKY_PROFILE_LINK_RE.exec(pathname))) {
-			return `/${match[1]}`;
-		}
-
-		if ((match = BSKY_POST_LINK_RE.exec(pathname))) {
-			return `/${match[1]}/${match[2]}`;
-		}
-
-		if ((match = BSKY_LIST_LINK_RE.exec(pathname))) {
-			return `/${match[1]}/lists/${match[2]}`;
-		}
-
-		if ((match = BSKY_FEED_LINK_RE.exec(pathname))) {
-			return `/${match[1]}/feeds/${match[2]}`;
-		}
-	}
-
-	return null;
 };

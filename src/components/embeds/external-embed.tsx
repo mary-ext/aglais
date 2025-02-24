@@ -4,6 +4,7 @@ import type { AppBskyEmbedExternal } from '@atcute/client/lexicons';
 
 import { safeUrlParse } from '~/api/utils/strings';
 
+import { redirectBskyUrl } from '~/lib/redirector';
 import { on } from '~/lib/utils/misc';
 
 import PlaySolidIcon from '../icons-central/play-solid';
@@ -75,10 +76,12 @@ const ExternalEmbed = ({ embed, interactive }: ExternalEmbedProps) => {
 		}) as unknown as JSX.Element;
 	}
 
+	const redirectUrl = redirectBskyUrl(uri);
+
 	return (
 		<a
-			href={interactive ? uri : undefined}
-			target="_blank"
+			href={interactive ? redirectUrl || uri : undefined}
+			target={!redirectUrl ? '_blank' : undefined}
 			rel="noopener noreferrer nofollow"
 			class={
 				`flex overflow-hidden rounded-md border border-outline` +

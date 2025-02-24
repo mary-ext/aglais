@@ -3,15 +3,8 @@ import { For, type JSX, Match, Show, Switch, createMemo } from 'solid-js';
 import { type Token, tokenize } from '@atcute/bluesky-search-parser';
 import { min } from '@mary/date-fns';
 
-import { safeUrlParse } from '~/api/utils/strings';
-
-import {
-	BSKY_FEED_LINK_RE,
-	BSKY_LIST_LINK_RE,
-	BSKY_POST_LINK_RE,
-	BSKY_PROFILE_LINK_RE,
-} from '~/lib/bsky/link-detection';
 import { parseEndDate, parseStartDate, splitFilters } from '~/lib/bsky/search';
+import { redirectBskyUrl } from '~/lib/redirector';
 
 import MagnifyingGlassOutlinedIcon from '../icons-central/magnifying-glass-outline';
 
@@ -350,7 +343,7 @@ const SearchSuggestionsView = (props: SearchSuggestionsViewProps) => {
 							)}
 						</Show>
 
-						<Show when={findLinkRedirect(query())}>
+						<Show when={redirectBskyUrl(query())}>
 							{(redirect) => (
 								<a
 									href={redirect()}
@@ -467,38 +460,6 @@ const maybeMatchDid = (query: string): string | null => {
 
 	if (match) {
 		return match[0];
-	}
-
-	return null;
-};
-
-const findLinkRedirect = (uri: string): string | null => {
-	const url = safeUrlParse(uri);
-
-	if (url === null) {
-		return null;
-	}
-
-	const host = url.host;
-	const pathname = url.pathname;
-	let match: RegExpExecArray | null | undefined;
-
-	if (host === 'bsky.app') {
-		if ((match = BSKY_PROFILE_LINK_RE.exec(pathname))) {
-			return `/${match[1]}`;
-		}
-
-		if ((match = BSKY_POST_LINK_RE.exec(pathname))) {
-			return `/${match[1]}/${match[2]}`;
-		}
-
-		if ((match = BSKY_LIST_LINK_RE.exec(pathname))) {
-			return `/${match[1]}/lists/${match[2]}`;
-		}
-
-		if ((match = BSKY_FEED_LINK_RE.exec(pathname))) {
-			return `/${match[1]}/feeds/${match[2]}`;
-		}
 	}
 
 	return null;
