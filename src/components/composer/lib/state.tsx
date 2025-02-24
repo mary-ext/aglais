@@ -1,6 +1,5 @@
 import { unwrap } from 'solid-js/store';
 
-import { type Token as RichToken, tokenize } from '@atcute/bluesky-richtext-parser';
 import type {
 	AppBskyEmbedDefs,
 	AppBskyEmbedExternal,
@@ -8,8 +7,6 @@ import type {
 	At,
 	Brand,
 } from '@atcute/client/lexicons';
-
-import { toShortUrl } from '~/api/utils/url';
 
 import { primarySystemLanguage } from '~/globals/locales';
 
@@ -22,6 +19,8 @@ import {
 } from '~/lib/preferences/snippets/composer';
 
 import type { GifMedia } from '../gifs/gif-search-dialog';
+
+import { type ParsedRichText, parseRichText } from './richtext';
 
 // Embeds
 export interface PostGifEmbed {
@@ -150,54 +149,6 @@ export function isAltTextMissing(embed: PostEmbed): boolean {
 
 	return false;
 }
-
-// Rich text parser
-export interface ParsedRichText {
-	tokens: RichToken[];
-	text: string;
-	length: number;
-	empty: boolean;
-}
-
-const S_RE = /^\s+$/;
-
-export const parseRichText = (input: string): ParsedRichText => {
-	const tokens = tokenize(input);
-
-	let output = '';
-	for (let idx = 0, len = tokens.length; idx < len; idx++) {
-		const token = tokens[idx];
-
-		switch (token.type) {
-			case 'autolink': {
-				output += toShortUrl(token.url);
-				break;
-			}
-			case 'emote': {
-				output += '●';
-				break;
-			}
-			case 'link': {
-				output += token.text;
-				break;
-			}
-			case 'escape': {
-				output += token.escaped;
-				break;
-			}
-			default: {
-				output += token.raw;
-			}
-		}
-	}
-
-	return {
-		tokens: tokens,
-		text: output,
-		length: output.length,
-		empty: input.length === 0 || S_RE.test(input),
-	};
-};
 
 // Post state
 export interface PostState {

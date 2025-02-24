@@ -26,7 +26,7 @@ import { assert } from '~/lib/utils/invariant';
 import Avatar, { getUserAvatarType } from '../avatar';
 import CircularProgress from '../circular-progress';
 
-import type { ParsedRichText } from './lib/state';
+import type { ParsedRichText } from './lib/richtext';
 
 export interface ComposerInputProps {
 	ref?: (el: HTMLTextAreaElement) => void;
@@ -462,6 +462,8 @@ const buildHtml = ({ tokens }: ParsedRichText) => {
 				`<span class=opacity-50>](${escape(token.url, false)})</span>`;
 		} else if (type === 'escape') {
 			str += `<span class=opacity-50>\\</span>` + escape(token.escaped, false);
+		} else if (type === 'silent') {
+			str += `<span class=opacity-50>${escape(token.text, false)}</span>`;
 		} else {
 			str += escape(token.raw, false);
 		}

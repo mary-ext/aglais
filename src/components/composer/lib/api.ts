@@ -36,16 +36,15 @@ import { compressPostImage } from '~/lib/bsky/image';
 import type { AgentContext } from '~/lib/states/agent';
 import { assert, assertUnreachable } from '~/lib/utils/invariant';
 
+import { type ParsedRichText, parseRichText } from './richtext';
 import {
 	type ComposerState,
-	type ParsedRichText,
 	type PostEmbed,
 	type PostImage,
 	type PostLinkEmbed,
 	type PostMediaEmbed,
 	type PostRecordEmbed,
 	getEmbedLabels,
-	parseRichText,
 } from './state';
 
 export interface PublishOptions {
@@ -648,7 +647,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 		}
 	}
 
-	async function resolveRichText({ text, tokens }: ParsedRichText) {
+	async function resolveRichText({ tokens, hasSilent }: ParsedRichText) {
 		const facets: AppBskyRichtextFacet.Main[] = [];
 
 		let utf8Length = 0;
@@ -688,10 +687,17 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 					const did = response.data.did;
 
-					facets.push({
-						index: index,
-						features: [{ $type: 'app.bsky.richtext.facet#mention', did: did }],
-					});
+					if (!hasSilent) {
+						facets.push({
+							index: index,
+							features: [{ $type: 'app.bsky.richtext.facet#mention', did: did }],
+						});
+					} else {
+						facets.push({
+							index: index,
+							features: [{ $type: 'app.bsky.richtext.facet#link', uri: `https://bsky.app/profile/${did}` }],
+						});
+					}
 				} catch (err) {
 					if (err instanceof XRPCError && err.kind === 'InvalidRequest') {
 						throw new InvalidHandleError(handle);
@@ -762,7 +768,10 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 			}
 		}
 
-		return { text, facets: facets };
+		return {
+			text: tokens.reduce((accu, token) => accu + token.raw, ''),
+			facets: facets,
+		};
 	}
 };
 
