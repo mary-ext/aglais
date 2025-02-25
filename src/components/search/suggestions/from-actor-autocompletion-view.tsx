@@ -1,4 +1,4 @@
-import { For, Show } from 'solid-js';
+import { For, Show, createMemo } from 'solid-js';
 
 import { createQuery, keepPreviousData } from '@mary/solid-query';
 
@@ -20,12 +20,12 @@ const FromActorAutocompletionView = (props: {
 	const { rpc } = useAgent();
 	const isFocused = useIsFocused();
 
-	const match = () => props.match;
+	const match = createMemo(() => {
+		return props.match.replace(/^@|[.]+$/g, '').toLowerCase();
+	});
 
 	const profiles = createQuery(() => {
-		const $match = match()
-			.replace(/^@|[.]+$/g, '')
-			.toLowerCase();
+		const $match = match();
 
 		return {
 			queryKey: ['profile-autocomplete', $match],
@@ -44,7 +44,17 @@ const FromActorAutocompletionView = (props: {
 			},
 			select(data) {
 				return {
-					actors: data.actors.filter((profile) => profile.handle !== 'handle.invalid'),
+					actors: data.actors.filter((profile) => {
+						if (profile.handle === 'handle.invalid') {
+							return false;
+						}
+
+						if ($match === '' && profile.did === currentAccount?.did) {
+							return false;
+						}
+
+						return true;
+					}),
 				};
 			},
 		};
