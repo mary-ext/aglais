@@ -113,7 +113,7 @@ const MenuContainer = (props: MenuContainerProps) => {
 							});
 						}
 					}}
-					class="flex grow snap-y snap-mandatory flex-col-reverse self-stretch overflow-y-auto overscroll-none bg-contrast-overlay/40 scrollbar-hide"
+					class="flex grow snap-y snap-mandatory flex-col-reverse items-center self-stretch overflow-y-auto overscroll-none bg-contrast-overlay/40 scrollbar-hide"
 				>
 					<div class="relative max-h-[60svh] w-[540px] max-w-full shrink-0 grow">
 						<div class="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between">
