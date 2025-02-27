@@ -72,7 +72,7 @@ export function keyArray<T, U, K>(
 
 			// Insertion fast-path
 			if (prev.size === 0) {
-				if (fallback !== undefined) {
+				if (fallbackDispose !== undefined) {
 					fallbackDispose!();
 					fallbackDispose = undefined;
 				}
