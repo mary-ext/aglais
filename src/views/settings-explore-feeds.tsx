@@ -1,5 +1,4 @@
 import { createMemo } from 'solid-js';
-import { modifyMutable, reconcile } from 'solid-js/store';
 
 import { dequal } from '~/api/utils/dequal';
 
@@ -45,7 +44,7 @@ const ExploreFeedsSettingsPage = () => {
 
 	const apply = () => {
 		if (currentAccount) {
-			modifyMutable(currentAccount.preferences.feeds, reconcile(feeds()));
+			currentAccount.preferences.feeds = feeds();
 		}
 	};
 
