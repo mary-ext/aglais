@@ -110,6 +110,10 @@ const routes: RouteDefinition[] = [
 		path: '/settings/content/translation/exclusion',
 		component: lazy(() => import('./views/settings-content-translation-exclusion')),
 	},
+	{
+		path: '/settings/explore/feeds',
+		component: lazy(() => import('./views/settings-explore-feeds')),
+	},
 
 	{
 		path: '/bookmarks',

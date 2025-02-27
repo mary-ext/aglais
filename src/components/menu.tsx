@@ -235,7 +235,7 @@ const MenuItem = (props: MenuItemProps) => {
 	);
 };
 const menuItemClasses = ({ variant = 'default', disabled }: MenuItemProps) => {
-	let cn = `flex gap-3 px-4 py-3 text-left `;
+	let cn = `flex gap-3 px-4 py-3 text-left outline-2 -outline-offset-2 outline-accent focus-visible:outline `;
 
 	if (disabled) {
 		cn += ` opacity-50`;
