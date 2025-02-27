@@ -22,7 +22,7 @@ export interface MenuContainerProps {
 
 const MenuContainer = (props: MenuContainerProps) => {
 	const { close, isActive } = useModalContext();
-	const isDesktop = useMediaQuery('(width >= 688px) and (height >= 500px)');
+	const isDesktop = useMediaQuery('((width >= 688px) and (height >= 500px)) or (pointer: fine)');
 
 	return on(isDesktop, ($isDesktop) => {
 		if ($isDesktop) {
