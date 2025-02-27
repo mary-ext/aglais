@@ -83,7 +83,7 @@ const MyFeedsSection = () => {
 							) : null}
 
 							<span class="text-sm font-bold">
-								{(() => {
+								{((): string => {
 									switch (type) {
 										case 'generator': {
 											return feed.info.displayName;
