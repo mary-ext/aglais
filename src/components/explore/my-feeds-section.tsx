@@ -75,9 +75,9 @@ const MyFeedsSection = () => {
 							class="flex items-center gap-4 px-4 py-3 hover:bg-contrast/sm-pressed active:bg-contrast/md"
 						>
 							{type === 'generator' || type === 'list' ? (
-								<Avatar type={type} src={feed.info.avatar} />
+								<Avatar type={type} src={feed.info.avatar} size="sm" />
 							) : type === 'search' ? (
-								<div class="grid h-9 w-9 place-items-center rounded-md bg-accent text-xl text-accent-fg">
+								<div class="grid h-6 w-6 place-items-center rounded-md bg-accent text-sm text-accent-fg">
 									<MagnifyingGlassOutlinedIcon />
 								</div>
 							) : null}
