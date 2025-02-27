@@ -16,7 +16,7 @@
 		"@atcute/cbor": "^2.1.3",
 		"@atcute/cid": "^2.1.0",
 		"@atcute/client": "^2.0.8",
-		"@atcute/oauth-browser-client": "^1.0.13",
+		"@atcute/oauth-browser-client": "^1.0.14",
 		"@atcute/tid": "^1.0.2",
 		"@atlaskit/pragmatic-drag-and-drop": "^1.5.0",
 		"@atlaskit/pragmatic-drag-and-drop-hitbox": "^1.0.3",
@@ -50,8 +50,8 @@
 		"typescript": "5.7.2",
 		"vite": "6.0.5",
 		"vite-plugin-pwa": "0.21.0",
-		"vite-plugin-solid": "^2.11.2",
-		"wrangler": "^3.109.3"
+		"vite-plugin-solid": "^2.11.5",
+		"wrangler": "^3.111.0"
 	},
 	"pnpm": {
 		"patchedDependencies": {
