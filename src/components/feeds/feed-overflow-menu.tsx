@@ -31,35 +31,33 @@ const FeedOverflowMenu = (props: FeedOverflowMenuProps) => {
 
 	const feed = props.feed;
 
-	const isSaved = createMemo(() => {
+	const saved = createMemo(() => {
 		if (!currentAccount) {
-			return false;
+			return -1;
 		}
 
 		const feeds = currentAccount.preferences.feeds;
-		return feeds.some((f) => f.info.uri === feed.uri);
+		const index = feeds.findIndex((f) => f.type === 'generator' && f.info.uri === feed.uri);
+
+		return index;
 	});
 
 	return (
 		<Menu.Container anchor={props.anchor}>
 			{currentAccount && (
 				<Menu.Item
-					icon={!isSaved() ? AddOutlinedIcon : TrashOutlinedIcon}
-					label={!isSaved() ? `Save to my feeds` : `Remove from my feeds`}
+					icon={saved() === -1 ? AddOutlinedIcon : TrashOutlinedIcon}
+					label={saved() === -1 ? `Save to my feeds` : `Remove from my feeds`}
 					onClick={() => {
 						close();
 
 						const feeds = currentAccount.preferences.feeds;
+						const index = saved();
 
-						if (isSaved()) {
-							const index = feeds.findIndex((f) => f.info.uri === feed.uri);
+						if (index !== -1) {
 							feeds.splice(index, 1);
 						} else {
-							feeds.push({
-								type: 'generator',
-								pinned: false,
-								info: omit(feed, ['likeCount']),
-							});
+							feeds.push({ type: 'generator', pinned: false, info: omit(feed, ['likeCount']) });
 						}
 					}}
 				/>
