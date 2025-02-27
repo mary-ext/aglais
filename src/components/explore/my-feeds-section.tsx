@@ -4,9 +4,11 @@ import { parseAtUri } from '~/api/types/at-uri';
 
 import type { SavedFeed } from '~/lib/preferences/account';
 import { useSession } from '~/lib/states/session';
+import { assertUnreachable } from '~/lib/utils/invariant';
 import { reconcile } from '~/lib/utils/misc';
 
 import Avatar from '../avatar';
+import MagnifyingGlassOutlinedIcon from '../icons-central/magnifying-glass-outline';
 
 const MyFeedsSection = () => {
 	const { currentAccount } = useSession();
@@ -16,7 +18,17 @@ const MyFeedsSection = () => {
 	}
 
 	const feeds = createMemo((prev: SavedFeed[] | undefined) => {
-		return reconcile(prev, currentAccount.preferences.feeds, (item) => item.info.uri);
+		return reconcile(prev, currentAccount.preferences.feeds, (feed) => {
+			switch (feed.type) {
+				case 'generator':
+				case 'list': {
+					return `${feed.type}:${feed.info.uri}`;
+				}
+				case 'search': {
+					return `${feed.type}:${feed.query}:${feed.kind}`;
+				}
+			}
+		});
 	});
 
 	return (
@@ -36,13 +48,24 @@ const MyFeedsSection = () => {
 				{(feed) => {
 					const type = feed.type;
 
-					let href: string | undefined;
-					{
-						const uri = parseAtUri(feed.info.uri);
-						if (type === 'generator') {
+					let href: string;
+					switch (type) {
+						case 'generator': {
+							const uri = parseAtUri(feed.info.uri);
 							href = `/${uri.repo}/feeds/${uri.rkey}`;
-						} else if (type === 'list') {
+							break;
+						}
+						case 'list': {
+							const uri = parseAtUri(feed.info.uri);
 							href = `/${uri.repo}/lists/${uri.rkey}`;
+							break;
+						}
+						case 'search': {
+							href = `/search?q=${encodeURIComponent(feed.query)}&t=${feed.kind}`;
+							break;
+						}
+						default: {
+							assertUnreachable(feed);
 						}
 					}
 
@@ -51,13 +74,26 @@ const MyFeedsSection = () => {
 							href={href}
 							class="flex items-center gap-4 px-4 py-3 hover:bg-contrast/sm-pressed active:bg-contrast/md"
 						>
-							<Avatar type={feed.type} src={feed.info.avatar} />
+							{type === 'generator' || type === 'list' ? (
+								<Avatar type={type} src={feed.info.avatar} />
+							) : type === 'search' ? (
+								<div class="grid h-9 w-9 place-items-center rounded-md bg-accent text-xl text-accent-fg">
+									<MagnifyingGlassOutlinedIcon />
+								</div>
+							) : null}
+
 							<span class="text-sm font-bold">
 								{(() => {
-									if (type === 'generator') {
-										return feed.info.displayName;
-									} else if (type === 'list') {
-										return feed.info.name;
+									switch (type) {
+										case 'generator': {
+											return feed.info.displayName;
+										}
+										case 'list': {
+											return feed.info.name;
+										}
+										case 'search': {
+											return feed.name || feed.query;
+										}
 									}
 								})()}
 							</span>

@@ -31,7 +31,7 @@ export interface ModerationLabelerPreferences {
 	definitions: Record<At.DID, ModerationLabeler>;
 }
 
-export type SavedFeed = SavedGeneratorFeed | SavedListFeed;
+export type SavedFeed = SavedGeneratorFeed | SavedListFeed | SavedSearchFeed;
 
 export interface SavedGeneratorFeed {
 	readonly type: 'generator';
@@ -43,6 +43,13 @@ export interface SavedListFeed {
 	readonly type: 'list';
 	pinned: boolean;
 	info: AppBskyGraphDefs.ListView;
+}
+
+export interface SavedSearchFeed {
+	readonly type: 'search';
+	name: string;
+	query: string;
+	kind: string;
 }
 
 export interface PersistedThreadgate {

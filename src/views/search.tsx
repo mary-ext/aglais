@@ -3,7 +3,7 @@ import { Match, Suspense, Switch, batch, createEffect, createMemo, lazy, onClean
 import { tokenize } from '@atcute/bluesky-search-parser';
 import { Freeze, ShowFreeze } from '@mary/solid-freeze';
 
-import { hasModals } from '~/globals/modals';
+import { hasModals, openModal } from '~/globals/modals';
 
 import { parseEndDate, parseStartDate, splitFilters, stringifySearch } from '~/lib/bsky/search';
 import { createDerivedSignal } from '~/lib/hooks/derived-signal';
@@ -18,6 +18,7 @@ import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline
 import SearchBar from '~/components/main/search-bar';
 import * as Page from '~/components/page';
 import { SearchBarProvider } from '~/components/search/context';
+import SearchOverflowMenu from '~/components/search/search-overflow-menu';
 import SearchSuggestionsView from '~/components/search/search-suggestions-view';
 import TabBar from '~/components/tab-bar';
 
@@ -93,7 +94,15 @@ const SearchPage = () => {
 
 				{!isInputFocused() && (
 					<Page.HeaderAccessory>
-						<IconButton icon={MoreHorizOutlinedIcon} title="Search actions" />
+						<IconButton
+							icon={MoreHorizOutlinedIcon}
+							title="Search actions"
+							onClick={(ev) => {
+								const anchor = ev.currentTarget;
+
+								openModal(() => <SearchOverflowMenu anchor={anchor} query={params.q} kind={params.t} />);
+							}}
+						/>
 					</Page.HeaderAccessory>
 				)}
 			</Page.Header>
