@@ -5,9 +5,11 @@ import { safeUrlParse } from '~/api/utils/strings';
 import {
 	BSKY_FEED_LINK_RE,
 	BSKY_GO_SHORTLINK_RE,
+	BSKY_HASHTAG_LINK_RE,
 	BSKY_LIST_LINK_RE,
 	BSKY_POST_LINK_RE,
 	BSKY_PROFILE_LINK_RE,
+	BSKY_SEARCH_LINK_RE,
 	BSKY_STARTERPACK_LINK_RE,
 } from './bsky/url';
 
@@ -82,6 +84,22 @@ export const redirectBskyUrl = (rawUrl: string): string | null | undefined => {
 			}
 
 			return `/${actor}/packs/${rkey}`;
+		}
+
+		if ((match = BSKY_SEARCH_LINK_RE.exec(pathname))) {
+			const query = url.searchParams.get('q');
+
+			if (!query) {
+				return null;
+			}
+
+			return `/search?q=${encodeURIComponent(query)}`;
+		}
+
+		if ((match = BSKY_HASHTAG_LINK_RE.exec(pathname))) {
+			const [, tag] = match;
+
+			return `/search?q=${encodeURIComponent('#' + tag)}`;
 		}
 
 		return null;

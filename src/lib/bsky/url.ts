@@ -1,7 +1,9 @@
 export const BSKY_FEED_LINK_RE = /^\/profile\/([^/]+)\/feed\/([^/]+)\/?$/;
+export const BSKY_HASHTAG_LINK_RE = /^\/hashtag\/([^/]+)\/?$/;
 export const BSKY_LIST_LINK_RE = /^\/profile\/([^/]+)\/lists\/([^/]+)\/?$/;
 export const BSKY_POST_LINK_RE = /^\/profile\/([^/]+)\/post\/([^/]+)\/?$/;
 export const BSKY_PROFILE_LINK_RE = /^\/profile\/([^/]+)\/?$/;
+export const BSKY_SEARCH_LINK_RE = /^\/search\/?$/;
 export const BSKY_STARTERPACK_LINK_RE = /^\/(starter-pack|start)\/([^/]+)\/([^/]+)\/?$/;
 
 // go.bsky.app/<base58btc>
