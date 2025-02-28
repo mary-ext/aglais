@@ -84,7 +84,11 @@ const ExploreFeedsSettingsPage = () => {
 				</div>
 
 				<Reorderable list={feeds()} onReorder={setFeeds}>
-					<Key each={feeds()} by={getFeedId}>
+					<Key
+						each={feeds()}
+						by={getFeedId}
+						fallback={<p class="py-6 text-center text-base font-medium">No saved feeds yet.</p>}
+					>
 						{(feed, index) => {
 							const draggable = useReorderableItem({
 								index,
