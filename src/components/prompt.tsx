@@ -18,7 +18,7 @@ export interface PromptContainerProps {
 
 const PromptContainer = (props: PromptContainerProps) => {
 	const { close, isActive } = useModalContext();
-	const isDesktop = useMediaQuery('(width >= 688px) and (height >= 500px)');
+	const isDesktop = useMediaQuery('((width >= 480px) and (height >= 500px))');
 
 	const isDisabled = () => !!props.disabled;
 
@@ -43,9 +43,13 @@ const PromptContainer = (props: PromptContainerProps) => {
 		} else {
 			return (
 				<Fieldset standalone disabled={isDisabled()}>
-					<div class="flex grow flex-col self-stretch overflow-y-auto bg-contrast-overlay/40">
+					<div class="flex grow flex-col items-center self-stretch overflow-y-auto bg-contrast-overlay/40">
 						<div class="h-[40dvh] shrink-0"></div>
-						<div ref={containerRef} role="menu" class="mt-auto flex flex-col rounded-t-xl bg-background p-4">
+						<div
+							ref={containerRef}
+							role="menu"
+							class="mt-auto flex w-full max-w-120 flex-col rounded-t-xl bg-background p-4"
+						>
 							{props.children}
 						</div>
 					</div>

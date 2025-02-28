@@ -11,11 +11,13 @@ import { history } from '~/globals/navigation';
 
 import { useParams, useTitle } from '~/lib/navigation/router';
 
+import Avatar from '~/components/avatar';
 import CircularProgressView from '~/components/circular-progress-view';
 import ErrorView from '~/components/error-view';
+import FeedInfoPrompt from '~/components/feeds/feed-info-prompt';
 import FeedOverflowMenu from '~/components/feeds/feed-overflow-menu';
 import IconButton from '~/components/icon-button';
-import CircleInfoOutlinedIcon from '~/components/icons-central/circle-info-outline';
+import ChevronRightOutlinedIcon from '~/components/icons-central/chevron-right-outline';
 import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
 import * as Page from '~/components/page';
 import TimelineList from '~/components/timeline/timeline-list';
@@ -44,7 +46,8 @@ const FeedPage = () => {
 					<Page.Back to={`/${didOrHandle}`} />
 				</Page.HeaderAccessory>
 
-				<Page.Heading
+				<Avatar type="generator" src={meta.data?.avatar} size={null} class="-ml-4 h-7 w-7" />
+				{/* <Page.Heading
 					title={(() => {
 						const feed = meta.data;
 						if (feed) {
@@ -53,19 +56,31 @@ const FeedPage = () => {
 
 						return `Feed`;
 					})()}
-				/>
+				/> */}
+
+				<div class="flex min-w-0 grow">
+					<button
+						disabled={!meta.data}
+						onClick={() => {
+							const feed = meta.data;
+							if (!feed) {
+								return;
+							}
+
+							openModal(() => <FeedInfoPrompt feed={feed} />);
+						}}
+						class="-mx-2 flex items-center gap-1 overflow-hidden rounded px-2 py-1 hover:bg-contrast-hinted/md active:bg-contrast-hinted/md-pressed"
+					>
+						<span class="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold">
+							{meta.data?.displayName.trim() || 'Feed'}
+						</span>
+						<ChevronRightOutlinedIcon class="-mr-1 shrink-0 rotate-90 text-lg text-contrast-muted" />
+					</button>
+				</div>
 
 				<Show when={meta.data}>
 					{(feed) => (
 						<Page.HeaderAccessory>
-							<IconButton
-								title="Feed information"
-								icon={CircleInfoOutlinedIcon}
-								onClick={() => {
-									history.navigate(`/${didOrHandle}/feeds/${rkey}/info`);
-								}}
-							/>
-
 							<IconButton
 								title="More actions"
 								icon={MoreHorizOutlinedIcon}

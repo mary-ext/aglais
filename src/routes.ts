@@ -206,13 +206,6 @@ const routes: RouteDefinition[] = [
 			return isValidDidOrHandle(params.didOrHandle);
 		},
 	},
-	{
-		path: '/:did/feeds/:rkey/info',
-		component: lazy(() => import('./views/profile-feed-info')),
-		validate(params) {
-			return isValidDidOrHandle(params.did);
-		},
-	},
 
 	{
 		path: '/:did/lists',
