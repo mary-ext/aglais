@@ -137,7 +137,7 @@ const ExploreFeedsSettingsPage = () => {
 								>
 									<DropIndicator edge={draggable.edge} />
 									<DraggablePreview container={draggable.preview}>
-										<div class="flex max-w-80 items-center gap-2 rounded border border-outline bg-background p-2">
+										<div class="flex max-w-64 items-center gap-2 rounded border border-outline bg-background p-2">
 											{type === 'generator' || type === 'list' ? (
 												<Avatar
 													type={type}
