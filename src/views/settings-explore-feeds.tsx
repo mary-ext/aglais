@@ -55,7 +55,7 @@ const ExploreFeedsSettingsPage = () => {
 					<Page.Back to="/explore" />
 				</Page.HeaderAccessory>
 
-				<Page.Heading title="My feeds" />
+				<Page.Heading title="My saved feeds" />
 
 				<Page.HeaderAccessory>
 					{!isEqual() && (
