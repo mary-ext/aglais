@@ -133,7 +133,7 @@ const ExploreFeedsSettingsPage = () => {
 									ref={(node) => {
 										draggable.refs.element(node);
 									}}
-									class="relative flex shrink-0 cursor-grab select-none items-center gap-4 px-4 py-3 hover:bg-contrast/sm-pressed"
+									class="relative flex shrink-0 cursor-grab select-none items-center gap-4 px-4 py-3 hover:bg-contrast/sm"
 								>
 									<DropIndicator edge={draggable.edge} />
 									<DraggablePreview container={draggable.preview}>
