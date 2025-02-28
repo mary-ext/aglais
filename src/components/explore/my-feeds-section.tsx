@@ -36,11 +36,7 @@ const MyFeedsSection = () => {
 			<div class="flex h-12 items-center justify-between gap-4 px-4">
 				<span class="text-base font-bold">My feeds</span>
 
-				<a
-					hidden={feeds().length === 0}
-					href="/settings/explore/feeds"
-					class="text-de text-accent hover:underline"
-				>
+				<a href="/settings/explore/feeds" class="text-de text-accent hover:underline">
 					Edit
 				</a>
 			</div>
