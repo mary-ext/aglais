@@ -156,7 +156,7 @@ const ExploreFeedsSettingsPage = () => {
 										<Avatar
 											type={type}
 											src={(feed() as SavedGeneratorFeed | SavedListFeed).info.avatar}
-											class="my-0.5"
+											class="pointer-events-none my-0.5"
 										/>
 									) : type === 'search' ? (
 										<div class="my-0.5 grid h-9 w-9 place-items-center rounded-md bg-accent text-xl text-accent-fg">
