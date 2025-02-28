@@ -19,8 +19,8 @@ const edgeToOrientation: Record<Edge, Orientation> = {
 };
 
 const orientationStyles: Record<Orientation, string> = {
-	horizontal: 'left-2 right-2',
-	vertical: 'top-2 bottom-2',
+	horizontal: 'left-4 right-4',
+	vertical: 'top-4 bottom-4',
 };
 
 const DropIndicator = (props: DropIndicatorProps) => {
