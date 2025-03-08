@@ -612,14 +612,14 @@ const PostAction = (props: {
 		if (video) {
 			let next = post.embed.media;
 			if (!next) {
-				if (video.size > 50_000_000) {
-					onError(`Video can't be more than 50 MB in size`);
+				if (video.size > 100_000_000) {
+					onError(`Video can't be more than 100 MB in size`);
 					return;
 				}
 
 				const metadata = await getVideoMetadata(video);
-				if (metadata.duration > 60) {
-					onError(`Video must be less than 60 seconds in duration`);
+				if (metadata.duration > 180.5) {
+					onError(`Video must be less than 3 minutes in duration`);
 					return;
 				}
 
