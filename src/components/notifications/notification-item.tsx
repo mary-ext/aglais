@@ -2,11 +2,15 @@ import { type Component, type ComponentProps, type JSX, createMemo } from 'solid
 
 import type {
 	AppBskyEmbedImages,
+	AppBskyFeedDefs,
 	AppBskyFeedPost,
 	AppBskyNotificationListNotifications,
 } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
+import { getModerationUI } from '~/api/moderation';
+import { ContextContentMedia } from '~/api/moderation/constants';
+import { moderatePost } from '~/api/moderation/entities/post';
 import { moderateProfile } from '~/api/moderation/entities/profile';
 import { precacheProfile } from '~/api/queries-cache/profile-precache';
 import type {
@@ -244,7 +248,7 @@ const renderAccessory = (data: FollowNotificationSlice | LikeNotificationSlice |
 				{
 					/* @once */ media &&
 						(media.$type === 'app.bsky.embed.images#view' ? (
-							<ImageAccessory images={/* @once */ media.images} />
+							<ImageAccessory post={post} images={/* @once */ media.images} />
 						) : gif ? (
 							<GifAccessory snippet={gif} />
 						) : null)
@@ -254,11 +258,25 @@ const renderAccessory = (data: FollowNotificationSlice | LikeNotificationSlice |
 	}
 };
 
-const ImageAccessory = ({ images }: { images: AppBskyEmbedImages.ViewImage[] }) => {
+const ImageAccessory = ({
+	post,
+	images,
+}: {
+	post: AppBskyFeedDefs.PostView;
+	images: AppBskyEmbedImages.ViewImage[];
+}) => {
+	const moderationOptions = inject(ModerationService);
+
+	const moderation = createMemo(() => moderatePost(post, moderationOptions()));
+	const shouldBlurMedia = createMemo(() => getModerationUI(moderation(), ContextContentMedia).b.length !== 0);
+
 	const nodes = images.map((img) => {
 		return (
 			<div class="shrink-0 overflow-hidden rounded bg-background">
-				<img src={/* @once */ img.fullsize} class="h-32 w-32 object-cover opacity-75" />
+				<img
+					src={/* @once */ img.fullsize}
+					class={`h-32 w-32 object-cover opacity-75` + (shouldBlurMedia() ? ` scale-125 blur` : ``)}
+				/>
 			</div>
 		);
 	});
