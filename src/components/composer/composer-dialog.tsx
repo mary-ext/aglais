@@ -586,24 +586,28 @@ const PostAction = (props: {
 
 	const onError = props.onError;
 
-	const canAddPost = () => {
+	const canAddPost = createMemo((): boolean => {
 		if (!props.canAddPost) {
 			return false;
 		}
 
 		const post = props.post;
-
 		const embed = post.embed;
-		const richtext = getPostRt(post);
-		const rtLength = richtext.length;
 
-		return (embed || rtLength > 0) && rtLength < MAX_TEXT_LENGTH;
-	};
+		return (
+			embed.link !== undefined ||
+			embed.media !== undefined ||
+			embed.record !== undefined ||
+			getPostRt(post).length > 0
+		);
+	});
 
-	const canEmbedImageOrVideo = () => {
-		const media = props.post.embed.media;
-		return !media || (media.type === 'image' && media.images.length < MAX_IMAGES);
-	};
+	const canEmbedImageOrVideo = createMemo((): boolean => {
+		const post = props.post;
+		const media = post.embed.media;
+
+		return media === undefined || (media.type === 'image' && media.images.length < MAX_IMAGES);
+	});
 
 	const addImagesOrVideo = async (blobs: Blob[]) => {
 		const post = props.post;
