@@ -18,21 +18,21 @@
 		"@atcute/client": "^2.0.8",
 		"@atcute/oauth-browser-client": "^1.0.15",
 		"@atcute/tid": "^1.0.2",
-		"@atlaskit/pragmatic-drag-and-drop": "^1.5.0",
+		"@atlaskit/pragmatic-drag-and-drop": "^1.5.1",
 		"@atlaskit/pragmatic-drag-and-drop-hitbox": "^1.0.3",
 		"@floating-ui/dom": "^1.6.13",
 		"@floating-ui/utils": "^0.2.9",
 		"@mary/array-fns": "npm:@jsr/mary__array-fns@^0.1.4",
 		"@mary/async-iterator-fns": "npm:@jsr/mary__async-iterator-fns@^0.1.1",
-		"@mary/date-fns": "npm:@jsr/mary__date-fns@^0.1.2",
+		"@mary/date-fns": "npm:@jsr/mary__date-fns@^0.1.3",
 		"@mary/events": "npm:@jsr/mary__events@^0.1.0",
-		"@mary/exif-rm": "npm:@jsr/mary__exif-rm@^0.2.1",
+		"@mary/exif-rm": "npm:@jsr/mary__exif-rm@^0.2.2",
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
 		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.5",
 		"comlink": "^4.4.2",
 		"hls.js": "^1.5.20",
 		"idb": "^8.0.2",
-		"nanoid": "^5.1.3",
+		"nanoid": "^5.1.4",
 		"solid-floating-ui": "~0.2.1",
 		"solid-js": "^1.9.5",
 		"webm-muxer": "^5.0.3"
@@ -41,7 +41,7 @@
 		"@trivago/prettier-plugin-sort-imports": "^5.2.2",
 		"@types/dom-close-watcher": "^1.0.0",
 		"@types/dom-webcodecs": "^0.1.14",
-		"autoprefixer": "^10.4.20",
+		"autoprefixer": "^10.4.21",
 		"babel-plugin-transform-typescript-const-enums": "^0.1.0",
 		"prettier": "^3.5.3",
 		"prettier-plugin-tailwindcss": "^0.6.11",
@@ -51,7 +51,7 @@
 		"vite": "6.0.5",
 		"vite-plugin-pwa": "0.21.0",
 		"vite-plugin-solid": "^2.11.6",
-		"wrangler": "^3.114.0"
+		"wrangler": "^4.0.0"
 	},
 	"pnpm": {
 		"patchedDependencies": {
@@ -65,6 +65,9 @@
 			"is-core-module": "npm:@nolyfill/is-core-module@^1",
 			"safe-buffer": "npm:@nolyfill/safe-buffer@^1",
 			"string.prototype.matchall": "npm:@nolyfill/string.prototype.matchall@^1"
-		}
+		},
+		"onlyBuiltDependencies": [
+			"esbuild"
+		]
 	}
 }
