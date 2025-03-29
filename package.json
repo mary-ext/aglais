@@ -30,12 +30,12 @@
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
 		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.5",
 		"comlink": "^4.4.2",
-		"hls.js": "^1.5.20",
+		"hls.js": "^1.6.0",
 		"idb": "^8.0.2",
 		"nanoid": "^5.1.5",
 		"solid-floating-ui": "~0.2.1",
 		"solid-js": "^1.9.5",
-		"webm-muxer": "^5.1.0"
+		"webm-muxer": "^5.1.1"
 	},
 	"devDependencies": {
 		"@trivago/prettier-plugin-sort-imports": "^5.2.2",
@@ -51,7 +51,7 @@
 		"vite": "6.0.5",
 		"vite-plugin-pwa": "0.21.0",
 		"vite-plugin-solid": "^2.11.6",
-		"wrangler": "^4.4.0"
+		"wrangler": "^4.6.0"
 	},
 	"pnpm": {
 		"patchedDependencies": {
