@@ -82,8 +82,8 @@ importers:
         specifier: npm:@jsr/mary__date-fns@^0.1.3
         version: '@jsr/mary__date-fns@0.1.3'
       '@mary/events':
-        specifier: npm:@jsr/mary__events@^0.1.0
-        version: '@jsr/mary__events@0.1.0'
+        specifier: npm:@jsr/mary__events@^0.2.0
+        version: '@jsr/mary__events@0.2.0'
       '@mary/exif-rm':
         specifier: npm:@jsr/mary__exif-rm@^0.2.2
         version: '@jsr/mary__exif-rm@0.2.2'
@@ -1228,8 +1228,8 @@ packages:
   '@jsr/mary__date-fns@0.1.3':
     resolution: {integrity: sha512-kjS04BESEHO9ZTqjOxk4ip8DsAdVDmt/jC5V4zVIYq3VD/04+WJK9kjdQda23eVZMuF9ZZY0zMswU7UXG+PSrg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__date-fns/0.1.3.tgz}
 
-  '@jsr/mary__events@0.1.0':
-    resolution: {integrity: sha512-oS6jVOaXTaNEa6avRncwrEtUYaBKrq/HEybPa9Z3aoeMs+RSly0vn0KcOj/fy2H6iTBkeh3wa8+/9nFjhKyKIg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__events/0.1.0.tgz}
+  '@jsr/mary__events@0.2.0':
+    resolution: {integrity: sha512-WcBRbtuTno3zcfXKd7SEeKr1lAJF+CQ8BCv+PEEMmNKNqFurkEksGxRB3UDPZxIxjJ7sAqMVTL26wRuMpAcIeA==, tarball: https://npm.jsr.io/~/11/@jsr/mary__events/0.2.0.tgz}
 
   '@jsr/mary__exif-rm@0.2.2':
     resolution: {integrity: sha512-+ZpLaC+1CyqWhH608Sqd6/yTG0pOlokn2tCXha7s1SMQ+GLKo4Nn/PskTeeP9Pt+6gNYSu6ednoSlRvXb2ZGxg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__exif-rm/0.2.2.tgz}
@@ -3731,7 +3731,7 @@ snapshots:
 
   '@jsr/mary__date-fns@0.1.3': {}
 
-  '@jsr/mary__events@0.1.0': {}
+  '@jsr/mary__events@0.2.0': {}
 
   '@jsr/mary__exif-rm@0.2.2': {}
 

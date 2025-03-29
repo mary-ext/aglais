@@ -90,7 +90,7 @@ interface RouteEvent {
 	enter: boolean;
 }
 
-const routerEvents = new EventEmitter<{ [key: string]: (event: RouteEvent) => void }>();
+const routerEvents = new EventEmitter<{ [key: string]: [event: RouteEvent] }>();
 
 export { routerEvents as UNSAFE_routerEvents };
 

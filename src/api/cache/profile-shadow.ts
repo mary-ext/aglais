@@ -33,7 +33,7 @@ type AllProfileView =
 	| AppBskyActorDefs.ProfileViewBasic
 	| AppBskyActorDefs.ProfileViewDetailed;
 
-const emitter = new EventEmitter<{ [uri: At.DID]: () => void }>();
+const emitter = new EventEmitter<{ [uri: At.DID]: [] }>();
 const shadows = new WeakMap<AllProfileView, ProfileShadow>();
 
 export const useProfileShadow = (profile: AccessorMaybe<AllProfileView>): Accessor<ProfileShadowView> => {

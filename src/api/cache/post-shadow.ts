@@ -32,7 +32,7 @@ export interface PostShadowView {
 	threadMuted: boolean;
 }
 
-const emitter = new EventEmitter<{ [uri: string]: () => void }>();
+const emitter = new EventEmitter<{ [uri: string]: [] }>();
 const shadows = new WeakMap<AppBskyFeedDefs.PostView, PostShadow>();
 
 export const usePostShadow = (post: AccessorMaybe<AppBskyFeedDefs.PostView>): Accessor<PostShadowView> => {
