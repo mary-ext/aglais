@@ -27,9 +27,21 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 		capLevelToPlayerSize: true,
 		startLevel: 1,
 		xhrSetup(xhr, urlString) {
+			// We want to replace the URL here so it points directly to the CDN,
+			// and not the middleware service.
+			//
+			// The problem here is that the original playlist.m3u8 file doesn't
+			// contain definitions for the captions, they're added in by the
+			// middleware service.
+			//
+			// Hence this exception.
+			if (!urlString.endsWith('/playlist.m3u8')) {
+				urlString = replaceVideoCdnUrl(urlString);
+			}
+
 			const url = new URL(urlString);
 
-			// Just in case it fails, we'll remove `session_id` everywhere
+			// Remove `session_id` everywhere
 			url.searchParams.delete('session_id');
 
 			xhr.open('get', url.toString());
@@ -38,7 +50,7 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 
 	onCleanup(() => hls.destroy());
 
-	hls.loadSource(replaceVideoCdnUrl(embed.playlist));
+	hls.loadSource(embed.playlist);
 
 	return (
 		<div class="contents">
