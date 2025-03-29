@@ -126,8 +126,6 @@ export const configureRouter = ({ history, logger: log, routes }: RouterOptions)
 	}
 
 	_cleanup = createRoot((cleanup) => {
-		createEventListener;
-
 		onCleanup(
 			history.listen(({ action, location: nextEntry }) => {
 				const currentEntry = _entry;
