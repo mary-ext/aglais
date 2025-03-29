@@ -74,8 +74,8 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 									}
 								/>
 
-								<div class="absolute left-1/2 top-1/2 grid -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-p-neutral-700/60 p-3 hover:bg-p-neutral-700/80">
-									<PlaySolidIcon class="text-xl" />
+								<div class="absolute left-1/2 top-1/2 grid aspect-square h-2/5 max-h-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-p-neutral-700/60 text-white backdrop-blur hover:bg-p-neutral-700/80">
+									<PlaySolidIcon class="h-2/5 w-2/5" />
 								</div>
 							</button>
 						}
