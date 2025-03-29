@@ -48,14 +48,20 @@ const VideoEmbed = (props: VideoEmbedProps) => {
 		>
 			<div class={cn} style={{ 'aspect-ratio': ratio }}>
 				{!interactive ? (
-					<img
-						alt={/* @once */ embed.alt}
-						src={/* @once */ embed.thumbnail && replaceVideoCdnUrl(embed.thumbnail)}
-						class={
-							`h-full w-full object-contain` +
-							(props.blur ? ` scale-125 ${borderless ? `blur-xl` : `blur`}` : ``)
-						}
-					/>
+					<>
+						<img
+							alt={/* @once */ embed.alt}
+							src={/* @once */ embed.thumbnail && replaceVideoCdnUrl(embed.thumbnail)}
+							class={
+								`h-full w-full object-contain` +
+								(props.blur ? ` scale-125 ${borderless ? `blur-xl` : `blur`}` : ``)
+							}
+						/>
+
+						<div class="absolute left-1/2 top-1/2 grid aspect-square h-2/5 max-h-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-p-neutral-700/60 text-white backdrop-blur">
+							<PlaySolidIcon class="h-2/5 w-2/5" />
+						</div>
+					</>
 				) : (
 					<Show
 						when={loaded()}
