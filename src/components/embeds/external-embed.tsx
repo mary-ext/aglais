@@ -55,7 +55,7 @@ const ExternalEmbed = ({ embed, interactive }: ExternalEmbedProps) => {
 					>
 						{thumb && <img src={thumb} class="h-full w-full object-cover" />}
 
-						<div class="absolute left-1/2 top-1/2 grid aspect-square h-2/5 max-h-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-p-neutral-700/60 text-white backdrop-blur hover:bg-p-neutral-700/80">
+						<div class="absolute left-1/2 top-1/2 grid aspect-square h-2/5 max-h-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-p-neutral-700/60 text-white backdrop-blur-sm hover:bg-p-neutral-700/80">
 							<PlaySolidIcon class="h-2/5 w-2/5" />
 						</div>
 					</button>
