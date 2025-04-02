@@ -5,6 +5,8 @@ import { precacheProfile } from '~/api/queries-cache/profile-precache';
 
 import { openModal } from '~/globals/modals';
 
+import Avatar from '../avatar';
+import HeartSolidIcon from '../icons-central/heart-solid';
 import MoreHorizOutlinedIcon from '../icons-central/more-horiz-outline';
 import TimeAgo from '../time-ago';
 
@@ -13,16 +15,27 @@ import PostOverflowMenu from './post-overflow-menu';
 export interface PostMetaProps {
 	/** Expected to be static */
 	post: AppBskyFeedDefs.PostView;
+	context?: AppBskyFeedDefs.ThreadContext;
+	/** Expected to be static */
 	authorHref: string;
+	/** Expected to be static */
 	href: string;
-	compact?: boolean;
+	/** Expected to be static */
 	gutterBottom?: boolean;
 	onPostDelete?: () => void;
 	onPostRedraft?: () => void;
 }
 
-const PostMeta = ({ post, authorHref, href, gutterBottom, onPostDelete, onPostRedraft }: PostMetaProps) => {
+const PostMeta = (props: PostMetaProps) => {
 	const queryClient = useQueryClient();
+
+	const post = props.post;
+	const href = props.href;
+	const authorHref = props.authorHref;
+	const gutterBottom = props.gutterBottom;
+
+	const onPostDelete = props.onPostDelete;
+	const onPostRedraft = props.onPostRedraft;
 
 	const author = post.author;
 	const indexedAt = post.indexedAt;
@@ -53,7 +66,14 @@ const PostMeta = ({ post, authorHref, href, gutterBottom, onPostDelete, onPostRe
 				</TimeAgo>
 			</div>
 
-			<div class="shrink-0">
+			<div class="flex shrink-0 items-center gap-4">
+				{props.context?.rootAuthorLike && (
+					<div class="relative">
+						<Avatar type="user" size={null} class="h-[18px] w-[18px]" />
+						<HeartSolidIcon class="absolute -bottom-1 -left-1.5 h-[14px] w-[14px] stroke-background stroke-[3] text-p-red-600" />
+					</div>
+				)}
+
 				<button
 					onClick={(ev) => {
 						const anchor = ev.currentTarget;

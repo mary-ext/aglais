@@ -69,6 +69,7 @@ export interface OverflowDescendantItem extends BaseDescendant {
 export interface PostDescendantItem extends BaseDescendant {
 	type: 'post';
 	post: AppBskyFeedDefs.PostView;
+	context: AppBskyFeedDefs.ThreadContext | undefined;
 	prev: boolean;
 	next: boolean;
 }
@@ -329,6 +330,7 @@ export const createThreadData = ({
 						id: post.uri,
 						type: 'post',
 						post: post,
+						context: reply.threadContext,
 						prev: depth !== 0,
 						next: children.length !== 0,
 						lines: nlines,

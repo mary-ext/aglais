@@ -113,6 +113,7 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 					<div class="min-w-0 grow py-3">
 						<PostMeta
 							post={/* @once */ post()}
+							context={(item() as PostDescendantItem).context}
 							href={href}
 							authorHref={authorHref}
 							gutterBottom

@@ -1,11 +1,12 @@
 import { modifyMutable, reconcile } from 'solid-js/store';
 
-import type { AppBskyActorDefs } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
+import { findProfilesInCache } from '../cache/profile-shadow';
 import { dequal } from '../utils/dequal';
 
 export interface ProfileQueryOptions {
@@ -50,7 +51,14 @@ export const createProfileQuery = (didOrHandle: () => string, opts: ProfileQuery
 				return data;
 			},
 			placeholderData(): AppBskyActorDefs.ProfileViewDetailed | undefined {
-				return queryClient.getQueryData(['profile-precache', $didOrHandle]);
+				const precache = queryClient.getQueryData(['profile-precache', $didOrHandle]);
+				if (precache) {
+					return precache as any;
+				}
+
+				for (const profile of findProfilesInCache(queryClient, $didOrHandle as At.DID)) {
+					return profile as any;
+				}
 			},
 			initialData(): AppBskyActorDefs.ProfileViewDetailed | undefined {
 				if (currentAccount !== undefined && currentAccount.did === $didOrHandle) {
