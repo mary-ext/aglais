@@ -43,7 +43,7 @@ const PromptContainer = (props: PromptContainerProps) => {
 		} else {
 			return (
 				<Fieldset standalone disabled={isDisabled()}>
-					<div class="flex grow flex-col items-center self-stretch overflow-y-auto bg-contrast-overlay/40">
+					<div class="flex grow flex-col items-center self-stretch overflow-y-auto bg-contrast-overlay/75">
 						<div class="h-[40dvh] shrink-0"></div>
 						<div
 							ref={containerRef}

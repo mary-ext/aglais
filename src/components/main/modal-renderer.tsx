@@ -62,7 +62,7 @@ const FallbackLoader = () => {
 	return (
 		<>
 			{/* <Dialog.Backdrop> */}
-			<div class="fixed inset-0 z-0 bg-contrast-overlay/40"></div>
+			<div class="fixed inset-0 z-0 bg-contrast-overlay/75"></div>
 			<div class="grid grow place-items-center">
 				{/* <CircularProgress> */}
 				<svg viewBox="0 0 32 32" class="animate-spin" style="height:24px;width:24px">

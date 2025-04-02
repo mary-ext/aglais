@@ -10,7 +10,7 @@ import IconButton from './icon-button';
 import CrossLargeOutlinedIcon from './icons-central/cross-large-outline';
 
 const DialogBackdrop = () => {
-	return <div class="fixed inset-0 z-0 bg-contrast-overlay/40"></div>;
+	return <div class="fixed inset-0 z-0 bg-contrast-overlay/75"></div>;
 };
 
 export { DialogBackdrop as Backdrop };

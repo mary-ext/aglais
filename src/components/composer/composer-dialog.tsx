@@ -853,7 +853,7 @@ const MediaDnd = (props: { onAddMedia: (blobs: Blob[]) => void }) => {
 		}
 
 		return (
-			<div class="pointer-events-none fixed inset-0 z-1 flex items-center justify-center bg-contrast-overlay/40">
+			<div class="pointer-events-none fixed inset-0 z-1 flex items-center justify-center bg-contrast-overlay/75">
 				<div class="rounded-lg bg-background p-2">
 					<p class="rounded border-2 border-dashed border-outline px-9 py-11">Drop to add images</p>
 				</div>
