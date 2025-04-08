@@ -38,12 +38,14 @@ export const stringifySearch = (tokens: Token[], filters?: Map<string, string>):
 	let query = '';
 
 	for (const token of tokens) {
+		query && (query += ' ');
 		query += token.value;
 	}
 
 	if (filters !== undefined) {
 		for (const [op, value] of filters) {
-			query += ` ${op}:${value}`;
+			query && (query += ' ');
+			query += `${op}:${value}`;
 		}
 	}
 
