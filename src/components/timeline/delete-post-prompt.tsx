@@ -1,9 +1,9 @@
-import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+import { XRPCError } from '@atcute/client';
+import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { updatePostShadow } from '~/api/cache/post-shadow';
 import { parseAtUri } from '~/api/types/at-uri';
-import { deleteRecord } from '~/api/utils/records';
 
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
@@ -25,17 +25,57 @@ const DeletePostPrompt = ({ post, onPostDelete }: DeletePostPromptProps) => {
 
 	const onDelete = () => {
 		const uri = parseAtUri(post.uri);
-		const promise = deleteRecord(rpc, {
-			repo: currentAccount!.did,
-			collection: 'app.bsky.feed.post',
-			rkey: uri.rkey,
+
+		const promise = rpc.call('com.atproto.repo.applyWrites', {
+			data: {
+				repo: currentAccount!.did,
+				writes: [
+					{
+						$type: 'com.atproto.repo.applyWrites#delete',
+						collection: 'app.bsky.feed.post',
+						rkey: uri.rkey,
+					},
+				],
+			},
 		});
 
 		updatePostShadow(queryClient, post.uri, { deleted: true });
 
-		if (onPostDelete) {
-			promise.then(onPostDelete);
-		}
+		promise.then(
+			() => {
+				onPostDelete?.();
+			},
+			async (err) => {
+				if (err instanceof XRPCError && err.kind === 'InternalServerError') {
+					await rpc.call('com.atproto.repo.putRecord', {
+						data: {
+							repo: currentAccount!.did,
+							collection: 'app.bsky.feed.post',
+							rkey: uri.rkey,
+							validate: false,
+							record: {
+								$type: 'app.bsky.feed.post',
+								text: '',
+								createdAt: '1970-01-01T00:00:00.000Z',
+							} satisfies AppBskyFeedPost.Record,
+						},
+					});
+
+					await rpc.call('com.atproto.repo.deleteRecord', {
+						data: {
+							repo: currentAccount!.did,
+							collection: 'app.bsky.feed.post',
+							rkey: uri.rkey,
+						},
+					});
+
+					onPostDelete?.();
+					return;
+				}
+
+				throw err;
+			},
+		);
 	};
 
 	return (
