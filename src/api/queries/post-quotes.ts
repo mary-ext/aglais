@@ -1,9 +1,9 @@
-import type { AppBskyFeedGetQuotes } from '@atcute/client/lexicons';
+import type { AppBskyFeedGetQuotes, At } from '@atcute/client/lexicons';
 import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
-export const createPostQuotesQuery = (uri: () => string) => {
+export const createPostQuotesQuery = (uri: () => At.ResourceUri) => {
 	const { rpc } = useAgent();
 
 	return createInfiniteQuery(() => {

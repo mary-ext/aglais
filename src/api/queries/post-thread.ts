@@ -1,5 +1,5 @@
 import { XRPCError } from '@atcute/client';
-import type { AppBskyFeedDefs, Brand } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs, At, Brand } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
@@ -11,7 +11,7 @@ const MAX_DEPTH = 4;
 
 type ThreadReturn = Brand.Union<AppBskyFeedDefs.ThreadViewPost | AppBskyFeedDefs.BlockedPost>;
 
-export const usePostThreadQuery = (uri: () => string) => {
+export const usePostThreadQuery = (uri: () => At.ResourceUri) => {
 	const { rpc } = useAgent();
 
 	return createQuery((queryClient) => {

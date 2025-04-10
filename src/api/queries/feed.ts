@@ -8,7 +8,7 @@ import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 import { omit } from '~/lib/utils/misc';
 
-import { makeAtUri, parseAtUri } from '../types/at-uri';
+import { makeAtUri, parseCanonicalResourceUri } from '../types/at-uri';
 import { isDid } from '../types/identity';
 
 import { resolveHandle } from './handle';
@@ -23,9 +23,9 @@ export const createFeedMetaQuery = (feedUri: () => string) => {
 		return {
 			queryKey: ['feed-meta', $feedUri],
 			async queryFn(ctx): Promise<AppBskyFeedDefs.GeneratorView> {
-				const uri = parseAtUri($feedUri);
+				const uri = parseCanonicalResourceUri($feedUri);
 
-				let did: At.DID;
+				let did: At.Did;
 				if (isDid(uri.repo)) {
 					did = uri.repo;
 				} else {

@@ -9,7 +9,7 @@ import { getModerationUI } from '~/api/moderation';
 import { ContextContentList } from '~/api/moderation/constants';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { precacheProfile } from '~/api/queries-cache/profile-precache';
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { history } from '~/globals/navigation';
 
@@ -54,7 +54,7 @@ const PostThreadItem = (props: PostThreadItemProps) => {
 
 	const shadow = usePostShadow(post);
 
-	const uri = parseAtUri(post().uri);
+	const uri = parseCanonicalResourceUri(post().uri);
 	const authorHref = `/${author().did}`;
 	const href = `/${author().did}/${uri.rkey}`;
 

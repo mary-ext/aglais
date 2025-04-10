@@ -6,7 +6,7 @@ import { useAgent } from '~/lib/states/agent';
 
 import { interpretLabelerDefinition } from '../moderation/labeler';
 
-export const createLabelerMetaQuery = (did: () => At.DID) => {
+export const createLabelerMetaQuery = (did: () => At.Did) => {
 	const { rpc } = useAgent();
 
 	const query = createQuery(() => {

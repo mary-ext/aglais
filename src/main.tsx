@@ -48,7 +48,7 @@ const InnerApp = () => {
 	const session = useSession();
 
 	onMount(() => {
-		const resumeAccount = async (did: At.DID | undefined) => {
+		const resumeAccount = async (did: At.Did | undefined) => {
 			try {
 				if (did) {
 					await session.resumeSession(did);

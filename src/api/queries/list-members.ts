@@ -1,8 +1,9 @@
+import type { At } from '@atcute/client/lexicons';
 import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
-export const createListMembersQuery = (listUri: () => string) => {
+export const createListMembersQuery = (listUri: () => At.ResourceUri) => {
 	const { rpc } = useAgent();
 
 	return createInfiniteQuery(() => {

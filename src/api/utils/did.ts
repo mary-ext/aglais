@@ -3,8 +3,8 @@ import type { At } from '@atcute/client/lexicons';
 
 import { isDid } from '../types/identity';
 
-const getDid = async (rpc: XRPC, actor: string, signal?: AbortSignal) => {
-	let did: At.DID;
+const getDid = async (rpc: XRPC, actor: At.Handle, signal?: AbortSignal) => {
+	let did: At.Did;
 	if (isDid(actor)) {
 		did = actor;
 	} else {

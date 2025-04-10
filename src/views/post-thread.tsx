@@ -38,7 +38,10 @@ import ThreadLines from '~/components/threads/thread-lines';
 import VirtualItem from '~/components/virtual-item';
 
 const PostThreadPage = () => {
-	const { didOrHandle, rkey } = useParams();
+	const { didOrHandle, rkey } = useParams<{
+		didOrHandle: At.Identifier;
+		rkey: At.RecordKey;
+	}>();
 
 	const queryClient = useQueryClient();
 
@@ -102,7 +105,7 @@ const PostThreadPage = () => {
 										const data = accessor();
 										const type = data.$type;
 
-										let did: At.DID | undefined;
+										let did: At.Did | undefined;
 
 										if (type === 'app.bsky.feed.defs#threadViewPost') {
 											did = data.post.author.did;

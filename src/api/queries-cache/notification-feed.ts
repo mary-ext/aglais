@@ -38,7 +38,7 @@ export const findAllPosts = (uri: string, includeQuote = false): CacheMatcher<Ap
 };
 
 export const findAllProfiles = (
-	did: At.DID,
+	did: At.Did,
 ): CacheMatcher<AppBskyActorDefs.ProfileViewBasic | AppBskyActorDefs.ProfileView> => {
 	return {
 		filter: {

@@ -3,7 +3,7 @@ import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { updatePostShadow } from '~/api/cache/post-shadow';
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
@@ -24,7 +24,7 @@ const DeletePostPrompt = ({ post, onPostDelete }: DeletePostPromptProps) => {
 	const queryClient = useQueryClient();
 
 	const onDelete = () => {
-		const uri = parseAtUri(post.uri);
+		const uri = parseCanonicalResourceUri(post.uri);
 
 		const promise = rpc.call('com.atproto.repo.applyWrites', {
 			data: {

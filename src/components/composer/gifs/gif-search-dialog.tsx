@@ -1,5 +1,6 @@
 import { For, Match, Switch, createSignal } from 'solid-js';
 
+import type { At } from '@atcute/client/lexicons';
 import { chunked } from '@mary/array-fns';
 
 import { type Gif, createGifSearchQuery } from '~/api/queries/composer-gif';
@@ -110,7 +111,7 @@ const GifSearchDialog = (props: GifSearchDialogProps) => {
 export default GifSearchDialog;
 
 export interface GifMedia {
-	embedUrl: string;
+	embedUrl: At.GenericUri;
 	alt: string;
 	ratio: { width: number; height: number };
 
@@ -128,7 +129,7 @@ const getGifMedia = (gif: Gif): GifMedia => {
 	const [, id, file] = /\/([^/]+?AAAAC)\/([^/]+?)\.gif\/?$/.exec(url)!;
 
 	return {
-		embedUrl: url + `?hh=${dimensions[1]}&ww=${dimensions[0]}`,
+		embedUrl: (url + `?hh=${dimensions[1]}&ww=${dimensions[0]}`) as At.GenericUri,
 		alt: gif.content_description,
 		ratio: { width: dimensions[0], height: dimensions[1] },
 

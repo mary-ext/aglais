@@ -5,7 +5,7 @@ import { useQueryClient } from '@mary/solid-query';
 
 import { moderateGeneric } from '~/api/moderation/entities/generic';
 import { precacheFeed } from '~/api/queries-cache/feed-precache';
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { inject } from '~/lib/states/singleton';
 import ModerationService from '~/lib/states/singletons/moderation';
@@ -26,7 +26,7 @@ const FeedEmbed = ({ feed, interactive }: FeedEmbedProps) => {
 
 	const moderation = createMemo(() => moderateGeneric(feed, feed.creator.did, moderationOptions()));
 
-	const href = `/${feed.creator.did}/feeds/${parseAtUri(feed.uri).rkey}`;
+	const href = `/${feed.creator.did}/feeds/${parseCanonicalResourceUri(feed.uri).rkey}`;
 
 	return (
 		<a

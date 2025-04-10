@@ -1,8 +1,9 @@
+import type { At } from '@atcute/client/lexicons';
 import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
-export const createProfileFeedsQuery = (didOrHandle: () => string) => {
+export const createProfileFeedsQuery = (didOrHandle: () => At.Identifier) => {
 	const { rpc } = useAgent();
 
 	return createInfiniteQuery(() => {

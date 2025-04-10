@@ -6,7 +6,7 @@ import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { getModerationUI } from '~/api/moderation';
 import { ContextProfileMedia, ContextProfileView } from '~/api/moderation/constants';
 import { moderateProfile } from '~/api/moderation/entities/profile';
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { openModal } from '~/globals/modals';
 
@@ -259,7 +259,7 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 						<Match when={viewer()?.mutedByList}>
 							{(list) => {
 								const href = () => {
-									const uri = parseAtUri(list().uri);
+									const uri = parseCanonicalResourceUri(list().uri);
 									return `/${uri.repo}/lists/${uri.rkey}`;
 								};
 

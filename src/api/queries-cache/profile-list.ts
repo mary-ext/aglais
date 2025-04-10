@@ -4,7 +4,7 @@ import type { InfiniteData } from '@mary/solid-query';
 import type { CacheMatcher } from '../cache/utils';
 import type { ProfilesListPage, ProfilesListWithSubjectPage } from '../types/profile-response';
 
-export const findAllProfiles = (did: At.DID): CacheMatcher<AppBskyActorDefs.ProfileView> => {
+export const findAllProfiles = (did: At.Did): CacheMatcher<AppBskyActorDefs.ProfileView> => {
 	return {
 		filter: [
 			{ queryKey: ['profile-followers'] },

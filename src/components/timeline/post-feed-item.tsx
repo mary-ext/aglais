@@ -9,7 +9,7 @@ import { getModerationUI } from '~/api/moderation';
 import { ContextContentList } from '~/api/moderation/constants';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { precacheProfile } from '~/api/queries-cache/profile-precache';
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { history } from '~/globals/navigation';
 
@@ -36,7 +36,7 @@ export interface PostFeedItemProps {
 	/** Expected to be static */
 	item: UiTimelineItem;
 	highlighted?: boolean;
-	timelineDid?: At.DID;
+	timelineDid?: At.Did;
 }
 
 const PostFeedItem = ({ item, highlighted, timelineDid }: PostFeedItemProps) => {
@@ -55,7 +55,7 @@ const PostFeedItem = ({ item, highlighted, timelineDid }: PostFeedItemProps) => 
 
 	const shadow = usePostShadow(post);
 
-	const uri = parseAtUri(post.uri);
+	const uri = parseCanonicalResourceUri(post.uri);
 	const authorHref = `/${authorDid}`;
 	const href = `/${authorDid}/${uri.rkey}`;
 

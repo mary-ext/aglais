@@ -5,7 +5,7 @@ import type { AppBskyEmbedRecord, AppBskyFeedPost } from '@atcute/client/lexicon
 import { getModerationUI } from '~/api/moderation';
 import { ContextContentMedia } from '~/api/moderation/constants';
 import { moderateQuote } from '~/api/moderation/entities/quote';
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 import { unwrapMediaEmbedView } from '~/api/utils/bluesky/embed-view';
 
 import { inject } from '~/lib/states/singleton';
@@ -32,7 +32,7 @@ const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 	const record = quote.value as AppBskyFeedPost.Record;
 	const author = quote.author;
 
-	const uri = parseAtUri(quote.uri);
+	const uri = parseCanonicalResourceUri(quote.uri);
 	const href = `/${author.did}/${uri.rkey}`;
 
 	const text = record.text.trim();

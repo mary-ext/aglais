@@ -1,6 +1,6 @@
 import { modifyMutable, reconcile } from 'solid-js/store';
 
-import type { AppBskyActorDefs } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
@@ -13,7 +13,7 @@ export interface ProfileQueryOptions {
 	gcTime?: number;
 }
 
-export const createProfileQuery = (didOrHandle: () => string, opts: ProfileQueryOptions = {}) => {
+export const createProfileQuery = (didOrHandle: () => At.Identifier, opts: ProfileQueryOptions = {}) => {
 	const { rpc } = useAgent();
 	const { currentAccount } = useSession();
 

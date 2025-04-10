@@ -6,7 +6,7 @@ import { type QueryFunctionContext as QC, createInfiniteQuery, useQueryClient } 
 
 import { useAgent } from '~/lib/states/agent';
 
-import { parseAtUri } from '../types/at-uri';
+import { parseCanonicalResourceUri } from '../types/at-uri';
 import { dequal } from '../utils/dequal';
 import { resetInfiniteData } from '../utils/query';
 
@@ -129,7 +129,7 @@ export const createNotificationFeedQuery = (filter: () => NotificationsFilter) =
 								const subjectUri = item.reasonSubject;
 
 								// skip if they're not related to posts.
-								if (!subjectUri || parseAtUri(subjectUri).collection !== 'app.bsky.feed.post') {
+								if (!subjectUri || parseCanonicalResourceUri(subjectUri).collection !== 'app.bsky.feed.post') {
 									return;
 								}
 

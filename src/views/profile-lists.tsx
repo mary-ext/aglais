@@ -1,3 +1,5 @@
+import type { At } from '@atcute/client/lexicons';
+
 import { createProfileQuery } from '~/api/queries/profile';
 import { createProfileListsQuery } from '~/api/queries/profile-lists';
 
@@ -8,7 +10,9 @@ import * as Page from '~/components/page';
 import PagedList from '~/components/paged-list';
 
 const ProfileListsPage = () => {
-	const { did } = useParams();
+	const { did } = useParams<{
+		did: At.Did;
+	}>();
 
 	const lists = createProfileListsQuery(() => did);
 	const profile = createProfileQuery(() => did);

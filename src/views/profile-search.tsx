@@ -1,5 +1,7 @@
 import { createSignal } from 'solid-js';
 
+import type { At } from '@atcute/client/lexicons';
+
 import { createProfileQuery } from '~/api/queries/profile';
 import { isDid } from '~/api/types/identity';
 
@@ -14,7 +16,9 @@ import { SearchBarProvider } from '~/components/search/context';
 import SearchSuggestionsView from '~/components/search/search-suggestions-view';
 
 const ProfileSearchPage = () => {
-	const { didOrHandle } = useParams();
+	const { didOrHandle } = useParams<{
+		didOrHandle: At.Identifier;
+	}>();
 
 	const [query, setQuery] = createSignal('');
 	const profile = createProfileQuery(() => didOrHandle);

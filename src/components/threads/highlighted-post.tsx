@@ -7,7 +7,7 @@ import { getModerationUI } from '~/api/moderation';
 import { ContextContentView } from '~/api/moderation/constants';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { createPostLikeMutation, createPostRepostMutation } from '~/api/mutations/post';
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { primarySystemLanguage } from '~/globals/locales';
 import { openModal } from '~/globals/modals';
@@ -63,7 +63,7 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 
 	const shadow = usePostShadow(post);
 
-	const uri = parseAtUri(post().uri);
+	const uri = parseCanonicalResourceUri(post().uri);
 	const authorDid = author().did;
 
 	const isOurPost = currentAccount && authorDid === currentAccount.did;

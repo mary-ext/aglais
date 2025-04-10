@@ -1,3 +1,5 @@
+import type { At } from '@atcute/client/lexicons';
+
 import { createProfileQuery } from '~/api/queries/profile';
 import { createProfileFeedsQuery } from '~/api/queries/profile-feeds';
 
@@ -9,7 +11,9 @@ import PagedList from '~/components/paged-list';
 import VirtualItem from '~/components/virtual-item';
 
 const ProfileFeedsPage = () => {
-	const { did } = useParams();
+	const { did } = useParams<{
+		did: At.Did;
+	}>();
 
 	const feeds = createProfileFeedsQuery(() => did);
 	const profile = createProfileQuery(() => did);

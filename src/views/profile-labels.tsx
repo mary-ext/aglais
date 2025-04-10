@@ -49,7 +49,7 @@ const ProfileLabelsPage = () => {
 	const { did } = useParams();
 	const { currentAccount } = useSession();
 
-	const query = createLabelerMetaQuery(() => did as At.DID);
+	const query = createLabelerMetaQuery(() => did as At.Did);
 
 	const config = createMemo(() => {
 		if (!currentAccount) {
@@ -57,7 +57,7 @@ const ProfileLabelsPage = () => {
 		}
 
 		const preferences = currentAccount.preferences;
-		return preferences.moderation.labelers[did as At.DID];
+		return preferences.moderation.labelers[did as At.Did];
 	});
 
 	useTitle(() => {
@@ -98,7 +98,7 @@ const ProfileLabelsPage = () => {
 														const preferences = currentAccount!.preferences;
 														const labelers = preferences.moderation.labelers;
 
-														labelers[did as At.DID] = {
+														labelers[did as At.Did] = {
 															labels: {},
 															privileged: false,
 															redact: false,
@@ -140,7 +140,7 @@ const ProfileLabelsPage = () => {
 																const preferences = currentAccount!.preferences;
 																const labelers = preferences.moderation.labelers;
 
-																delete labelers[did as At.DID];
+																delete labelers[did as At.Did];
 															}}
 														/>
 													));

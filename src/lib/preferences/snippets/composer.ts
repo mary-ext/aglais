@@ -11,6 +11,8 @@ export const toPersistedThreadgate = (gate: ThreadgateState): PersistedThreadgat
 			switch (rule.$type) {
 				case 'app.bsky.feed.threadgate#followingRule':
 					return { type: 'following' };
+				case 'app.bsky.feed.threadgate#followerRule':
+					return { type: 'follower' };
 				case 'app.bsky.feed.threadgate#mentionRule':
 					return { type: 'mention' };
 				case 'app.bsky.feed.threadgate#listRule':
@@ -26,6 +28,8 @@ export const fromPersistedThreadgate = (gate: PersistedThreadgate): ThreadgateSt
 			switch (rule.type) {
 				case 'following':
 					return { $type: 'app.bsky.feed.threadgate#followingRule' };
+				case 'follower':
+					return { $type: 'app.bsky.feed.threadgate#followerRule' };
 				case 'mention':
 					return { $type: 'app.bsky.feed.threadgate#mentionRule' };
 				case 'list':

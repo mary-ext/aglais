@@ -1,6 +1,6 @@
 import { For, createMemo } from 'solid-js';
 
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 
 import type { SavedFeed } from '~/lib/preferences/account';
 import { useSession } from '~/lib/states/session';
@@ -55,12 +55,12 @@ const MyFeedsSection = () => {
 					let href: string;
 					switch (type) {
 						case 'generator': {
-							const uri = parseAtUri(feed.info.uri);
+							const uri = parseCanonicalResourceUri(feed.info.uri);
 							href = `/${uri.repo}/feeds/${uri.rkey}`;
 							break;
 						}
 						case 'list': {
-							const uri = parseAtUri(feed.info.uri);
+							const uri = parseCanonicalResourceUri(feed.info.uri);
 							href = `/${uri.repo}/lists/${uri.rkey}`;
 							break;
 						}

@@ -1,8 +1,9 @@
+import type { At } from '@atcute/client/lexicons';
 import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
-export const createProfileListsQuery = (didOrHandle: () => string) => {
+export const createProfileListsQuery = (didOrHandle: () => At.Identifier) => {
 	const { rpc } = useAgent();
 
 	const collator = new Intl.Collator('en-US');

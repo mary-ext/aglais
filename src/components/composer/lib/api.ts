@@ -26,7 +26,7 @@ import { updatePostShadow } from '~/api/cache/post-shadow';
 import { uploadBlob } from '~/api/queries/blob';
 import type { LinkMeta } from '~/api/queries/composer';
 import { resolveHandle } from '~/api/queries/handle';
-import { makeAtUri, parseAtUri } from '~/api/types/at-uri';
+import { makeAtUri, parseCanonicalResourceUri } from '~/api/types/at-uri';
 import { isDid } from '~/api/types/identity';
 import { getRecord } from '~/api/utils/records';
 import { trimRichText } from '~/api/utils/richtext';
@@ -74,9 +74,9 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 			queryKey: ['post', replyUri],
 			staleTime: 30_000,
 			async queryFn(ctx) {
-				const uri = parseAtUri(replyUri);
+				const uri = parseCanonicalResourceUri(replyUri);
 
-				let did: At.DID;
+				let did: At.Did;
 				if (isDid(uri.repo)) {
 					did = uri.repo;
 				} else {
@@ -113,7 +113,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 	}
 
 	if (state.redraftUri) {
-		const uri = parseAtUri(state.redraftUri);
+		const uri = parseCanonicalResourceUri(state.redraftUri);
 
 		writes.push({
 			$type: 'com.atproto.repo.applyWrites#delete',
@@ -669,10 +669,10 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 			if (type === 'link' || type === 'autolink') {
 				facets.push({
 					index: index,
-					features: [{ $type: 'app.bsky.richtext.facet#link', uri: token.url }],
+					features: [{ $type: 'app.bsky.richtext.facet#link', uri: token.url as At.GenericUri }],
 				});
 			} else if (type === 'mention') {
-				const handle = token.handle;
+				const handle = token.handle as At.Handle;
 
 				if (handle === 'handle.invalid') {
 					throw new InvalidHandleError(handle);

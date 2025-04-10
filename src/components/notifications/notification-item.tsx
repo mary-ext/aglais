@@ -19,7 +19,7 @@ import type {
 	NotificationSlice,
 	RepostNotificationSlice,
 } from '~/api/queries/notification-feed';
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 import { type MediaEmbedView, unwrapMediaEmbedView } from '~/api/utils/bluesky/embed-view';
 
 import { history } from '~/globals/navigation';
@@ -95,7 +95,7 @@ const NotificationItem = ({ item }: NotificationItemProps) => {
 				}
 			} else {
 				const post = item.view;
-				const uri = parseAtUri(post.uri);
+				const uri = parseCanonicalResourceUri(post.uri);
 				href = `/${uri.repo}/${uri.rkey}`;
 			}
 

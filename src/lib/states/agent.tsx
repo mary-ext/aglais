@@ -14,7 +14,7 @@ import { on } from '../utils/misc';
 import { useSession } from './session';
 
 export interface AgentContext {
-	did: At.DID | null;
+	did: At.Did | null;
 	rpc: XRPC;
 	handler: OAuthUserAgent | null;
 	persister: ReturnType<typeof createQueryPersister>;

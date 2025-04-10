@@ -5,7 +5,7 @@ import { TargetContent } from '../constants';
 
 export const moderateGeneric = (
 	item: { labels?: ComAtprotoLabelDefs.Label[] },
-	userDid: At.DID,
+	userDid: At.Did,
 	opts: ModerationOptions,
 ) => {
 	const accu: ModerationCause[] = [];

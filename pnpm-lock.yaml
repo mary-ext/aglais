@@ -31,32 +31,32 @@ importers:
   .:
     dependencies:
       '@atcute/bluemoji':
-        specifier: ^1.0.4
-        version: 1.0.4(@atcute/bluesky@1.0.15(@atcute/client@2.0.9))(@atcute/client@2.0.9)
+        specifier: ^2.0.0
+        version: 2.0.0(@atcute/bluesky@2.0.0(@atcute/client@3.0.0))(@atcute/client@3.0.0)
       '@atcute/bluesky':
-        specifier: ^1.0.15
-        version: 1.0.15(@atcute/client@2.0.9)
+        specifier: ^2.0.0
+        version: 2.0.0(@atcute/client@3.0.0)
       '@atcute/bluesky-richtext-parser':
         specifier: ^1.0.7
         version: 1.0.7
       '@atcute/bluesky-richtext-segmenter':
-        specifier: ^1.0.5
-        version: 1.0.5(@atcute/bluesky@1.0.15(@atcute/client@2.0.9))(@atcute/client@2.0.9)
+        specifier: ^2.0.0
+        version: 2.0.0(@atcute/bluesky@2.0.0(@atcute/client@3.0.0))(@atcute/client@3.0.0)
       '@atcute/bluesky-search-parser':
         specifier: ^0.1.0
         version: 0.1.0
       '@atcute/cbor':
-        specifier: ^2.2.0
-        version: 2.2.0
+        specifier: ^2.2.1
+        version: 2.2.1
       '@atcute/cid':
-        specifier: ^2.2.0
-        version: 2.2.0
+        specifier: ^2.2.1
+        version: 2.2.1
       '@atcute/client':
-        specifier: ^2.0.9
-        version: 2.0.9
+        specifier: ^3.0.0
+        version: 3.0.0
       '@atcute/oauth-browser-client':
-        specifier: ^1.0.16
-        version: 1.0.16
+        specifier: ^1.0.17
+        version: 1.0.17
       '@atcute/tid':
         specifier: ^1.0.2
         version: 1.0.2
@@ -174,43 +174,43 @@ packages:
     peerDependencies:
       ajv: '>=8'
 
-  '@atcute/bluemoji@1.0.4':
-    resolution: {integrity: sha512-Rzujybon6EFuycWPID5bzjYIVdPPWWjVfPqELhByJTLe2vq3SlEubUCmz3VfhDu/Bb8wlBP2tIT5w4oq3vJLrg==}
+  '@atcute/bluemoji@2.0.0':
+    resolution: {integrity: sha512-tgcsW4H50oWo6uHMkUVU2IgObfX63mYp/qxWfoLkKPFWbwz68SiwedaCY/E+Cw8anWGF0urFjDemmga7B5Z0QA==}
     peerDependencies:
-      '@atcute/bluesky': ^1.0.0
-      '@atcute/client': ^1.0.0 || ^2.0.0
+      '@atcute/bluesky': ^2.0.0
+      '@atcute/client': ^3.0.0
 
   '@atcute/bluesky-richtext-parser@1.0.7':
     resolution: {integrity: sha512-nOvU699OXiGMbyswao7JJnY0C9WkwE7PVC/m5WWt0UN9fsXSOor9IZWw+v9SATp+94BTJoG38XyUomUaJnoQRA==}
 
-  '@atcute/bluesky-richtext-segmenter@1.0.5':
-    resolution: {integrity: sha512-D0FfmJVwppky9naL1OGKcQjtgO0lDLhkG4iCQHpShuHhEZ9FUdf3eUb/eQpVRNJGaJ4ShjEOHA6FlAizcjMkGQ==}
+  '@atcute/bluesky-richtext-segmenter@2.0.0':
+    resolution: {integrity: sha512-BummI6zgdXSx9f5TJg2oR2ervCJhG8zcbAMDLWjccNLt/0P38lIRsXqOBdIIAZoBtk8g5LpgnnICdiMsDM2iDQ==}
     peerDependencies:
-      '@atcute/bluesky': ^1.0.0
-      '@atcute/client': ^1.0.0 || ^2.0.0
+      '@atcute/bluesky': ^2.0.0
+      '@atcute/client': ^3.0.0
 
   '@atcute/bluesky-search-parser@0.1.0':
     resolution: {integrity: sha512-bTClwD9VGwaECOyWe1mf8V6t+7/77e3tiUHTE6CSrHXOJ/yM8N2xbn+dIi2ki2JLHvgvBN9wsWpFLykgfWhBaw==}
 
-  '@atcute/bluesky@1.0.15':
-    resolution: {integrity: sha512-+EFiybmKQ97aBAgtaD+cKRJER5AMn3cZMkEwEg/pDdWyzxYJ9m1UgemmLdTgI8VrxPufKqdXS2nl7uO7TY6BPA==}
+  '@atcute/bluesky@2.0.0':
+    resolution: {integrity: sha512-G54WP8ribfH7dojidp6LJjNISauZr2AN9VxRi3k5XTLnT3S5l59e8l48psxTTv+GzBnY8u2GIHMlehBXt7X69A==}
     peerDependencies:
-      '@atcute/client': ^1.0.0 || ^2.0.0
+      '@atcute/client': ^3.0.0
 
-  '@atcute/cbor@2.2.0':
-    resolution: {integrity: sha512-W3ttcDJHiB5N6MbfEpJbTINZSjg0KB8gpBds8UWOGmybqUnuz43HZkFSpF/Vom0KilYg6QWU/ZM4X8SXZE+kow==}
+  '@atcute/cbor@2.2.1':
+    resolution: {integrity: sha512-o+zCkfFQhRxpQmGYOAlRAK9xqq3VH66Mw0muUOlc+Wnk5X8CyZcIkdYorzYWTtyNO2/WHdMcUzZs93+Ajl6BbA==}
 
-  '@atcute/cid@2.2.0':
-    resolution: {integrity: sha512-ty+WjGcTfi1JJtcRNz6bsJMqT69lEIl4Ts7vl4U8SBHbxjbb6Tk/pcnQZVClKRYduRoZ1XhS9n5qOSIbIMctDA==}
+  '@atcute/cid@2.2.1':
+    resolution: {integrity: sha512-tSsVdgx8jj+n6l+MP8IN8rZCR9N4ltJ8EPMiRzo6uduAAygYiZkCRceCOZ57IMtToZcSgm3nxYr4g1aeUbHUcw==}
 
-  '@atcute/client@2.0.9':
-    resolution: {integrity: sha512-QNDm9gMP6x9LY77ArwY+urQOBtQW74/onEAz42c40JxRm6Rl9K9cU4ROvNKJ+5cpVmEm1sthEWVRmDr5CSZENA==}
+  '@atcute/client@3.0.0':
+    resolution: {integrity: sha512-6OsDqqkrqob/fMJ++s5vPc2MknQ6yfTzK+TY3MjXK3ZOkF0XseB5+QV1IiBWnEZ4X3aY21x2a3kv3YcvSQKxXQ==}
 
-  '@atcute/multibase@1.1.2':
-    resolution: {integrity: sha512-KFX+c7a/u2jSNcRw0rLaUHG/XEKf1A1c8XF5soHnsb1JMCShihf/anfZ1kJ4no/IlIp9HEHV3PQRQO2sWL6ASQ==}
+  '@atcute/multibase@1.1.3':
+    resolution: {integrity: sha512-vQQO0tDuQPguBvHdgV3ryn7R8U6beQ50KA/juYm+dCeT/3hOK2stMbX+IaW8JEuwkT5lJsU8wDIOicQT4mB7Ag==}
 
-  '@atcute/oauth-browser-client@1.0.16':
-    resolution: {integrity: sha512-BKkA4TPyaLIO+hVxcxZoDfLFUgsd3A47UyzWAbe3BpSoN8Kywy/CqWuAVlqdiUhO1iG+vVqGQhjKy4UxutaU4g==}
+  '@atcute/oauth-browser-client@1.0.17':
+    resolution: {integrity: sha512-0w3L/ZKQR3SK0VW7YvHF8fKKdSJu0nxVY8yxsbMbJ8JhT2RFUA5F+2yJT5O0341zot5zUKZ2iaGW2zccIcyz/w==}
 
   '@atcute/tid@1.0.2':
     resolution: {integrity: sha512-ahmjroNyeDPJhtuf3+HTJropaH04HmJ8fhntDu73Gpz/RkAF7+nkz6kcP2QTgfvMCgMPAJUdskAAP82GPDTY9w==}
@@ -2707,45 +2707,45 @@ snapshots:
       jsonpointer: 5.0.1
       leven: 3.1.0
 
-  '@atcute/bluemoji@1.0.4(@atcute/bluesky@1.0.15(@atcute/client@2.0.9))(@atcute/client@2.0.9)':
+  '@atcute/bluemoji@2.0.0(@atcute/bluesky@2.0.0(@atcute/client@3.0.0))(@atcute/client@3.0.0)':
     dependencies:
-      '@atcute/bluesky': 1.0.15(@atcute/client@2.0.9)
-      '@atcute/client': 2.0.9
+      '@atcute/bluesky': 2.0.0(@atcute/client@3.0.0)
+      '@atcute/client': 3.0.0
 
   '@atcute/bluesky-richtext-parser@1.0.7': {}
 
-  '@atcute/bluesky-richtext-segmenter@1.0.5(@atcute/bluesky@1.0.15(@atcute/client@2.0.9))(@atcute/client@2.0.9)':
+  '@atcute/bluesky-richtext-segmenter@2.0.0(@atcute/bluesky@2.0.0(@atcute/client@3.0.0))(@atcute/client@3.0.0)':
     dependencies:
-      '@atcute/bluesky': 1.0.15(@atcute/client@2.0.9)
-      '@atcute/client': 2.0.9
+      '@atcute/bluesky': 2.0.0(@atcute/client@3.0.0)
+      '@atcute/client': 3.0.0
 
   '@atcute/bluesky-search-parser@0.1.0': {}
 
-  '@atcute/bluesky@1.0.15(@atcute/client@2.0.9)':
+  '@atcute/bluesky@2.0.0(@atcute/client@3.0.0)':
     dependencies:
-      '@atcute/client': 2.0.9
+      '@atcute/client': 3.0.0
 
-  '@atcute/cbor@2.2.0':
+  '@atcute/cbor@2.2.1':
     dependencies:
-      '@atcute/cid': 2.2.0
-      '@atcute/multibase': 1.1.2
+      '@atcute/cid': 2.2.1
+      '@atcute/multibase': 1.1.3
       '@atcute/uint8array': 1.0.1
 
-  '@atcute/cid@2.2.0':
+  '@atcute/cid@2.2.1':
     dependencies:
-      '@atcute/multibase': 1.1.2
+      '@atcute/multibase': 1.1.3
       '@atcute/uint8array': 1.0.1
 
-  '@atcute/client@2.0.9': {}
+  '@atcute/client@3.0.0': {}
 
-  '@atcute/multibase@1.1.2':
+  '@atcute/multibase@1.1.3':
     dependencies:
       '@atcute/uint8array': 1.0.1
 
-  '@atcute/oauth-browser-client@1.0.16':
+  '@atcute/oauth-browser-client@1.0.17':
     dependencies:
-      '@atcute/client': 2.0.9
-      '@atcute/multibase': 1.1.2
+      '@atcute/client': 3.0.0
+      '@atcute/multibase': 1.1.3
       '@atcute/uint8array': 1.0.1
 
   '@atcute/tid@1.0.2': {}

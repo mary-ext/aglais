@@ -1,6 +1,6 @@
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 import { serializeRichText } from '~/api/utils/richtext-stringify';
 
 import { useModalContext } from '~/globals/modals';
@@ -21,7 +21,7 @@ const PostShareMenu = (props: PostShareMenuProps) => {
 	const post = props.post;
 
 	const did = post.author.did;
-	const { rkey } = parseAtUri(post.uri);
+	const { rkey } = parseCanonicalResourceUri(post.uri);
 
 	return (
 		<Menu.Container anchor={props.anchor} placement="bottom-end">

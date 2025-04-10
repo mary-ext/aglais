@@ -1,3 +1,5 @@
+import type { At } from '@atcute/client/lexicons';
+
 import { makeAtUri } from '~/api/types/at-uri';
 import { safeUrlParse } from '~/api/utils/strings';
 
@@ -15,33 +17,33 @@ export const getRecordEmbedFromLink = (href: string): PostRecordEmbed | undefine
 
 		if (host === 'bsky.app') {
 			if ((match = BSKY_POST_LINK_RE.exec(path))) {
-				const handleOrDid = match[1];
+				const didOrHandle = match[1] as At.Identifier;
 				const rkey = match[2];
 
 				return {
 					type: 'quote',
-					uri: makeAtUri(handleOrDid, 'app.bsky.feed.post', rkey),
+					uri: makeAtUri(didOrHandle, 'app.bsky.feed.post', rkey),
 					origin: false,
 				};
 			}
 
 			if ((match = BSKY_FEED_LINK_RE.exec(path))) {
-				const handleOrDid = match[1];
+				const didOrHandle = match[1] as At.Identifier;
 				const rkey = match[2];
 
 				return {
 					type: 'feed',
-					uri: makeAtUri(handleOrDid, 'app.bsky.feed.generator', rkey),
+					uri: makeAtUri(didOrHandle, 'app.bsky.feed.generator', rkey),
 				};
 			}
 
 			if ((match = BSKY_LIST_LINK_RE.exec(path))) {
-				const handleOrDid = match[1];
+				const didOrHandle = match[1] as At.Identifier;
 				const rkey = match[2];
 
 				return {
 					type: 'list',
-					uri: makeAtUri(handleOrDid, 'app.bsky.graph.list', rkey),
+					uri: makeAtUri(didOrHandle, 'app.bsky.graph.list', rkey),
 				};
 			}
 		}

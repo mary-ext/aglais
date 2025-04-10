@@ -2,7 +2,7 @@ import type { AppBskyFeedPost } from '@atcute/client/lexicons';
 
 import type { UiTimelineItem } from '~/api/models/timeline';
 import { createProfileQuery } from '~/api/queries/profile';
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { useSession } from '~/lib/states/session';
 
@@ -43,7 +43,7 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 
 		const raw = (post.record as AppBskyFeedPost.Record).reply?.parent;
 		if (raw) {
-			const did = parseAtUri(raw.uri).repo;
+			const did = parseCanonicalResourceUri(raw.uri).repo;
 			if (did === currentAccount?.did) {
 				return <div class="mb-0.5 flex text-de text-contrast-muted">Replying to you</div>;
 			}

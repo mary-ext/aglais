@@ -6,7 +6,7 @@ import { usePostShadow } from '~/api/cache/post-shadow';
 import { getModerationUI } from '~/api/moderation';
 import { ContextContentList } from '~/api/moderation/constants';
 import { moderatePost } from '~/api/moderation/entities/post';
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { history } from '~/globals/navigation';
 
@@ -40,7 +40,7 @@ const BookmarkFeedItem = ({ item }: BookmarkFeedItemProps) => {
 
 	const shadow = usePostShadow(post);
 
-	const uri = parseAtUri(post.uri);
+	const uri = parseCanonicalResourceUri(post.uri);
 	const authorHref = `/${author.did}`;
 	const href = `/${author.did}/${uri.rkey}`;
 

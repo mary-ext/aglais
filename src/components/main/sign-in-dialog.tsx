@@ -27,7 +27,7 @@ const enum View {
 }
 
 export interface SignInDialogProps {
-	relogin?: { did: At.DID; handle?: string };
+	relogin?: { did: At.Did; handle?: string };
 }
 
 const SignInDialog = (props: SignInDialogProps) => {

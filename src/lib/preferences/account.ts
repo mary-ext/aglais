@@ -28,7 +28,7 @@ export interface ThreadViewPreferences {
 
 export interface ModerationLabelerPreferences {
 	updated: number;
-	definitions: Record<At.DID, ModerationLabeler>;
+	definitions: Record<At.Did, ModerationLabeler>;
 }
 
 export type SavedFeed = SavedGeneratorFeed | SavedListFeed | SavedSearchFeed;
@@ -53,7 +53,9 @@ export interface SavedSearchFeed {
 }
 
 export interface PersistedThreadgate {
-	allow?: Array<{ type: 'following' } | { type: 'mention' } | { type: 'list'; uri: At.Uri }>;
+	allow?: Array<
+		{ type: 'following' } | { type: 'follower' } | { type: 'mention' } | { type: 'list'; uri: At.ResourceUri }
+	>;
 }
 
 export interface PersistedPostgate {

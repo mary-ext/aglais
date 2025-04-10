@@ -1,5 +1,7 @@
 import { Match, Switch } from 'solid-js';
 
+import type { At } from '@atcute/client/lexicons';
+
 import { createListMetaQuery } from '~/api/queries/list';
 import { makeAtUri } from '~/api/types/at-uri';
 
@@ -11,7 +13,10 @@ import * as Page from '~/components/page';
 import TimelineList from '~/components/timeline/timeline-list';
 
 const CurationListPage = () => {
-	const { did, rkey } = useParams();
+	const { did, rkey } = useParams<{
+		did: At.Did;
+		rkey: At.RecordKey;
+	}>();
 
 	const uri = makeAtUri(did, 'app.bsky.graph.list', rkey);
 	const meta = createListMetaQuery(() => uri);

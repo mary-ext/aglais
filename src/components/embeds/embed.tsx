@@ -2,7 +2,7 @@ import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 
 import { type ModerationCause, getModerationUI } from '~/api/moderation';
 import { ContextContentMedia } from '~/api/moderation/constants';
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 import { type MediaEmbedView, type RecordEmbedView, unwrapEmbedView } from '~/api/utils/bluesky/embed-view';
 
 import ContentHider from '../moderation/content-hider';
@@ -100,7 +100,7 @@ const RecordEmbed = (props: RecordEmbedProps) => {
 	}
 
 	if (type === 'app.bsky.embed.record#viewNotFound' || type === 'app.bsky.embed.record#viewBlocked') {
-		const uri = parseAtUri(embed.uri);
+		const uri = parseCanonicalResourceUri(embed.uri);
 
 		if (type === 'app.bsky.embed.record#viewBlocked' && uri.collection === 'app.bsky.feed.post') {
 			return <QuoteBlockedEmbed embed={embed} uri={uri} />;

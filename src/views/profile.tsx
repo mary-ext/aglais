@@ -1,7 +1,7 @@
 import { Match, Show, Switch, createMemo } from 'solid-js';
 
 import { XRPCError } from '@atcute/client';
-import type { AppBskyActorDefs } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { useProfileShadow } from '~/api/cache/profile-shadow';
@@ -31,7 +31,9 @@ import TimelineList from '~/components/timeline/timeline-list';
 import VirtualItem from '~/components/virtual-item';
 
 const ProfilePage = () => {
-	const { didOrHandle } = useParams();
+	const { didOrHandle } = useParams<{
+		didOrHandle: At.Identifier;
+	}>();
 
 	const queryClient = useQueryClient();
 	const profile = createProfileQuery(() => didOrHandle);

@@ -119,7 +119,7 @@ export const createThreadData = ({
 	thread: Brand.Union<AppBskyFeedDefs.ThreadViewPost>;
 	preferences: ThreadViewPreferences;
 	moderationOptions: ModerationOptions;
-	selfDid?: At.DID;
+	selfDid?: At.Did;
 }): ThreadData => {
 	const { followsFirst, sort, treeView } = preferences;
 

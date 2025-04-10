@@ -5,7 +5,7 @@ import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
 import { type PostShadowView, updatePostShadow } from '../cache/post-shadow';
-import { parseAtUri } from '../types/at-uri';
+import { parseCanonicalResourceUri } from '../types/at-uri';
 import { getCurrentDate } from '../utils/misc';
 import { createRecord, deleteRecord } from '../utils/records';
 import { createToggleMutationQueue } from '../utils/toggle-mutation';
@@ -45,7 +45,7 @@ export const createPostLikeMutation = (
 
 				return result.uri;
 			} else if (prevLikeUri) {
-				const uri = parseAtUri(prevLikeUri);
+				const uri = parseCanonicalResourceUri(prevLikeUri);
 
 				await deleteRecord(rpc, {
 					repo: currentAccount!.did,
@@ -104,7 +104,7 @@ export const createPostRepostMutation = (
 
 				return result.uri;
 			} else if (prevRepostUri) {
-				const uri = parseAtUri(prevRepostUri);
+				const uri = parseCanonicalResourceUri(prevRepostUri);
 
 				await deleteRecord(rpc, {
 					repo: currentAccount!.did,

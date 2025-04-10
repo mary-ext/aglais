@@ -1,9 +1,10 @@
 import { XRPC } from '@atcute/client';
+import type { At } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
-export const useResolveHandleQuery = (handle: () => string) => {
+export const useResolveHandleQuery = (handle: () => At.Handle) => {
 	const { rpc } = useAgent();
 
 	return createQuery(() => {
@@ -18,7 +19,7 @@ export const useResolveHandleQuery = (handle: () => string) => {
 	});
 };
 
-export const resolveHandle = async (rpc: XRPC, handle: string, signal?: AbortSignal) => {
+export const resolveHandle = async (rpc: XRPC, handle: At.Handle, signal?: AbortSignal) => {
 	const { data } = await rpc.get('com.atproto.identity.resolveHandle', {
 		signal: signal,
 		params: {

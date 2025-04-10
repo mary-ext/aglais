@@ -9,7 +9,7 @@ import type {
 type RecordType = keyof Records;
 
 export interface CreateRecordOptions<K extends RecordType> {
-	repo: At.DID;
+	repo: At.Did;
 	collection: K;
 	rkey?: string;
 	record: Records[K];
@@ -24,12 +24,12 @@ export const createRecord = async <K extends RecordType>(rpc: XRPC, options: Cre
 };
 
 export interface PutRecordOptions<K extends RecordType> {
-	repo: At.DID;
+	repo: At.Did;
 	collection: K;
 	rkey: string;
 	record: Records[K];
 	swapCommit?: string;
-	swapRecord?: At.CID | null;
+	swapRecord?: At.Cid | null;
 	validate?: boolean;
 }
 
@@ -40,7 +40,7 @@ export const putRecord = async <K extends RecordType>(rpc: XRPC, options: PutRec
 };
 
 export interface DeleteRecordOptions<K extends RecordType> {
-	repo: At.DID;
+	repo: At.Did;
 	collection: K;
 	rkey: string;
 	swapCommit?: string;
@@ -54,7 +54,7 @@ export const deleteRecord = async <K extends RecordType>(rpc: XRPC, options: Del
 };
 
 export interface GetRecordOptions<K extends RecordType> {
-	repo: At.DID;
+	repo: At.Did;
 	collection: K;
 	rkey: string;
 	cid?: string;
@@ -77,7 +77,7 @@ export const getRecord = async <K extends RecordType>(
 
 export interface ListRecordsOptions<K extends RecordType> {
 	signal?: AbortSignal;
-	repo: At.DID;
+	repo: At.Did;
 	collection: K;
 	cursor?: string;
 	limit?: number;
@@ -85,7 +85,7 @@ export interface ListRecordsOptions<K extends RecordType> {
 
 export interface ListRecordsOutput<T> extends ComAtprotoRepoListRecords.Output {
 	cursor?: string;
-	records: { cid: At.CID; uri: At.Uri; value: T }[];
+	records: { cid: At.Cid; uri: At.ResourceUri; value: T }[];
 }
 
 export const listRecords = async <K extends RecordType>(

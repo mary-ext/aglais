@@ -5,7 +5,7 @@ import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
 import { type ProfileShadowView, updateProfileShadow } from '../cache/profile-shadow';
-import { parseAtUri } from '../types/at-uri';
+import { parseCanonicalResourceUri } from '../types/at-uri';
 import { getCurrentDate } from '../utils/misc';
 import { createRecord, deleteRecord } from '../utils/records';
 import { createToggleMutationQueue } from '../utils/toggle-mutation';
@@ -42,7 +42,7 @@ export const createProfileFollowMutation = (
 
 				return result.uri;
 			} else if (prevFollowUri) {
-				const uri = parseAtUri(prevFollowUri);
+				const uri = parseCanonicalResourceUri(prevFollowUri);
 
 				await deleteRecord(rpc, {
 					repo: currentAccount!.did,

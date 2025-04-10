@@ -1,6 +1,6 @@
 import { Match, Show, Switch, createMemo } from 'solid-js';
 
-import type { AppBskyGraphDefs } from '@atcute/client/lexicons';
+import type { AppBskyGraphDefs, At } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { ContextContentMedia } from '~/api/moderation/constants';
@@ -29,7 +29,10 @@ import ProfileItem from '~/components/profiles/profile-item';
 import VirtualItem from '~/components/virtual-item';
 
 const ProfileModerationListPage = () => {
-	const { did, rkey } = useParams();
+	const { did, rkey } = useParams<{
+		did: At.Did;
+		rkey: At.RecordKey;
+	}>();
 
 	const uri = makeAtUri(did, 'app.bsky.graph.list', rkey);
 	const query = createListMetaQuery(() => uri);
@@ -160,7 +163,7 @@ const InfoView = (props: { list: AppBskyGraphDefs.ListView }) => {
 	);
 };
 
-const MembersList = ({ uri }: { uri: string }) => {
+const MembersList = ({ uri }: { uri: At.ResourceUri }) => {
 	const members = createListMembersQuery(() => uri);
 
 	return (

@@ -33,7 +33,7 @@ type AllProfileView =
 	| AppBskyActorDefs.ProfileViewBasic
 	| AppBskyActorDefs.ProfileViewDetailed;
 
-const emitter = new EventEmitter<{ [uri: At.DID]: [] }>();
+const emitter = new EventEmitter<{ [uri: At.Did]: [] }>();
 const shadows = new WeakMap<AllProfileView, ProfileShadow>();
 
 export const useProfileShadow = (profile: AccessorMaybe<AllProfileView>): Accessor<ProfileShadowView> => {
@@ -66,7 +66,7 @@ export const getProfileShadow = (profile: AllProfileView): ProfileShadowView => 
 	};
 };
 
-export const updateProfileShadow = (queryClient: QueryClient, did: At.DID, value: Partial<ProfileShadow>) => {
+export const updateProfileShadow = (queryClient: QueryClient, did: At.Did, value: Partial<ProfileShadow>) => {
 	for (const profile of findProfilesInCache(queryClient, did)) {
 		shadows.set(profile, { ...shadows.get(profile), ...value });
 	}
@@ -74,7 +74,7 @@ export const updateProfileShadow = (queryClient: QueryClient, did: At.DID, value
 	batch(() => emitter.emit(did));
 };
 
-export function findProfilesInCache(queryClient: QueryClient, did: At.DID): Generator<AllProfileView> {
+export function findProfilesInCache(queryClient: QueryClient, did: At.Did): Generator<AllProfileView> {
 	return iterateQueryCache<AllProfileView>(queryClient, [
 		findAllProfilesInBookmarkFeed(did),
 		findAllProfilesInNotificationFeed(did),

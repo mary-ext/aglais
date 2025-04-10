@@ -3,7 +3,7 @@ import type { At } from '@atcute/client/lexicons';
 import { mergeHeaders } from '@atcute/client/utils/http';
 
 export interface Labeler {
-	did: At.DID;
+	did: At.Did;
 	redact: boolean;
 }
 

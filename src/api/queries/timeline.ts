@@ -31,7 +31,7 @@ import {
 	getModerationUI,
 } from '../moderation';
 import { ContextContentList, PreferenceHide, TargetContent } from '../moderation/constants';
-import { parseAtUri } from '../types/at-uri';
+import { parseCanonicalResourceUri } from '../types/at-uri';
 import { unwrapRecordEmbed } from '../utils/bluesky/embed';
 import { unwrapRecordEmbedView } from '../utils/bluesky/embed-view';
 import { EQUALS_DEQUAL } from '../utils/dequal';
@@ -49,7 +49,7 @@ export interface FollowingTimelineParams {
 
 export interface FeedTimelineParams {
 	type: 'feed';
-	uri: string;
+	uri: At.ResourceUri;
 	showReplies: boolean;
 	showReposts: boolean;
 	showQuotes: boolean;
@@ -57,14 +57,14 @@ export interface FeedTimelineParams {
 
 export interface ListTimelineParams {
 	type: 'list';
-	uri: string;
+	uri: At.ResourceUri;
 	showReplies: boolean;
 	showQuotes: boolean;
 }
 
 export interface ProfileTimelineParams {
 	type: 'profile';
-	actor: At.DID;
+	actor: At.Did;
 	tab: 'posts' | 'replies' | 'likes' | 'media';
 }
 
@@ -526,7 +526,9 @@ const createHideQuotesFilter = (): PostFilter => {
 		const post = item.post.record as PostRecord;
 		const record = unwrapRecordEmbed(post.embed);
 
-		return record === undefined || parseAtUri(record.record.uri).collection === 'app.bsky.feed.post';
+		return (
+			record === undefined || parseCanonicalResourceUri(record.record.uri).collection === 'app.bsky.feed.post'
+		);
 	};
 };
 
@@ -575,7 +577,7 @@ const createFeedSliceFilter = (): SliceFilter | undefined => {
 	};
 };
 
-const createHomeSliceFilter = (uid: At.DID, followsOnly: boolean): SliceFilter | undefined => {
+const createHomeSliceFilter = (uid: At.Did, followsOnly: boolean): SliceFilter | undefined => {
 	return (slice) => {
 		const items = slice.items;
 		const first = items[0];
@@ -607,7 +609,7 @@ const createHomeSliceFilter = (uid: At.DID, followsOnly: boolean): SliceFilter |
 	};
 };
 
-const createProfileSliceFilter = (did: At.DID): SliceFilter | undefined => {
+const createProfileSliceFilter = (did: At.Did): SliceFilter | undefined => {
 	return (slice) => {
 		const items = slice.items;
 		const first = items[0];

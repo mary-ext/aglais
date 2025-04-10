@@ -1,3 +1,5 @@
+import type { At } from '@atcute/client/lexicons';
+
 import { createPostQuotesQuery } from '~/api/queries/post-quotes';
 import { makeAtUri } from '~/api/types/at-uri';
 
@@ -9,7 +11,10 @@ import PostFeedItem from '~/components/timeline/post-feed-item';
 import VirtualItem from '~/components/virtual-item';
 
 const PostQuotesPage = () => {
-	const { did, rkey } = useParams();
+	const { did, rkey } = useParams<{
+		did: At.Did;
+		rkey: At.RecordKey;
+	}>();
 
 	const uri = makeAtUri(did, 'app.bsky.feed.post', rkey);
 	const quotes = createPostQuotesQuery(() => uri);

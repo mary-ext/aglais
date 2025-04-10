@@ -2,7 +2,7 @@ import { createMemo } from 'solid-js';
 
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { useModalContext } from '~/globals/modals';
 
@@ -83,7 +83,7 @@ const FeedOverflowMenu = (props: FeedOverflowMenuProps) => {
 				icon={OpenInNewOutlinedIcon}
 				label="Open in Bluesky app"
 				onClick={() => {
-					const uri = `https://bsky.app/profile/${feed.creator.did}/feed/${parseAtUri(feed.uri).rkey}`;
+					const uri = `https://bsky.app/profile/${feed.creator.did}/feed/${parseCanonicalResourceUri(feed.uri).rkey}`;
 
 					close();
 					window.open(uri, '_blank');

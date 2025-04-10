@@ -39,7 +39,7 @@ const ModerationService = () => {
 		return currentAccount.preferences.moderation;
 	});
 
-	const fetchLabeler = createBatchedFetch<At.DID, At.DID, ModerationLabeler>({
+	const fetchLabeler = createBatchedFetch<At.Did, At.Did, ModerationLabeler>({
 		limit: 20,
 		timeout: 1,
 		idFromQuery: (query) => query,
@@ -61,7 +61,7 @@ const ModerationService = () => {
 	const labelerDefs = createQueries(() => {
 		return {
 			queries: Object.keys(modPreferences().labelers).map((_did) => {
-				const did = _did as At.DID;
+				const did = _did as At.Did;
 
 				return {
 					queryKey: ['labeler-definition', did],
@@ -76,7 +76,7 @@ const ModerationService = () => {
 				const defs = mapDefined(results, (result) => result.data);
 				const fields = Object.fromEntries(defs.map((def) => [def.did, def]));
 
-				return fields as Record<At.DID, ModerationLabeler>;
+				return fields as Record<At.Did, ModerationLabeler>;
 			},
 		};
 	});

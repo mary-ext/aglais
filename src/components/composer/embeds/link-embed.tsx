@@ -1,6 +1,6 @@
 import { Match, Switch, onCleanup } from 'solid-js';
 
-import type { AppBskyEmbedExternal } from '@atcute/client/lexicons';
+import type { AppBskyEmbedExternal, At } from '@atcute/client/lexicons';
 
 import { createLinkMetaQuery } from '~/api/queries/composer';
 
@@ -38,7 +38,7 @@ const LinkEmbed = (props: LinkEmbedProps) => {
 					{(state) => {
 						const meta = state.external;
 
-						let thumbUrl: string | undefined;
+						let thumbUrl: At.GenericUri | undefined;
 						if (meta.thumb) {
 							const did = currentAccount!.did;
 							const cid = meta.thumb.ref.$link;
@@ -85,7 +85,7 @@ const LinkEmbed = (props: LinkEmbedProps) => {
 												title: data.title,
 												description: data.description,
 												uri: data.uri,
-												thumb: thumbUrl,
+												thumb: thumbUrl as At.GenericUri,
 											},
 										};
 

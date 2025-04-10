@@ -5,7 +5,7 @@ import { QueryClient, createMutation } from '@mary/solid-query';
 
 import { updateProfileShadow, useProfileShadow } from '~/api/cache/profile-shadow';
 import { createListMetaQuery } from '~/api/queries/list';
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 import { getCurrentDate } from '~/api/utils/misc';
 import { createRecord, deleteRecord } from '~/api/utils/records';
 
@@ -126,12 +126,12 @@ const UnblockPrompt = ({ profile }: BlockAccountPrompt) => {
 	const { close } = useModalContext();
 
 	const { rpc } = useAgent();
-	const { repo, rkey } = parseAtUri(profile.viewer!.blocking!);
+	const { repo, rkey } = parseCanonicalResourceUri(profile.viewer!.blocking!);
 
 	const mutation = createMutation((queryClient) => ({
 		async mutationFn() {
 			return await deleteRecord(rpc, {
-				repo: repo as At.DID,
+				repo: repo as At.Did,
 				collection: 'app.bsky.graph.block',
 				rkey: rkey,
 			});
@@ -225,7 +225,7 @@ const BlockedByList = ({ profile }: BlockAccountPrompt) => {
 	);
 };
 
-const resetThreadQueries = (queryClient: QueryClient, did: At.DID) => {
+const resetThreadQueries = (queryClient: QueryClient, did: At.Did) => {
 	const substring = `at://${did}/`;
 
 	queryClient.resetQueries({

@@ -2,7 +2,7 @@ import type { AppBskyActorDefs, AppBskyActorSearchActorsTypeahead, At } from '@a
 
 import type { CacheMatcher } from '../cache/utils';
 
-export const findAllProfiles = (did: At.DID): CacheMatcher<AppBskyActorDefs.ProfileViewBasic> => {
+export const findAllProfiles = (did: At.Did): CacheMatcher<AppBskyActorDefs.ProfileViewBasic> => {
 	return {
 		filter: {
 			queryKey: ['profile-autocomplete'],

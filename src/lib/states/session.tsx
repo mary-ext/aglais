@@ -27,7 +27,7 @@ import type { AccountData } from '../preferences/sessions';
 import { assert } from '../utils/invariant';
 
 export interface CurrentAccountState {
-	readonly did: At.DID;
+	readonly did: At.Did;
 	readonly data: AccountData;
 	readonly preferences: PerAccountPreferenceSchema;
 
@@ -40,8 +40,8 @@ export interface SessionContext {
 	readonly currentAccount: CurrentAccountState | undefined;
 
 	getAccounts(): AccountData[];
-	resumeSession(did: At.DID): Promise<void>;
-	removeAccount(did: At.DID): Promise<void>;
+	resumeSession(did: At.Did): Promise<void>;
+	removeAccount(did: At.Did): Promise<void>;
 
 	logout(): Promise<void>;
 }
@@ -60,7 +60,7 @@ export const SessionProvider = (props: ParentProps) => {
 	};
 
 	const createAccountState = (
-		did: At.DID,
+		did: At.Did,
 		session: OAuthUserAgent | undefined,
 		rpc: XRPC,
 	): CurrentAccountState => {
@@ -75,7 +75,7 @@ export const SessionProvider = (props: ParentProps) => {
 
 			const labelers = createMemo((): Labeler[] => {
 				return Object.entries(preferences.moderation.labelers).map(([did, info]): Labeler => {
-					return { did: did as At.DID, redact: info.redact };
+					return { did: did as At.Did, redact: info.redact };
 				});
 			});
 
@@ -144,7 +144,7 @@ export const SessionProvider = (props: ParentProps) => {
 		getAccounts(): AccountData[] {
 			return sessions.accounts;
 		},
-		async resumeSession(did: At.DID): Promise<void> {
+		async resumeSession(did: At.Did): Promise<void> {
 			const account = sessions.accounts.find((acc) => acc.did === did);
 			if (!account) {
 				return;
@@ -197,7 +197,7 @@ export const SessionProvider = (props: ParentProps) => {
 			});
 		},
 
-		async removeAccount(did: At.DID): Promise<void> {
+		async removeAccount(did: At.Did): Promise<void> {
 			const $state = untrack(state);
 			const isLoggedIn = $state !== undefined && $state.did === did;
 
@@ -246,7 +246,7 @@ export const useSession = (): SessionContext => {
 	return session;
 };
 
-const createAccountPreferences = (did: At.DID) => {
+const createAccountPreferences = (did: At.Did) => {
 	const key = `account-${did}`;
 	return createReactiveLocalStorage<PerAccountPreferenceSchema>(key, (version, prev) => {
 		if (version === 0) {
@@ -282,7 +282,7 @@ const createAccountPreferences = (did: At.DID) => {
 							},
 							displayName: 'Popular With Friends',
 							description: '',
-							avatar: '',
+							avatar: '' as At.GenericUri,
 							indexedAt: '0000-00-00T00:00:00.000Z',
 						},
 					},

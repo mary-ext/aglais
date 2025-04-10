@@ -1,17 +1,13 @@
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { useModalContext } from '~/globals/modals';
 
 import { formatLong } from '~/lib/intl/number';
 
 import Avatar from '~/components/avatar';
-import Button from '~/components/button';
-import Divider from '~/components/divider';
 import * as Prompt from '~/components/prompt';
-
-import HeartOutlinedIcon from '../icons-central/heart-outline';
 
 export interface FeedInfoPromptProps {
 	/** Expected to be static */
@@ -24,7 +20,7 @@ const FeedInfoPrompt = (props: FeedInfoPromptProps) => {
 	const feed = props.feed;
 
 	const authorUrl = `/${feed.creator.did}`;
-	const feedUrl = `${authorUrl}/feeds/${parseAtUri(feed.uri).rkey}`;
+	const feedUrl = `${authorUrl}/feeds/${parseCanonicalResourceUri(feed.uri).rkey}`;
 
 	return (
 		<Prompt.Container maxWidth="md">

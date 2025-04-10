@@ -1,6 +1,6 @@
 import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/client/lexicons';
 
-import { parseAtUri } from '~/api/types/at-uri';
+import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 import { type MediaEmbed, type RecordEmbed, unwrapEmbed } from '~/api/utils/bluesky/embed';
 import { serializeRichText } from '~/api/utils/richtext-stringify';
 
@@ -133,7 +133,7 @@ const toRecordEmbed = (embed: RecordEmbed): PostRecordEmbed | undefined => {
 	const ref = embed.record;
 
 	const uri = ref.uri;
-	const { collection } = parseAtUri(uri);
+	const { collection } = parseCanonicalResourceUri(uri);
 
 	switch (collection) {
 		case 'app.bsky.feed.post': {

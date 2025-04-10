@@ -1,3 +1,5 @@
+import type { At } from '@atcute/client/lexicons';
+
 import { createSubjectLikersQuery } from '~/api/queries/subject-likers';
 import { makeAtUri } from '~/api/types/at-uri';
 
@@ -10,7 +12,10 @@ import ProfileItem from '~/components/profiles/profile-item';
 import VirtualItem from '~/components/virtual-item';
 
 const PostLikesPage = () => {
-	const { did, rkey } = useParams();
+	const { did, rkey } = useParams<{
+		did: At.Did;
+		rkey: At.RecordKey;
+	}>();
 
 	const uri = makeAtUri(did, 'app.bsky.feed.post', rkey);
 	const likers = createSubjectLikersQuery(() => uri);

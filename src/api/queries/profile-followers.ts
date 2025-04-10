@@ -1,11 +1,11 @@
-import type { AppBskyActorDefs } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { type InfiniteData, type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
 import { type ProfilesListWithSubjectPage, toProfilesListWithSubjectPage } from '../types/profile-response';
 
-export const createProfileFollowersQuery = (didOrHandle: () => string) => {
+export const createProfileFollowersQuery = (didOrHandle: () => At.Identifier) => {
 	const { rpc } = useAgent();
 
 	return createInfiniteQuery((queryClient) => {
