@@ -39,10 +39,6 @@ configureOAuth({
 	},
 });
 
-localStorage.removeItem('oauth-dpopNonces');
-localStorage.removeItem('oauth-sessions');
-localStorage.removeItem('oauth-states');
-
 const InnerApp = () => {
 	const [ready, setReady] = createSignal(false);
 	const session = useSession();
