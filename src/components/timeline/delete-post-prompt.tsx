@@ -39,10 +39,9 @@ const DeletePostPrompt = ({ post, onPostDelete }: DeletePostPromptProps) => {
 			},
 		});
 
-		updatePostShadow(queryClient, post.uri, { deleted: true });
-
 		promise.then(
 			() => {
+				updatePostShadow(queryClient, post.uri, { deleted: true });
 				onPostDelete?.();
 			},
 			async (err) => {
@@ -69,6 +68,7 @@ const DeletePostPrompt = ({ post, onPostDelete }: DeletePostPromptProps) => {
 						},
 					});
 
+					updatePostShadow(queryClient, post.uri, { deleted: true });
 					onPostDelete?.();
 					return;
 				}
