@@ -1,34 +1,53 @@
-import { type ParentProps, createContext, getOwner, runWithOwner, useContext } from 'solid-js';
+import { type ParentProps, createContext, createRoot, getOwner, useContext } from 'solid-js';
 
 import { assert } from '../utils/invariant';
 
-export interface SingletonContext {
-	inject<T>(construct: () => T): T;
+interface Singleton<T> {
+	n: string;
+	c: () => T;
+}
+
+interface SingletonContext {
+	inject<T>(singleton: Singleton<T>): T;
 }
 
 const Context = createContext<SingletonContext>();
 
 export const SingletonProvider = (props: ParentProps) => {
 	const owner = getOwner();
-	const instances = new Map<() => any, any>();
+	const registry = new Map<
+		string,
+		{
+			construct: any;
+			value: any;
+			cleanup: () => void;
+		}
+	>();
 
 	const context: SingletonContext = {
-		inject(construct) {
-			let instance = instances.get(construct);
-			if (instance === undefined) {
-				instances.set(construct, (instance = runWithOwner(owner, construct)));
+		inject({ n: name, c: construct }) {
+			let registered = registry.get(name);
+			if (registered === undefined || registered.construct !== construct) {
+				registered?.cleanup();
+				registered = createRoot((cleanup) => ({ construct, cleanup, value: construct() }), owner);
+
+				registry.set(name, registered);
 			}
 
-			return instance;
+			return registered.value;
 		},
 	};
 
 	return <Context.Provider value={context}>{props.children}</Context.Provider>;
 };
 
-export const inject = <T,>(construct: () => T): T => {
+export const define = <T,>(name: string, construct: () => T): Singleton<T> => {
+	return { n: name, c: construct };
+};
+
+export const inject = <T,>(singleton: Singleton<T>): T => {
 	const context = useContext(Context);
 	assert(context !== undefined, `Expected inject to be called under <SingletonProvider>`);
 
-	return context.inject(construct);
+	return context.inject(singleton);
 };

@@ -13,10 +13,11 @@ import { createBatchedFetch } from '~/lib/utils/batch-fetch';
 
 import { useAgent } from '../agent';
 import { useSession } from '../session';
+import { define } from '../singleton';
 
 type Labeler = AppBskyLabelerDefs.LabelerViewDetailed;
 
-const ModerationService = () => {
+const ModerationService = define('moderation', () => {
 	const { rpc, persister } = useAgent();
 	const { currentAccount } = useSession();
 
@@ -90,6 +91,6 @@ const ModerationService = () => {
 	});
 
 	return modOptions;
-};
+});
 
 export default ModerationService;

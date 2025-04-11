@@ -5,8 +5,9 @@ import type { BookmarkDBSchema } from '~/lib/aglais-bookmarks/db';
 import { assert } from '~/lib/utils/invariant';
 
 import { useSession } from '../session';
+import { define } from '../singleton';
 
-const BookmarksService = () => {
+const BookmarksService = define('bookmarks', () => {
 	const { currentAccount } = useSession();
 
 	let promise: Promise<IDBPDatabase<BookmarkDBSchema>> | undefined;
@@ -51,6 +52,6 @@ const BookmarksService = () => {
 			})());
 		},
 	};
-};
+});
 
 export default BookmarksService;
