@@ -18,23 +18,23 @@ export const SingletonProvider = (props: ParentProps) => {
 	const registry = new Map<
 		string,
 		{
-			construct: any;
-			value: any;
-			cleanup: () => void;
+			c: any;
+			v: any;
+			d: () => void;
 		}
 	>();
 
 	const context: SingletonContext = {
 		inject({ n: name, c: construct }) {
 			let registered = registry.get(name);
-			if (registered === undefined || registered.construct !== construct) {
-				registered?.cleanup();
-				registered = createRoot((cleanup) => ({ construct, cleanup, value: construct() }), owner);
+			if (registered === undefined || registered.c !== construct) {
+				registered?.d();
+				registered = createRoot((dispose) => ({ c: construct, d: dispose, v: construct() }), owner);
 
 				registry.set(name, registered);
 			}
 
-			return registered.value;
+			return registered.v;
 		},
 	};
 
