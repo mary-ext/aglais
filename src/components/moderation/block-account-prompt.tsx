@@ -3,7 +3,7 @@ import { Match, Switch } from 'solid-js';
 import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { QueryClient, createMutation } from '@mary/solid-query';
 
-import { updateProfileShadow, useProfileShadow } from '~/api/cache/profile-shadow';
+import { type ProfileShadowView, updateProfileShadow, useProfileShadow } from '~/api/cache/profile-shadow';
 import { createListMetaQuery } from '~/api/queries/list';
 import { parseCanonicalResourceUri } from '~/api/types/at-uri';
 import { getCurrentDate } from '~/api/utils/misc';
@@ -22,26 +22,25 @@ import ReplyOutlinedIcon from '../icons-central/reply-outline';
 import * as Prompt from '../prompt';
 
 export interface BlockAccountPrompt {
-	/** Expected to be static */
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }
 
 const BlockAccountPrompt = (props: BlockAccountPrompt) => {
-	const profile = props.profile;
-	const shadow = useProfileShadow(props.profile);
+	const profile = () => props.profile;
+	const shadow = useProfileShadow(profile);
 
 	return (
 		<Switch>
-			<Match when={/* @once */ profile.viewer?.blockingByList}>
-				<BlockedByList {...props} />
+			<Match when={profile().viewer?.blockingByList}>
+				<BlockedByList profile={profile()} shadow={shadow()} />
 			</Match>
 
 			<Match when={shadow().blockUri}>
-				<UnblockPrompt {...props} />
+				<UnblockPrompt profile={profile()} shadow={shadow()} />
 			</Match>
 
 			<Match when>
-				<BlockPrompt {...props} />
+				<BlockPrompt profile={profile()} shadow={shadow()} />
 			</Match>
 		</Switch>
 	);
@@ -49,7 +48,11 @@ const BlockAccountPrompt = (props: BlockAccountPrompt) => {
 
 export default BlockAccountPrompt;
 
-const BlockPrompt = ({ profile }: BlockAccountPrompt) => {
+interface BlockAccountPromptInnerProps extends BlockAccountPrompt {
+	shadow: ProfileShadowView;
+}
+
+const BlockPrompt = (props: BlockAccountPromptInnerProps) => {
 	const { close } = useModalContext();
 
 	const { currentAccount } = useSession();
@@ -63,16 +66,16 @@ const BlockPrompt = ({ profile }: BlockAccountPrompt) => {
 				record: {
 					$type: 'app.bsky.graph.block',
 					createdAt: getCurrentDate(),
-					subject: profile.did,
+					subject: props.profile.did,
 				},
 			});
 		},
 		onSuccess(ret) {
 			close();
-			updateProfileShadow(queryClient, profile.did, { blockUri: ret.uri });
+			updateProfileShadow(queryClient, props.profile.did, { blockUri: ret.uri });
 
 			setTimeout(() => {
-				resetThreadQueries(queryClient, profile.did);
+				resetThreadQueries(queryClient, props.profile.did);
 			}, 1_500);
 		},
 		onError() {
@@ -82,7 +85,7 @@ const BlockPrompt = ({ profile }: BlockAccountPrompt) => {
 
 	return (
 		<Prompt.Container maxWidth="md" disabled={mutation.isPending}>
-			<Prompt.Title>{/* @once */ `Block @${profile.handle.toLowerCase()}?`}</Prompt.Title>
+			<Prompt.Title>{/* @once */ `Block @${props.profile.handle.toLowerCase()}?`}</Prompt.Title>
 
 			<Prompt.Description>Here's what happens if you do:</Prompt.Description>
 
@@ -122,14 +125,15 @@ const BlockPrompt = ({ profile }: BlockAccountPrompt) => {
 	);
 };
 
-const UnblockPrompt = ({ profile }: BlockAccountPrompt) => {
+const UnblockPrompt = (props: BlockAccountPromptInnerProps) => {
 	const { close } = useModalContext();
 
 	const { rpc } = useAgent();
-	const { repo, rkey } = parseCanonicalResourceUri(profile.viewer!.blocking!);
 
 	const mutation = createMutation((queryClient) => ({
 		async mutationFn() {
+			const { repo, rkey } = parseCanonicalResourceUri(props.shadow.blockUri!);
+
 			return await deleteRecord(rpc, {
 				repo: repo as At.Did,
 				collection: 'app.bsky.graph.block',
@@ -138,10 +142,10 @@ const UnblockPrompt = ({ profile }: BlockAccountPrompt) => {
 		},
 		onSuccess() {
 			close();
-			updateProfileShadow(queryClient, profile.did, { blockUri: undefined });
+			updateProfileShadow(queryClient, props.profile.did, { blockUri: undefined });
 
 			setTimeout(() => {
-				resetThreadQueries(queryClient, profile.did);
+				resetThreadQueries(queryClient, props.profile.did);
 			}, 1_500);
 		},
 		onError() {
@@ -151,7 +155,7 @@ const UnblockPrompt = ({ profile }: BlockAccountPrompt) => {
 
 	return (
 		<Prompt.Container maxWidth="md" disabled={mutation.isPending}>
-			<Prompt.Title>{/* @once */ `Unblock @${profile.handle.toLowerCase()}?`}</Prompt.Title>
+			<Prompt.Title>{/* @once */ `Unblock @${props.profile.handle.toLowerCase()}?`}</Prompt.Title>
 
 			<Prompt.Description>Here's what happens if you do:</Prompt.Description>
 
@@ -191,15 +195,14 @@ const UnblockPrompt = ({ profile }: BlockAccountPrompt) => {
 	);
 };
 
-const BlockedByList = ({ profile }: BlockAccountPrompt) => {
+const BlockedByList = (props: BlockAccountPromptInnerProps) => {
 	const { close } = useModalContext();
 
-	const listBasic = profile.viewer!.blockingByList!;
-	const query = createListMetaQuery(() => listBasic.uri);
+	const query = createListMetaQuery(() => props.profile.viewer!.blockingByList!.uri);
 
 	return (
 		<Prompt.Container>
-			<Prompt.Title>{/* @once */ `Can't unblock @${profile.handle.toLowerCase()}`}</Prompt.Title>
+			<Prompt.Title>{/* @once */ `Can't unblock @${props.profile.handle.toLowerCase()}`}</Prompt.Title>
 			<Prompt.Description>
 				You've currently opted to block all accounts that are in this moderation list:
 			</Prompt.Description>
