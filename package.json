@@ -24,6 +24,7 @@
 		"@floating-ui/utils": "^0.2.9",
 		"@mary/array-fns": "jsr:^0.1.4",
 		"@mary/async-iterator-fns": "jsr:^0.1.1",
+		"@mary/batch-fetch": "jsr:^0.1.0",
 		"@mary/date-fns": "jsr:^0.1.3",
 		"@mary/events": "jsr:^0.2.0",
 		"@mary/exif-rm": "jsr:^0.2.2",

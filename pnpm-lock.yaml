@@ -78,6 +78,9 @@ importers:
       '@mary/async-iterator-fns':
         specifier: jsr:^0.1.1
         version: '@jsr/mary__async-iterator-fns@0.1.1'
+      '@mary/batch-fetch':
+        specifier: jsr:^0.1.0
+        version: '@jsr/mary__batch-fetch@0.1.0'
       '@mary/date-fns':
         specifier: jsr:^0.1.3
         version: '@jsr/mary__date-fns@0.1.3'
@@ -1230,6 +1233,9 @@ packages:
 
   '@jsr/mary__async-iterator-fns@0.1.1':
     resolution: {integrity: sha512-ef/TDpu6yGTAb4fbGEjSFPO7u49WrxJeXa9T6fvmjlpEfR84qxrjTR6MEUQ1hMySD0+O9yQKvBl/KL5x7K9+iA==, tarball: https://npm.jsr.io/~/11/@jsr/mary__async-iterator-fns/0.1.1.tgz}
+
+  '@jsr/mary__batch-fetch@0.1.0':
+    resolution: {integrity: sha512-A5SmTfDUMjr+AaJA+wFg4eKKVQm6/51CYTg5ssO+vcnaCJoP1Y0RURG6VkMno9QUholf3AAldfzRgQOXDZbFgg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__batch-fetch/0.1.0.tgz}
 
   '@jsr/mary__date-fns@0.1.3':
     resolution: {integrity: sha512-kjS04BESEHO9ZTqjOxk4ip8DsAdVDmt/jC5V4zVIYq3VD/04+WJK9kjdQda23eVZMuF9ZZY0zMswU7UXG+PSrg==, tarball: https://npm.jsr.io/~/11/@jsr/mary__date-fns/0.1.3.tgz}
@@ -3734,6 +3740,8 @@ snapshots:
   '@jsr/mary__array-fns@0.1.4': {}
 
   '@jsr/mary__async-iterator-fns@0.1.1': {}
+
+  '@jsr/mary__batch-fetch@0.1.0': {}
 
   '@jsr/mary__date-fns@0.1.3': {}
 

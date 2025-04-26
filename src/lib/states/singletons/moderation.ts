@@ -3,13 +3,12 @@ import { unwrap } from 'solid-js/store';
 
 import type { AppBskyLabelerDefs, At } from '@atcute/client/lexicons';
 import { mapDefined } from '@mary/array-fns';
-import { createQueries } from '@mary/solid-query';
+import { createBatchedFetch } from '@mary/batch-fetch';
+import { type QueryFunctionContext as QC, createQueries } from '@mary/solid-query';
 
 import { BLUESKY_MODERATION_DID } from '~/api/defaults';
 import type { ModerationLabeler, ModerationOptions, ModerationPreferences } from '~/api/moderation';
 import { interpretLabelerDefinition } from '~/api/moderation/labeler';
-
-import { createBatchedFetch } from '~/lib/utils/batch-fetch';
 
 import { useAgent } from '../agent';
 import { useSession } from '../session';
@@ -40,13 +39,13 @@ const ModerationService = define('moderation', () => {
 		return currentAccount.preferences.moderation;
 	});
 
-	const fetchLabeler = createBatchedFetch<At.Did, At.Did, ModerationLabeler>({
+	const fetchLabeler = createBatchedFetch<At.Did, ModerationLabeler>({
 		limit: 20,
 		timeout: 1,
-		idFromQuery: (query) => query,
-		idFromData: (data) => data.did,
-		async fetch(dids) {
+		idFromResource: (labeler) => labeler.did,
+		async fetch(dids, signal) {
 			const { data } = await rpc.get('app.bsky.labeler.getServices', {
+				signal,
 				params: {
 					dids: dids,
 					detailed: true,
@@ -66,7 +65,7 @@ const ModerationService = define('moderation', () => {
 
 				return {
 					queryKey: ['labeler-definition', did],
-					queryFn: () => fetchLabeler(did),
+					queryFn: ({ signal }: QC) => fetchLabeler(did, signal),
 					staleTime: 21600000, // 6 hours
 					gcTime: 86400000, // 24 hours
 					refetchOnWindowFocus: true,
