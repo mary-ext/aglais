@@ -73,19 +73,19 @@ importers:
         specifier: ^0.2.9
         version: 0.2.9(patch_hash=1cf283fbaa686f96f7b3029bbc0955bff698af6f4a75ba6c276ad1a7a7c40aea)
       '@mary/array-fns':
-        specifier: npm:@jsr/mary__array-fns@^0.1.4
+        specifier: jsr:^0.1.4
         version: '@jsr/mary__array-fns@0.1.4'
       '@mary/async-iterator-fns':
-        specifier: npm:@jsr/mary__async-iterator-fns@^0.1.1
+        specifier: jsr:^0.1.1
         version: '@jsr/mary__async-iterator-fns@0.1.1'
       '@mary/date-fns':
-        specifier: npm:@jsr/mary__date-fns@^0.1.3
+        specifier: jsr:^0.1.3
         version: '@jsr/mary__date-fns@0.1.3'
       '@mary/events':
-        specifier: npm:@jsr/mary__events@^0.2.0
+        specifier: jsr:^0.2.0
         version: '@jsr/mary__events@0.2.0'
       '@mary/exif-rm':
-        specifier: npm:@jsr/mary__exif-rm@^0.2.2
+        specifier: jsr:^0.2.2
         version: '@jsr/mary__exif-rm@0.2.2'
       '@mary/solid-freeze':
         specifier: npm:@externdefs/solid-freeze@^0.1.1
