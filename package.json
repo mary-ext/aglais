@@ -9,18 +9,18 @@
 	},
 	"dependencies": {
 		"@atcute/bluemoji": "^2.0.0",
-		"@atcute/bluesky": "^2.0.0",
+		"@atcute/bluesky": "^2.1.1",
 		"@atcute/bluesky-richtext-parser": "^1.0.7",
 		"@atcute/bluesky-richtext-segmenter": "^2.0.0",
 		"@atcute/bluesky-search-parser": "^0.1.0",
-		"@atcute/cbor": "^2.2.1",
-		"@atcute/cid": "^2.2.1",
-		"@atcute/client": "^3.0.0",
-		"@atcute/oauth-browser-client": "^1.0.17",
+		"@atcute/cbor": "^2.2.3",
+		"@atcute/cid": "^2.2.2",
+		"@atcute/client": "^3.1.0",
+		"@atcute/oauth-browser-client": "^1.0.18",
 		"@atcute/tid": "^1.0.2",
-		"@atlaskit/pragmatic-drag-and-drop": "^1.5.2",
+		"@atlaskit/pragmatic-drag-and-drop": "^1.6.0",
 		"@atlaskit/pragmatic-drag-and-drop-hitbox": "^1.0.3",
-		"@floating-ui/dom": "^1.6.13",
+		"@floating-ui/dom": "^1.7.0",
 		"@floating-ui/utils": "^0.2.9",
 		"@mary/array-fns": "jsr:^0.1.4",
 		"@mary/async-iterator-fns": "jsr:^0.1.1",
@@ -31,12 +31,12 @@
 		"@mary/solid-freeze": "npm:@externdefs/solid-freeze@^0.1.1",
 		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.5",
 		"comlink": "^4.4.2",
-		"hls.js": "^1.6.1",
+		"hls.js": "^1.6.2",
 		"idb": "^8.0.2",
 		"nanoid": "^5.1.5",
 		"solid-floating-ui": "~0.2.1",
-		"solid-js": "^1.9.5",
-		"webm-muxer": "^5.1.1"
+		"solid-js": "^1.9.6",
+		"webm-muxer": "^5.1.2"
 	},
 	"devDependencies": {
 		"@trivago/prettier-plugin-sort-imports": "^5.2.2",
@@ -49,10 +49,10 @@
 		"tailwindcss": "^3.4.17",
 		"terser": "^5.39.0",
 		"typescript": "~5.8.3",
-		"vite": "^6.2.6",
+		"vite": "^6.3.4",
 		"vite-plugin-pwa": "0.21.0",
 		"vite-plugin-solid": "^2.11.6",
-		"wrangler": "^4.9.1"
+		"wrangler": "^4.14.1"
 	},
 	"pnpm": {
 		"patchedDependencies": {
