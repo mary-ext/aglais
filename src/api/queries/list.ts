@@ -1,5 +1,6 @@
 import { modifyMutable, reconcile } from 'solid-js/store';
 
+import { ok } from '@atcute/client';
 import type { AppBskyGraphDefs, At } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
@@ -14,7 +15,7 @@ import { isDid } from '../types/identity';
 import { resolveHandle } from './handle';
 
 export const createListMetaQuery = (listUri: () => string) => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 	const { currentAccount } = useSession();
 
 	return createQuery((queryClient) => {
@@ -29,16 +30,18 @@ export const createListMetaQuery = (listUri: () => string) => {
 				if (isDid(uri.repo)) {
 					did = uri.repo;
 				} else {
-					did = await resolveHandle(rpc, uri.repo, ctx.signal);
+					did = await resolveHandle(client, uri.repo, ctx.signal);
 				}
 
-				const { data } = await rpc.get('app.bsky.graph.getList', {
-					signal: ctx.signal,
-					params: {
-						list: makeAtUri(did, uri.collection, uri.rkey),
-						limit: 1,
-					},
-				});
+				const data = await ok(
+					client.get('app.bsky.graph.getList', {
+						signal: ctx.signal,
+						params: {
+							list: makeAtUri(did, uri.collection, uri.rkey),
+							limit: 1,
+						},
+					}),
+				);
 
 				if (currentAccount) {
 					const found = currentAccount.preferences.feeds.find((item): item is SavedListFeed => {

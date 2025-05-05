@@ -1,4 +1,5 @@
 import { tokenize } from '@atcute/bluesky-search-parser';
+import { ok } from '@atcute/client';
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 import { mapDefined } from '@mary/array-fns';
 import { filter, map, take, toArray } from '@mary/async-iterator-fns';
@@ -41,7 +42,7 @@ export interface BookmarkFeedReturn {
 
 export const createBookmarkFeedQuery = (tagId: () => string, search: () => string) => {
 	const bookmarks = inject(BookmarksService);
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	const listing = createInfiniteQuery(() => {
 		const $tagId = tagId();
@@ -95,12 +96,14 @@ export const createBookmarkFeedQuery = (tagId: () => string, search: () => strin
 					let map: Map<string, AppBskyFeedDefs.PostView>;
 
 					try {
-						const { data } = await rpc.get('app.bsky.feed.getPosts', {
-							signal: ctx.signal,
-							params: {
-								uris: raws.map((item) => item.view.uri),
-							},
-						});
+						const data = await ok(
+							client.get('app.bsky.feed.getPosts', {
+								signal: ctx.signal,
+								params: {
+									uris: raws.map((item) => item.view.uri),
+								},
+							}),
+						);
 
 						map = new Map(data.posts.map((view) => [view.uri, view]));
 					} catch {}

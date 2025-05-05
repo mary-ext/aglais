@@ -15,7 +15,7 @@ export const createProfileFollowMutation = (
 	shadow: () => ProfileShadowView,
 ) => {
 	const queryClient = useQueryClient();
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 	const { currentAccount } = useSession();
 
 	const did = profile().did;
@@ -30,7 +30,7 @@ export const createProfileFollowMutation = (
 					return prevFollowUri;
 				}
 
-				const result = await createRecord(rpc, {
+				const result = await createRecord(client, {
 					repo: currentAccount!.did,
 					collection: 'app.bsky.graph.follow',
 					record: {
@@ -44,7 +44,7 @@ export const createProfileFollowMutation = (
 			} else if (prevFollowUri) {
 				const uri = parseCanonicalResourceUri(prevFollowUri);
 
-				await deleteRecord(rpc, {
+				await deleteRecord(client, {
 					repo: currentAccount!.did,
 					collection: 'app.bsky.graph.follow',
 					rkey: uri.rkey,

@@ -1,6 +1,6 @@
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 
-import { XRPC, simpleFetchHandler } from '@atcute/client';
+import { Client, ok, simpleFetchHandler } from '@atcute/client';
 import { sampleOne } from '@mary/array-fns';
 import { createQuery } from '@mary/solid-query';
 
@@ -66,17 +66,17 @@ const PostTranslation = (props: PostTranslationProps) => {
 					targetLang = found;
 				}
 
-				console.log(targetLang);
-
-				const rpc = new XRPC({ handler: simpleFetchHandler({ service: $instanceUrl! }) });
-				const { data } = await rpc.get('x.basa.translate', {
-					params: {
-						engine: 'google',
-						text: $text,
-						from: $source,
-						to: targetLang,
-					},
-				});
+				const client = new Client({ handler: simpleFetchHandler({ service: $instanceUrl! }) });
+				const data = await ok(
+					client.get('x.basa.translate', {
+						params: {
+							engine: 'google',
+							text: $text,
+							from: $source,
+							to: targetLang,
+						},
+					}),
+				);
 
 				return data;
 			},

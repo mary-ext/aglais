@@ -1,5 +1,6 @@
 import { modifyMutable, reconcile } from 'solid-js/store';
 
+import { ok } from '@atcute/client';
 import type { AppBskyFeedDefs, At } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
@@ -14,7 +15,7 @@ import { isDid } from '../types/identity';
 import { resolveHandle } from './handle';
 
 export const createFeedMetaQuery = (feedUri: () => string) => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 	const { currentAccount } = useSession();
 
 	return createQuery((queryClient) => {
@@ -29,15 +30,17 @@ export const createFeedMetaQuery = (feedUri: () => string) => {
 				if (isDid(uri.repo)) {
 					did = uri.repo;
 				} else {
-					did = await resolveHandle(rpc, uri.repo, ctx.signal);
+					did = await resolveHandle(client, uri.repo, ctx.signal);
 				}
 
-				const { data } = await rpc.get('app.bsky.feed.getFeedGenerator', {
-					signal: ctx.signal,
-					params: {
-						feed: makeAtUri(did, uri.collection, uri.rkey),
-					},
-				});
+				const data = await ok(
+					client.get('app.bsky.feed.getFeedGenerator', {
+						signal: ctx.signal,
+						params: {
+							feed: makeAtUri(did, uri.collection, uri.rkey),
+						},
+					}),
+				);
 
 				if (currentAccount) {
 					const found = currentAccount.preferences.feeds.find((item): item is SavedGeneratorFeed => {

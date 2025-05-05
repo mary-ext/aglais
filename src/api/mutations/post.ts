@@ -15,7 +15,7 @@ export const createPostLikeMutation = (
 	shadow: () => PostShadowView,
 ) => {
 	const queryClient = useQueryClient();
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 	const { currentAccount } = useSession();
 
 	const postUri = post().uri;
@@ -30,7 +30,7 @@ export const createPostLikeMutation = (
 					return prevLikeUri;
 				}
 
-				const result = await createRecord(rpc, {
+				const result = await createRecord(client, {
 					repo: currentAccount!.did,
 					collection: 'app.bsky.feed.like',
 					record: {
@@ -47,7 +47,7 @@ export const createPostLikeMutation = (
 			} else if (prevLikeUri) {
 				const uri = parseCanonicalResourceUri(prevLikeUri);
 
-				await deleteRecord(rpc, {
+				await deleteRecord(client, {
 					repo: currentAccount!.did,
 					collection: 'app.bsky.feed.like',
 					rkey: uri.rkey,
@@ -74,7 +74,7 @@ export const createPostRepostMutation = (
 	shadow: () => PostShadowView,
 ) => {
 	const queryClient = useQueryClient();
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 	const { currentAccount } = useSession();
 
 	const postUri = post().uri;
@@ -89,7 +89,7 @@ export const createPostRepostMutation = (
 					return prevRepostUri;
 				}
 
-				const result = await createRecord(rpc, {
+				const result = await createRecord(client, {
 					repo: currentAccount!.did,
 					collection: 'app.bsky.feed.repost',
 					record: {
@@ -106,7 +106,7 @@ export const createPostRepostMutation = (
 			} else if (prevRepostUri) {
 				const uri = parseCanonicalResourceUri(prevRepostUri);
 
-				await deleteRecord(rpc, {
+				await deleteRecord(client, {
 					repo: currentAccount!.did,
 					collection: 'app.bsky.feed.repost',
 					rkey: uri.rkey,

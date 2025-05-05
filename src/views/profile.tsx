@@ -1,6 +1,6 @@
 import { Match, Show, Switch, createMemo } from 'solid-js';
 
-import { XRPCError } from '@atcute/client';
+import { ClientResponseError } from '@atcute/client';
 import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
@@ -117,15 +117,15 @@ const ProfilePage = () => {
 				<Match when={profile.error} keyed>
 					{(err) => {
 						if (
-							err instanceof XRPCError &&
-							(err.kind === 'InvalidRequest' ||
-								err.kind === 'AccountTakedown' ||
-								err.kind === 'AccountDeactivated')
+							err instanceof ClientResponseError &&
+							(err.error === 'InvalidRequest' ||
+								err.error === 'AccountTakedown' ||
+								err.error === 'AccountDeactivated')
 						) {
 							const text =
-								err.kind === 'AccountTakedown'
+								err.error === 'AccountTakedown'
 									? `This account is taken down`
-									: err.kind === 'AccountDeactivated'
+									: err.error === 'AccountDeactivated'
 										? `This account has deactivated`
 										: `This account doesn't exist`;
 

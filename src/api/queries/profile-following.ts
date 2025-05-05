@@ -1,3 +1,4 @@
+import { ok } from '@atcute/client';
 import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { type InfiniteData, type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
@@ -6,7 +7,7 @@ import { useAgent } from '~/lib/states/agent';
 import { type ProfilesListWithSubjectPage, toProfilesListWithSubjectPage } from '../types/profile-response';
 
 export const createProfileFollowingQuery = (didOrHandle: () => At.Identifier) => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	return createInfiniteQuery((queryClient) => {
 		const $didOrHandle = didOrHandle();
@@ -14,14 +15,16 @@ export const createProfileFollowingQuery = (didOrHandle: () => At.Identifier) =>
 		return {
 			queryKey: ['profile-following', $didOrHandle],
 			async queryFn(ctx: QC<never, string | undefined>): Promise<ProfilesListWithSubjectPage> {
-				const { data } = await rpc.get('app.bsky.graph.getFollows', {
-					signal: ctx.signal,
-					params: {
-						actor: $didOrHandle,
-						limit: 50,
-						cursor: ctx.pageParam,
-					},
-				});
+				const data = await ok(
+					client.get('app.bsky.graph.getFollows', {
+						signal: ctx.signal,
+						params: {
+							actor: $didOrHandle,
+							limit: 50,
+							cursor: ctx.pageParam,
+						},
+					}),
+				);
 
 				return toProfilesListWithSubjectPage(data, 'follows');
 			},

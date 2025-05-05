@@ -1,3 +1,4 @@
+import { ok } from '@atcute/client';
 import type { AppBskyGraphDefs } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
@@ -7,7 +8,7 @@ import { useSession } from '~/lib/states/session';
 export type MyListsFilter = 'all' | 'curation' | 'moderation' | 'all-including-subscribed';
 
 export const createMyListsQuery = (filter: MyListsFilter) => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 	const { currentAccount } = useSession();
 
 	return createQuery(() => ({
@@ -15,14 +16,16 @@ export const createMyListsQuery = (filter: MyListsFilter) => {
 		async queryFn({ signal }) {
 			const promises = [
 				accumulate(async (cursor) => {
-					const { data } = await rpc.get('app.bsky.graph.getLists', {
-						signal,
-						params: {
-							actor: currentAccount!.did,
-							cursor,
-							limit: 100,
-						},
-					});
+					const data = await ok(
+						client.get('app.bsky.graph.getLists', {
+							signal,
+							params: {
+								actor: currentAccount!.did,
+								cursor,
+								limit: 100,
+							},
+						}),
+					);
 
 					return {
 						cursor: data.cursor,
@@ -34,13 +37,15 @@ export const createMyListsQuery = (filter: MyListsFilter) => {
 			if (filter === 'all-including-subscribed' || filter === 'moderation') {
 				promises.push(
 					accumulate(async (cursor) => {
-						const { data } = await rpc.get('app.bsky.graph.getListMutes', {
-							signal,
-							params: {
-								cursor,
-								limit: 100,
-							},
-						});
+						const data = await ok(
+							client.get('app.bsky.graph.getListMutes', {
+								signal,
+								params: {
+									cursor,
+									limit: 100,
+								},
+							}),
+						);
 
 						return {
 							cursor: data.cursor,
@@ -51,13 +56,15 @@ export const createMyListsQuery = (filter: MyListsFilter) => {
 
 				promises.push(
 					accumulate(async (cursor) => {
-						const { data } = await rpc.get('app.bsky.graph.getListBlocks', {
-							signal,
-							params: {
-								cursor,
-								limit: 100,
-							},
-						});
+						const data = await ok(
+							client.get('app.bsky.graph.getListBlocks', {
+								signal,
+								params: {
+									cursor,
+									limit: 100,
+								},
+							}),
+						);
 
 						return {
 							cursor: data.cursor,

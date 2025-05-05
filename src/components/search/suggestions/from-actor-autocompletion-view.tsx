@@ -1,5 +1,6 @@
 import { For, Show, createMemo } from 'solid-js';
 
+import { ok } from '@atcute/client';
 import { createQuery, keepPreviousData } from '@mary/solid-query';
 
 import { createProfileQuery } from '~/api/queries/profile';
@@ -17,7 +18,7 @@ const FromActorAutocompletionView = (props: {
 }) => {
 	const { currentAccount } = useSession();
 
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 	const isFocused = useIsFocused();
 
 	const match = createMemo(() => {
@@ -32,13 +33,15 @@ const FromActorAutocompletionView = (props: {
 			enabled: $match !== '' && isFocused(),
 			placeholderData: keepPreviousData,
 			async queryFn({ signal }) {
-				const { data } = await rpc.get('app.bsky.actor.searchActorsTypeahead', {
-					signal,
-					params: {
-						q: $match,
-						limit: 10,
-					},
-				});
+				const data = await ok(
+					client.get('app.bsky.actor.searchActorsTypeahead', {
+						signal,
+						params: {
+							q: $match,
+							limit: 10,
+						},
+					}),
+				);
 
 				return data;
 			},

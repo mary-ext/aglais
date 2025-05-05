@@ -12,6 +12,7 @@ import {
 	createSignal,
 } from 'solid-js';
 
+import { ok } from '@atcute/client';
 import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 
 import { safeUrlParse } from '~/api/utils/strings';
@@ -62,7 +63,7 @@ const ComposerInput = (props: ComposerInputProps) => {
 	const onChange = props.onChange;
 	const onSubmit = props.onSubmit;
 
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	const [inputCursor, setInputCursor] = createSignal<number>();
 	const [menuSelection, setMenuSelection] = createSignal<number>();
@@ -135,14 +136,16 @@ const ComposerInput = (props: ComposerInputProps) => {
 			const MATCH_LIMIT = 5;
 
 			if (type === Suggestion.MENTION) {
-				const response = await rpc.get('app.bsky.actor.searchActorsTypeahead', {
-					params: {
-						q: match.query,
-						limit: MATCH_LIMIT,
-					},
-				});
+				const data = await ok(
+					client.get('app.bsky.actor.searchActorsTypeahead', {
+						params: {
+							q: match.query,
+							limit: MATCH_LIMIT,
+						},
+					}),
+				);
 
-				return response.data.actors.map((item) => ({ type: Suggestion.MENTION, data: item }));
+				return data.actors.map((item) => ({ type: Suggestion.MENTION, data: item }));
 			}
 
 			assert(false, `expected match`);

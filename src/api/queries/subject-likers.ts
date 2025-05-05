@@ -1,3 +1,4 @@
+import { ok } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
 import type { QueryFunctionContext as QC } from '@mary/solid-query';
 import { createInfiniteQuery } from '@mary/solid-query';
@@ -7,7 +8,7 @@ import { useAgent } from '~/lib/states/agent';
 import type { ProfilesListPage } from '../types/profile-response';
 
 export const createSubjectLikersQuery = (uri: () => At.ResourceUri) => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	return createInfiniteQuery(() => {
 		const $uri = uri();
@@ -16,14 +17,16 @@ export const createSubjectLikersQuery = (uri: () => At.ResourceUri) => {
 			queryKey: ['subject-likers', $uri],
 			structuralSharing: false,
 			async queryFn(ctx: QC<never, string | undefined>): Promise<ProfilesListPage> {
-				const { data } = await rpc.get('app.bsky.feed.getLikes', {
-					signal: ctx.signal,
-					params: {
-						uri: $uri,
-						limit: 50,
-						cursor: ctx.pageParam,
-					},
-				});
+				const data = await ok(
+					client.get('app.bsky.feed.getLikes', {
+						signal: ctx.signal,
+						params: {
+							uri: $uri,
+							limit: 50,
+							cursor: ctx.pageParam,
+						},
+					}),
+				);
 
 				return {
 					cursor: data.cursor,

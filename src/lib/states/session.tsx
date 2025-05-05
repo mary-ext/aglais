@@ -10,7 +10,7 @@ import {
 	useContext,
 } from 'solid-js';
 
-import { type FetchHandler, type FetchHandlerObject, XRPC, XRPCError } from '@atcute/client';
+import { Client, ClientResponseError, type FetchHandler, type FetchHandlerObject } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
 import { OAuthUserAgent, deleteStoredSession, getSession } from '@atcute/oauth-browser-client';
 import { mapDefined } from '@mary/array-fns';
@@ -31,7 +31,7 @@ export interface CurrentAccountState {
 	readonly data: AccountData;
 	readonly preferences: PerAccountPreferenceSchema;
 
-	readonly rpc: XRPC;
+	readonly client: Client;
 	readonly agent: OAuthUserAgent | undefined;
 	readonly _cleanup: () => void;
 }
@@ -62,7 +62,7 @@ export const SessionProvider = (props: ParentProps) => {
 	const createAccountState = (
 		did: At.Did,
 		session: OAuthUserAgent | undefined,
-		rpc: XRPC,
+		client: Client,
 	): CurrentAccountState => {
 		return createRoot((cleanup): CurrentAccountState => {
 			const preferences = createAccountPreferences(did);
@@ -80,7 +80,7 @@ export const SessionProvider = (props: ParentProps) => {
 			});
 
 			// A bit of a hack, but works right now.
-			rpc.handle = attachLabelerHeaders(rpc.handle, labelers);
+			client.handler = attachLabelerHeaders(client.handler, labelers);
 
 			createEffect(() => {
 				const signal = abortable();
@@ -129,7 +129,7 @@ export const SessionProvider = (props: ParentProps) => {
 					return $data;
 				},
 
-				rpc: rpc,
+				client: client,
 				agent: session,
 				_cleanup: cleanup,
 			};
@@ -181,11 +181,11 @@ export const SessionProvider = (props: ParentProps) => {
 				// Dirty hack to account for the fact that we aren't dumping the user
 				// directly to the login modal.
 				handler = () => {
-					throw new XRPCError(400, { kind: 'invalid_token' });
+					throw new ClientResponseError({ status: 400, data: { error: 'invalid_token' } });
 				};
 			}
 
-			const rpc = new XRPC({ handler });
+			const rpc = new Client({ handler });
 
 			signal.throwIfAborted();
 

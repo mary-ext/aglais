@@ -1,6 +1,6 @@
 import { Match, Show, Switch, batch } from 'solid-js';
 
-import { XRPCError } from '@atcute/client';
+import { ClientResponseError } from '@atcute/client';
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 import { createMutation } from '@mary/solid-query';
 
@@ -23,7 +23,7 @@ export interface PinPostPromptProps {
 
 const PinPostPrompt = ({ post }: PinPostPromptProps) => {
 	const { currentAccount } = useSession();
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	const { close } = useModalContext();
 
@@ -40,7 +40,7 @@ const PinPostPrompt = ({ post }: PinPostPromptProps) => {
 				updatePostShadow(queryClient, post.uri, { pinned: next });
 
 				while (true) {
-					const existing = await getRecord(rpc, {
+					const existing = await getRecord(client, {
 						repo,
 						collection: 'app.bsky.actor.profile',
 						rkey: 'self',
@@ -63,7 +63,7 @@ const PinPostPrompt = ({ post }: PinPostPromptProps) => {
 					record.pinnedPost = next ? { uri: post.uri, cid: post.cid } : undefined;
 
 					try {
-						await putRecord(rpc, {
+						await putRecord(client, {
 							repo,
 							collection: 'app.bsky.actor.profile',
 							rkey: 'self',
@@ -71,7 +71,7 @@ const PinPostPrompt = ({ post }: PinPostPromptProps) => {
 							swapRecord: existing?.cid ?? null,
 						});
 					} catch (err) {
-						if (err instanceof XRPCError && err.kind === 'InvalidSwapError') {
+						if (err instanceof ClientResponseError && err.error === 'InvalidSwapError') {
 							if (retriesRemaining--) {
 								continue;
 							}

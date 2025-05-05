@@ -45,13 +45,13 @@ const BluemojiEmotesPage = () => {
 		openModal(() => <AddEmotePrompt blob={blob} onAdd={() => {}} />);
 	};
 
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 	const { currentAccount } = useSession();
 
 	const query = createInfiniteQuery(() => ({
 		queryKey: ['bluemoji', 'emotes'],
 		async queryFn(ctx) {
-			return listRecords(rpc, {
+			return listRecords(client, {
 				repo: currentAccount!.did,
 				collection: 'blue.moji.collection.item',
 				limit: 100,

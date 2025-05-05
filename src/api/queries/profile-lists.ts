@@ -1,10 +1,11 @@
+import { ok } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
 import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
 export const createProfileListsQuery = (didOrHandle: () => At.Identifier) => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	const collator = new Intl.Collator('en-US');
 
@@ -14,14 +15,16 @@ export const createProfileListsQuery = (didOrHandle: () => At.Identifier) => {
 		return {
 			queryKey: ['profile-lists', $didOrHandle],
 			async queryFn(ctx: QC<never, string | undefined>) {
-				const { data } = await rpc.get('app.bsky.graph.getLists', {
-					signal: ctx.signal,
-					params: {
-						actor: $didOrHandle,
-						limit: 100,
-						cursor: ctx.pageParam,
-					},
-				});
+				const data = await ok(
+					client.get('app.bsky.graph.getLists', {
+						signal: ctx.signal,
+						params: {
+							actor: $didOrHandle,
+							limit: 100,
+							cursor: ctx.pageParam,
+						},
+					}),
+				);
 
 				data.lists.sort((a, b) => collator.compare(a.name, b.name));
 				return data;

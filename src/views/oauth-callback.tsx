@@ -1,6 +1,6 @@
 import { Match, Switch, createResource } from 'solid-js';
 
-import { XRPC } from '@atcute/client';
+import { Client, ok } from '@atcute/client';
 import {
 	AuthorizationError,
 	OAuthResponseError,
@@ -27,13 +27,15 @@ const OAuthCallbackPage = () => {
 		const did = session.info.sub;
 
 		const agent = new OAuthUserAgent(session);
-		const rpc = new XRPC({ handler: agent });
+		const client = new Client({ handler: agent });
 
-		const { data: profile } = await rpc.get('app.bsky.actor.getProfile', {
-			params: {
-				actor: did,
-			},
-		});
+		const profile = await ok(
+			client.get('app.bsky.actor.getProfile', {
+				params: {
+					actor: did,
+				},
+			}),
+		);
 
 		{
 			// Update UI preferences

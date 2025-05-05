@@ -1,4 +1,4 @@
-import { XRPCError } from '@atcute/client';
+import { ClientResponseError, ok } from '@atcute/client';
 import type { AppBskyFeedDefs, At, Brand } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
@@ -12,7 +12,7 @@ const MAX_DEPTH = 4;
 type ThreadReturn = Brand.Union<AppBskyFeedDefs.ThreadViewPost | AppBskyFeedDefs.BlockedPost>;
 
 export const usePostThreadQuery = (uri: () => At.ResourceUri) => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	return createQuery((queryClient) => {
 		const $uri = uri();
@@ -21,21 +21,26 @@ export const usePostThreadQuery = (uri: () => At.ResourceUri) => {
 			queryKey: ['post-thread', $uri],
 			structuralSharing: false,
 			async queryFn(ctx): Promise<ThreadReturn> {
-				const { data } = await rpc.get('app.bsky.feed.getPostThread', {
-					signal: ctx.signal,
-					params: {
-						uri: $uri,
-						depth: MAX_DEPTH,
-						parentHeight: MAX_HEIGHT,
-					},
-				});
+				const data = await ok(
+					client.get('app.bsky.feed.getPostThread', {
+						signal: ctx.signal,
+						params: {
+							uri: $uri,
+							depth: MAX_DEPTH,
+							parentHeight: MAX_HEIGHT,
+						},
+					}),
+				);
 
 				const thread = data.thread;
 
 				if (thread.$type === 'app.bsky.feed.defs#notFoundPost') {
-					throw new XRPCError(400, {
-						kind: 'NotFound',
-						description: `Post not found: ${$uri}`,
+					throw new ClientResponseError({
+						status: 400,
+						data: {
+							error: `NotFound`,
+							message: `Post not found: ${$uri}`,
+						},
 					});
 				}
 

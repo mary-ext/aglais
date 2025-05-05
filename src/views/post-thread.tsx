@@ -1,6 +1,6 @@
 import { For, Match, Switch, createEffect, createMemo, createSignal } from 'solid-js';
 
-import { XRPCError } from '@atcute/client';
+import { ClientResponseError } from '@atcute/client';
 import type { AppBskyFeedDefs, AppBskyFeedPost, At, Brand } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
@@ -78,9 +78,9 @@ const PostThreadPage = () => {
 
 			<Switch>
 				<Match when={query.error} keyed>
-					{(error) => {
-						if (error instanceof XRPCError) {
-							if (error.kind === 'NotFound') {
+					{(err) => {
+						if (err instanceof ClientResponseError) {
+							if (err.error === 'NotFound') {
 								return (
 									<div class="px-4 py-3">
 										<div class="rounded-md border border-outline p-3">
@@ -91,7 +91,7 @@ const PostThreadPage = () => {
 							}
 						}
 
-						return <ErrorView error={error} onRetry={() => query.refetch()} />;
+						return <ErrorView error={err} onRetry={() => query.refetch()} />;
 					}}
 				</Match>
 

@@ -1,6 +1,6 @@
 import { type JSX, type ParentProps, createContext, createMemo, useContext } from 'solid-js';
 
-import { XRPC, simpleFetchHandler } from '@atcute/client';
+import { Client, simpleFetchHandler } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
 import type { OAuthUserAgent } from '@atcute/oauth-browser-client';
 import { QueryClient, QueryClientProvider } from '@mary/solid-query';
@@ -15,7 +15,7 @@ import { useSession } from './session';
 
 export interface AgentContext {
 	did: At.Did | null;
-	rpc: XRPC;
+	client: Client;
 	handler: OAuthUserAgent | null;
 	persister: ReturnType<typeof createQueryPersister>;
 }
@@ -32,7 +32,7 @@ export const AgentProvider = (props: ParentProps) => {
 			return {
 				did: currentAccount.did,
 				handler: currentAccount.agent ?? null,
-				rpc: currentAccount.rpc,
+				client: currentAccount.client,
 				persister: createQueryPersister({ name: `queryCache-${currentAccount.did}` }),
 			};
 		}
@@ -40,7 +40,7 @@ export const AgentProvider = (props: ParentProps) => {
 		return {
 			did: null,
 			handler: null,
-			rpc: new XRPC({ handler: simpleFetchHandler({ service: DEFAULT_APPVIEW_URL }) }),
+			client: new Client({ handler: simpleFetchHandler({ service: DEFAULT_APPVIEW_URL }) }),
 			persister: createQueryPersister({ name: `queryCache-public` }),
 		};
 	});

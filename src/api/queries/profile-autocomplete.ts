@@ -1,3 +1,4 @@
+import { ok } from '@atcute/client';
 import { createQuery, keepPreviousData } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
@@ -10,7 +11,7 @@ export const createProfileAutocompleteQuery = (
 	query: () => string,
 	opts?: ProfileAutocompleteQueryOptions,
 ) => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	return createQuery(() => {
 		const $query = query();
@@ -26,13 +27,15 @@ export const createProfileAutocompleteQuery = (
 			enabled: isEnabled,
 			placeholderData: isEnabled ? keepPreviousData : undefined,
 			async queryFn({ signal }) {
-				const { data } = await rpc.get('app.bsky.actor.searchActorsTypeahead', {
-					signal,
-					params: {
-						q: trimmed,
-						limit: 10,
-					},
-				});
+				const data = await ok(
+					client.get('app.bsky.actor.searchActorsTypeahead', {
+						signal,
+						params: {
+							q: trimmed,
+							limit: 10,
+						},
+					}),
+				);
 
 				return data;
 			},

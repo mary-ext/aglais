@@ -1,5 +1,6 @@
 import { createSignal } from 'solid-js';
 
+import { ok } from '@atcute/client';
 import type { AppBskyFeedDefs, AppBskyNotificationListNotifications } from '@atcute/client/lexicons';
 import { chunked, mapDefined } from '@mary/array-fns';
 import { type QueryFunctionContext as QC, createInfiniteQuery, useQueryClient } from '@mary/solid-query';
@@ -84,7 +85,7 @@ const MAX_MERGE_TIME = 6 * 60 * 60 * 1_000;
 export type NotificationsFilter = 'all' | 'mentions';
 
 export const createNotificationFeedQuery = (filter: () => NotificationsFilter) => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 	const queryClient = useQueryClient();
 
 	const [firstFetchedAt, setFirstFetchedAt] = createSignal(0);
@@ -104,14 +105,16 @@ export const createNotificationFeedQuery = (filter: () => NotificationsFilter) =
 					reasons = ['mention', 'reply', 'quote'];
 				}
 
-				const { data } = await rpc.get('app.bsky.notification.listNotifications', {
-					signal: signal,
-					params: {
-						limit: 40,
-						reasons: reasons,
-						cursor: pageParam?.cursor,
-					},
-				});
+				const data = await ok(
+					client.get('app.bsky.notification.listNotifications', {
+						signal: signal,
+						params: {
+							limit: 40,
+							reasons: reasons,
+							cursor: pageParam?.cursor,
+						},
+					}),
+				);
 
 				const notifs = data.notifications;
 				const firstSeenAt = pageParam?.seenAt;
@@ -129,7 +132,10 @@ export const createNotificationFeedQuery = (filter: () => NotificationsFilter) =
 								const subjectUri = item.reasonSubject;
 
 								// skip if they're not related to posts.
-								if (!subjectUri || parseCanonicalResourceUri(subjectUri).collection !== 'app.bsky.feed.post') {
+								if (
+									!subjectUri ||
+									parseCanonicalResourceUri(subjectUri).collection !== 'app.bsky.feed.post'
+								) {
 									return;
 								}
 
@@ -142,11 +148,13 @@ export const createNotificationFeedQuery = (filter: () => NotificationsFilter) =
 
 					const chunkedPosts = await Promise.all(
 						chunked(Array.from(postUris), 25).map(async (uris) => {
-							const { data } = await rpc.get('app.bsky.feed.getPosts', {
-								params: {
-									uris: uris,
-								},
-							});
+							const data = await ok(
+								client.get('app.bsky.feed.getPosts', {
+									params: {
+										uris: uris,
+									},
+								}),
+							);
 
 							return data.posts;
 						}),
@@ -238,11 +246,14 @@ export const createNotificationFeedQuery = (filter: () => NotificationsFilter) =
 						const indexedAt = new Date(notifs[0]?.indexedAt ?? 0).getTime();
 						const seenAt = Math.max(now, indexedAt);
 
-						const promise = rpc.call('app.bsky.notification.updateSeen', {
-							data: {
-								seenAt: new Date(seenAt).toISOString(),
-							},
-						});
+						const promise = ok(
+							client.post('app.bsky.notification.updateSeen', {
+								as: null,
+								input: {
+									seenAt: new Date(seenAt).toISOString(),
+								},
+							}),
+						);
 
 						queryClient.cancelQueries({
 							exact: true,

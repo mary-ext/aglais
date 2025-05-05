@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid/non-secure';
 
-import { XRPC, XRPCError, simpleFetchHandler } from '@atcute/client';
+import { Client, ClientResponseError, ok, simpleFetchHandler } from '@atcute/client';
 import type {
 	AppBskyEmbedImages,
 	AppBskyEmbedRecord,
@@ -57,7 +57,7 @@ export interface PublishOptions {
 let cidPromise: Promise<typeof import('./cid')>;
 
 export const publish = async ({ agent, queryClient, state, onLog: log }: PublishOptions) => {
-	const rpc = agent.rpc;
+	const client = agent.client;
 	const did = agent.did!;
 
 	const now = new Date();
@@ -80,15 +80,17 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				if (isDid(uri.repo)) {
 					did = uri.repo;
 				} else {
-					did = await resolveHandle(rpc, uri.repo, ctx.signal);
+					did = await resolveHandle(client, uri.repo, ctx.signal);
 				}
 
-				const { data } = await rpc.get('app.bsky.feed.getPosts', {
-					signal: ctx.signal,
-					params: {
-						uris: [makeAtUri(did, uri.collection, uri.rkey)],
-					},
-				});
+				const data = await ok(
+					client.get('app.bsky.feed.getPosts', {
+						signal: ctx.signal,
+						params: {
+							uris: [makeAtUri(did, uri.collection, uri.rkey)],
+						},
+					}),
+				);
 
 				const post = data.posts[0];
 
@@ -226,12 +228,14 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 	log?.(`Posting`);
 
-	await rpc.call('com.atproto.repo.applyWrites', {
-		data: {
-			repo: did,
-			writes: writes,
-		},
-	});
+	await ok(
+		client.post('com.atproto.repo.applyWrites', {
+			input: {
+				repo: did,
+				writes: writes,
+			},
+		}),
+	);
 
 	if (state.redraftUri) {
 		updatePostShadow(queryClient, state.redraftUri, { deleted: true });
@@ -298,7 +302,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 						switch (source.type) {
 							case 'local': {
-								const uploaded = await uploadBlob(rpc, source.blob);
+								const uploaded = await uploadBlob(client, source.blob);
 
 								return {
 									image: uploaded,
@@ -339,7 +343,9 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 				const blob = source.blob;
 
-				const videoRpc = new XRPC({ handler: simpleFetchHandler({ service: 'https://video.bsky.app' }) });
+				const videoClient = new Client({
+					handler: simpleFetchHandler({ service: 'https://video.bsky.app' }),
+				});
 
 				// Get upload limit status
 				{
@@ -360,18 +366,22 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 					// GET https://porcini.us-east.host.bsky.network/xrpc/chat.bsky.convo.getLog
 					// atproto-proxy: did:web:api.bsky.chat#bsky_chat
 					//
-					const { data: tokenData } = await rpc.get('com.atproto.server.getServiceAuth', {
-						params: {
-							aud: 'did:web:video.bsky.app',
-							lxm: 'app.bsky.video.getUploadLimits',
-						},
-					});
+					const tokenData = await ok(
+						client.get('com.atproto.server.getServiceAuth', {
+							params: {
+								aud: 'did:web:video.bsky.app',
+								lxm: 'app.bsky.video.getUploadLimits',
+							},
+						}),
+					);
 
-					const { data } = await videoRpc.get('app.bsky.video.getUploadLimits', {
-						headers: {
-							authorization: `Bearer ${tokenData.token}`,
-						},
-					});
+					const data = await ok(
+						videoClient.get('app.bsky.video.getUploadLimits', {
+							headers: {
+								authorization: `Bearer ${tokenData.token}`,
+							},
+						}),
+					);
 
 					if (!data.canUpload) {
 						let message = data.message || `You've reached the limit on video uploads`;
@@ -408,14 +418,16 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 					// Create an access token *to the PDS*, allowing the video service to
 					// upload the final blobs to our repository on our behalf.
-					const { data: tokenData } = await rpc.get('com.atproto.server.getServiceAuth', {
-						params: {
-							// `did:web:porcini.us-east.host.bsky.network`
-							aud: `did:web:${new URL(session.info.aud).host}`,
-							lxm: 'com.atproto.repo.uploadBlob',
-							exp: Date.now() / 1000 + 60 * 30, // 30 minutes
-						},
-					});
+					const tokenData = await ok(
+						client.get('com.atproto.server.getServiceAuth', {
+							params: {
+								// `did:web:porcini.us-east.host.bsky.network`
+								aud: `did:web:${new URL(session.info.aud).host}`,
+								lxm: 'com.atproto.repo.uploadBlob',
+								exp: Date.now() / 1000 + 60 * 30, // 30 minutes
+							},
+						}),
+					);
 
 					jobId = await new Promise((resolve, reject) => {
 						const xhr = new XMLHttpRequest();
@@ -475,11 +487,13 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 						let status: AppBskyVideoDefs.JobStatus;
 
 						try {
-							const { data } = await videoRpc.get('app.bsky.video.getJobStatus', {
-								params: {
-									jobId: jobId,
-								},
-							});
+							const data = await ok(
+								videoClient.get('app.bsky.video.getJobStatus', {
+									params: {
+										jobId: jobId,
+									},
+								}),
+							);
 
 							status = data.jobStatus;
 							pollFailures = 0;
@@ -546,7 +560,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 					log?.(`Uploading GIF thumbnail`);
 					const compressed = await compressPostImage(gifBlob);
-					const blob = await uploadBlob(rpc, compressed.blob);
+					const blob = await uploadBlob(client, compressed.blob);
 
 					thumbBlob = blob;
 				}
@@ -584,7 +598,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				log?.(`Uploading link thumbnail`);
 
 				const compressed = await compressPostImage(thumb);
-				const blob = await uploadBlob(rpc, compressed.blob);
+				const blob = await uploadBlob(client, compressed.blob);
 
 				thumbBlob = blob;
 			}
@@ -679,13 +693,15 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				}
 
 				try {
-					const response = await rpc.get('com.atproto.identity.resolveHandle', {
-						params: {
-							handle: handle,
-						},
-					});
+					const data = await ok(
+						client.get('com.atproto.identity.resolveHandle', {
+							params: {
+								handle: handle,
+							},
+						}),
+					);
 
-					const did = response.data.did;
+					const did = data.did;
 
 					if (!hasSilent) {
 						facets.push({
@@ -699,7 +715,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 						});
 					}
 				} catch (err) {
-					if (err instanceof XRPCError && err.kind === 'InvalidRequest') {
+					if (err instanceof ClientResponseError && err.error === 'InvalidRequest') {
 						throw new InvalidHandleError(handle);
 					}
 
@@ -711,7 +727,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 					features: [{ $type: 'app.bsky.richtext.facet#tag', tag: token.name }],
 				});
 			} else if (type === 'emote') {
-				const { value } = await getRecord(rpc, {
+				const { value } = await getRecord(client, {
 					repo: did,
 					collection: 'blue.moji.collection.item',
 					rkey: token.name,

@@ -1,10 +1,11 @@
+import { ok } from '@atcute/client';
 import type { AppBskyUnspeccedGetPopularFeedGenerators } from '@atcute/client/lexicons';
 import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
 export const createSearchFeedsQuery = (query: () => string) => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	return createInfiniteQuery(() => {
 		const q = query();
@@ -14,14 +15,16 @@ export const createSearchFeedsQuery = (query: () => string) => {
 			async queryFn(
 				ctx: QC<never, string | undefined>,
 			): Promise<AppBskyUnspeccedGetPopularFeedGenerators.Output> {
-				const { data } = await rpc.get('app.bsky.unspecced.getPopularFeedGenerators', {
-					signal: ctx.signal,
-					params: {
-						query: q,
-						limit: 50,
-						cursor: ctx.pageParam,
-					},
-				});
+				const data = await ok(
+					client.get('app.bsky.unspecced.getPopularFeedGenerators', {
+						signal: ctx.signal,
+						params: {
+							query: q,
+							limit: 50,
+							cursor: ctx.pageParam,
+						},
+					}),
+				);
 
 				return data;
 			},

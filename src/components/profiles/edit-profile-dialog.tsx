@@ -1,6 +1,6 @@
 import { Show, createMemo, createSignal } from 'solid-js';
 
-import { XRPCError } from '@atcute/client';
+import { ClientResponseError } from '@atcute/client';
 import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { createMutation } from '@mary/solid-query';
 
@@ -34,7 +34,7 @@ export interface EditProfileDialogProps {
 const EditProfileDialog = ({ profile }: EditProfileDialogProps) => {
 	const { close } = useModalContext();
 
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 	const { currentAccount } = useSession();
 
 	const snapshot = {
@@ -78,15 +78,15 @@ const EditProfileDialog = ({ profile }: EditProfileDialogProps) => {
 			let bannerPromise: Promise<At.Blob<any>> | undefined;
 
 			if ($avatar instanceof Blob) {
-				avatarPromise = compressProfileImage($avatar, 1000, 1000).then((res) => uploadBlob(rpc, res.blob));
+				avatarPromise = compressProfileImage($avatar, 1000, 1000).then((res) => uploadBlob(client, res.blob));
 			}
 			if ($banner instanceof Blob) {
-				bannerPromise = compressProfileImage($banner, 3000, 1000).then((res) => uploadBlob(rpc, res.blob));
+				bannerPromise = compressProfileImage($banner, 3000, 1000).then((res) => uploadBlob(client, res.blob));
 			}
 
 			let retriesRemaining = 3;
 			while (true) {
-				const existing = await getRecord(rpc, {
+				const existing = await getRecord(client, {
 					repo,
 					collection: 'app.bsky.actor.profile',
 					rkey: 'self',
@@ -114,7 +114,7 @@ const EditProfileDialog = ({ profile }: EditProfileDialogProps) => {
 				}
 
 				try {
-					await putRecord(rpc, {
+					await putRecord(client, {
 						repo,
 						collection: 'app.bsky.actor.profile',
 						rkey: 'self',
@@ -122,7 +122,7 @@ const EditProfileDialog = ({ profile }: EditProfileDialogProps) => {
 						swapRecord: existing?.cid ?? null,
 					});
 				} catch (err) {
-					if (err instanceof XRPCError && err.kind === 'InvalidSwapError') {
+					if (err instanceof ClientResponseError && err.error === 'InvalidSwapError') {
 						if (retriesRemaining--) {
 							continue;
 						}

@@ -1,4 +1,4 @@
-import type { XRPC } from '@atcute/client';
+import { type Client, ok } from '@atcute/client';
 import type {
 	At,
 	ComAtprotoRepoGetRecord,
@@ -17,8 +17,12 @@ export interface CreateRecordOptions<K extends RecordType> {
 	validate?: boolean;
 }
 
-export const createRecord = async <K extends RecordType>(rpc: XRPC, options: CreateRecordOptions<K>) => {
-	const { data } = await rpc.call('com.atproto.repo.createRecord', { data: options });
+export const createRecord = async <K extends RecordType>(client: Client, options: CreateRecordOptions<K>) => {
+	const data = await ok(
+		client.post('com.atproto.repo.createRecord', {
+			input: options,
+		}),
+	);
 
 	return data;
 };
@@ -33,8 +37,12 @@ export interface PutRecordOptions<K extends RecordType> {
 	validate?: boolean;
 }
 
-export const putRecord = async <K extends RecordType>(rpc: XRPC, options: PutRecordOptions<K>) => {
-	const { data } = await rpc.call('com.atproto.repo.putRecord', { data: options });
+export const putRecord = async <K extends RecordType>(client: Client, options: PutRecordOptions<K>) => {
+	const data = await ok(
+		client.post('com.atproto.repo.putRecord', {
+			input: options,
+		}),
+	);
 
 	return data;
 };
@@ -47,13 +55,16 @@ export interface DeleteRecordOptions<K extends RecordType> {
 	swapRecord?: string;
 }
 
-export const deleteRecord = async <K extends RecordType>(rpc: XRPC, options: DeleteRecordOptions<K>) => {
-	await rpc.call('com.atproto.repo.deleteRecord', {
-		data: options,
-	});
+export const deleteRecord = async <K extends RecordType>(client: Client, options: DeleteRecordOptions<K>) => {
+	await ok(
+		client.post('com.atproto.repo.deleteRecord', {
+			input: options,
+		}),
+	);
 };
 
 export interface GetRecordOptions<K extends RecordType> {
+	signal?: AbortSignal;
 	repo: At.Did;
 	collection: K;
 	rkey: string;
@@ -65,12 +76,20 @@ export interface GetRecordOutput<T> extends ComAtprotoRepoGetRecord.Output {
 }
 
 export const getRecord = async <K extends RecordType>(
-	rpc: XRPC,
+	client: Client,
 	options: GetRecordOptions<K>,
 ): Promise<GetRecordOutput<Records[K]>> => {
-	const { data } = await rpc.get('com.atproto.repo.getRecord', {
-		params: options,
-	});
+	const data = await ok(
+		client.get('com.atproto.repo.getRecord', {
+			signal: options.signal,
+			params: {
+				repo: options.repo,
+				collection: options.collection,
+				rkey: options.rkey,
+				cid: options.cid,
+			},
+		}),
+	);
 
 	return data as any;
 };
@@ -89,18 +108,20 @@ export interface ListRecordsOutput<T> extends ComAtprotoRepoListRecords.Output {
 }
 
 export const listRecords = async <K extends RecordType>(
-	rpc: XRPC,
+	client: Client,
 	options: ListRecordsOptions<K>,
 ): Promise<ListRecordsOutput<Records[K]>> => {
-	const { data } = await rpc.get('com.atproto.repo.listRecords', {
-		signal: options.signal,
-		params: {
-			repo: options.repo,
-			collection: options.collection,
-			limit: options.limit,
-			cursor: options.cursor,
-		},
-	});
+	const data = await ok(
+		client.get('com.atproto.repo.listRecords', {
+			signal: options.signal,
+			params: {
+				repo: options.repo,
+				collection: options.collection,
+				limit: options.limit,
+				cursor: options.cursor,
+			},
+		}),
+	);
 
 	return data as any;
 };

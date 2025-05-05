@@ -1,5 +1,6 @@
 import { Match, Switch, createSignal } from 'solid-js';
 
+import { ok } from '@atcute/client';
 import { createMutation } from '@mary/solid-query';
 
 import { autofocusNode, modelChecked, modelText } from '~/lib/input-refs';
@@ -13,7 +14,7 @@ import TextInput from '../../text-input';
 export interface AddAppPasswordPromptProps {}
 
 const AddAppPasswordPrompt = ({}: AddAppPasswordPromptProps) => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	const [name, setName] = createSignal('');
 	const [privileged, setPrivileged] = createSignal(false);
@@ -22,12 +23,14 @@ const AddAppPasswordPrompt = ({}: AddAppPasswordPromptProps) => {
 	const mutation = createMutation((queryClient) => {
 		return {
 			async mutationFn() {
-				const { data } = await rpc.call('com.atproto.server.createAppPassword', {
-					data: {
-						name: name().replace(/^\s+|\s+$|(?<=\s)\s+/g, ''),
-						privileged: privileged(),
-					},
-				});
+				const data = await ok(
+					client.post('com.atproto.server.createAppPassword', {
+						input: {
+							name: name().replace(/^\s+|\s+$|(?<=\s)\s+/g, ''),
+							privileged: privileged(),
+						},
+					}),
+				);
 
 				return data;
 			},

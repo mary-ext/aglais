@@ -1,6 +1,6 @@
 import { createEffect, createMemo, createRenderEffect, onCleanup, untrack } from 'solid-js';
 
-import type { XRPC } from '@atcute/client';
+import { type Client, ok } from '@atcute/client';
 import type { AppBskyFeedDefs, AppBskyFeedGetTimeline, AppBskyFeedPost, At } from '@atcute/client/lexicons';
 import { type FalsyValue, definite } from '@mary/array-fns';
 import { type InfiniteData, createInfiniteQuery, createQuery, useQueryClient } from '@mary/solid-query';
@@ -126,7 +126,7 @@ const getTimelineHash = (views: AppBskyFeedDefs.FeedViewPost[]): number | undefi
 export const useTimelineQuery = (_params: () => TimelineParams) => {
 	const getParams = createMemo(() => _params(), EQUALS_DEQUAL);
 
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 
@@ -195,7 +195,7 @@ export const useTimelineQuery = (_params: () => TimelineParams) => {
 					postFilter = createLabelPostFilter(moderation);
 				}
 
-				const timeline = await fetchPage(rpc, params, limit, cursor, ctx.signal);
+				const timeline = await fetchPage(client, params, limit, cursor, ctx.signal);
 
 				const feed = timeline.feed;
 				const newCursor = timeline.cursor;
@@ -238,7 +238,7 @@ export const useTimelineQuery = (_params: () => TimelineParams) => {
 				// const offset = params.type !== 'profile' ? timelineData!.pages[0].pinAmount : 0;
 				const offset = timelineData!.pages[0].pinAmount;
 
-				const timeline = await fetchPage(rpc, params, offset + 1, undefined, ctx.signal);
+				const timeline = await fetchPage(client, params, offset + 1, undefined, ctx.signal);
 				const feed = timeline.feed;
 
 				return { hash: getTimelineHash(feed) };
@@ -308,7 +308,7 @@ const isTimelineStale = (
 
 //// Raw fetch
 const fetchPage = async (
-	rpc: XRPC,
+	client: Client,
 	params: TimelineParams,
 	limit: number,
 	cursor: string | undefined,
@@ -317,30 +317,32 @@ const fetchPage = async (
 	const type = params.type;
 
 	if (type === 'following') {
-		const response = await rpc.get('app.bsky.feed.getTimeline', {
-			signal: signal,
-			params: {
-				algorithm: 'reverse-chronological',
-				cursor: cursor,
-				limit: limit,
-			},
-		});
+		const data = await ok(
+			client.get('app.bsky.feed.getTimeline', {
+				signal: signal,
+				params: {
+					algorithm: 'reverse-chronological',
+					cursor: cursor,
+					limit: limit,
+				},
+			}),
+		);
 
-		return response.data;
+		return data;
 	} else if (type === 'feed') {
-		const response = await rpc.get('app.bsky.feed.getFeed', {
-			signal: signal,
-			headers: {
-				'accent-language': navigator.languages.join(','),
-			},
-			params: {
-				feed: params.uri,
-				cursor: cursor,
-				limit: limit,
-			},
-		});
-
-		const data = response.data;
+		const data = await ok(
+			client.get('app.bsky.feed.getFeed', {
+				signal: signal,
+				headers: {
+					'accent-language': navigator.languages.join(','),
+				},
+				params: {
+					feed: params.uri,
+					cursor: cursor,
+					limit: limit,
+				},
+			}),
+		);
 
 		return {
 			// Discover feed, wooo.
@@ -348,59 +350,65 @@ const fetchPage = async (
 			feed: data.feed,
 		};
 	} else if (type === 'list') {
-		const response = await rpc.get('app.bsky.feed.getListFeed', {
-			signal: signal,
-			params: {
-				list: params.uri,
-				cursor: cursor,
-				limit: limit,
-			},
-		});
+		const data = await ok(
+			client.get('app.bsky.feed.getListFeed', {
+				signal: signal,
+				params: {
+					list: params.uri,
+					cursor: cursor,
+					limit: limit,
+				},
+			}),
+		);
 
-		return response.data;
+		return data;
 	} else if (type === 'profile') {
 		if (params.tab === 'likes') {
-			const response = await rpc.get('app.bsky.feed.getActorLikes', {
-				signal: signal,
-				params: {
-					actor: params.actor,
-					cursor: cursor,
-					limit: limit,
-				},
-			});
+			const data = await ok(
+				client.get('app.bsky.feed.getActorLikes', {
+					signal: signal,
+					params: {
+						actor: params.actor,
+						cursor: cursor,
+						limit: limit,
+					},
+				}),
+			);
 
-			return response.data;
+			return data;
 		} else {
-			const response = await rpc.get('app.bsky.feed.getAuthorFeed', {
-				signal: signal,
-				params: {
-					actor: params.actor,
-					cursor: cursor,
-					limit: limit,
-					includePins: params.tab !== 'media',
-					filter:
-						params.tab === 'media'
-							? 'posts_with_media'
-							: params.tab === 'replies'
-								? 'posts_with_replies'
-								: 'posts_and_author_threads',
-				},
-			});
+			const data = await ok(
+				client.get('app.bsky.feed.getAuthorFeed', {
+					signal: signal,
+					params: {
+						actor: params.actor,
+						cursor: cursor,
+						limit: limit,
+						includePins: params.tab !== 'media',
+						filter:
+							params.tab === 'media'
+								? 'posts_with_media'
+								: params.tab === 'replies'
+									? 'posts_with_replies'
+									: 'posts_and_author_threads',
+					},
+				}),
+			);
 
-			return response.data;
+			return data;
 		}
 	} else if (type === 'search') {
-		const response = await rpc.get('app.bsky.feed.searchPosts', {
-			signal: signal,
-			params: {
-				sort: params.sort,
-				q: params.query,
-				cursor: cursor,
-				limit: limit,
-			},
-		});
-
-		const data = response.data;
+		const data = await ok(
+			client.get('app.bsky.feed.searchPosts', {
+				signal: signal,
+				params: {
+					sort: params.sort,
+					q: params.query,
+					cursor: cursor,
+					limit: limit,
+				},
+			}),
+		);
 
 		return { cursor: data.cursor, feed: data.posts.map((view) => ({ post: view })) };
 	} else {

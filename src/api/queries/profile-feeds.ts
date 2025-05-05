@@ -1,10 +1,11 @@
+import { ok } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
 import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
 export const createProfileFeedsQuery = (didOrHandle: () => At.Identifier) => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	return createInfiniteQuery(() => {
 		const $didOrHandle = didOrHandle();
@@ -12,14 +13,16 @@ export const createProfileFeedsQuery = (didOrHandle: () => At.Identifier) => {
 		return {
 			queryKey: ['profile-feeds', $didOrHandle],
 			async queryFn(ctx: QC<never, string | undefined>) {
-				const { data } = await rpc.get('app.bsky.feed.getActorFeeds', {
-					signal: ctx.signal,
-					params: {
-						actor: $didOrHandle,
-						limit: 100,
-						cursor: ctx.pageParam,
-					},
-				});
+				const data = await ok(
+					client.get('app.bsky.feed.getActorFeeds', {
+						signal: ctx.signal,
+						params: {
+							actor: $didOrHandle,
+							limit: 100,
+							cursor: ctx.pageParam,
+						},
+					}),
+				);
 
 				data.feeds.sort((a, b) => (b.likeCount ?? 0) - (a.likeCount ?? 0));
 				return data;

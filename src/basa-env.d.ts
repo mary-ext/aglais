@@ -57,10 +57,14 @@ declare module '@atcute/client/lexicons' {
 
 	interface Queries {
 		'x.basa.describeServer': {
+			response: { json: XBasaDescribeServer.Output };
+			/** @deprecated */
 			output: XBasaDescribeServer.Output;
 		};
 		'x.basa.translate': {
 			params: XBasaTranslate.Params;
+			response: { json: XBasaTranslate.Output };
+			/** @deprecated */
 			output: XBasaTranslate.Output;
 		};
 	}

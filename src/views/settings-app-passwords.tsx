@@ -1,5 +1,6 @@
 import { For, Match, Show, Switch } from 'solid-js';
 
+import { ok } from '@atcute/client';
 import type { ComAtprotoServerListAppPasswords } from '@atcute/client/lexicons';
 import { createMutation, createQuery } from '@mary/solid-query';
 
@@ -22,13 +23,13 @@ import * as Prompt from '~/components/prompt';
 import AddAppPasswordPrompt from '~/components/settings/app-passwords/add-app-password-prompt';
 
 const AppPasswordsSettingsPage = () => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	const passwords = createQuery(() => {
 		return {
 			queryKey: ['app-passwords'],
 			async queryFn() {
-				const { data } = await rpc.get('com.atproto.server.listAppPasswords', {});
+				const data = await ok(client.get('com.atproto.server.listAppPasswords'));
 
 				return data.passwords;
 			},
@@ -105,16 +106,19 @@ interface PasswordEntryProps {
 }
 
 const PasswordEntry = ({ item }: PasswordEntryProps) => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	const isPrivileged = item.privileged;
 
 	const mutation = createMutation((queryClient) => {
 		return {
 			async mutationFn() {
-				await rpc.call('com.atproto.server.revokeAppPassword', {
-					data: { name: item.name },
-				});
+				await ok(
+					client.post('com.atproto.server.revokeAppPassword', {
+						as: null,
+						input: { name: item.name },
+					}),
+				);
 			},
 			async onSuccess() {
 				await queryClient.invalidateQueries({ queryKey: ['app-passwords'] });

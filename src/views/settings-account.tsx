@@ -1,3 +1,4 @@
+import { ok } from '@atcute/client';
 import { createQuery } from '@mary/solid-query';
 
 import { useTitle } from '~/lib/navigation/router';
@@ -7,20 +8,20 @@ import * as Boxed from '~/components/boxed';
 import * as Page from '~/components/page';
 
 const AccountSettingsPage = () => {
-	const { did, rpc, persister } = useAgent();
+	const { did, client, persister } = useAgent();
 
 	const repo = createQuery(() => ({
 		queryKey: ['describe-repo'],
 		persister: persister as any,
 		async queryFn() {
-			const [repoResponse, serverResponse] = await Promise.all([
-				rpc.get('com.atproto.repo.describeRepo', { params: { repo: did! } }),
-				rpc.handle('/xrpc/com.atproto.server.describeServer', {}),
+			const [repo, server] = await Promise.all([
+				ok(client.get('com.atproto.repo.describeRepo', { params: { repo: did! } })),
+				ok(client.get('com.atproto.server.describeServer')),
 			]);
 
 			return {
-				handle: repoResponse.data.handle,
-				pds: new URL(serverResponse.url).host,
+				handle: repo.handle,
+				pds: server.did.replace(/^did:web:/, ''),
 			};
 		},
 	}));

@@ -1,4 +1,4 @@
-import { XRPCError } from '@atcute/client';
+import { ClientResponseError, ok } from '@atcute/client';
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
@@ -19,15 +19,15 @@ export interface DeletePostPromptProps {
 
 const DeletePostPrompt = ({ post, onPostDelete }: DeletePostPromptProps) => {
 	const { currentAccount } = useSession();
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	const queryClient = useQueryClient();
 
-	const onDelete = () => {
+	const onDelete = async () => {
 		const uri = parseCanonicalResourceUri(post.uri);
 
-		const promise = rpc.call('com.atproto.repo.applyWrites', {
-			data: {
+		const write = await client.post('com.atproto.repo.applyWrites', {
+			input: {
 				repo: currentAccount!.did,
 				writes: [
 					{
@@ -39,43 +39,44 @@ const DeletePostPrompt = ({ post, onPostDelete }: DeletePostPromptProps) => {
 			},
 		});
 
-		promise.then(
-			() => {
-				updatePostShadow(queryClient, post.uri, { deleted: true });
-				onPostDelete?.();
-			},
-			async (err) => {
-				if (err instanceof XRPCError && err.kind === 'InternalServerError') {
-					await rpc.call('com.atproto.repo.putRecord', {
-						data: {
-							repo: currentAccount!.did,
-							collection: 'app.bsky.feed.post',
-							rkey: uri.rkey,
-							validate: false,
-							record: {
-								$type: 'app.bsky.feed.post',
-								text: '',
-								createdAt: '1970-01-01T00:00:00.000Z',
-							} satisfies AppBskyFeedPost.Record,
-						},
-					});
+		if (write.ok) {
+			updatePostShadow(queryClient, post.uri, { deleted: true });
+			onPostDelete?.();
+			return;
+		}
 
-					await rpc.call('com.atproto.repo.deleteRecord', {
-						data: {
-							repo: currentAccount!.did,
-							collection: 'app.bsky.feed.post',
-							rkey: uri.rkey,
-						},
-					});
+		if (write.data.error !== 'InternalServerError') {
+			throw new ClientResponseError(write);
+		}
 
-					updatePostShadow(queryClient, post.uri, { deleted: true });
-					onPostDelete?.();
-					return;
-				}
-
-				throw err;
-			},
+		await ok(
+			client.post('com.atproto.repo.putRecord', {
+				input: {
+					repo: currentAccount!.did,
+					collection: 'app.bsky.feed.post',
+					rkey: uri.rkey,
+					validate: false,
+					record: {
+						$type: 'app.bsky.feed.post',
+						text: '',
+						createdAt: '1970-01-01T00:00:00.000Z',
+					} satisfies AppBskyFeedPost.Record,
+				},
+			}),
 		);
+
+		await ok(
+			client.post('com.atproto.repo.deleteRecord', {
+				input: {
+					repo: currentAccount!.did,
+					collection: 'app.bsky.feed.post',
+					rkey: uri.rkey,
+				},
+			}),
+		);
+
+		updatePostShadow(queryClient, post.uri, { deleted: true });
+		onPostDelete?.();
 	};
 
 	return (

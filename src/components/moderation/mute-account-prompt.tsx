@@ -1,5 +1,6 @@
 import { Match, Switch, onMount } from 'solid-js';
 
+import { ok } from '@atcute/client';
 import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 import { createMutation } from '@mary/solid-query';
 
@@ -49,15 +50,18 @@ export default MuteAccountPrompt;
 const MutePrompt = ({ profile }: MuteAccountPromptProps) => {
 	const { close } = useModalContext();
 
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	const mutation = createMutation((queryClient) => ({
 		async mutationFn() {
-			await rpc.call('app.bsky.graph.muteActor', {
-				data: {
-					actor: profile.did,
-				},
-			});
+			await ok(
+				client.post('app.bsky.graph.muteActor', {
+					as: null,
+					input: {
+						actor: profile.did,
+					},
+				}),
+			);
 		},
 		onSuccess() {
 			close();
@@ -115,15 +119,18 @@ const MutePrompt = ({ profile }: MuteAccountPromptProps) => {
 const UnmutePrompt = ({ profile }: MuteAccountPromptProps) => {
 	const { close } = useModalContext();
 
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	const mutation = createMutation((queryClient) => ({
 		async mutationFn() {
-			await rpc.call('app.bsky.graph.unmuteActor', {
-				data: {
-					actor: profile.did,
-				},
-			});
+			await ok(
+				client.post('app.bsky.graph.unmuteActor', {
+					as: null,
+					input: {
+						actor: profile.did,
+					},
+				}),
+			);
 		},
 		onSuccess() {
 			close();

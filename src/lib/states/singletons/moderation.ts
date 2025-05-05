@@ -1,7 +1,8 @@
 import { createMemo } from 'solid-js';
 import { unwrap } from 'solid-js/store';
 
-import type { AppBskyLabelerDefs, At } from '@atcute/client/lexicons';
+import { ok } from '@atcute/client';
+import type { At } from '@atcute/client/lexicons';
 import { mapDefined } from '@mary/array-fns';
 import { createBatchedFetch } from '@mary/batch-fetch';
 import { type QueryFunctionContext as QC, createQueries } from '@mary/solid-query';
@@ -14,10 +15,8 @@ import { useAgent } from '../agent';
 import { useSession } from '../session';
 import { define } from '../singleton';
 
-type Labeler = AppBskyLabelerDefs.LabelerViewDetailed;
-
 const ModerationService = define('moderation', () => {
-	const { rpc, persister } = useAgent();
+	const { client, persister } = useAgent();
 	const { currentAccount } = useSession();
 
 	const modPreferences = createMemo((): ModerationPreferences => {
@@ -44,16 +43,17 @@ const ModerationService = define('moderation', () => {
 		timeout: 1,
 		idFromResource: (labeler) => labeler.did,
 		async fetch(dids, signal) {
-			const { data } = await rpc.get('app.bsky.labeler.getServices', {
-				signal,
-				params: {
-					dids: dids,
-					detailed: true,
-				},
-			});
+			const data = await ok(
+				client.get('app.bsky.labeler.getServices', {
+					signal,
+					params: {
+						dids: dids,
+						detailed: true,
+					},
+				}),
+			);
 
-			const views = data.views as Labeler[];
-
+			const views = data.views.filter((view) => view.$type === 'app.bsky.labeler.defs#labelerViewDetailed');
 			return views.map((view) => interpretLabelerDefinition(view));
 		},
 	});

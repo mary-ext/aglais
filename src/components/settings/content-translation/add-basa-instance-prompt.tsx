@@ -1,6 +1,6 @@
 import { createMemo, createSignal } from 'solid-js';
 
-import { XRPC, simpleFetchHandler } from '@atcute/client';
+import { Client, ok, simpleFetchHandler } from '@atcute/client';
 import { createMutation } from '@mary/solid-query';
 
 import { formatQueryError } from '~/api/utils/error';
@@ -47,8 +47,8 @@ const AddBasaInstancePrompt = () => {
 
 	const mutation = createMutation(() => ({
 		async mutationFn({ url }: { url: URL }) {
-			const rpc = new XRPC({ handler: simpleFetchHandler({ service: url }) });
-			await rpc.get('x.basa.describeServer', {});
+			const client = new Client({ handler: simpleFetchHandler({ service: url }) });
+			await ok(client.get('x.basa.describeServer'));
 		},
 		onSuccess(_data, { url }) {
 			const href = url.toString();

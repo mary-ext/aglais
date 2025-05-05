@@ -1,3 +1,4 @@
+import { ok } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
@@ -10,7 +11,7 @@ import { isDid } from '../types/identity';
 import { resolveHandle } from './handle';
 
 export const createPostQuery = (postUri: () => string) => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 
 	return createQuery((queryClient) => {
 		const $postUri = postUri();
@@ -24,15 +25,17 @@ export const createPostQuery = (postUri: () => string) => {
 				if (isDid(uri.repo)) {
 					did = uri.repo;
 				} else {
-					did = await resolveHandle(rpc, uri.repo, ctx.signal);
+					did = await resolveHandle(client, uri.repo, ctx.signal);
 				}
 
-				const { data } = await rpc.get('app.bsky.feed.getPosts', {
-					signal: ctx.signal,
-					params: {
-						uris: [makeAtUri(did, uri.collection, uri.rkey)],
-					},
-				});
+				const data = await ok(
+					client.get('app.bsky.feed.getPosts', {
+						signal: ctx.signal,
+						params: {
+							uris: [makeAtUri(did, uri.collection, uri.rkey)],
+						},
+					}),
+				);
 
 				const post = data.posts[0];
 

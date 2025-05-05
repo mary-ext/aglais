@@ -1,5 +1,6 @@
 import { modifyMutable, reconcile } from 'solid-js/store';
 
+import { ok } from '@atcute/client';
 import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
@@ -14,7 +15,7 @@ export interface ProfileQueryOptions {
 }
 
 export const createProfileQuery = (didOrHandle: () => At.Identifier, opts: ProfileQueryOptions = {}) => {
-	const { rpc } = useAgent();
+	const { client } = useAgent();
 	const { currentAccount } = useSession();
 
 	return createQuery((queryClient) => {
@@ -25,12 +26,14 @@ export const createProfileQuery = (didOrHandle: () => At.Identifier, opts: Profi
 			staleTime: opts.staleTime,
 			gcTime: opts.gcTime,
 			async queryFn(ctx): Promise<AppBskyActorDefs.ProfileViewDetailed> {
-				const { data } = await rpc.get('app.bsky.actor.getProfile', {
-					signal: ctx.signal,
-					params: {
-						actor: $didOrHandle!,
-					},
-				});
+				const data = await ok(
+					client.get('app.bsky.actor.getProfile', {
+						signal: ctx.signal,
+						params: {
+							actor: $didOrHandle!,
+						},
+					}),
+				);
 
 				if (currentAccount !== undefined && currentAccount.did === data.did) {
 					// Unset `knownFollowers` as we don't need that on our own profile.

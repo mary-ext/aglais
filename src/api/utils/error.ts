@@ -1,8 +1,8 @@
-import { XRPCError } from '@atcute/client';
+import { ClientResponseError } from '@atcute/client';
 import { TokenRefreshError } from '@atcute/oauth-browser-client';
 
-export const formatXRPCError = (err: XRPCError): string => {
-	const name = err.kind;
+export const formatXRPCError = (err: ClientResponseError): string => {
+	const name = err.error;
 	return (name ? name + ': ' : '') + err.description;
 };
 
@@ -11,8 +11,8 @@ export const formatQueryError = (err: unknown) => {
 		return `Account session is no longer valid`;
 	}
 
-	if (err instanceof XRPCError) {
-		const kind = err.kind;
+	if (err instanceof ClientResponseError) {
+		const kind = err.error;
 
 		if (kind === 'invalid_token') {
 			return `Account session is no longer valid`;
