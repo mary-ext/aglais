@@ -1,20 +1,20 @@
 diff --git a/dist/solid.js b/dist/solid.js
-index 2571609363d5758d32e2aa88489acca146a6d308..4a1e0bf4e523fb075340e0c2ccef0a4a9ab12f7f 100644
+index f8d7c6698944fb9deb3c1e0ffb77071da6fe562c..0751e68eb39091cc51236d0d6abb637dd7b08436 100644
 --- a/dist/solid.js
 +++ b/dist/solid.js
-@@ -1581,7 +1581,6 @@ function Show(props) {
+@@ -1586,7 +1586,6 @@ function Show(props) {
                  keyed
                    ? c
                    : () => {
 -                      if (!untrack(condition)) throw narrowedError("Show");
-                       return props.when;
+                       return conditionValue();
                      }
                )
-@@ -1628,7 +1627,6 @@ function Switch(props) {
-               keyed
-                 ? when
+@@ -1636,7 +1635,6 @@ function Switch(props) {
+               mp.keyed
+                 ? conditionValue()
                  : () => {
--                    if (untrack(evalConditions)[0] !== index) throw narrowedError("Match");
-                     return cond.when;
+-                    if (untrack(switchFunc)()?.[0] !== index) throw narrowedError("Match");
+                     return conditionValue();
                    }
              )

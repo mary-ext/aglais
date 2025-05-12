@@ -17,7 +17,7 @@ patchedDependencies:
     hash: 0b06407b66b7af88765fb6e01e112677a8c09ce518cb4f547cee8a0044471acd
     path: patches/@tanstack__query-core@5.17.19.patch
   solid-js:
-    hash: 9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c
+    hash: 34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268
     path: patches/solid-js.patch
   vite-plugin-pwa:
     hash: 003379ded749ad87080f87b428b17f04c4c88b6b64544df4d928aab76fbf6325
@@ -92,10 +92,10 @@ importers:
         version: '@jsr/mary__exif-rm@0.2.2'
       '@mary/solid-freeze':
         specifier: npm:@externdefs/solid-freeze@^0.1.1
-        version: '@externdefs/solid-freeze@0.1.1(solid-js@1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c))'
+        version: '@externdefs/solid-freeze@0.1.1(solid-js@1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268))'
       '@mary/solid-query':
         specifier: npm:@externdefs/solid-query@^0.1.5
-        version: '@externdefs/solid-query@0.1.5(solid-js@1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c))'
+        version: '@externdefs/solid-query@0.1.5(solid-js@1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268))'
       comlink:
         specifier: ^4.4.2
         version: 4.4.2
@@ -110,10 +110,10 @@ importers:
         version: 5.1.5
       solid-floating-ui:
         specifier: ~0.2.1
-        version: 0.2.1(@floating-ui/dom@1.7.0)(solid-js@1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c))
+        version: 0.2.1(@floating-ui/dom@1.7.0)(solid-js@1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268))
       solid-js:
         specifier: ^1.9.6
-        version: 1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c)
+        version: 1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268)
       webm-muxer:
         specifier: ^5.1.2
         version: 5.1.2
@@ -156,7 +156,7 @@ importers:
         version: 0.21.0(patch_hash=003379ded749ad87080f87b428b17f04c4c88b6b64544df4d928aab76fbf6325)(@types/babel__core@7.20.5)(vite@6.3.4(jiti@1.21.7)(terser@5.39.0)(yaml@2.7.1))
       vite-plugin-solid:
         specifier: ^2.11.6
-        version: 2.11.6(solid-js@1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c))(vite@6.3.4(jiti@1.21.7)(terser@5.39.0)(yaml@2.7.1))
+        version: 2.11.6(solid-js@1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268))(vite@6.3.4(jiti@1.21.7)(terser@5.39.0)(yaml@2.7.1))
       wrangler:
         specifier: ^4.14.1
         version: 4.14.1
@@ -3595,14 +3595,14 @@ snapshots:
   '@esbuild/win32-x64@0.25.3':
     optional: true
 
-  '@externdefs/solid-freeze@0.1.1(solid-js@1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c))':
+  '@externdefs/solid-freeze@0.1.1(solid-js@1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268))':
     dependencies:
-      solid-js: 1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c)
+      solid-js: 1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268)
 
-  '@externdefs/solid-query@0.1.5(solid-js@1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c))':
+  '@externdefs/solid-query@0.1.5(solid-js@1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268))':
     dependencies:
       '@tanstack/query-core': 5.17.19(patch_hash=0b06407b66b7af88765fb6e01e112677a8c09ce518cb4f547cee8a0044471acd)
-      solid-js: 1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c)
+      solid-js: 1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268)
 
   '@fastify/busboy@2.1.1': {}
 
@@ -4715,23 +4715,23 @@ snapshots:
 
   smob@1.5.0: {}
 
-  solid-floating-ui@0.2.1(@floating-ui/dom@1.7.0)(solid-js@1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c)):
+  solid-floating-ui@0.2.1(@floating-ui/dom@1.7.0)(solid-js@1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268)):
     dependencies:
       '@floating-ui/dom': 1.7.0
-      solid-js: 1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c)
+      solid-js: 1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268)
 
-  solid-js@1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c):
+  solid-js@1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268):
     dependencies:
       csstype: 3.1.3
       seroval: 1.2.1
       seroval-plugins: 1.2.1(seroval@1.2.1)
 
-  solid-refresh@0.6.3(solid-js@1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c)):
+  solid-refresh@0.6.3(solid-js@1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268)):
     dependencies:
       '@babel/generator': 7.27.1
       '@babel/helper-module-imports': 7.27.1
       '@babel/types': 7.27.1
-      solid-js: 1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c)
+      solid-js: 1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268)
     transitivePeerDependencies:
       - supports-color
 
@@ -4929,14 +4929,14 @@ snapshots:
       - '@types/babel__core'
       - supports-color
 
-  vite-plugin-solid@2.11.6(solid-js@1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c))(vite@6.3.4(jiti@1.21.7)(terser@5.39.0)(yaml@2.7.1)):
+  vite-plugin-solid@2.11.6(solid-js@1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268))(vite@6.3.4(jiti@1.21.7)(terser@5.39.0)(yaml@2.7.1)):
     dependencies:
       '@babel/core': 7.27.1
       '@types/babel__core': 7.20.5
       babel-preset-solid: 1.9.6(@babel/core@7.27.1)
       merge-anything: 5.1.7
-      solid-js: 1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c)
-      solid-refresh: 0.6.3(solid-js@1.9.6(patch_hash=9a1f52b880286fb75dd8b75f1dbd1f4c0ed3fc3e607aeacc391a7e5ea64bbf9c))
+      solid-js: 1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268)
+      solid-refresh: 0.6.3(solid-js@1.9.6(patch_hash=34b4d8d8690680b566072e58ba66c5cec2f5a8fe0073abbee0445c8e02182268))
       vite: 6.3.4(jiti@1.21.7)(terser@5.39.0)(yaml@2.7.1)
       vitefu: 1.0.6(vite@6.3.4(jiti@1.21.7)(terser@5.39.0)(yaml@2.7.1))
     transitivePeerDependencies:
