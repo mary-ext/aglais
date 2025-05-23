@@ -1,20 +1,20 @@
 diff --git a/dist/solid.js b/dist/solid.js
-index f8d7c6698944fb9deb3c1e0ffb77071da6fe562c..0751e68eb39091cc51236d0d6abb637dd7b08436 100644
+index a36e31312a461cdf9999e22aa893ef29162750c8..6de1f7f7d608e07baa9edbc6f0ee394f7f9b4411 100644
 --- a/dist/solid.js
 +++ b/dist/solid.js
-@@ -1586,7 +1586,6 @@ function Show(props) {
-                 keyed
-                   ? c
-                   : () => {
--                      if (!untrack(condition)) throw narrowedError("Show");
-                       return conditionValue();
-                     }
-               )
-@@ -1636,7 +1635,6 @@ function Switch(props) {
-               mp.keyed
-                 ? conditionValue()
-                 : () => {
--                    if (untrack(switchFunc)()?.[0] !== index) throw narrowedError("Match");
-                     return conditionValue();
-                   }
-             )
+@@ -1468,7 +1468,6 @@ function Show(props) {
+       const child = props.children;
+       const fn = typeof child === "function" && child.length > 0;
+       return fn ? untrack(() => child(keyed ? c : () => {
+-        if (!untrack(condition)) throw narrowedError("Show");
+         return conditionValue();
+       })) : child;
+     }
+@@ -1500,7 +1499,6 @@ function Switch(props) {
+     const child = mp.children;
+     const fn = typeof child === "function" && child.length > 0;
+     return fn ? untrack(() => child(mp.keyed ? conditionValue() : () => {
+-      if (untrack(switchFunc)()?.[0] !== index) throw narrowedError("Match");
+       return conditionValue();
+     })) : child;
+   }, undefined, undefined);
