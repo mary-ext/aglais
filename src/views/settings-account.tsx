@@ -8,19 +8,19 @@ import * as Boxed from '~/components/boxed';
 import * as Page from '~/components/page';
 
 const AccountSettingsPage = () => {
-	const { did, client, persister } = useAgent();
+	const { client, persister } = useAgent();
 
 	const repo = createQuery(() => ({
 		queryKey: ['describe-repo'],
 		persister: persister as any,
 		async queryFn() {
-			const [repo, server] = await Promise.all([
-				ok(client.get('com.atproto.repo.describeRepo', { params: { repo: did! } })),
+			const [session, server] = await Promise.all([
+				ok(client.get('com.atproto.server.getSession')),
 				ok(client.get('com.atproto.server.describeServer')),
 			]);
 
 			return {
-				handle: repo.handle,
+				handle: session.handle,
 				pds: server.did.replace(/^did:web:/, ''),
 			};
 		},
