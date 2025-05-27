@@ -74,12 +74,7 @@ export interface PromptTitleProps {
 }
 
 const PromptTitle = (props: PromptTitleProps) => {
-	const isDesktop = useMediaQuery('(width >= 688px) and (height >= 500px)');
-	return (
-		<h1 class={`mb-1 break-words font-bold` + (!isDesktop() ? ` text-base` : ` text-xl`)}>
-			{props.children}
-		</h1>
-	);
+	return <h1 class="mb-1 break-words text-lg font-bold">{props.children}</h1>;
 };
 
 export { PromptTitle as Title };
