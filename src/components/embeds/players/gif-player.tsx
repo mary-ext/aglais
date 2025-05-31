@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid/non-secure';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 
 import { globalEvents } from '~/globals/events';
@@ -14,8 +13,6 @@ export interface GifPlayerProps {
 }
 
 const GifPlayer = ({ snippet }: GifPlayerProps) => {
-	const playerId = nanoid();
-
 	const [playing, setPlaying] = createSignal(false);
 	const [stalling, setStalling] = createSignal(false);
 
@@ -67,7 +64,7 @@ const GifPlayer = ({ snippet }: GifPlayerProps) => {
 					}
 				}}
 				onPlay={() => {
-					globalEvents.emit('mediaplay', playerId);
+					globalEvents.emit('mediaplay');
 					setPlaying(true);
 				}}
 				onPause={() => {

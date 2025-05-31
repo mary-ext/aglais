@@ -4,7 +4,7 @@ export const globalEvents = new EventEmitter<{
 	// User has published a post
 	postpublished: [];
 	// Media is being played
-	mediaplay: [id: string];
+	mediaplay: [];
 	// User initiated scroll to top
 	softreset: [];
 }>();

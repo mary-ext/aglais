@@ -1,6 +1,5 @@
 import type * as h from 'hls.js';
 import Hls from 'hls.js/dist/hls.light.js';
-import { nanoid } from 'nanoid/non-secure';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
@@ -21,7 +20,6 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 	const { currentAccount } = useSession();
 
 	const [playing, setPlaying] = createSignal(false);
-	const playerId = nanoid();
 
 	const hls = new Hls({
 		capLevelToPlayerSize: true,
@@ -90,7 +88,6 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 				playsinline
 				autoplay
 				onPlay={() => {
-					globalEvents.emit('mediaplay', playerId);
 					setPlaying(true);
 				}}
 				onPause={() => {
