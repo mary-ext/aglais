@@ -3,6 +3,7 @@ import { modifyMutable, reconcile } from 'solid-js/store';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { type Did } from '@atcute/lexicons';
+import { isDid } from '@atcute/lexicons/syntax';
 import { createQuery } from '@mary/solid-query';
 
 import type { SavedGeneratorFeed } from '~/lib/preferences/account';
@@ -11,7 +12,6 @@ import { useSession } from '~/lib/states/session';
 import { omit } from '~/lib/utils/misc';
 
 import { assertCanonicalResourceUri, makeAtUri } from '../types/at-uri';
-import { isDid } from '../types/identity';
 
 import { resolveHandle } from './handle';
 

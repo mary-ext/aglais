@@ -3,6 +3,7 @@ import { For, Match, Switch, createEffect, createMemo, createSignal } from 'soli
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
 import type { $type, ActorIdentifier, Did, RecordKey } from '@atcute/lexicons';
+import { isDid } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@mary/solid-query';
 
 import {
@@ -13,7 +14,6 @@ import {
 import { usePostThreadQuery } from '~/api/queries/post-thread';
 import { createProfileQuery } from '~/api/queries/profile';
 import { makeAtUri } from '~/api/types/at-uri';
-import { isDid } from '~/api/types/identity';
 
 import { history } from '~/globals/navigation';
 

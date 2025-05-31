@@ -3,11 +3,11 @@ import { Match, Show, Switch, createMemo } from 'solid-js';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
 import type { ActorIdentifier } from '@atcute/lexicons';
+import { isDid } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@mary/solid-query';
 
 import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { createProfileQuery } from '~/api/queries/profile';
-import { isDid } from '~/api/types/identity';
 
 import { openModal } from '~/globals/modals';
 import { history } from '~/globals/navigation';

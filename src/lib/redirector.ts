@@ -1,5 +1,5 @@
-import { isDid, isHandle } from '~/api/types/identity';
-import { isRecordKey, isTid } from '~/api/types/rkey';
+import { isDid, isHandle, isRecordKey, isTid } from '@atcute/lexicons/syntax';
+
 import { safeUrlParse } from '~/api/utils/strings';
 
 import {

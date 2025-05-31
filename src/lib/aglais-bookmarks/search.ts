@@ -1,8 +1,7 @@
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import type { Token } from '@atcute/bluesky-search-parser';
+import { isDid, isHandle } from '@atcute/lexicons/syntax';
 import { mapDefined } from '@mary/array-fns';
-
-import { DID_RE, HANDLE_RE } from '~/api/types/identity';
 
 import { parseEndDate, parseStartDate, splitFilters } from '../bsky/search';
 import { escapeRegex } from '../utils/regex';
@@ -44,14 +43,14 @@ export const createSearchPredicate = (tokens: Token[]) => {
 
 		{
 			const raw = filters.get('from');
-			if (raw && HANDLE_RE.test(raw)) {
+			if (isHandle(raw)) {
 				from = raw;
 			}
 		}
 
 		{
 			const raw = filters.get('did');
-			if (raw && DID_RE.test(raw)) {
+			if (isDid(raw)) {
 				from = raw;
 			}
 		}

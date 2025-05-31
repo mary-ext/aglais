@@ -1,9 +1,9 @@
 import { createSignal } from 'solid-js';
 
 import type { ActorIdentifier } from '@atcute/lexicons';
+import { isDid } from '@atcute/lexicons/syntax';
 
 import { createProfileQuery } from '~/api/queries/profile';
-import { isDid } from '~/api/types/identity';
 
 import { history } from '~/globals/navigation';
 

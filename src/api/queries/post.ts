@@ -1,12 +1,12 @@
 import { ok } from '@atcute/client';
 import { type Did } from '@atcute/lexicons';
+import { isDid } from '@atcute/lexicons/syntax';
 import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
 import { findPostsInCache } from '../cache/post-shadow';
 import { assertCanonicalResourceUri, makeAtUri } from '../types/at-uri';
-import { isDid } from '../types/identity';
 
 import { resolveHandle } from './handle';
 

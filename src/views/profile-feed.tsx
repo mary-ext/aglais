@@ -1,11 +1,11 @@
 import { Match, Show, Switch } from 'solid-js';
 
 import type { ActorIdentifier, RecordKey } from '@atcute/lexicons';
+import { isDid } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@mary/solid-query';
 
 import { createFeedMetaQuery } from '~/api/queries/feed';
 import { makeAtUri } from '~/api/types/at-uri';
-import { isDid } from '~/api/types/identity';
 
 import { openModal } from '~/globals/modals';
 import { history } from '~/globals/navigation';

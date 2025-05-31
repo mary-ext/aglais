@@ -1,7 +1,6 @@
 import { type Client, ok } from '@atcute/client';
 import type { Did, Handle } from '@atcute/lexicons';
-
-import { isDid } from '../types/identity';
+import { isDid } from '@atcute/lexicons/syntax';
 
 const getDid = async (client: Client, actor: Handle, signal?: AbortSignal) => {
 	let did: Did;

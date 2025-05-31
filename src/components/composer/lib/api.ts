@@ -20,6 +20,7 @@ import type {
 } from '@atcute/bluesky';
 import { Client, ClientResponseError, ok, simpleFetchHandler } from '@atcute/client';
 import { type $type, type Blob as AtpBlob, type Did, type GenericUri, type Handle } from '@atcute/lexicons';
+import { isDid } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 import type { QueryClient } from '@mary/solid-query';
 
@@ -28,7 +29,6 @@ import { uploadBlob } from '~/api/queries/blob';
 import type { LinkMeta } from '~/api/queries/composer';
 import { resolveHandle } from '~/api/queries/handle';
 import { assertCanonicalResourceUri, makeAtUri } from '~/api/types/at-uri';
-import { isDid } from '~/api/types/identity';
 import { getRecord } from '~/api/utils/records';
 import { trimRichText } from '~/api/utils/richtext';
 import { getUtf8Length } from '~/api/utils/unicode';
