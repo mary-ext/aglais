@@ -50,6 +50,7 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 			}
 
 			const profile = createProfileQuery(() => did, {
+				batched: true,
 				staleTime: Infinity,
 				gcTime: 60_000 * 5,
 			});

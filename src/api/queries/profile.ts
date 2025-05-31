@@ -2,22 +2,51 @@ import { modifyMutable, reconcile } from 'solid-js/store';
 
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { ActorIdentifier } from '@atcute/lexicons';
+import type { ActorIdentifier, Did } from '@atcute/lexicons';
+import { isDid } from '@atcute/lexicons/syntax';
+import { createBatchedFetch } from '@mary/batch-fetch';
 import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
+import { define, inject } from '~/lib/states/singleton';
 
 import { dequal } from '../utils/dequal';
 
 export interface ProfileQueryOptions {
+	batched?: boolean;
 	staleTime?: number;
 	gcTime?: number;
 }
 
+const BatchedProfileService = define('batched-profile', () => {
+	const { client } = useAgent();
+
+	const fetch = createBatchedFetch<Did, AppBskyActorDefs.ProfileViewDetailed>({
+		limit: 25,
+		idFromResource: (profile) => profile.did,
+		async fetch(queries, signal) {
+			const data = await ok(
+				client.get('app.bsky.actor.getProfiles', {
+					signal,
+					params: {
+						actors: queries,
+					},
+				}),
+			);
+
+			return data.profiles;
+		},
+	});
+
+	return { fetch };
+});
+
 export const createProfileQuery = (didOrHandle: () => ActorIdentifier, opts: ProfileQueryOptions = {}) => {
 	const { client } = useAgent();
 	const { currentAccount } = useSession();
+
+	const batched = inject(BatchedProfileService);
 
 	return createQuery((queryClient) => {
 		const $didOrHandle = didOrHandle();
@@ -26,15 +55,21 @@ export const createProfileQuery = (didOrHandle: () => ActorIdentifier, opts: Pro
 			queryKey: ['profile', $didOrHandle],
 			staleTime: opts.staleTime,
 			gcTime: opts.gcTime,
-			async queryFn(ctx): Promise<AppBskyActorDefs.ProfileViewDetailed> {
-				const data = await ok(
-					client.get('app.bsky.actor.getProfile', {
-						signal: ctx.signal,
-						params: {
-							actor: $didOrHandle!,
-						},
-					}),
-				);
+			async queryFn({ signal }): Promise<AppBskyActorDefs.ProfileViewDetailed> {
+				let data: AppBskyActorDefs.ProfileViewDetailed;
+
+				if (opts.batched && isDid($didOrHandle)) {
+					data = await batched.fetch($didOrHandle, signal);
+				} else {
+					data = await ok(
+						client.get('app.bsky.actor.getProfile', {
+							signal,
+							params: {
+								actor: $didOrHandle!,
+							},
+						}),
+					);
+				}
 
 				if (currentAccount !== undefined && currentAccount.did === data.did) {
 					// Unset `knownFollowers` as we don't need that on our own profile.
