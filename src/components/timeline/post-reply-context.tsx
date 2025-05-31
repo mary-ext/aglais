@@ -49,6 +49,21 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 				return <div class="mb-0.5 flex text-de text-contrast-muted">Replying to you</div>;
 			}
 
+			if (did === post.author.did) {
+				return (
+					<div class="mb-0.5 flex text-de text-contrast-muted">
+						<span class="shrink-0 whitespace-pre">Replying to </span>
+						<a
+							dir="auto"
+							href={`/${did}`}
+							class="overflow-hidden text-ellipsis whitespace-nowrap font-semibold hover:underline"
+						>
+							{/* @once */ post.author.handle.toLowerCase()}
+						</a>
+					</div>
+				);
+			}
+
 			const profile = createProfileQuery(() => did, {
 				batched: true,
 				staleTime: Infinity,
