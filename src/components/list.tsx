@@ -3,9 +3,9 @@ import { For, type JSX, Match, Switch, untrack } from 'solid-js';
 import { getQueryErrorInfo } from '~/api/utils/query';
 
 import { ifIntersect } from '~/lib/element-refs';
+import { useIsFocused } from '~/lib/navigation/router';
 
 import CircularProgress from './circular-progress';
-import EndOfListView from './end-of-list-view';
 import ErrorView from './error-view';
 
 export interface ListProps<T> {
@@ -93,19 +93,30 @@ const List = <T,>(props: ListProps<T>) => {
 					<div
 						ref={(node) => {
 							if (onEndReached) {
-								ifIntersect(node, () => !props.isFetchingNextPage && props.hasNextPage, onEndReached, {
-									rootMargin: `150% 0%`,
-								});
+								const isFocused = useIsFocused();
+
+								ifIntersect(
+									node,
+									() => !props.isFetchingNextPage && !props.isRefreshing && props.hasNextPage && isFocused(),
+									onEndReached,
+									{ rootMargin: '200% 0%' },
+								);
 							}
 						}}
-						class="grid h-13 shrink-0 place-items-center"
+						class="h-[50svh] shrink-0"
 					>
-						<CircularProgress />
+						<div class="grid place-items-center py-8">
+							<CircularProgress />
+						</div>
 					</div>
 				</Match>
 
 				<Match when={props.data}>
-					<EndOfListView />
+					<div class="h-[50svh] shrink-0">
+						<div class="grid place-items-center py-8">
+							<div class="h-1 w-1 rounded-full bg-contrast-muted"></div>
+						</div>
+					</div>
 				</Match>
 			</Switch>
 		</div>
