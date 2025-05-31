@@ -1,4 +1,4 @@
-import type { At } from '@atcute/client/lexicons';
+import type { ActorIdentifier } from '@atcute/lexicons';
 
 import { makeAtUri } from '~/api/types/at-uri';
 import { safeUrlParse } from '~/api/utils/strings';
@@ -17,7 +17,7 @@ export const getRecordEmbedFromLink = (href: string): PostRecordEmbed | undefine
 
 		if (host === 'bsky.app') {
 			if ((match = BSKY_POST_LINK_RE.exec(path))) {
-				const didOrHandle = match[1] as At.Identifier;
+				const didOrHandle = match[1] as ActorIdentifier;
 				const rkey = match[2];
 
 				return {
@@ -28,7 +28,7 @@ export const getRecordEmbedFromLink = (href: string): PostRecordEmbed | undefine
 			}
 
 			if ((match = BSKY_FEED_LINK_RE.exec(path))) {
-				const didOrHandle = match[1] as At.Identifier;
+				const didOrHandle = match[1] as ActorIdentifier;
 				const rkey = match[2];
 
 				return {
@@ -38,7 +38,7 @@ export const getRecordEmbedFromLink = (href: string): PostRecordEmbed | undefine
 			}
 
 			if ((match = BSKY_LIST_LINK_RE.exec(path))) {
-				const didOrHandle = match[1] as At.Identifier;
+				const didOrHandle = match[1] as ActorIdentifier;
 				const rkey = match[2];
 
 				return {

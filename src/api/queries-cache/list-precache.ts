@@ -1,4 +1,4 @@
-import type { AppBskyGraphDefs } from '@atcute/client/lexicons';
+import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import type { QueryClient } from '@mary/solid-query';
 
 export const precacheList = (

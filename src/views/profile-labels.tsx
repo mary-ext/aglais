@@ -1,6 +1,6 @@
 import { Match, Show, Switch, createMemo } from 'solid-js';
 
-import type { At } from '@atcute/client/lexicons';
+import type { Did } from '@atcute/lexicons';
 import { mapDefined } from '@mary/array-fns';
 
 import {
@@ -46,10 +46,10 @@ import * as Prompt from '~/components/prompt';
 import LabelerOverflowMenu from '~/components/settings/moderation/labeling/labeler-overflow-menu';
 
 const ProfileLabelsPage = () => {
-	const { did } = useParams();
+	const { did } = useParams<{ did: Did }>();
 	const { currentAccount } = useSession();
 
-	const query = createLabelerMetaQuery(() => did as At.Did);
+	const query = createLabelerMetaQuery(() => did);
 
 	const config = createMemo(() => {
 		if (!currentAccount) {
@@ -57,7 +57,7 @@ const ProfileLabelsPage = () => {
 		}
 
 		const preferences = currentAccount.preferences;
-		return preferences.moderation.labelers[did as At.Did];
+		return preferences.moderation.labelers[did];
 	});
 
 	useTitle(() => {
@@ -98,7 +98,7 @@ const ProfileLabelsPage = () => {
 														const preferences = currentAccount!.preferences;
 														const labelers = preferences.moderation.labelers;
 
-														labelers[did as At.Did] = {
+														labelers[did] = {
 															labels: {},
 															privileged: false,
 															redact: false,
@@ -140,7 +140,7 @@ const ProfileLabelsPage = () => {
 																const preferences = currentAccount!.preferences;
 																const labelers = preferences.moderation.labelers;
 
-																delete labelers[did as At.Did];
+																delete labelers[did];
 															}}
 														/>
 													));

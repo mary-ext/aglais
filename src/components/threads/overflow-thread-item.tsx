@@ -1,5 +1,5 @@
 import type { OverflowAncestorItem, OverflowDescendantItem } from '~/api/models/post-thread';
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 
 import MoreHorizOutlinedIcon from '../icons-central/more-horiz-outline';
 
@@ -20,7 +20,7 @@ const OverflowThreadItem = (props: OverflowThreadItemProps) => {
 	return (
 		<a
 			href={(() => {
-				const uri = parseCanonicalResourceUri(props.item.uri);
+				const uri = assertCanonicalResourceUri(props.item.uri);
 				return `/${uri.repo}/${uri.rkey}`;
 			})()}
 			class={

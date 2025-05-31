@@ -1,12 +1,13 @@
+import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import { ClientResponseError, ok } from '@atcute/client';
-import type { AppBskyLabelerDefs, At } from '@atcute/client/lexicons';
+import type { Did } from '@atcute/lexicons';
 import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
 import { interpretLabelerDefinition } from '../moderation/labeler';
 
-export const createLabelerMetaQuery = (did: () => At.Did) => {
+export const createLabelerMetaQuery = (did: () => Did) => {
 	const { client } = useAgent();
 
 	const query = createQuery(() => {

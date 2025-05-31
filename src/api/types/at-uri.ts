@@ -1,33 +1,29 @@
-import type { At, Records } from '@atcute/client/lexicons';
+import {
+	type ActorIdentifier,
+	type Nsid,
+	type ParsedCanonicalResourceUri,
+	type RecordKey,
+	type ResourceUri,
+	parseCanonicalResourceUri,
+} from '@atcute/lexicons';
+import type { Records } from '@atcute/lexicons/ambient';
 
 import { assert } from '~/lib/utils/invariant';
 
-export const ATURI_RE =
-	/^at:\/\/(did:[a-z]+:[a-zA-Z0-9._:%\-]*[a-zA-Z0-9._\-]|(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])\/([a-zA-Z0-9-.]+)\/((?!\.{1,2}$)[a-zA-Z0-9_~.:-]{1,512})(?:#(\/[a-zA-Z0-9._~:@!$&%')(*+,;=\-[\]/\\]*))?$/;
+// #__NO_SIDE_EFFECTS__
+export const assertCanonicalResourceUri = (input: string): ParsedCanonicalResourceUri => {
+	const result = parseCanonicalResourceUri(input);
+	if (!result.ok) {
+		assert(false, result.error);
+	}
 
-export interface ParsedCanonicalResourceUri {
-	repo: At.Did;
-	collection: At.Nsid;
-	rkey: At.RecordKey;
-	fragment: string | undefined;
-}
-
-export const parseCanonicalResourceUri = (str: string): ParsedCanonicalResourceUri => {
-	const match = ATURI_RE.exec(str);
-	assert(match !== null, `failed to parse canonical-at-uri for ${str}`);
-
-	return {
-		repo: match[1] as At.Did,
-		collection: match[2] as At.Nsid,
-		rkey: match[3] as At.RecordKey,
-		fragment: match[4],
-	};
+	return result.value;
 };
 
 export const makeAtUri = (
-	repo: At.Identifier,
-	collection: keyof Records | (string & {}),
-	rkey: At.RecordKey,
-): At.ResourceUri => {
+	repo: ActorIdentifier,
+	collection: keyof Records | (Nsid & {}),
+	rkey: RecordKey,
+): ResourceUri => {
 	return `at://${repo}/${collection}/${rkey}`;
 };

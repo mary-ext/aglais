@@ -1,10 +1,11 @@
+import type { AppBskyFeedGetQuotes } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { AppBskyFeedGetQuotes, At } from '@atcute/client/lexicons';
+import type { ResourceUri } from '@atcute/lexicons';
 import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
-export const createPostQuotesQuery = (uri: () => At.ResourceUri) => {
+export const createPostQuotesQuery = (uri: () => ResourceUri) => {
 	const { client } = useAgent();
 
 	return createInfiniteQuery(() => {
@@ -13,7 +14,7 @@ export const createPostQuotesQuery = (uri: () => At.ResourceUri) => {
 		return {
 			queryKey: ['post-quotes', $uri],
 			structuralSharing: false,
-			async queryFn(ctx: QC<never, string | undefined>): Promise<AppBskyFeedGetQuotes.Output> {
+			async queryFn(ctx: QC<never, string | undefined>): Promise<AppBskyFeedGetQuotes.$output> {
 				const data = await ok(
 					client.get('app.bsky.feed.getQuotes', {
 						signal: ctx.signal,

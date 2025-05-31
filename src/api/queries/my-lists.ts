@@ -1,5 +1,5 @@
+import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { AppBskyGraphDefs } from '@atcute/client/lexicons';
 import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';

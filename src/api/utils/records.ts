@@ -1,18 +1,15 @@
+import type { ComAtprotoRepoGetRecord, ComAtprotoRepoListRecords } from '@atcute/atproto';
 import { type Client, ok } from '@atcute/client';
-import type {
-	At,
-	ComAtprotoRepoGetRecord,
-	ComAtprotoRepoListRecords,
-	Records,
-} from '@atcute/client/lexicons';
+import type { Cid, Did, InferInput, ResourceUri } from '@atcute/lexicons';
+import type { Records } from '@atcute/lexicons/ambient';
 
 type RecordType = keyof Records;
 
 export interface CreateRecordOptions<K extends RecordType> {
-	repo: At.Did;
+	repo: Did;
 	collection: K;
 	rkey?: string;
-	record: Records[K];
+	record: InferInput<Records[K]>;
 	swapCommit?: string;
 	validate?: boolean;
 }
@@ -20,7 +17,7 @@ export interface CreateRecordOptions<K extends RecordType> {
 export const createRecord = async <K extends RecordType>(client: Client, options: CreateRecordOptions<K>) => {
 	const data = await ok(
 		client.post('com.atproto.repo.createRecord', {
-			input: options,
+			input: options as any,
 		}),
 	);
 
@@ -28,19 +25,19 @@ export const createRecord = async <K extends RecordType>(client: Client, options
 };
 
 export interface PutRecordOptions<K extends RecordType> {
-	repo: At.Did;
+	repo: Did;
 	collection: K;
 	rkey: string;
-	record: Records[K];
+	record: InferInput<Records[K]>;
 	swapCommit?: string;
-	swapRecord?: At.Cid | null;
+	swapRecord?: Cid | null;
 	validate?: boolean;
 }
 
 export const putRecord = async <K extends RecordType>(client: Client, options: PutRecordOptions<K>) => {
 	const data = await ok(
 		client.post('com.atproto.repo.putRecord', {
-			input: options,
+			input: options as any,
 		}),
 	);
 
@@ -48,7 +45,7 @@ export const putRecord = async <K extends RecordType>(client: Client, options: P
 };
 
 export interface DeleteRecordOptions<K extends RecordType> {
-	repo: At.Did;
+	repo: Did;
 	collection: K;
 	rkey: string;
 	swapCommit?: string;
@@ -65,20 +62,20 @@ export const deleteRecord = async <K extends RecordType>(client: Client, options
 
 export interface GetRecordOptions<K extends RecordType> {
 	signal?: AbortSignal;
-	repo: At.Did;
+	repo: Did;
 	collection: K;
 	rkey: string;
 	cid?: string;
 }
 
-export interface GetRecordOutput<T> extends ComAtprotoRepoGetRecord.Output {
+export type GetRecordOutput<T> = ComAtprotoRepoGetRecord.$output & {
 	value: T;
-}
+};
 
 export const getRecord = async <K extends RecordType>(
 	client: Client,
 	options: GetRecordOptions<K>,
-): Promise<GetRecordOutput<Records[K]>> => {
+): Promise<GetRecordOutput<InferInput<Records[K]>>> => {
 	const data = await ok(
 		client.get('com.atproto.repo.getRecord', {
 			signal: options.signal,
@@ -96,21 +93,21 @@ export const getRecord = async <K extends RecordType>(
 
 export interface ListRecordsOptions<K extends RecordType> {
 	signal?: AbortSignal;
-	repo: At.Did;
+	repo: Did;
 	collection: K;
 	cursor?: string;
 	limit?: number;
 }
 
-export interface ListRecordsOutput<T> extends ComAtprotoRepoListRecords.Output {
+export type ListRecordsOutput<T> = ComAtprotoRepoListRecords.$output & {
 	cursor?: string;
-	records: { cid: At.Cid; uri: At.ResourceUri; value: T }[];
-}
+	records: { cid: Cid; uri: ResourceUri; value: T }[];
+};
 
 export const listRecords = async <K extends RecordType>(
 	client: Client,
 	options: ListRecordsOptions<K>,
-): Promise<ListRecordsOutput<Records[K]>> => {
+): Promise<ListRecordsOutput<InferInput<Records[K]>>> => {
 	const data = await ok(
 		client.get('com.atproto.repo.listRecords', {
 			signal: options.signal,

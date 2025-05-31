@@ -12,8 +12,8 @@ import {
 	createSignal,
 } from 'solid-js';
 
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 
 import { safeUrlParse } from '~/api/utils/strings';
 

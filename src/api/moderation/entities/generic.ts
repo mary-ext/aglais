@@ -1,11 +1,12 @@
-import type { At, ComAtprotoLabelDefs } from '@atcute/client/lexicons';
+import type { ComAtprotoLabelDefs } from '@atcute/atproto';
+import type { Did } from '@atcute/lexicons';
 
 import { type ModerationCause, type ModerationOptions, decideLabelModeration } from '..';
 import { TargetContent } from '../constants';
 
 export const moderateGeneric = (
 	item: { labels?: ComAtprotoLabelDefs.Label[] },
-	userDid: At.Did,
+	userDid: Did,
 	opts: ModerationOptions,
 ) => {
 	const accu: ModerationCause[] = [];

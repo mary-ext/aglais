@@ -1,6 +1,6 @@
 import { Show } from 'solid-js';
 
-import type { ComAtprotoLabelDefs } from '@atcute/client/lexicons';
+import type { ComAtprotoLabelDefs } from '@atcute/atproto';
 
 import { useSession } from '~/lib/states/session';
 

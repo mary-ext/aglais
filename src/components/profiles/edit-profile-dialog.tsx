@@ -1,7 +1,8 @@
 import { Show, createMemo, createSignal } from 'solid-js';
 
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
-import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
+import type { Blob as AtpBlob } from '@atcute/lexicons';
 import { createMutation } from '@mary/solid-query';
 
 import { uploadBlob } from '~/api/queries/blob';
@@ -74,8 +75,8 @@ const EditProfileDialog = ({ profile }: EditProfileDialogProps) => {
 			const $avatar = avatar();
 			const $banner = banner();
 
-			let avatarPromise: Promise<At.Blob<any>> | undefined;
-			let bannerPromise: Promise<At.Blob<any>> | undefined;
+			let avatarPromise: Promise<AtpBlob<any>> | undefined;
+			let bannerPromise: Promise<AtpBlob<any>> | undefined;
 
 			if ($avatar instanceof Blob) {
 				avatarPromise = compressProfileImage($avatar, 1000, 1000).then((res) => uploadBlob(client, res.blob));

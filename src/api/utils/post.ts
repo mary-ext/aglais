@@ -4,10 +4,10 @@ import type {
 	AppBskyEmbedRecord,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
-	Brand,
-} from '@atcute/client/lexicons';
+} from '@atcute/bluesky';
+import type { $type } from '@atcute/lexicons';
 
-type RecordEmbed = AppBskyFeedPost.Record['embed'];
+type RecordEmbed = AppBskyFeedPost.Main['embed'];
 type ViewEmbed = AppBskyFeedDefs.PostView['embed'];
 
 export const unwrapPostEmbedText = (embed: RecordEmbed | ViewEmbed): string => {
@@ -35,7 +35,9 @@ export const unwrapPostEmbedText = (embed: RecordEmbed | ViewEmbed): string => {
 type RecordMedia = AppBskyEmbedExternal.Main | AppBskyEmbedImages.Main;
 type ViewMedia = AppBskyEmbedExternal.View | AppBskyEmbedImages.View;
 
-const getMediaEmbed = (embed: RecordEmbed | ViewEmbed): Brand.Union<RecordMedia | ViewMedia> | undefined => {
+const getMediaEmbed = (
+	embed: RecordEmbed | ViewEmbed,
+): $type.enforce<RecordMedia | ViewMedia> | undefined => {
 	if (embed) {
 		const type = embed.$type;
 

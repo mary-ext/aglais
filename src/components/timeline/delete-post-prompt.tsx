@@ -1,9 +1,9 @@
+import { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { ClientResponseError, ok } from '@atcute/client';
-import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { updatePostShadow } from '~/api/cache/post-shadow';
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
@@ -24,7 +24,7 @@ const DeletePostPrompt = ({ post, onPostDelete }: DeletePostPromptProps) => {
 	const queryClient = useQueryClient();
 
 	const onDelete = async () => {
-		const uri = parseCanonicalResourceUri(post.uri);
+		const { rkey } = assertCanonicalResourceUri(post.uri);
 
 		const write = await client.post('com.atproto.repo.applyWrites', {
 			input: {
@@ -33,7 +33,7 @@ const DeletePostPrompt = ({ post, onPostDelete }: DeletePostPromptProps) => {
 					{
 						$type: 'com.atproto.repo.applyWrites#delete',
 						collection: 'app.bsky.feed.post',
-						rkey: uri.rkey,
+						rkey: rkey,
 					},
 				],
 			},
@@ -54,13 +54,13 @@ const DeletePostPrompt = ({ post, onPostDelete }: DeletePostPromptProps) => {
 				input: {
 					repo: currentAccount!.did,
 					collection: 'app.bsky.feed.post',
-					rkey: uri.rkey,
+					rkey: rkey,
 					validate: false,
 					record: {
 						$type: 'app.bsky.feed.post',
 						text: '',
 						createdAt: '1970-01-01T00:00:00.000Z',
-					} satisfies AppBskyFeedPost.Record,
+					} satisfies AppBskyFeedPost.Main,
 				},
 			}),
 		);
@@ -70,7 +70,7 @@ const DeletePostPrompt = ({ post, onPostDelete }: DeletePostPromptProps) => {
 				input: {
 					repo: currentAccount!.did,
 					collection: 'app.bsky.feed.post',
-					rkey: uri.rkey,
+					rkey: rkey,
 				},
 			}),
 		);

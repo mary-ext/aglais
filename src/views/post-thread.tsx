@@ -1,7 +1,8 @@
 import { For, Match, Switch, createEffect, createMemo, createSignal } from 'solid-js';
 
+import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
-import type { AppBskyFeedDefs, AppBskyFeedPost, At, Brand } from '@atcute/client/lexicons';
+import type { $type, ActorIdentifier, Did, RecordKey } from '@atcute/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import {
@@ -39,8 +40,8 @@ import VirtualItem from '~/components/virtual-item';
 
 const PostThreadPage = () => {
 	const { didOrHandle, rkey } = useParams<{
-		didOrHandle: At.Identifier;
-		rkey: At.RecordKey;
+		didOrHandle: ActorIdentifier;
+		rkey: RecordKey;
 	}>();
 
 	const queryClient = useQueryClient();
@@ -53,7 +54,7 @@ const PostThreadPage = () => {
 		if (data && data.$type === 'app.bsky.feed.defs#threadViewPost') {
 			const post = data.post;
 			const author = post.author;
-			const record = post.record as AppBskyFeedPost.Record;
+			const record = post.record as AppBskyFeedPost.Main;
 
 			const authorTitle = `@${truncateMiddle(author.handle, 29).toLowerCase()}`;
 			const postContent = record.text?.trim();
@@ -105,7 +106,7 @@ const PostThreadPage = () => {
 										const data = accessor();
 										const type = data.$type;
 
-										let did: At.Did | undefined;
+										let did: Did | undefined;
 
 										if (type === 'app.bsky.feed.defs#threadViewPost') {
 											did = data.post.author.did;
@@ -220,7 +221,7 @@ const PostThreadPage = () => {
 export default PostThreadPage;
 
 const ThreadView = (props: {
-	data: Brand.Union<AppBskyFeedDefs.ThreadViewPost>;
+	data: $type.enforce<AppBskyFeedDefs.ThreadViewPost>;
 	isPlaceholderData: boolean;
 	onReplyPublish?: () => void;
 	onMainPostDelete?: () => void;
@@ -260,7 +261,7 @@ const ThreadView = (props: {
 			}
 		}
 
-		return (post.record as AppBskyFeedPost.Record).reply !== undefined;
+		return (post.record as AppBskyFeedPost.Main).reply !== undefined;
 	};
 
 	return (

@@ -1,4 +1,4 @@
-import type { AppBskyEmbedDefs } from '@atcute/client/lexicons';
+import type { AppBskyEmbedDefs } from '@atcute/bluesky';
 import { remove as removeExif } from '@mary/exif-rm';
 
 const MAX_SIZE = 1_000_000; // 1 MB

@@ -1,6 +1,6 @@
 import { For, createMemo } from 'solid-js';
 
-import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { intersection } from '@mary/array-fns';
 import { useQueryClient } from '@mary/solid-query';
 

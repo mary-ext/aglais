@@ -1,10 +1,11 @@
-import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 import type { InfiniteData } from '@mary/solid-query';
 
 import type { CacheMatcher } from '../cache/utils';
 import type { ProfilesListPage, ProfilesListWithSubjectPage } from '../types/profile-response';
 
-export const findAllProfiles = (did: At.Did): CacheMatcher<AppBskyActorDefs.ProfileView> => {
+export const findAllProfiles = (did: Did): CacheMatcher<AppBskyActorDefs.ProfileView> => {
 	return {
 		filter: [
 			{ queryKey: ['profile-followers'] },

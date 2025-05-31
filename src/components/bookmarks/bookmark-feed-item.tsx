@@ -1,12 +1,12 @@
 import { createMemo } from 'solid-js';
 
-import type { AppBskyFeedPost } from '@atcute/client/lexicons';
+import type { AppBskyFeedPost } from '@atcute/bluesky';
 
 import { usePostShadow } from '~/api/cache/post-shadow';
 import { getModerationUI } from '~/api/moderation';
 import { ContextContentList } from '~/api/moderation/constants';
 import { moderatePost } from '~/api/moderation/entities/post';
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { history } from '~/globals/navigation';
 
@@ -35,12 +35,13 @@ const BookmarkFeedItem = ({ item }: BookmarkFeedItemProps) => {
 	const { post, stale } = item;
 
 	const author = post.author;
-	const record = post.record as AppBskyFeedPost.Record;
+	const record = post.record as AppBskyFeedPost.Main;
 	const embed = post.embed;
 
 	const shadow = usePostShadow(post);
 
-	const uri = parseCanonicalResourceUri(post.uri);
+	const uri = assertCanonicalResourceUri(post.uri);
+
 	const authorHref = `/${author.did}`;
 	const href = `/${author.did}/${uri.rkey}`;
 

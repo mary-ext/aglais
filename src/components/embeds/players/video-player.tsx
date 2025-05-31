@@ -3,7 +3,7 @@ import Hls from 'hls.js/dist/hls.light.js';
 import { nanoid } from 'nanoid/non-secure';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 
-import type { AppBskyEmbedVideo } from '@atcute/client/lexicons';
+import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 
 import { globalEvents } from '~/globals/events';
 

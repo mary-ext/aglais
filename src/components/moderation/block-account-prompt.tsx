@@ -1,11 +1,12 @@
 import { Match, Switch } from 'solid-js';
 
-import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
+import { type Did } from '@atcute/lexicons';
 import { QueryClient, createMutation } from '@mary/solid-query';
 
 import { type ProfileShadowView, updateProfileShadow, useProfileShadow } from '~/api/cache/profile-shadow';
 import { createListMetaQuery } from '~/api/queries/list';
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 import { getCurrentDate } from '~/api/utils/misc';
 import { createRecord, deleteRecord } from '~/api/utils/records';
 
@@ -132,12 +133,12 @@ const UnblockPrompt = (props: BlockAccountPromptInnerProps) => {
 
 	const mutation = createMutation((queryClient) => ({
 		async mutationFn() {
-			const { repo, rkey } = parseCanonicalResourceUri(props.shadow.blockUri!);
+			const uri = assertCanonicalResourceUri(props.shadow.blockUri!);
 
 			return await deleteRecord(client, {
-				repo: repo as At.Did,
+				repo: uri.repo,
 				collection: 'app.bsky.graph.block',
-				rkey: rkey,
+				rkey: uri.rkey,
 			});
 		},
 		onSuccess() {
@@ -228,7 +229,7 @@ const BlockedByList = (props: BlockAccountPromptInnerProps) => {
 	);
 };
 
-const resetThreadQueries = (queryClient: QueryClient, did: At.Did) => {
+const resetThreadQueries = (queryClient: QueryClient, did: Did) => {
 	const substring = `at://${did}/`;
 
 	queryClient.resetQueries({

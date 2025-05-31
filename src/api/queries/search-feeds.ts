@@ -1,5 +1,5 @@
+import type { AppBskyUnspeccedGetPopularFeedGenerators } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { AppBskyUnspeccedGetPopularFeedGenerators } from '@atcute/client/lexicons';
 import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
@@ -14,7 +14,7 @@ export const createSearchFeedsQuery = (query: () => string) => {
 			queryKey: ['search-feeds', q],
 			async queryFn(
 				ctx: QC<never, string | undefined>,
-			): Promise<AppBskyUnspeccedGetPopularFeedGenerators.Output> {
+			): Promise<AppBskyUnspeccedGetPopularFeedGenerators.$output> {
 				const data = await ok(
 					client.get('app.bsky.unspecced.getPopularFeedGenerators', {
 						signal: ctx.signal,

@@ -1,10 +1,10 @@
 import { ok } from '@atcute/client';
-import type { At } from '@atcute/client/lexicons';
+import type { ActorIdentifier } from '@atcute/lexicons';
 import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
-export const createProfileListsQuery = (didOrHandle: () => At.Identifier) => {
+export const createProfileListsQuery = (didOrHandle: () => ActorIdentifier) => {
 	const { client } = useAgent();
 
 	const collator = new Intl.Collator('en-US');

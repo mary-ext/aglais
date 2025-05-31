@@ -1,6 +1,6 @@
 import { Match, Show, Switch } from 'solid-js';
 
-import type { At } from '@atcute/client/lexicons';
+import type { ActorIdentifier, RecordKey } from '@atcute/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { createFeedMetaQuery } from '~/api/queries/feed';
@@ -25,8 +25,8 @@ import TimelineList from '~/components/timeline/timeline-list';
 
 const FeedPage = () => {
 	const { didOrHandle, rkey } = useParams<{
-		didOrHandle: At.Identifier;
-		rkey: At.RecordKey;
+		didOrHandle: ActorIdentifier;
+		rkey: RecordKey;
 	}>();
 
 	const queryClient = useQueryClient();

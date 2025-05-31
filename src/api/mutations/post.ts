@@ -1,11 +1,11 @@
-import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { useQueryClient } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
 import { type PostShadowView, updatePostShadow } from '../cache/post-shadow';
-import { parseCanonicalResourceUri } from '../types/at-uri';
+import { assertCanonicalResourceUri } from '../types/at-uri';
 import { getCurrentDate } from '../utils/misc';
 import { createRecord, deleteRecord } from '../utils/records';
 import { createToggleMutationQueue } from '../utils/toggle-mutation';
@@ -45,7 +45,7 @@ export const createPostLikeMutation = (
 
 				return result.uri;
 			} else if (prevLikeUri) {
-				const uri = parseCanonicalResourceUri(prevLikeUri);
+				const uri = assertCanonicalResourceUri(prevLikeUri);
 
 				await deleteRecord(client, {
 					repo: currentAccount!.did,
@@ -104,7 +104,7 @@ export const createPostRepostMutation = (
 
 				return result.uri;
 			} else if (prevRepostUri) {
-				const uri = parseCanonicalResourceUri(prevRepostUri);
+				const uri = assertCanonicalResourceUri(prevRepostUri);
 
 				await deleteRecord(client, {
 					repo: currentAccount!.did,

@@ -1,4 +1,4 @@
-import type { AppBskyActorDefs } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { QueryClient } from '@mary/solid-query';
 
 export const precacheProfile = (

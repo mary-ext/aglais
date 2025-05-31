@@ -1,6 +1,5 @@
-import type { AppBskyEmbedRecord } from '@atcute/client/lexicons';
-
-import type { ParsedCanonicalResourceUri } from '~/api/types/at-uri';
+import type { AppBskyEmbedRecord } from '@atcute/bluesky';
+import type { ParsedCanonicalResourceUri } from '@atcute/lexicons';
 
 import BlockOutlinedIcon from '../icons-central/block-outline';
 

@@ -1,6 +1,7 @@
 import { createMemo } from 'solid-js';
 
-import type { AppBskyFeedPost, At } from '@atcute/client/lexicons';
+import type { AppBskyFeedPost } from '@atcute/bluesky';
+import { type Did } from '@atcute/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { usePostShadow } from '~/api/cache/post-shadow';
@@ -9,7 +10,7 @@ import { getModerationUI } from '~/api/moderation';
 import { ContextContentList } from '~/api/moderation/constants';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { precacheProfile } from '~/api/queries-cache/profile-precache';
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { history } from '~/globals/navigation';
 
@@ -36,7 +37,7 @@ export interface PostFeedItemProps {
 	/** Expected to be static */
 	item: UiTimelineItem;
 	highlighted?: boolean;
-	timelineDid?: At.Did;
+	timelineDid?: Did;
 }
 
 const PostFeedItem = ({ item, highlighted, timelineDid }: PostFeedItemProps) => {
@@ -50,14 +51,15 @@ const PostFeedItem = ({ item, highlighted, timelineDid }: PostFeedItemProps) => 
 	const author = post.author;
 	const authorDid = author.did;
 
-	const record = post.record as AppBskyFeedPost.Record;
+	const record = post.record as AppBskyFeedPost.Main;
 	const embed = post.embed;
 
 	const shadow = usePostShadow(post);
 
-	const uri = parseCanonicalResourceUri(post.uri);
+	const { rkey } = assertCanonicalResourceUri(post.uri);
+
 	const authorHref = `/${authorDid}`;
-	const href = `/${authorDid}/${uri.rkey}`;
+	const href = `/${authorDid}/${rkey}`;
 
 	const isOurPost = currentAccount && authorDid === currentAccount.did;
 

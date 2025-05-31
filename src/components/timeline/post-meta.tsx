@@ -1,4 +1,4 @@
-import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { useQueryClient } from '@mary/solid-query';
 
 import { precacheProfile } from '~/api/queries-cache/profile-precache';

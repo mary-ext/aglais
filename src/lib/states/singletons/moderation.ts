@@ -2,7 +2,7 @@ import { createMemo } from 'solid-js';
 import { unwrap } from 'solid-js/store';
 
 import { ok } from '@atcute/client';
-import type { At } from '@atcute/client/lexicons';
+import type { Did } from '@atcute/lexicons';
 import { mapDefined } from '@mary/array-fns';
 import { createBatchedFetch } from '@mary/batch-fetch';
 import { type QueryFunctionContext as QC, createQueries } from '@mary/solid-query';
@@ -38,7 +38,7 @@ const ModerationService = define('moderation', () => {
 		return currentAccount.preferences.moderation;
 	});
 
-	const fetchLabeler = createBatchedFetch<At.Did, ModerationLabeler>({
+	const fetchLabeler = createBatchedFetch<Did, ModerationLabeler>({
 		limit: 20,
 		timeout: 1,
 		idFromResource: (labeler) => labeler.did,
@@ -61,7 +61,7 @@ const ModerationService = define('moderation', () => {
 	const labelerDefs = createQueries(() => {
 		return {
 			queries: Object.keys(modPreferences().labelers).map((_did) => {
-				const did = _did as At.Did;
+				const did = _did as Did;
 
 				return {
 					queryKey: ['labeler-definition', did],
@@ -76,7 +76,7 @@ const ModerationService = define('moderation', () => {
 				const defs = mapDefined(results, (result) => result.data);
 				const fields = Object.fromEntries(defs.map((def) => [def.did, def]));
 
-				return fields as Record<At.Did, ModerationLabeler>;
+				return fields as Record<Did, ModerationLabeler>;
 			},
 		};
 	});

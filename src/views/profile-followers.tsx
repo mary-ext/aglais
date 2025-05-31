@@ -1,6 +1,6 @@
 import { createMemo } from 'solid-js';
 
-import type { At } from '@atcute/client/lexicons';
+import type { Did } from '@atcute/lexicons';
 
 import { createProfileFollowersQuery } from '~/api/queries/profile-followers';
 
@@ -13,9 +13,7 @@ import ProfileItem from '~/components/profiles/profile-item';
 import VirtualItem from '~/components/virtual-item';
 
 const ProfileFollowersPage = () => {
-	const { did } = useParams<{
-		did: At.Did;
-	}>();
+	const { did } = useParams<{ did: Did }>();
 
 	const followers = createProfileFollowersQuery(() => did);
 	const subject = createMemo(() => followers.data?.pages[0].subject);

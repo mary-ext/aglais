@@ -1,6 +1,7 @@
 import { For, Match, Switch, batch, createEffect, createMemo, createSignal, untrack } from 'solid-js';
 
-import type { AppBskyFeedThreadgate, Brand } from '@atcute/client/lexicons';
+import type { AppBskyFeedThreadgate } from '@atcute/bluesky';
+import type { $type } from '@atcute/lexicons';
 
 import { createMyListsQuery } from '~/api/queries/my-lists';
 import { dequal } from '~/api/utils/dequal';
@@ -239,7 +240,7 @@ const ComposedInteractionDialog = ({ initialState, onApply }: ComposedInteractio
 									<Boxed.List>
 										<For each={lists.data}>
 											{(list) => {
-												const rule: Brand.Union<AppBskyFeedThreadgate.ListRule> = {
+												const rule: $type.enforce<AppBskyFeedThreadgate.ListRule> = {
 													$type: 'app.bsky.feed.threadgate#listRule',
 													list: list.uri,
 												};

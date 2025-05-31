@@ -1,12 +1,11 @@
 import { type JSX, createMemo } from 'solid-js';
 
-import type { AppBskyEmbedRecord, AppBskyFeedPost } from '@atcute/client/lexicons';
+import { AppBskyEmbedRecord, AppBskyFeedPost, unwrapMediaEmbed } from '@atcute/bluesky';
 
 import { getModerationUI } from '~/api/moderation';
 import { ContextContentMedia } from '~/api/moderation/constants';
 import { moderateQuote } from '~/api/moderation/entities/quote';
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
-import { unwrapMediaEmbedView } from '~/api/utils/bluesky/embed-view';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { inject } from '~/lib/states/singleton';
 import ModerationService from '~/lib/states/singletons/moderation';
@@ -29,14 +28,14 @@ export interface QuoteEmbedProps {
 const QuoteEmbed = ({ quote, interactive, large }: QuoteEmbedProps) => {
 	const moderationOptions = inject(ModerationService);
 
-	const record = quote.value as AppBskyFeedPost.Record;
+	const record = quote.value as AppBskyFeedPost.Main;
 	const author = quote.author;
 
-	const uri = parseCanonicalResourceUri(quote.uri);
+	const uri = assertCanonicalResourceUri(quote.uri);
 	const href = `/${author.did}/${uri.rkey}`;
 
 	const text = record.text.trim();
-	const media = unwrapMediaEmbedView(quote.embeds?.[0]);
+	const media = unwrapMediaEmbed(quote.embeds?.[0]);
 
 	const moderation = createMemo(() => moderateQuote(quote, moderationOptions()));
 

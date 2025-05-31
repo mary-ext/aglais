@@ -1,9 +1,9 @@
-import type { AppBskyFeedPostgate, AppBskyFeedThreadgate } from '@atcute/client/lexicons';
+import type { AppBskyFeedPostgate, AppBskyFeedThreadgate } from '@atcute/bluesky';
 
 import type { PersistedPostgate, PersistedThreadgate } from '../account';
 
-export type ThreadgateState = Pick<AppBskyFeedThreadgate.Record, 'allow' | 'hiddenReplies'>;
-export type PostgateState = Pick<AppBskyFeedPostgate.Record, 'detachedEmbeddingUris' | 'embeddingRules'>;
+export type ThreadgateState = Pick<AppBskyFeedThreadgate.Main, 'allow' | 'hiddenReplies'>;
+export type PostgateState = Pick<AppBskyFeedPostgate.Main, 'detachedEmbeddingUris' | 'embeddingRules'>;
 
 export const toPersistedThreadgate = (gate: ThreadgateState): PersistedThreadgate => {
 	return {

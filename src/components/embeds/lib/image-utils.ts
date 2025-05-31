@@ -1,4 +1,4 @@
-import type { AppBskyEmbedImages } from '@atcute/client/lexicons';
+import type { AppBskyEmbedImages } from '@atcute/bluesky';
 
 const clamp = (value: number, min: number, max: number): number => {
 	return Math.max(min, Math.min(max, value));

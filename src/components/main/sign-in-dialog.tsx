@@ -1,6 +1,6 @@
 import { Match, Switch, createSignal, onMount } from 'solid-js';
 
-import type { At } from '@atcute/client/lexicons';
+import type { Did } from '@atcute/lexicons';
 import {
 	type AuthorizationServerMetadata,
 	type IdentityMetadata,
@@ -27,7 +27,7 @@ const enum View {
 }
 
 export interface SignInDialogProps {
-	relogin?: { did: At.Did; handle?: string };
+	relogin?: { did: Did; handle?: string };
 }
 
 const SignInDialog = (props: SignInDialogProps) => {

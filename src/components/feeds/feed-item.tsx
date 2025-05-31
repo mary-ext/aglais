@@ -1,11 +1,11 @@
 import { createMemo } from 'solid-js';
 
-import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { useQueryClient } from '@mary/solid-query';
 
 import { moderateGeneric } from '~/api/moderation/entities/generic';
 import { precacheFeed } from '~/api/queries-cache/feed-precache';
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { history } from '~/globals/navigation';
 
@@ -27,7 +27,7 @@ const FeedItem = ({ item }: FeedItemProps) => {
 	const moderationOptions = inject(ModerationService);
 
 	const creator = item.creator;
-	const href = `/${creator.did}/feeds/${parseCanonicalResourceUri(item.uri).rkey}`;
+	const href = `/${creator.did}/feeds/${assertCanonicalResourceUri(item.uri).rkey}`;
 
 	const moderation = createMemo(() => moderateGeneric(item, creator.did, moderationOptions()));
 

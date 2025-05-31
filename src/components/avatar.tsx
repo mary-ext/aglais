@@ -1,6 +1,6 @@
 import { Match, Switch } from 'solid-js';
 
-import type { AppBskyActorDefs } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { type ModerationCause, getModerationUI } from '~/api/moderation';
 import { ContextProfileMedia, type ModerationContext } from '~/api/moderation/constants';

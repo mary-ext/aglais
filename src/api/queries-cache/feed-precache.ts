@@ -1,4 +1,4 @@
-import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { QueryClient } from '@mary/solid-query';
 
 export const precacheFeed = (queryClient: QueryClient, feed: AppBskyFeedDefs.GeneratorView) => {

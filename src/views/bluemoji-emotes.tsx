@@ -1,5 +1,6 @@
 import { type JSX, createEffect, createSignal } from 'solid-js';
 
+import type { Blob as AtpBlob } from '@atcute/lexicons';
 import { remove as removeExif } from '@mary/exif-rm';
 import { createInfiniteQuery } from '@mary/solid-query';
 
@@ -113,7 +114,7 @@ const BluemojiEmotesPage = () => {
 					return (
 						<div class="flex items-center gap-4 px-4 py-4">
 							<img
-								src={/* @once */ getCdnUrl(currentAccount!.did, blob!.ref.$link)}
+								src={/* @once */ getCdnUrl(currentAccount!.did, (blob! as AtpBlob).ref.$link)}
 								class="h-8 w-8 object-cover"
 							/>
 

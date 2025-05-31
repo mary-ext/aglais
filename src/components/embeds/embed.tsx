@@ -1,9 +1,8 @@
-import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+import { type AppBskyFeedDefs, type MediaEmbed, type RecordEmbed, unwrapEmbed } from '@atcute/bluesky';
 
 import { type ModerationCause, getModerationUI } from '~/api/moderation';
 import { ContextContentMedia } from '~/api/moderation/constants';
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
-import { type MediaEmbedView, type RecordEmbedView, unwrapEmbedView } from '~/api/utils/bluesky/embed-view';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 
 import ContentHider from '../moderation/content-hider';
 
@@ -26,7 +25,7 @@ export interface EmbedProps {
 }
 
 const Embed = (props: EmbedProps) => {
-	const { media, record } = unwrapEmbedView(props.embed);
+	const { media, record } = unwrapEmbed(props.embed);
 
 	const gutterTop = props.gutterTop;
 	const large = props.large;
@@ -43,7 +42,7 @@ export default Embed;
 
 interface MediaEmbedProps {
 	/** Expected to be static */
-	embed: MediaEmbedView;
+	embed: MediaEmbed;
 	moderation?: ModerationCause[];
 }
 
@@ -76,7 +75,7 @@ const MediaEmbed = (props: MediaEmbedProps) => {
 
 interface RecordEmbedProps {
 	/** Expected to be static */
-	embed: RecordEmbedView;
+	embed: RecordEmbed;
 	/** Expected to be static */
 	large?: boolean;
 }
@@ -100,7 +99,7 @@ const RecordEmbed = (props: RecordEmbedProps) => {
 	}
 
 	if (type === 'app.bsky.embed.record#viewNotFound' || type === 'app.bsky.embed.record#viewBlocked') {
-		const uri = parseCanonicalResourceUri(embed.uri);
+		const uri = assertCanonicalResourceUri(embed.uri);
 
 		if (type === 'app.bsky.embed.record#viewBlocked' && uri.collection === 'app.bsky.feed.post') {
 			return <QuoteBlockedEmbed embed={embed} uri={uri} />;

@@ -1,7 +1,14 @@
 import { createEffect, createMemo, createRenderEffect, onCleanup, untrack } from 'solid-js';
 
+import {
+	type AppBskyFeedDefs,
+	type AppBskyFeedGetTimeline,
+	type AppBskyFeedPost,
+	unwrapRawRecordEmbed,
+	unwrapRecordEmbed,
+} from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { AppBskyFeedDefs, AppBskyFeedGetTimeline, AppBskyFeedPost, At } from '@atcute/client/lexicons';
+import { type Did, type ResourceUri } from '@atcute/lexicons';
 import { type FalsyValue, definite } from '@mary/array-fns';
 import { type InfiniteData, createInfiniteQuery, createQuery, useQueryClient } from '@mary/solid-query';
 
@@ -31,14 +38,12 @@ import {
 	getModerationUI,
 } from '../moderation';
 import { ContextContentList, PreferenceHide, TargetContent } from '../moderation/constants';
-import { parseCanonicalResourceUri } from '../types/at-uri';
-import { unwrapRecordEmbed } from '../utils/bluesky/embed';
-import { unwrapRecordEmbedView } from '../utils/bluesky/embed-view';
+import { assertCanonicalResourceUri } from '../types/at-uri';
 import { EQUALS_DEQUAL } from '../utils/dequal';
 import { unwrapPostEmbedText } from '../utils/post';
 import { resetInfiniteData, wrapQuery } from '../utils/query';
 
-type PostRecord = AppBskyFeedPost.Record;
+type PostRecord = AppBskyFeedPost.Main;
 
 export interface FollowingTimelineParams {
 	type: 'following';
@@ -49,7 +54,7 @@ export interface FollowingTimelineParams {
 
 export interface FeedTimelineParams {
 	type: 'feed';
-	uri: At.ResourceUri;
+	uri: ResourceUri;
 	showReplies: boolean;
 	showReposts: boolean;
 	showQuotes: boolean;
@@ -57,14 +62,14 @@ export interface FeedTimelineParams {
 
 export interface ListTimelineParams {
 	type: 'list';
-	uri: At.ResourceUri;
+	uri: ResourceUri;
 	showReplies: boolean;
 	showQuotes: boolean;
 }
 
 export interface ProfileTimelineParams {
 	type: 'profile';
-	actor: At.Did;
+	actor: Did;
 	tab: 'posts' | 'replies' | 'likes' | 'media';
 }
 
@@ -313,7 +318,7 @@ const fetchPage = async (
 	limit: number,
 	cursor: string | undefined,
 	signal: AbortSignal,
-): Promise<AppBskyFeedGetTimeline.Output> => {
+): Promise<AppBskyFeedGetTimeline.$output> => {
 	const type = params.type;
 
 	if (type === 'following') {
@@ -532,10 +537,11 @@ const createHideRepostsFilter = (): PostFilter => {
 const createHideQuotesFilter = (): PostFilter => {
 	return (item) => {
 		const post = item.post.record as PostRecord;
-		const record = unwrapRecordEmbed(post.embed);
+		const record = unwrapRawRecordEmbed(post.embed);
 
 		return (
-			record === undefined || parseCanonicalResourceUri(record.record.uri).collection === 'app.bsky.feed.post'
+			record === undefined ||
+			assertCanonicalResourceUri(record.record.uri).collection === 'app.bsky.feed.post'
 		);
 	};
 };
@@ -543,7 +549,7 @@ const createHideQuotesFilter = (): PostFilter => {
 const createHideQuotesFromMutedFilter = (): PostFilter => {
 	return (item) => {
 		const post = item.post;
-		const record = unwrapRecordEmbedView(post.embed);
+		const record = unwrapRecordEmbed(post.embed);
 
 		return (
 			record === undefined ||
@@ -585,7 +591,7 @@ const createFeedSliceFilter = (): SliceFilter | undefined => {
 	};
 };
 
-const createHomeSliceFilter = (uid: At.Did, followsOnly: boolean): SliceFilter | undefined => {
+const createHomeSliceFilter = (uid: Did, followsOnly: boolean): SliceFilter | undefined => {
 	return (slice) => {
 		const items = slice.items;
 		const first = items[0];
@@ -617,7 +623,7 @@ const createHomeSliceFilter = (uid: At.Did, followsOnly: boolean): SliceFilter |
 	};
 };
 
-const createProfileSliceFilter = (did: At.Did): SliceFilter | undefined => {
+const createProfileSliceFilter = (did: Did): SliceFilter | undefined => {
 	return (slice) => {
 		const items = slice.items;
 		const first = items[0];

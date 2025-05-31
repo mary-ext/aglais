@@ -1,7 +1,13 @@
-import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/client/lexicons';
+import {
+	type AppBskyFeedDefs,
+	type AppBskyFeedPost,
+	type AppBskyFeedThreadgate,
+	type RawMediaEmbed,
+	type RawRecordEmbed,
+	unwrapRawEmbed,
+} from '@atcute/bluesky';
 
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
-import { type MediaEmbed, type RecordEmbed, unwrapEmbed } from '~/api/utils/bluesky/embed';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 import { serializeRichText } from '~/api/utils/richtext-stringify';
 
 import { openModal, useModalContext } from '~/globals/modals';
@@ -15,6 +21,7 @@ import ComposerDialog from '../composer/composer-dialog';
 import {
 	type ComposerState,
 	type PostEmbed,
+	type PostImage,
 	type PostLinkEmbed,
 	type PostMediaEmbed,
 	type PostRecordEmbed,
@@ -32,11 +39,11 @@ const RevisePostPrompt = ({ post, onPostRevise }: RevisePostPromptProps) => {
 	const { close } = useModalContext();
 
 	(async () => {
-		const record = post.record as AppBskyFeedPost.Record;
-		const threadgate = post.threadgate?.record as AppBskyFeedThreadgate.Record | undefined;
+		const record = post.record as AppBskyFeedPost.Main;
+		const threadgate = post.threadgate?.record as AppBskyFeedThreadgate.Main | undefined;
 		const embeddingDisabled = post.viewer?.embeddingDisabled;
 
-		const embeds = unwrapEmbed(record.embed);
+		const embeds = unwrapRawEmbed(record.embed);
 		const draftEmbeds: PostEmbed = {
 			link: embeds.media ? toLinkEmbed(post, embeds.media) : undefined,
 			media: embeds.media ? toMediaEmbed(post, embeds.media) : undefined,
@@ -76,25 +83,31 @@ const RevisePostPrompt = ({ post, onPostRevise }: RevisePostPromptProps) => {
 
 export default RevisePostPrompt;
 
-const toMediaEmbed = (post: AppBskyFeedDefs.PostView, embed: MediaEmbed): PostMediaEmbed | undefined => {
+const toMediaEmbed = (post: AppBskyFeedDefs.PostView, embed: RawMediaEmbed): PostMediaEmbed | undefined => {
 	const authorDid = post.author.did;
 
 	switch (embed.$type) {
 		case 'app.bsky.embed.images': {
 			return {
 				type: 'image',
-				images: embed.images.map((item) => ({
-					source: {
-						type: 'remote',
-						blob: item.image,
-						aspectRatio: item.aspectRatio,
-					},
-					alt: item.alt,
-				})),
+				images: embed.images.map((item): PostImage => {
+					assert('$type' in item.image);
+
+					return {
+						source: {
+							type: 'remote',
+							blob: item.image,
+							aspectRatio: item.aspectRatio,
+						},
+						alt: item.alt,
+					};
+				}),
 				labels: post.labels?.filter((label) => label.src === authorDid).map((label) => label.val) ?? [],
 			};
 		}
 		case 'app.bsky.embed.video': {
+			assert('$type' in embed.video);
+
 			return {
 				type: 'video',
 				source: {
@@ -109,7 +122,7 @@ const toMediaEmbed = (post: AppBskyFeedDefs.PostView, embed: MediaEmbed): PostMe
 	}
 };
 
-const toLinkEmbed = (post: AppBskyFeedDefs.PostView, embed: MediaEmbed): PostLinkEmbed | undefined => {
+const toLinkEmbed = (post: AppBskyFeedDefs.PostView, embed: RawMediaEmbed): PostLinkEmbed | undefined => {
 	const authorDid = post.author.did;
 
 	switch (embed.$type) {
@@ -129,23 +142,23 @@ const toLinkEmbed = (post: AppBskyFeedDefs.PostView, embed: MediaEmbed): PostLin
 	}
 };
 
-const toRecordEmbed = (embed: RecordEmbed): PostRecordEmbed | undefined => {
+const toRecordEmbed = (embed: RawRecordEmbed): PostRecordEmbed | undefined => {
 	const ref = embed.record;
 
-	const uri = ref.uri;
-	const { collection } = parseCanonicalResourceUri(uri);
+	const refUri = ref.uri;
+	const uri = assertCanonicalResourceUri(refUri);
 
-	switch (collection) {
+	switch (uri.collection) {
 		case 'app.bsky.feed.post': {
-			return { type: 'quote', uri, origin: false };
+			return { type: 'quote', uri: refUri, origin: false };
 		}
 		case 'app.bsky.graph.list': {
-			return { type: 'list', uri };
+			return { type: 'list', uri: refUri };
 		}
 		case 'app.bsky.feed.generator': {
-			return { type: 'feed', uri };
+			return { type: 'feed', uri: refUri };
 		}
 	}
 
-	assert(false, `unknown "${collection}" record type`);
+	assert(false, `unknown "${uri.collection}" record type`);
 };

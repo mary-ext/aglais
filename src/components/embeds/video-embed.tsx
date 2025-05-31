@@ -1,6 +1,6 @@
 import { Show, Suspense, createSignal, lazy } from 'solid-js';
 
-import type { AppBskyEmbedDefs, AppBskyEmbedVideo } from '@atcute/client/lexicons';
+import { AppBskyEmbedDefs, AppBskyEmbedVideo } from '@atcute/bluesky';
 
 import { replaceVideoCdnUrl } from '~/lib/bsky/video';
 

@@ -1,4 +1,4 @@
-import type { AppBskyFeedDefs, AppBskyFeedGetQuotes } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedGetQuotes } from '@atcute/bluesky';
 import type { InfiniteData } from '@mary/solid-query';
 
 import type { CacheMatcher } from '../cache/utils';
@@ -9,7 +9,7 @@ export const findAllPosts = (uri: string, includeQuote = false): CacheMatcher<Ap
 		filter: {
 			queryKey: ['post-quotes'],
 		},
-		*iterate(data: InfiniteData<AppBskyFeedGetQuotes.Output>) {
+		*iterate(data: InfiniteData<AppBskyFeedGetQuotes.$output>) {
 			for (const page of data.pages) {
 				for (const post of page.posts) {
 					if (post.uri === uri) {

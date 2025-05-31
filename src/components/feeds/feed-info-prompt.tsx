@@ -1,6 +1,6 @@
-import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { useModalContext } from '~/globals/modals';
 
@@ -20,7 +20,7 @@ const FeedInfoPrompt = (props: FeedInfoPromptProps) => {
 	const feed = props.feed;
 
 	const authorUrl = `/${feed.creator.did}`;
-	const feedUrl = `${authorUrl}/feeds/${parseCanonicalResourceUri(feed.uri).rkey}`;
+	const feedUrl = `${authorUrl}/feeds/${assertCanonicalResourceUri(feed.uri).rkey}`;
 
 	return (
 		<Prompt.Container maxWidth="md">

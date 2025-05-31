@@ -8,7 +8,7 @@ import {
 	lazy,
 } from 'solid-js';
 
-import type { AppBskyNotificationGetUnreadCount } from '@atcute/client/lexicons';
+import type { AppBskyNotificationGetUnreadCount } from '@atcute/bluesky';
 import type { DefinedCreateQueryResult } from '@mary/solid-query';
 
 import { createNotificationCountQuery } from '~/api/queries/notification-count';
@@ -99,7 +99,7 @@ const NavBar = ({
 	unread,
 }: {
 	route: Accessor<MatchedRouteState>;
-	unread: DefinedCreateQueryResult<AppBskyNotificationGetUnreadCount.Output>;
+	unread: DefinedCreateQueryResult<AppBskyNotificationGetUnreadCount.$output>;
 }) => {
 	const active = () => route().def.meta?.name;
 

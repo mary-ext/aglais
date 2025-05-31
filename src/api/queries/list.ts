@@ -1,7 +1,8 @@
 import { modifyMutable, reconcile } from 'solid-js/store';
 
+import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { AppBskyGraphDefs, At } from '@atcute/client/lexicons';
+import { type Did } from '@atcute/lexicons';
 import { createQuery } from '@mary/solid-query';
 
 import type { SavedListFeed } from '~/lib/preferences/account';
@@ -9,7 +10,7 @@ import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 import { omit } from '~/lib/utils/misc';
 
-import { makeAtUri, parseCanonicalResourceUri } from '../types/at-uri';
+import { assertCanonicalResourceUri, makeAtUri } from '../types/at-uri';
 import { isDid } from '../types/identity';
 
 import { resolveHandle } from './handle';
@@ -24,9 +25,9 @@ export const createListMetaQuery = (listUri: () => string) => {
 		return {
 			queryKey: ['list-meta', $listUri],
 			async queryFn(ctx) {
-				const uri = parseCanonicalResourceUri($listUri);
+				const uri = assertCanonicalResourceUri($listUri);
 
-				let did: At.Did;
+				let did: Did;
 				if (isDid(uri.repo)) {
 					did = uri.repo;
 				} else {

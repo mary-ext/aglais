@@ -1,13 +1,13 @@
 import { Show, createMemo } from 'solid-js';
 
-import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
+import { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 
 import { usePostShadow } from '~/api/cache/post-shadow';
 import { getModerationUI } from '~/api/moderation';
 import { ContextContentView } from '~/api/moderation/constants';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { createPostLikeMutation, createPostRepostMutation } from '~/api/mutations/post';
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { primarySystemLanguage } from '~/globals/locales';
 import { openModal } from '~/globals/modals';
@@ -58,18 +58,18 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 	const moderationOptions = inject(ModerationService);
 
 	const author = () => post().author;
-	const record = () => post().record as AppBskyFeedPost.Record;
+	const record = () => post().record as AppBskyFeedPost.Main;
 	const embed = () => post().embed;
 
 	const shadow = usePostShadow(post);
 
-	const uri = parseCanonicalResourceUri(post().uri);
+	const { rkey } = assertCanonicalResourceUri(post().uri);
 	const authorDid = author().did;
 
 	const isOurPost = currentAccount && authorDid === currentAccount.did;
 
 	const authorHref = `/${authorDid}`;
-	const href = `/${authorDid}/${uri.rkey}`;
+	const href = `/${authorDid}/${rkey}`;
 
 	const moderation = createMemo(() => moderatePost(post(), moderationOptions()));
 	const ui = createMemo(() => getModerationUI(moderation(), ContextContentView));
@@ -151,7 +151,7 @@ const HighlightedPost = (props: HighlightedPostProps) => {
 					}
 
 					if (props.translate) {
-						return <PostTranslation text={(post().record as AppBskyFeedPost.Record).text} />;
+						return <PostTranslation text={(post().record as AppBskyFeedPost.Main).text} />;
 					}
 
 					if (needTranslation(post(), currentAccount.preferences.translation)) {
@@ -274,7 +274,7 @@ const needTranslation = (post: AppBskyFeedDefs.PostView, prefs?: ContentTranslat
 		return false;
 	}
 
-	const record = post.record as AppBskyFeedPost.Record;
+	const record = post.record as AppBskyFeedPost.Main;
 	const langs = record.langs;
 
 	if (!langs || langs.length < 1 || !record.text) {

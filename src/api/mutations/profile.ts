@@ -1,11 +1,11 @@
-import type { AppBskyActorDefs } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { useQueryClient } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 
 import { type ProfileShadowView, updateProfileShadow } from '../cache/profile-shadow';
-import { parseCanonicalResourceUri } from '../types/at-uri';
+import { assertCanonicalResourceUri } from '../types/at-uri';
 import { getCurrentDate } from '../utils/misc';
 import { createRecord, deleteRecord } from '../utils/records';
 import { createToggleMutationQueue } from '../utils/toggle-mutation';
@@ -42,7 +42,7 @@ export const createProfileFollowMutation = (
 
 				return result.uri;
 			} else if (prevFollowUri) {
-				const uri = parseCanonicalResourceUri(prevFollowUri);
+				const uri = assertCanonicalResourceUri(prevFollowUri);
 
 				await deleteRecord(client, {
 					repo: currentAccount!.did,

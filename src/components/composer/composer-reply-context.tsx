@@ -1,12 +1,11 @@
 import { Match, Switch, createMemo } from 'solid-js';
 
-import type { AppBskyFeedPost } from '@atcute/client/lexicons';
+import { type AppBskyFeedPost, unwrapMediaEmbed } from '@atcute/bluesky';
 
 import { getModerationUI } from '~/api/moderation';
 import { ContextContentMedia } from '~/api/moderation/constants';
 import { moderatePost } from '~/api/moderation/entities/post';
 import { createPostQuery } from '~/api/queries/post';
-import { unwrapMediaEmbedView } from '~/api/utils/bluesky/embed-view';
 import { formatQueryError } from '~/api/utils/error';
 
 import { inject } from '~/lib/states/singleton';
@@ -34,12 +33,12 @@ const ComposerReplyContext = (props: ComposerReplyContextProps) => {
 			<Match when={query.data} keyed>
 				{(post) => {
 					const author = post.author;
-					const record = post.record as AppBskyFeedPost.Record;
+					const record = post.record as AppBskyFeedPost.Main;
 
 					const moderation = createMemo(() => moderatePost(post, moderationOptions()));
 					const shouldBlurImage = () => getModerationUI(moderation(), ContextContentMedia).b.length !== 0;
 
-					const media = unwrapMediaEmbedView(post.embed);
+					const media = unwrapMediaEmbed(post.embed);
 
 					return (
 						<div class="relative flex gap-3 px-4 pt-3">

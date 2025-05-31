@@ -2,7 +2,7 @@
 import { type JSX, createSignal, onMount } from 'solid-js';
 import { render } from 'solid-js/web';
 
-import type { At } from '@atcute/client/lexicons';
+import type { Did } from '@atcute/lexicons';
 import { configureOAuth } from '@atcute/oauth-browser-client';
 
 import * as navigation from '~/globals/navigation';
@@ -44,7 +44,7 @@ const InnerApp = () => {
 	const session = useSession();
 
 	onMount(() => {
-		const resumeAccount = async (did: At.Did | undefined) => {
+		const resumeAccount = async (did: Did | undefined) => {
 			try {
 				if (did) {
 					await session.resumeSession(did);

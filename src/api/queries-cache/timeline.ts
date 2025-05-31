@@ -1,4 +1,5 @@
-import type { AppBskyActorDefs, AppBskyFeedDefs, At } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 import type { InfiniteData } from '@mary/solid-query';
 
 import type { CacheMatcher } from '../cache/utils';
@@ -63,7 +64,7 @@ export const findAllPosts = (uri: string, includeQuote = false): CacheMatcher<Ap
 	};
 };
 
-export const findAllProfiles = (did: At.Did): CacheMatcher<AppBskyActorDefs.ProfileViewBasic> => {
+export const findAllProfiles = (did: Did): CacheMatcher<AppBskyActorDefs.ProfileViewBasic> => {
 	return {
 		filter: {
 			queryKey: ['timeline'],

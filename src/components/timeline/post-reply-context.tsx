@@ -1,8 +1,8 @@
-import type { AppBskyFeedPost } from '@atcute/client/lexicons';
+import type { AppBskyFeedPost } from '@atcute/bluesky';
 
 import type { UiTimelineItem } from '~/api/models/timeline';
 import { createProfileQuery } from '~/api/queries/profile';
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { useSession } from '~/lib/states/session';
 
@@ -41,9 +41,10 @@ const PostReplyContext = (props: PostReplyContextProps) => {
 			);
 		}
 
-		const raw = (post.record as AppBskyFeedPost.Record).reply?.parent;
+		const raw = (post.record as AppBskyFeedPost.Main).reply?.parent;
 		if (raw) {
-			const did = parseCanonicalResourceUri(raw.uri).repo;
+			const { repo: did } = assertCanonicalResourceUri(raw.uri);
+
 			if (did === currentAccount?.did) {
 				return <div class="mb-0.5 flex text-de text-contrast-muted">Replying to you</div>;
 			}

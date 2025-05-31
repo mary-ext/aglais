@@ -1,5 +1,5 @@
+import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import type { Token } from '@atcute/bluesky-search-parser';
-import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
 import { mapDefined } from '@mary/array-fns';
 
 import { DID_RE, HANDLE_RE } from '~/api/types/identity';
@@ -84,7 +84,7 @@ export const createSearchPredicate = (tokens: Token[]) => {
 		});
 
 		const re = new RegExp('\\b' + values.join('|') + '\\b', 'i');
-		predicates.push((post) => re.test((post.record as AppBskyFeedPost.Record).text));
+		predicates.push((post) => re.test((post.record as AppBskyFeedPost.Main).text));
 	}
 
 	return (post: AppBskyFeedDefs.PostView) => predicates.every((fn) => fn(post));

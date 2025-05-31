@@ -1,7 +1,7 @@
 import { type JSX, type ParentProps, createContext, createMemo, useContext } from 'solid-js';
 
 import { Client, simpleFetchHandler } from '@atcute/client';
-import type { At } from '@atcute/client/lexicons';
+import type { Did } from '@atcute/lexicons';
 import type { OAuthUserAgent } from '@atcute/oauth-browser-client';
 import { QueryClient, QueryClientProvider } from '@mary/solid-query';
 
@@ -14,7 +14,7 @@ import { on } from '../utils/misc';
 import { useSession } from './session';
 
 export interface AgentContext {
-	did: At.Did | null;
+	did: Did | null;
 	client: Client;
 	handler: OAuthUserAgent | null;
 	persister: ReturnType<typeof createQueryPersister>;

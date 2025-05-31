@@ -1,6 +1,7 @@
 import { type Accessor, batch, createRenderEffect, createSignal, onCleanup } from 'solid-js';
 
-import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 import { EventEmitter } from '@mary/events';
 import type { QueryClient } from '@mary/solid-query';
 
@@ -33,7 +34,7 @@ type AllProfileView =
 	| AppBskyActorDefs.ProfileViewBasic
 	| AppBskyActorDefs.ProfileViewDetailed;
 
-const emitter = new EventEmitter<{ [uri: At.Did]: [] }>();
+const emitter = new EventEmitter<{ [uri: Did]: [] }>();
 const shadows = new WeakMap<AllProfileView, ProfileShadow>();
 
 export const useProfileShadow = (profile: AccessorMaybe<AllProfileView>): Accessor<ProfileShadowView> => {
@@ -66,7 +67,7 @@ export const getProfileShadow = (profile: AllProfileView): ProfileShadowView => 
 	};
 };
 
-export const updateProfileShadow = (queryClient: QueryClient, did: At.Did, value: Partial<ProfileShadow>) => {
+export const updateProfileShadow = (queryClient: QueryClient, did: Did, value: Partial<ProfileShadow>) => {
 	for (const profile of findProfilesInCache(queryClient, did)) {
 		shadows.set(profile, { ...shadows.get(profile), ...value });
 	}
@@ -74,7 +75,7 @@ export const updateProfileShadow = (queryClient: QueryClient, did: At.Did, value
 	batch(() => emitter.emit(did));
 };
 
-export function findProfilesInCache(queryClient: QueryClient, did: At.Did): Generator<AllProfileView> {
+export function findProfilesInCache(queryClient: QueryClient, did: Did): Generator<AllProfileView> {
 	return iterateQueryCache<AllProfileView>(queryClient, [
 		findAllProfilesInBookmarkFeed(did),
 		findAllProfilesInNotificationFeed(did),

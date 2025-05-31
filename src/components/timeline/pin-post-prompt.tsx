@@ -1,7 +1,7 @@
 import { Match, Show, Switch, batch } from 'solid-js';
 
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
-import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 import { createMutation } from '@mary/solid-query';
 
 import { updatePostShadow, usePostShadow } from '~/api/cache/post-shadow';

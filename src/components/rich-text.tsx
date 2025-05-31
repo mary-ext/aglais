@@ -1,7 +1,8 @@
 import type { JSX } from 'solid-js';
 
+import type { BlueMojiRichtextFacet } from '@atcute/bluemoji';
+import type { AppBskyRichtextFacet } from '@atcute/bluesky';
 import { segmentize } from '@atcute/bluesky-richtext-segmenter';
-import type { AppBskyRichtextFacet } from '@atcute/client/lexicons';
 
 import { isLinkValid } from '~/api/utils/strings';
 
@@ -64,15 +65,16 @@ const RichText = (props: RichTextProps) => {
 
 							break;
 						} else if (type === 'blue.moji.richtext.facet') {
-							const formats = feature.formats;
+							const feat = feature as BlueMojiRichtextFacet.Main;
+							const formats = feat.formats;
 							if (formats.$type !== 'blue.moji.richtext.facet#formats_v0' || !formats.png_128) {
 								continue;
 							}
 
 							node = (
 								<img
-									src={/* @once */ getCdnUrl(feature.did, formats.png_128)}
-									title={/* @once */ feature.name}
+									src={/* @once */ getCdnUrl(feat.did, formats.png_128)}
+									title={/* @once */ feat.name}
 									class={`mx-px inline-block align-top text-[0]` + (!large ? ` h-5 w-5` : ` h-6 w-6`)}
 								/>
 							);

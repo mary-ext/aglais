@@ -1,4 +1,5 @@
-import type { AppBskyFeedDefs, AppBskyGraphDefs, At } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
+import type { Did, ResourceUri } from '@atcute/lexicons';
 
 import type { ModerationLabeler, ModerationPreferences } from '~/api/moderation';
 
@@ -28,7 +29,7 @@ export interface ThreadViewPreferences {
 
 export interface ModerationLabelerPreferences {
 	updated: number;
-	definitions: Record<At.Did, ModerationLabeler>;
+	definitions: Record<Did, ModerationLabeler>;
 }
 
 export type SavedFeed = SavedGeneratorFeed | SavedListFeed | SavedSearchFeed;
@@ -54,7 +55,7 @@ export interface SavedSearchFeed {
 
 export interface PersistedThreadgate {
 	allow?: Array<
-		{ type: 'following' } | { type: 'follower' } | { type: 'mention' } | { type: 'list'; uri: At.ResourceUri }
+		{ type: 'following' } | { type: 'follower' } | { type: 'mention' } | { type: 'list'; uri: ResourceUri }
 	>;
 }
 

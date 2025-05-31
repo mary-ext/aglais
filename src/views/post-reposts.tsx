@@ -1,4 +1,4 @@
-import type { At } from '@atcute/client/lexicons';
+import type { Did, RecordKey } from '@atcute/lexicons';
 
 import { createSubjectRepostersQuery } from '~/api/queries/subject-reposters';
 import { makeAtUri } from '~/api/types/at-uri';
@@ -13,8 +13,8 @@ import VirtualItem from '~/components/virtual-item';
 
 const PostLikesPage = () => {
 	const { did, rkey } = useParams<{
-		did: At.Did;
-		rkey: At.RecordKey;
+		did: Did;
+		rkey: RecordKey;
 	}>();
 
 	const uri = makeAtUri(did, 'app.bsky.feed.post', rkey);

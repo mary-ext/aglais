@@ -1,12 +1,13 @@
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
+import type { ActorIdentifier } from '@atcute/lexicons';
 import { type InfiniteData, type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
 import { type ProfilesListWithSubjectPage, toProfilesListWithSubjectPage } from '../types/profile-response';
 
-export const createProfileFollowingQuery = (didOrHandle: () => At.Identifier) => {
+export const createProfileFollowingQuery = (didOrHandle: () => ActorIdentifier) => {
 	const { client } = useAgent();
 
 	return createInfiniteQuery((queryClient) => {

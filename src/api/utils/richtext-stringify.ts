@@ -1,5 +1,5 @@
+import type { AppBskyRichtextFacet } from '@atcute/bluesky';
 import { segmentize } from '@atcute/bluesky-richtext-segmenter';
-import type { AppBskyRichtextFacet } from '@atcute/client/lexicons';
 
 import { isLinkValid } from './strings';
 

@@ -1,5 +1,6 @@
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ClientResponseError, ok } from '@atcute/client';
-import type { AppBskyFeedDefs, At, Brand } from '@atcute/client/lexicons';
+import type { $type, ResourceUri } from '@atcute/lexicons';
 import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
@@ -9,9 +10,9 @@ import { findPostsInCache } from '../cache/post-shadow';
 const MAX_HEIGHT = 10;
 const MAX_DEPTH = 4;
 
-type ThreadReturn = Brand.Union<AppBskyFeedDefs.ThreadViewPost | AppBskyFeedDefs.BlockedPost>;
+type ThreadReturn = $type.enforce<AppBskyFeedDefs.ThreadViewPost | AppBskyFeedDefs.BlockedPost>;
 
-export const usePostThreadQuery = (uri: () => At.ResourceUri) => {
+export const usePostThreadQuery = (uri: () => ResourceUri) => {
 	const { client } = useAgent();
 
 	return createQuery((queryClient) => {
@@ -56,7 +57,7 @@ export const usePostThreadQuery = (uri: () => At.ResourceUri) => {
 					// Break if either:
 					// - This isn't a quote embed transformed into a post view
 					// - We've went through 10 post views
-					if (!('$transform' in found) || ++step >= 10) {
+					if (!('$transform' in post) || ++step >= 10) {
 						break;
 					}
 				}

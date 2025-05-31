@@ -1,7 +1,8 @@
 import { modifyMutable, reconcile } from 'solid-js/store';
 
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { AppBskyFeedDefs, At } from '@atcute/client/lexicons';
+import { type Did } from '@atcute/lexicons';
 import { createQuery } from '@mary/solid-query';
 
 import type { SavedGeneratorFeed } from '~/lib/preferences/account';
@@ -9,7 +10,7 @@ import { useAgent } from '~/lib/states/agent';
 import { useSession } from '~/lib/states/session';
 import { omit } from '~/lib/utils/misc';
 
-import { makeAtUri, parseCanonicalResourceUri } from '../types/at-uri';
+import { assertCanonicalResourceUri, makeAtUri } from '../types/at-uri';
 import { isDid } from '../types/identity';
 
 import { resolveHandle } from './handle';
@@ -24,9 +25,9 @@ export const createFeedMetaQuery = (feedUri: () => string) => {
 		return {
 			queryKey: ['feed-meta', $feedUri],
 			async queryFn(ctx): Promise<AppBskyFeedDefs.GeneratorView> {
-				const uri = parseCanonicalResourceUri($feedUri);
+				const uri = assertCanonicalResourceUri($feedUri);
 
-				let did: At.Did;
+				let did: Did;
 				if (isDid(uri.repo)) {
 					did = uri.repo;
 				} else {

@@ -1,6 +1,6 @@
 import { createMemo } from 'solid-js';
 
-import type { AppBskyGraphDefs } from '@atcute/client/lexicons';
+import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
 import { moderateGeneric } from '~/api/moderation/entities/generic';
 

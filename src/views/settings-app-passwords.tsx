@@ -1,7 +1,7 @@
 import { For, Match, Show, Switch } from 'solid-js';
 
+import type { ComAtprotoServerListAppPasswords } from '@atcute/atproto';
 import { ok } from '@atcute/client';
-import type { ComAtprotoServerListAppPasswords } from '@atcute/client/lexicons';
 import { createMutation, createQuery } from '@mary/solid-query';
 
 import { openModal } from '~/globals/modals';

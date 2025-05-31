@@ -13,7 +13,7 @@ import {
 } from 'solid-js';
 import { createMutable, unwrap } from 'solid-js/store';
 
-import type { AppBskyActorDefs } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { type CreateQueryResult, useQueryClient } from '@mary/solid-query';
 
 import { GLOBAL_LABELS, getLocalizedLabel } from '~/api/moderation';

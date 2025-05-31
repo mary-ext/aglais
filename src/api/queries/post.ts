@@ -1,11 +1,11 @@
 import { ok } from '@atcute/client';
-import type { At } from '@atcute/client/lexicons';
+import { type Did } from '@atcute/lexicons';
 import { createQuery } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
 import { findPostsInCache } from '../cache/post-shadow';
-import { makeAtUri, parseCanonicalResourceUri } from '../types/at-uri';
+import { assertCanonicalResourceUri, makeAtUri } from '../types/at-uri';
 import { isDid } from '../types/identity';
 
 import { resolveHandle } from './handle';
@@ -19,9 +19,9 @@ export const createPostQuery = (postUri: () => string) => {
 		return {
 			queryKey: ['post', $postUri],
 			async queryFn(ctx) {
-				const uri = parseCanonicalResourceUri($postUri);
+				const uri = assertCanonicalResourceUri($postUri);
 
-				let did: At.Did;
+				let did: Did;
 				if (isDid(uri.repo)) {
 					did = uri.repo;
 				} else {

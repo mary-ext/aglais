@@ -1,7 +1,8 @@
 import { Match, Show, Switch, createMemo } from 'solid-js';
 
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
-import type { AppBskyActorDefs, At } from '@atcute/client/lexicons';
+import type { ActorIdentifier } from '@atcute/lexicons';
 import { useQueryClient } from '@mary/solid-query';
 
 import { useProfileShadow } from '~/api/cache/profile-shadow';
@@ -32,7 +33,7 @@ import VirtualItem from '~/components/virtual-item';
 
 const ProfilePage = () => {
 	const { didOrHandle } = useParams<{
-		didOrHandle: At.Identifier;
+		didOrHandle: ActorIdentifier;
 	}>();
 
 	const queryClient = useQueryClient();

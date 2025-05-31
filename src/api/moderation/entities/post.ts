@@ -1,4 +1,4 @@
-import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 
 import { unwrapPostEmbedText } from '~/api/utils/post';
 
@@ -14,7 +14,7 @@ import { moderateProfile } from './profile';
 
 export const moderatePost = (post: AppBskyFeedDefs.PostView, opts: ModerationOptions) => {
 	const author = post.author;
-	const record = post.record as AppBskyFeedPost.Record;
+	const record = post.record as AppBskyFeedPost.Main;
 	const text = record.text + unwrapPostEmbedText(record.embed);
 
 	const accu: ModerationCause[] = moderateProfile(author, opts);

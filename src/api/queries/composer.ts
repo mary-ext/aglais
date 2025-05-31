@@ -1,4 +1,4 @@
-import type { At } from '@atcute/client/lexicons';
+import type { GenericUri } from '@atcute/lexicons';
 import { createQuery } from '@mary/solid-query';
 
 const LINK_PROXY_ENDPOINT = 'https://cardyb.bsky.app/v1/extract';
@@ -13,7 +13,7 @@ interface LinkProxyResponse {
 }
 
 export interface LinkMeta {
-	uri: At.GenericUri;
+	uri: GenericUri;
 	title: string;
 	description: string;
 	thumb: Blob | undefined;
@@ -57,7 +57,7 @@ export const createLinkMetaQuery = (uri: () => string) => {
 				}
 
 				const meta: LinkMeta = {
-					uri: $uri as At.GenericUri,
+					uri: $uri as GenericUri,
 					title: data.title,
 					description: data.description,
 					thumb: thumb,

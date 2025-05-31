@@ -2,7 +2,14 @@
 	"compilerOptions": {
 		"target": "ESNext",
 		"lib": ["DOM", "DOM.Iterable", "ESNext"],
-		"types": ["dom-close-watcher", "dom-webcodecs"],
+		"types": [
+			"dom-close-watcher",
+			"dom-webcodecs",
+			"@atcute/atproto",
+			"@atcute/bluemoji",
+			"@atcute/bluesky",
+			"@kelinci/basa-lexicons",
+		],
 		"skipLibCheck": true,
 
 		"module": "ESNext",

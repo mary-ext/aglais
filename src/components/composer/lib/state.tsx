@@ -1,12 +1,7 @@
 import { unwrap } from 'solid-js/store';
 
-import type {
-	AppBskyEmbedDefs,
-	AppBskyEmbedExternal,
-	AppBskyFeedDefs,
-	At,
-	Brand,
-} from '@atcute/client/lexicons';
+import type { AppBskyEmbedDefs, AppBskyEmbedExternal, AppBskyFeedDefs } from '@atcute/bluesky';
+import type { $type, Blob as AtpBlob } from '@atcute/lexicons';
 
 import { primarySystemLanguage } from '~/globals/locales';
 
@@ -38,7 +33,7 @@ export interface LocalMediaSource {
 
 export interface RemoteMediaSource {
 	type: 'remote';
-	blob: At.Blob;
+	blob: AtpBlob;
 	aspectRatio?: AppBskyEmbedDefs.AspectRatio;
 }
 
@@ -89,7 +84,7 @@ export interface UriLinkSource {
 
 export interface RemoteLinkSource {
 	type: 'remote';
-	state: Brand.Union<AppBskyEmbedExternal.Main>;
+	state: $type.enforce<AppBskyEmbedExternal.Main>;
 }
 
 export type LinkSource = UriLinkSource | RemoteLinkSource;

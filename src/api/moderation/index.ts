@@ -1,4 +1,5 @@
-import type { At, ComAtprotoLabelDefs } from '@atcute/client/lexicons';
+import type { ComAtprotoLabelDefs } from '@atcute/atproto';
+import type { Did } from '@atcute/lexicons';
 
 import {
 	BlurContent,
@@ -280,7 +281,7 @@ export interface KeywordFilter {
 
 export interface ModerationLabeler {
 	/** DID of the labeler */
-	did: At.Did;
+	did: Did;
 	/** Profile details of the labeler */
 	profile: {
 		avatar?: string;
@@ -309,26 +310,26 @@ export interface ModerationPreferences {
 	/** Preferences for global-defined labels */
 	labels: LabelPreferenceMapping;
 	/** Preferences for labels from subscribed labelers */
-	labelers: Record<At.Did, ModerationLabelerPreferences>;
+	labelers: Record<Did, ModerationLabelerPreferences>;
 	/** Keyword filters */
 	keywords: KeywordFilter[];
 
 	/** List of users to hide reposts from */
-	hideReposts: At.Did[];
+	hideReposts: Did[];
 }
 
 export interface ModerationOptions {
 	_filtersCache?: [raw: string, match: RegExp][];
 
 	preferences: ModerationPreferences;
-	labelerDefinitions: Record<At.Did, ModerationLabeler>;
+	labelerDefinitions: Record<Did, ModerationLabeler>;
 }
 
 export const decideLabelModeration = (
 	accu: ModerationCause[],
 	target: LabelTarget,
 	labels: Label[] | undefined,
-	userDid: At.Did,
+	userDid: Did,
 	opts: ModerationOptions,
 ) => {
 	if (labels /* && labels.length > 0 */) {

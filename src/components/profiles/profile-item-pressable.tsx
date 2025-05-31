@@ -1,6 +1,6 @@
 import { type JSX, createMemo } from 'solid-js';
 
-import type { AppBskyActorDefs } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { moderateProfile } from '~/api/moderation/entities/profile';
 

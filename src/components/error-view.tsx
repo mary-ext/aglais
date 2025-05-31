@@ -1,7 +1,7 @@
 import { Match, Switch } from 'solid-js';
 
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
-import type { AppBskyActorDefs } from '@atcute/client/lexicons';
 import { TokenRefreshError } from '@atcute/oauth-browser-client';
 import { useQueryClient } from '@mary/solid-query';
 

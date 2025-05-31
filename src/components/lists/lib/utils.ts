@@ -1,6 +1,6 @@
-import type { AppBskyGraphDefs } from '@atcute/client/lexicons';
+import type { AppBskyGraphDefs } from '@atcute/bluesky';
 
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 
 export const getListPurposeLabel = (purpose: AppBskyGraphDefs.ListPurpose) => {
 	switch (purpose) {
@@ -15,7 +15,7 @@ export const getListPurposeLabel = (purpose: AppBskyGraphDefs.ListPurpose) => {
 
 export const getListUrl = (list: AppBskyGraphDefs.ListView) => {
 	const did = list.creator.did;
-	const { rkey } = parseCanonicalResourceUri(list.uri);
+	const { rkey } = assertCanonicalResourceUri(list.uri);
 
 	switch (list.purpose) {
 		case 'app.bsky.graph.defs#curatelist':

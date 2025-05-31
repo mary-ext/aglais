@@ -1,4 +1,4 @@
-import type { At } from '@atcute/client/lexicons';
+import type { Did } from '@atcute/lexicons';
 
 import { type TimelineParams, useTimelineQuery } from '~/api/queries/timeline';
 
@@ -9,7 +9,7 @@ import PostFeedItem from './post-feed-item';
 
 export interface TimelineListProps {
 	params: TimelineParams;
-	timelineDid?: At.Did;
+	timelineDid?: Did;
 }
 
 const TimelineList = (props: TimelineListProps) => {

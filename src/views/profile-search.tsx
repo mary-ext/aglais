@@ -1,6 +1,6 @@
 import { createSignal } from 'solid-js';
 
-import type { At } from '@atcute/client/lexicons';
+import type { ActorIdentifier } from '@atcute/lexicons';
 
 import { createProfileQuery } from '~/api/queries/profile';
 import { isDid } from '~/api/types/identity';
@@ -17,7 +17,7 @@ import SearchSuggestionsView from '~/components/search/search-suggestions-view';
 
 const ProfileSearchPage = () => {
 	const { didOrHandle } = useParams<{
-		didOrHandle: At.Identifier;
+		didOrHandle: ActorIdentifier;
 	}>();
 
 	const [query, setQuery] = createSignal('');

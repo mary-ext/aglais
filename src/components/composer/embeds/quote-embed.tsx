@@ -1,6 +1,6 @@
 import { Match, Switch } from 'solid-js';
 
-import type { AppBskyEmbedRecord } from '@atcute/client/lexicons';
+import type { AppBskyEmbedRecord } from '@atcute/bluesky';
 
 import { createPostQuery } from '~/api/queries/post';
 

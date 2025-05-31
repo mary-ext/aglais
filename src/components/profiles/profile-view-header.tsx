@@ -1,12 +1,12 @@
 import { type Component, type ComponentProps, type JSX, Match, Show, Switch, createMemo } from 'solid-js';
 
-import type { AppBskyActorDefs } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { useProfileShadow } from '~/api/cache/profile-shadow';
 import { getModerationUI } from '~/api/moderation';
 import { ContextProfileMedia, ContextProfileView } from '~/api/moderation/constants';
 import { moderateProfile } from '~/api/moderation/entities/profile';
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { openModal } from '~/globals/modals';
 
@@ -259,8 +259,8 @@ const ProfileViewHeader = (props: ProfileViewHeader) => {
 						<Match when={viewer()?.mutedByList}>
 							{(list) => {
 								const href = () => {
-									const uri = parseCanonicalResourceUri(list().uri);
-									return `/${uri.repo}/lists/${uri.rkey}`;
+									const { repo, rkey } = assertCanonicalResourceUri(list().uri);
+									return `/${repo}/lists/${rkey}`;
 								};
 
 								return (

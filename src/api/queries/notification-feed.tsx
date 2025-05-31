@@ -1,13 +1,13 @@
 import { createSignal } from 'solid-js';
 
+import type { AppBskyFeedDefs, AppBskyNotificationListNotifications } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { AppBskyFeedDefs, AppBskyNotificationListNotifications } from '@atcute/client/lexicons';
 import { chunked, mapDefined } from '@mary/array-fns';
 import { type QueryFunctionContext as QC, createInfiniteQuery, useQueryClient } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
 
-import { parseCanonicalResourceUri } from '../types/at-uri';
+import { assertCanonicalResourceUri } from '../types/at-uri';
 import { dequal } from '../utils/dequal';
 import { resetInfiniteData } from '../utils/query';
 
@@ -134,7 +134,7 @@ export const createNotificationFeedQuery = (filter: () => NotificationsFilter) =
 								// skip if they're not related to posts.
 								if (
 									!subjectUri ||
-									parseCanonicalResourceUri(subjectUri).collection !== 'app.bsky.feed.post'
+									assertCanonicalResourceUri(subjectUri).collection !== 'app.bsky.feed.post'
 								) {
 									return;
 								}

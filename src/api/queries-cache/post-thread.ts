@@ -1,16 +1,12 @@
-import type {
-	AppBskyActorDefs,
-	AppBskyFeedDefs,
-	AppBskyFeedGetPostThread,
-	At,
-} from '@atcute/client/lexicons';
+import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyFeedGetPostThread } from '@atcute/bluesky';
+import type { Did } from '@atcute/lexicons';
 
 import type { CacheMatcher } from '../cache/utils';
 import { embedViewRecordToPostView, getEmbeddedPost } from '../utils/post';
 
-function* traverseThread(
-	node: AppBskyFeedGetPostThread.Output['thread'],
-): Generator<AppBskyFeedDefs.ThreadViewPost> {
+type Thread = AppBskyFeedGetPostThread.$output['thread'];
+
+function* traverseThread(node: Thread): Generator<AppBskyFeedDefs.ThreadViewPost> {
 	if (node.$type === 'app.bsky.feed.defs#threadViewPost') {
 		const parent = node.parent;
 		const replies = node.replies;
@@ -35,7 +31,7 @@ export const findAllPosts = (uri: string, includeQuote = false): CacheMatcher<Ap
 		filter: {
 			queryKey: ['post-thread'],
 		},
-		*iterate(data: AppBskyFeedGetPostThread.Output['thread']) {
+		*iterate(data: Thread) {
 			for (const thread of traverseThread(data)) {
 				const post = thread.post;
 
@@ -54,12 +50,12 @@ export const findAllPosts = (uri: string, includeQuote = false): CacheMatcher<Ap
 	};
 };
 
-export const findAllProfiles = (did: At.Did): CacheMatcher<AppBskyActorDefs.ProfileViewBasic> => {
+export const findAllProfiles = (did: Did): CacheMatcher<AppBskyActorDefs.ProfileViewBasic> => {
 	return {
 		filter: {
 			queryKey: ['post-thread'],
 		},
-		*iterate(data: AppBskyFeedGetPostThread.Output['thread']) {
+		*iterate(data: Thread) {
 			for (const thread of traverseThread(data)) {
 				const post = thread.post;
 

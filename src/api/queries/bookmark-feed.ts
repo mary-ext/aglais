@@ -1,6 +1,6 @@
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { tokenize } from '@atcute/bluesky-search-parser';
 import { ok } from '@atcute/client';
-import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 import { mapDefined } from '@mary/array-fns';
 import { filter, map, take, toArray } from '@mary/async-iterator-fns';
 import { createInfiniteQuery, createQuery } from '@mary/solid-query';

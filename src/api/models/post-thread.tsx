@@ -1,10 +1,5 @@
-import type {
-	AppBskyFeedDefs,
-	AppBskyFeedGetPostThread,
-	AppBskyFeedPost,
-	At,
-	Brand,
-} from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedGetPostThread, AppBskyFeedPost } from '@atcute/bluesky';
+import type { $type, Did } from '@atcute/lexicons';
 
 import type { ThreadViewPreferences } from '~/lib/preferences/account';
 
@@ -87,7 +82,7 @@ export interface ThreadData {
 
 export const fillModerationCache = (
 	cache: ThreadModerationCache,
-	thread: AppBskyFeedGetPostThread.Output['thread'],
+	thread: AppBskyFeedGetPostThread.$output['thread'],
 	options: ModerationOptions,
 ) => {
 	if (thread.$type === 'app.bsky.feed.defs#threadViewPost') {
@@ -116,10 +111,10 @@ export const createThreadData = ({
 	moderationOptions,
 	selfDid,
 }: {
-	thread: Brand.Union<AppBskyFeedDefs.ThreadViewPost>;
+	thread: $type.enforce<AppBskyFeedDefs.ThreadViewPost>;
 	preferences: ThreadViewPreferences;
 	moderationOptions: ModerationOptions;
-	selfDid?: At.Did;
+	selfDid?: Did;
 }): ThreadData => {
 	const { followsFirst, sort, treeView } = preferences;
 
@@ -166,7 +161,7 @@ export const createThreadData = ({
 
 			if (last && last.type === 'post') {
 				const post = last.post;
-				const reply = (post.record as AppBskyFeedPost.Record).reply;
+				const reply = (post.record as AppBskyFeedPost.Main).reply;
 
 				if (reply) {
 					const uri = reply.parent.uri;
@@ -205,7 +200,7 @@ export const createThreadData = ({
 
 			// Filter the replies to only what we want
 			const items = replies.filter(
-				(x): x is Brand.Union<AppBskyFeedDefs.ThreadViewPost | AppBskyFeedDefs.BlockedPost> => {
+				(x): x is $type.enforce<AppBskyFeedDefs.ThreadViewPost | AppBskyFeedDefs.BlockedPost> => {
 					return (
 						x.$type === 'app.bsky.feed.defs#threadViewPost' ||
 						(x.$type === 'app.bsky.feed.defs#blockedPost' && !x.author.viewer?.blockedBy)

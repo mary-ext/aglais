@@ -1,6 +1,11 @@
 import { nanoid } from 'nanoid/non-secure';
 
-import { Client, ClientResponseError, ok, simpleFetchHandler } from '@atcute/client';
+import type {
+	ComAtprotoLabelDefs,
+	ComAtprotoRepoApplyWrites,
+	ComAtprotoRepoStrongRef,
+} from '@atcute/atproto';
+import type { BlueMojiRichtextFacet } from '@atcute/bluemoji';
 import type {
 	AppBskyEmbedImages,
 	AppBskyEmbedRecord,
@@ -12,13 +17,9 @@ import type {
 	AppBskyGraphDefs,
 	AppBskyRichtextFacet,
 	AppBskyVideoDefs,
-	At,
-	BlueMojiRichtextFacet,
-	Brand,
-	ComAtprotoLabelDefs,
-	ComAtprotoRepoApplyWrites,
-	ComAtprotoRepoStrongRef,
-} from '@atcute/client/lexicons';
+} from '@atcute/bluesky';
+import { Client, ClientResponseError, ok, simpleFetchHandler } from '@atcute/client';
+import { type $type, type Blob as AtpBlob, type Did, type GenericUri, type Handle } from '@atcute/lexicons';
 import * as TID from '@atcute/tid';
 import type { QueryClient } from '@mary/solid-query';
 
@@ -26,7 +27,7 @@ import { updatePostShadow } from '~/api/cache/post-shadow';
 import { uploadBlob } from '~/api/queries/blob';
 import type { LinkMeta } from '~/api/queries/composer';
 import { resolveHandle } from '~/api/queries/handle';
-import { makeAtUri, parseCanonicalResourceUri } from '~/api/types/at-uri';
+import { assertCanonicalResourceUri, makeAtUri } from '~/api/types/at-uri';
 import { isDid } from '~/api/types/identity';
 import { getRecord } from '~/api/utils/records';
 import { trimRichText } from '~/api/utils/richtext';
@@ -61,7 +62,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 	const did = agent.did!;
 
 	const now = new Date();
-	const writes: ComAtprotoRepoApplyWrites.Input['writes'] = [];
+	const writes: ComAtprotoRepoApplyWrites.$input['writes'] = [];
 
 	let reply: AppBskyFeedPost.ReplyRef | undefined;
 	let rkey: string | undefined;
@@ -74,9 +75,9 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 			queryKey: ['post', replyUri],
 			staleTime: 30_000,
 			async queryFn(ctx) {
-				const uri = parseCanonicalResourceUri(replyUri);
+				const uri = assertCanonicalResourceUri(replyUri);
 
-				let did: At.Did;
+				let did: Did;
 				if (isDid(uri.repo)) {
 					did = uri.repo;
 				} else {
@@ -102,7 +103,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 			},
 		});
 
-		const root = (post.record as AppBskyFeedPost.Record).reply?.root;
+		const root = (post.record as AppBskyFeedPost.Main).reply?.root;
 		const ref: ComAtprotoRepoStrongRef.Main = {
 			uri: post.uri,
 			cid: post.cid,
@@ -115,7 +116,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 	}
 
 	if (state.redraftUri) {
-		const uri = parseCanonicalResourceUri(state.redraftUri);
+		const uri = assertCanonicalResourceUri(state.redraftUri);
 
 		writes.push({
 			$type: 'com.atproto.repo.applyWrites#delete',
@@ -141,7 +142,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 		// Get the self-labels
 		const labels = getEmbedLabels(post.embed);
-		let selfLabels: Brand.Union<ComAtprotoLabelDefs.SelfLabels> | undefined;
+		let selfLabels: $type.enforce<ComAtprotoLabelDefs.SelfLabels> | undefined;
 
 		if (labels?.length) {
 			selfLabels = {
@@ -151,7 +152,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 		}
 
 		// Now form the record
-		const record: AppBskyFeedPost.Record = {
+		const record: AppBskyFeedPost.Main = {
 			$type: 'app.bsky.feed.post',
 			createdAt: now.toISOString(),
 			text: rt.text,
@@ -171,7 +172,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 		// If this is the first post, and we have a threadgate set, create one now.
 		if (idx === 0 && !reply && state.threadgate.allow) {
-			const threadgateRecord: AppBskyFeedThreadgate.Record = {
+			const threadgateRecord: AppBskyFeedThreadgate.Main = {
 				$type: 'app.bsky.feed.threadgate',
 				createdAt: now.toISOString(),
 				post: uri,
@@ -188,7 +189,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 		// If we have a postgate set, create one for this post.
 		if (state.postgate.embeddingRules?.length) {
-			const postgateRecord: AppBskyFeedPostgate.Record = {
+			const postgateRecord: AppBskyFeedPostgate.Main = {
 				$type: 'app.bsky.feed.postgate',
 				createdAt: now.toISOString(),
 				post: uri,
@@ -243,9 +244,9 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 	return writes;
 
-	async function resolveEmbed(root: PostEmbed): Promise<AppBskyFeedPost.Record['embed']> {
+	async function resolveEmbed(root: PostEmbed): Promise<AppBskyFeedPost.Main['embed']> {
 		let pMedia: Promise<AppBskyEmbedRecordWithMedia.Main['media']> | undefined;
-		let pRecord: Promise<Brand.Union<AppBskyEmbedRecord.Main>> | undefined;
+		let pRecord: Promise<$type.enforce<AppBskyEmbedRecord.Main>> | undefined;
 
 		if (root.media) {
 			pMedia = resolveMediaEmbed(root.media);
@@ -477,7 +478,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				}
 
 				// Check the upload status
-				let result: At.Blob<any>;
+				let result: AtpBlob<any>;
 				{
 					let pollFailures = 0;
 
@@ -509,7 +510,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 						const state = status.state;
 
 						if (state === 'JOB_STATE_COMPLETED') {
-							if (!status.blob) {
+							if (!status.blob || !('$type' in status.blob)) {
 								throw new PublishError(`Unexpected error when processing video`);
 							}
 
@@ -547,7 +548,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				const gif = embed.gif;
 				const alt = embed.alt;
 
-				let thumbBlob: At.Blob<any> | undefined;
+				let thumbBlob: AtpBlob<any> | undefined;
 
 				{
 					log?.(`Retrieving GIF thumbnail`);
@@ -592,7 +593,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 			// compress... upload...
 			const thumb = meta.thumb;
-			let thumbBlob: At.Blob<any> | undefined;
+			let thumbBlob: AtpBlob<any> | undefined;
 
 			if (thumb !== undefined) {
 				log?.(`Uploading link thumbnail`);
@@ -616,7 +617,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 		async function resolveRecordEmbed(
 			record: PostRecordEmbed,
-		): Promise<Brand.Union<AppBskyEmbedRecord.Main>> {
+		): Promise<$type.enforce<AppBskyEmbedRecord.Main>> {
 			const type = record.type;
 
 			if (type === 'feed') {
@@ -683,10 +684,10 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 			if (type === 'link' || type === 'autolink') {
 				facets.push({
 					index: index,
-					features: [{ $type: 'app.bsky.richtext.facet#link', uri: token.url as At.GenericUri }],
+					features: [{ $type: 'app.bsky.richtext.facet#link', uri: token.url as GenericUri }],
 				});
 			} else if (type === 'mention') {
-				const handle = token.handle as At.Handle;
+				const handle = token.handle as Handle;
 
 				if (handle === 'handle.invalid') {
 					throw new InvalidHandleError(handle);
@@ -735,7 +736,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 				const raws = value.formats;
 
-				const cids: Brand.Union<BlueMojiRichtextFacet.Formats_v0> = {
+				const cids: $type.enforce<BlueMojiRichtextFacet.Formats_v0> = {
 					$type: 'blue.moji.richtext.facet#formats_v0',
 				};
 
@@ -748,20 +749,20 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 						cids.lottie = true;
 					}
 
-					if (raws.gif_128) {
+					if (raws.gif_128 && '$type' in raws.gif_128) {
 						cids.gif_128 = raws.gif_128.ref.$link;
 					}
 
-					if (raws.png_128) {
+					if (raws.png_128 && '$type' in raws.png_128) {
 						cids.png_128 = raws.png_128.ref.$link;
 					}
 
-					if (raws.webp_128) {
+					if (raws.webp_128 && '$type' in raws.webp_128) {
 						cids.webp_128 = raws.webp_128.ref.$link;
 					}
 				}
 
-				const facet: Brand.Union<BlueMojiRichtextFacet.Main> = {
+				const facet: $type.enforce<BlueMojiRichtextFacet.Main> = {
 					$type: 'blue.moji.richtext.facet',
 					did: did,
 					name: value.name,

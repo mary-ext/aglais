@@ -1,6 +1,6 @@
-import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 import { serializeRichText } from '~/api/utils/richtext-stringify';
 
 import { useModalContext } from '~/globals/modals';
@@ -21,7 +21,7 @@ const PostShareMenu = (props: PostShareMenuProps) => {
 	const post = props.post;
 
 	const did = post.author.did;
-	const { rkey } = parseCanonicalResourceUri(post.uri);
+	const { rkey } = assertCanonicalResourceUri(post.uri);
 
 	return (
 		<Menu.Container anchor={props.anchor} placement="bottom-end">
@@ -38,7 +38,7 @@ const PostShareMenu = (props: PostShareMenuProps) => {
 				icon={ClipboardOutlinedIcon}
 				label="Copy post text"
 				onClick={() => {
-					const record = post.record as AppBskyFeedPost.Record;
+					const record = post.record as AppBskyFeedPost.Main;
 					const serialized = serializeRichText(record.text, record.facets);
 
 					navigator.clipboard.writeText(serialized).then(close);

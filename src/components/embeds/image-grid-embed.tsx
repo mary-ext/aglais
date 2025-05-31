@@ -1,4 +1,4 @@
-import type { AppBskyEmbedImages } from '@atcute/client/lexicons';
+import type { AppBskyEmbedImages } from '@atcute/bluesky';
 
 export interface ImageGridEmbedProps {
 	/** Expected to be static */

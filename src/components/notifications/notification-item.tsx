@@ -1,11 +1,13 @@
 import { type Component, type ComponentProps, type JSX, createMemo } from 'solid-js';
 
-import type {
-	AppBskyEmbedImages,
-	AppBskyFeedDefs,
-	AppBskyFeedPost,
-	AppBskyNotificationListNotifications,
-} from '@atcute/client/lexicons';
+import {
+	type AppBskyEmbedImages,
+	type AppBskyFeedDefs,
+	type AppBskyFeedPost,
+	type AppBskyNotificationListNotifications,
+	type MediaEmbed,
+	unwrapMediaEmbed,
+} from '@atcute/bluesky';
 import { useQueryClient } from '@mary/solid-query';
 
 import { getModerationUI } from '~/api/moderation';
@@ -19,8 +21,7 @@ import type {
 	NotificationSlice,
 	RepostNotificationSlice,
 } from '~/api/queries/notification-feed';
-import { parseCanonicalResourceUri } from '~/api/types/at-uri';
-import { type MediaEmbedView, unwrapMediaEmbedView } from '~/api/utils/bluesky/embed-view';
+import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { history } from '~/globals/navigation';
 
@@ -95,8 +96,9 @@ const NotificationItem = ({ item }: NotificationItemProps) => {
 				}
 			} else {
 				const post = item.view;
-				const uri = parseCanonicalResourceUri(post.uri);
-				href = `/${uri.repo}/${uri.rkey}`;
+				const { repo, rkey } = assertCanonicalResourceUri(post.uri);
+
+				href = `/${repo}/${rkey}`;
 			}
 
 			if (isElementAltClicked(ev)) {
@@ -234,9 +236,9 @@ const renderAccessory = (data: FollowNotificationSlice | LikeNotificationSlice |
 
 	if (type === 'like' || type === 'repost') {
 		const post = data.view;
-		const record = post.record as AppBskyFeedPost.Record;
+		const record = post.record as AppBskyFeedPost.Main;
 
-		const media = unwrapMediaEmbedView(post.embed);
+		const media = unwrapMediaEmbed(post.embed);
 		const gif = maybeUnwrapGifEmbed(media);
 
 		return (
@@ -300,7 +302,7 @@ const GifAccessory = ({ snippet }: { snippet: BlueskyGifSnippet }) => {
 	);
 };
 
-const maybeUnwrapGifEmbed = (embed: MediaEmbedView | undefined): BlueskyGifSnippet | undefined => {
+const maybeUnwrapGifEmbed = (embed: MediaEmbed | undefined): BlueskyGifSnippet | undefined => {
 	if (embed?.$type === 'app.bsky.embed.external#view') {
 		const snippet = detectSnippet(embed.external);
 		if (snippet.type !== SnippetType.BLUESKY_GIF) {

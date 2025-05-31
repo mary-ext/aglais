@@ -1,4 +1,4 @@
-import type { AppBskyActorDefs } from '@atcute/client/lexicons';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 import { useModalContext } from '~/globals/modals';
 
