@@ -172,7 +172,9 @@ export const SessionProvider = (props: ParentProps) => {
 				const expiresAt = session.token.expires_at;
 
 				agent = new OAuthUserAgent(session);
-				handler = agent;
+				handler = (pathname, init) => {
+					return agent!.handle(pathname, { ...init, keepalive: false });
+				};
 
 				if (expiresAt !== undefined && expiresAt - Date.now() <= 5 * 60 * 1000) {
 					agent.getSession({ noCache: true });

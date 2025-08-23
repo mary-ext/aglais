@@ -27,7 +27,11 @@ const OAuthCallbackPage = () => {
 		const did = session.info.sub;
 
 		const agent = new OAuthUserAgent(session);
-		const client = new Client({ handler: agent });
+		const client = new Client({
+			handler(pathname, init) {
+				return agent!.handle(pathname, { ...init, keepalive: false });
+			},
+		});
 
 		const profile = await ok(
 			client.get('app.bsky.actor.getProfile', {
