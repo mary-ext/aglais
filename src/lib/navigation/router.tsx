@@ -367,12 +367,20 @@ const matchRoute = (path: string): MatchedRoute | null => {
 		const pattern = (route._regex ||= buildPathRegex(route.path));
 
 		const match = pattern.exec(path);
-
-		if (!match || (validate && !validate(match.groups!))) {
+		if (!match) {
 			continue;
 		}
 
-		const params = match.groups!;
+		const rawParams = match.groups!;
+		const params: Record<string, string> = {};
+
+		for (const key in rawParams) {
+			params[key] = decodeURIComponent(rawParams[key]);
+		}
+
+		if (validate && !validate(params)) {
+			continue;
+		}
 
 		let id: string | undefined;
 		if (route.single) {
