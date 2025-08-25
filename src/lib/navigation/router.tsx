@@ -360,6 +360,8 @@ export const RouterView = (props: RouterViewProps) => {
 };
 
 const matchRoute = (path: string): MatchedRoute | null => {
+	path = decodeURIComponent(path);
+
 	for (let idx = 0, len = _routes!.length; idx < len; idx++) {
 		const route = _routes![idx];
 
@@ -371,12 +373,7 @@ const matchRoute = (path: string): MatchedRoute | null => {
 			continue;
 		}
 
-		const rawParams = match.groups!;
-		const params: Record<string, string> = {};
-
-		for (const key in rawParams) {
-			params[key] = decodeURIComponent(rawParams[key]);
-		}
+		const params = match.groups!;
 
 		if (validate && !validate(params)) {
 			continue;
