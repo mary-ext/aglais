@@ -57,12 +57,15 @@ importers:
       '@atcute/client':
         specifier: ^4.0.3
         version: 4.0.3
+      '@atcute/identity':
+        specifier: ^1.1.0
+        version: 1.1.0
       '@atcute/lexicons':
         specifier: ^1.1.0
         version: 1.1.0
       '@atcute/oauth-browser-client':
-        specifier: ^1.0.26
-        version: 1.0.26
+        specifier: 2.0.0-next.0
+        version: 2.0.0-next.0
       '@atcute/tid':
         specifier: ^1.0.2
         version: 1.0.2
@@ -213,23 +216,34 @@ packages:
   '@atcute/client@4.0.3':
     resolution: {integrity: sha512-RIOZWFVLca/HiPAAUDqQPOdOreCxTbL5cb+WUf5yqQOKIu5yEAP3eksinmlLmgIrlr5qVOE7brazUUzaskFCfw==}
 
-  '@atcute/identity@1.0.3':
-    resolution: {integrity: sha512-mNMxbKHFGys03A8JXKk0KfMBzdd0vrYMzZZWjpw1nYTs0+ea6bo5S1hwqVUZxHdo1gFHSe/t63jxQIF4yL9aKw==}
+  '@atcute/identity-resolver@1.1.3':
+    resolution: {integrity: sha512-KZgGgg99CWaV7Df3+h3X/WMrDzTPQVfsaoIVbTNLx2B56BvCL2EmaxPSVw/7BFUJMZHlVU4rtoEB4lyvNyMswA==}
+    peerDependencies:
+      '@atcute/identity': ^1.0.0
+
+  '@atcute/identity@1.1.0':
+    resolution: {integrity: sha512-6vRvRqJatDB+JUQsb+UswYmtBGQnSZcqC3a2y6H5DB/v5KcIh+6nFFtc17G0+3W9rxdk7k9M4KkgkdKf/YDNoQ==}
 
   '@atcute/lexicons@1.1.0':
     resolution: {integrity: sha512-LFqwnria78xLYb62Ri/+WwQpUTgZp2DuyolNGIIOV1dpiKhFFFh//nscHMA6IExFLQRqWDs3tTjy7zv0h3sf1Q==}
 
+  '@atcute/lexicons@1.1.1':
+    resolution: {integrity: sha512-k6qy5p3j9fJJ6ekaMPfEfp3ni4TW/XNuH9ZmsuwC0fi0tOjp+Fa8ZQakHwnqOzFt/cVBfGcmYE/lKNAbeTjgUg==}
+
   '@atcute/multibase@1.1.4':
     resolution: {integrity: sha512-NUf5AeeSOmuZHGU+4GAaMtISJoG+ZHtW/vUVA4lK/YDt/7LODAW0Fd0NNIIUPVUoW0xJS6zSEIWvwLLuxmEHhA==}
 
-  '@atcute/oauth-browser-client@1.0.26':
-    resolution: {integrity: sha512-z8VUmwRO1sFu5Dq1qYQOQLenkTSNaOyzlUZhVwFR41ru+AP84MS5UHHW/NsdC1xJAq1v6mlLySJ+pjxdDW8IYA==}
+  '@atcute/oauth-browser-client@2.0.0-next.0':
+    resolution: {integrity: sha512-BaVU0Mu5ACerdWdMok6kvwwAuPJunbQQk0C51zpxNLpT0P/SYnun+3xX7bcrbtDG1lXn+r+Qld88P+zonY1wPA==}
 
   '@atcute/tid@1.0.2':
     resolution: {integrity: sha512-ahmjroNyeDPJhtuf3+HTJropaH04HmJ8fhntDu73Gpz/RkAF7+nkz6kcP2QTgfvMCgMPAJUdskAAP82GPDTY9w==}
 
   '@atcute/uint8array@1.0.3':
     resolution: {integrity: sha512-M/K+ihiVW8Pl2PFLzaC4E3l4JaZ1IH05Q0AbPWUC4cVHnd/gZ/1kAF5ngdtGvJeDMirHZ2VAy7OmAsPwR/2nlA==}
+
+  '@atcute/util-fetch@1.0.1':
+    resolution: {integrity: sha512-Clc0E/5ufyGBVfYBUwWNlHONlZCoblSr4Ho50l1LhmRPGB1Wu/AQ9Sz+rsBg7fdaW/auve8ulmwhRhnX2cGRow==}
 
   '@atlaskit/pragmatic-drag-and-drop-hitbox@1.0.3':
     resolution: {integrity: sha512-/Sbu/HqN2VGLYBhnsG7SbRNg98XKkbF6L7XDdBi+izRybfaK1FeMfodPpm/xnBHPJzwYMdkE0qtLyv6afhgMUA==}
@@ -2767,15 +2781,26 @@ snapshots:
 
   '@atcute/client@4.0.3':
     dependencies:
-      '@atcute/identity': 1.0.3
+      '@atcute/identity': 1.1.0
       '@atcute/lexicons': 1.1.0
 
-  '@atcute/identity@1.0.3':
+  '@atcute/identity-resolver@1.1.3(@atcute/identity@1.1.0)':
     dependencies:
-      '@atcute/lexicons': 1.1.0
+      '@atcute/identity': 1.1.0
+      '@atcute/lexicons': 1.1.1
+      '@atcute/util-fetch': 1.0.1
+      '@badrap/valita': 0.4.5
+
+  '@atcute/identity@1.1.0':
+    dependencies:
+      '@atcute/lexicons': 1.1.1
       '@badrap/valita': 0.4.5
 
   '@atcute/lexicons@1.1.0':
+    dependencies:
+      esm-env: 1.2.2
+
+  '@atcute/lexicons@1.1.1':
     dependencies:
       esm-env: 1.2.2
 
@@ -2783,11 +2808,12 @@ snapshots:
     dependencies:
       '@atcute/uint8array': 1.0.3
 
-  '@atcute/oauth-browser-client@1.0.26':
+  '@atcute/oauth-browser-client@2.0.0-next.0':
     dependencies:
       '@atcute/client': 4.0.3
-      '@atcute/identity': 1.0.3
-      '@atcute/lexicons': 1.1.0
+      '@atcute/identity': 1.1.0
+      '@atcute/identity-resolver': 1.1.3(@atcute/identity@1.1.0)
+      '@atcute/lexicons': 1.1.1
       '@atcute/multibase': 1.1.4
       '@atcute/uint8array': 1.0.3
       nanoid: 5.1.5
@@ -2795,6 +2821,10 @@ snapshots:
   '@atcute/tid@1.0.2': {}
 
   '@atcute/uint8array@1.0.3': {}
+
+  '@atcute/util-fetch@1.0.1':
+    dependencies:
+      '@badrap/valita': 0.4.5
 
   '@atlaskit/pragmatic-drag-and-drop-hitbox@1.0.3':
     dependencies:

@@ -1,14 +1,11 @@
 import { Match, Switch, createSignal, onMount } from 'solid-js';
 
-import type { Did } from '@atcute/lexicons';
+import type { ActorIdentifier, Did } from '@atcute/lexicons';
 import {
-	type AuthorizationServerMetadata,
-	type IdentityMetadata,
+	type AuthorizeTargetOptions,
 	OAuthResponseError,
 	ResolverError,
 	createAuthorizationUrl,
-	resolveFromIdentity,
-	resolveFromService,
 } from '@atcute/oauth-browser-client';
 import { createMutation } from '@mary/solid-query';
 
@@ -42,13 +39,12 @@ const SignInDialog = (props: SignInDialogProps) => {
 		async mutationFn({ identifier, pds }: { identifier?: string; pds?: string }) {
 			setPending(`Resolving your identity`);
 
-			let metadata: AuthorizationServerMetadata;
-			let identity: IdentityMetadata | undefined;
+			let target: AuthorizeTargetOptions;
 
 			if (identifier) {
-				({ metadata, identity } = await resolveFromIdentity(identifier));
+				target = { type: 'account', identifier: identifier as ActorIdentifier };
 			} else if (pds) {
-				({ metadata } = await resolveFromService(pds));
+				target = { type: 'pds', serviceUrl: pds };
 			} else {
 				assert(false);
 			}
@@ -56,8 +52,7 @@ const SignInDialog = (props: SignInDialogProps) => {
 			setPending(`Contacting your data server`);
 
 			const authUrl = await createAuthorizationUrl({
-				metadata: metadata,
-				identity: identity,
+				target: target,
 				scope: import.meta.env.VITE_OAUTH_SCOPE,
 			});
 

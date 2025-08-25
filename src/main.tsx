@@ -2,6 +2,8 @@
 import { type JSX, createSignal, onMount } from 'solid-js';
 import { render } from 'solid-js/web';
 
+import { Client, ok, simpleFetchHandler } from '@atcute/client';
+import type { DidDocument } from '@atcute/identity';
 import type { Did } from '@atcute/lexicons';
 import { configureOAuth } from '@atcute/oauth-browser-client';
 
@@ -32,12 +34,45 @@ configureRouter({
 });
 
 // Configure OAuth
-configureOAuth({
-	metadata: {
-		client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
-		redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URL,
-	},
-});
+{
+	const resolver = new Client({
+		handler: simpleFetchHandler({ service: 'https://identitas.kelinci.deno.net' }),
+	});
+
+	configureOAuth({
+		metadata: {
+			client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
+			redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URL,
+		},
+
+		didDocumentResolver: {
+			async resolve(did) {
+				const data = await ok(
+					resolver.get('com.atproto.identity.resolveDid', {
+						params: {
+							did: did,
+						},
+					}),
+				);
+
+				return data.didDoc as unknown as DidDocument;
+			},
+		},
+		handleResolver: {
+			async resolve(handle) {
+				const data = await ok(
+					resolver.get('com.atproto.identity.resolveHandle', {
+						params: {
+							handle: handle,
+						},
+					}),
+				);
+
+				return data.did as Did<'plc' | 'web'>;
+			},
+		},
+	});
+}
 
 const InnerApp = () => {
 	const [ready, setReady] = createSignal(false);
