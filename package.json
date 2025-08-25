@@ -3,7 +3,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite",
-		"build": "vite build",
+		"build": "tsc -b && vite build",
 		"preview": "vite preview",
 		"fmt": "PRETTIER_EXPERIMENTAL_CLI=1 prettier --cache --write ."
 	},
@@ -46,6 +46,7 @@
 		"@trivago/prettier-plugin-sort-imports": "^5.2.2",
 		"@types/dom-close-watcher": "^1.0.0",
 		"@types/dom-webcodecs": "^0.1.15",
+		"@types/node": "^24.3.0",
 		"autoprefixer": "^10.4.21",
 		"babel-plugin-transform-typescript-const-enums": "^0.1.0",
 		"prettier": "^3.6.0",

@@ -100,6 +100,7 @@ export default defineConfig({
 
 		// Transform the icon components to remove the `() => _tmpl$()` wrapper
 		{
+			name: 'aglais-icon-transform',
 			transform(code, id) {
 				if (!id.includes('/icons-central/')) {
 					return;
@@ -107,7 +108,7 @@ export default defineConfig({
 
 				const transformed = code.replace(
 					/(?<=createIcon\()\(\)\s*=>*.([\w$]+)\(\)(?=\))/g,
-					(match, id) => id,
+					(_match, id) => id,
 				);
 
 				return { code: transformed, map: null };
@@ -116,6 +117,7 @@ export default defineConfig({
 
 		// Injects OAuth-related variables
 		{
+			name: 'aglais-oauth-inject',
 			config(_conf, { command }) {
 				if (command === 'build') {
 					process.env.VITE_OAUTH_CLIENT_ID = metadata.client_id;

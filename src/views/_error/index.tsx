@@ -5,7 +5,7 @@ export interface ErrorPageProps {
 	reset: () => void;
 }
 
-const ErrorPage = ({ error, reset: retry }: ErrorPageProps) => {
+const ErrorPage = ({ error, reset: _retry }: ErrorPageProps) => {
 	useTitle(() => `Something went wrong :( — ${import.meta.env.VITE_APP_NAME}`);
 
 	console.error(error);
