@@ -74,7 +74,7 @@ export default defineConfig({
 			},
 		}),
 
-		cloudflare(),
+		process.env.NODE_ENV === 'development' && cloudflare(),
 
 		VitePWA({
 			registerType: 'prompt',
