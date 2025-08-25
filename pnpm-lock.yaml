@@ -31,14 +31,14 @@ importers:
   .:
     dependencies:
       '@atcute/atproto':
-        specifier: ^3.1.0
-        version: 3.1.0
+        specifier: ^3.1.2
+        version: 3.1.2
       '@atcute/bluemoji':
         specifier: ^3.1.0
         version: 3.1.0
       '@atcute/bluesky':
-        specifier: ^3.1.3
-        version: 3.1.3
+        specifier: ^3.2.1
+        version: 3.2.1
       '@atcute/bluesky-richtext-parser':
         specifier: ^1.0.7
         version: 1.0.7
@@ -49,8 +49,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       '@atcute/cbor':
-        specifier: ^2.2.4
-        version: 2.2.4
+        specifier: ^2.2.5
+        version: 2.2.5
       '@atcute/cid':
         specifier: ^2.2.3
         version: 2.2.3
@@ -60,15 +60,21 @@ importers:
       '@atcute/identity':
         specifier: ^1.1.0
         version: 1.1.0
+      '@atcute/identity-resolver':
+        specifier: ^1.1.3
+        version: 1.1.3(@atcute/identity@1.1.0)
       '@atcute/lexicons':
-        specifier: ^1.1.0
-        version: 1.1.0
+        specifier: ^1.1.1
+        version: 1.1.1
       '@atcute/oauth-browser-client':
         specifier: 2.0.0-next.0
         version: 2.0.0-next.0
       '@atcute/tid':
         specifier: ^1.0.2
         version: 1.0.2
+      '@atcute/xrpc-server':
+        specifier: ^0.1.1
+        version: 0.1.1
       '@atlaskit/pragmatic-drag-and-drop':
         specifier: 1.6.0
         version: 1.6.0
@@ -195,8 +201,8 @@ packages:
     peerDependencies:
       ajv: '>=8'
 
-  '@atcute/atproto@3.1.0':
-    resolution: {integrity: sha512-aJbDsY7FcIh8APWKAimBtshPwqoRE056tc0UV6vw4TW4e3nYaHedoJmKhlh/k8KQWxyw64MQThNGMaC89HNoTg==}
+  '@atcute/atproto@3.1.2':
+    resolution: {integrity: sha512-m6OWoGTeL8Wlw7cm8Nrf+NU24rlx5A0DzxEQQPPu1wqYNHw6S33nOU90W+U09vVN0aZGZUrLFfWWhAaSWTp1ZQ==}
 
   '@atcute/bluemoji@3.1.0':
     resolution: {integrity: sha512-8EfcEDrXlStvu57WVcGSeDWfbEDKTjfI43rk+oohe2sdYU113ObTe8Pv1vW0DRfOYcQqR4+eF2SbpvXE6//24g==}
@@ -210,17 +216,20 @@ packages:
   '@atcute/bluesky-search-parser@0.1.0':
     resolution: {integrity: sha512-bTClwD9VGwaECOyWe1mf8V6t+7/77e3tiUHTE6CSrHXOJ/yM8N2xbn+dIi2ki2JLHvgvBN9wsWpFLykgfWhBaw==}
 
-  '@atcute/bluesky@3.1.3':
-    resolution: {integrity: sha512-avb9HLUqmCfIU/ZF6WeSjxLwUbzqST2JTF6efW7n1+3kw+oKRe6hhgsZoTka+3VrBZEpqveGt5O5TYdhzW0+lQ==}
+  '@atcute/bluesky@3.2.1':
+    resolution: {integrity: sha512-WehZuGNEC9NNB2y7Jg/i4ANzbMEQzs2EwrLYKWDuvJT3YnPHEol3vkc4DK47TODs3TiacQJp4MWhsQyfktsZ6g==}
 
-  '@atcute/cbor@2.2.4':
-    resolution: {integrity: sha512-8Y/OTM8zs5VInOCjfx4f9Idiiz7ygM/FkfWv/HW3/ZUsXczn1xk7GzTBbm4P5crn4C5luwDGpO7FwClMOERrow==}
+  '@atcute/cbor@2.2.5':
+    resolution: {integrity: sha512-sBT8+6qau0mC3kwgmjl+nzqGn02xsE9b+kSgXm4/BRd9w8fwdRQYwcC9ApDlfaojrljJfcEkimppl/IcPOF3CA==}
 
   '@atcute/cid@2.2.3':
     resolution: {integrity: sha512-WEzNSL1EuCVtCQDFYEBIm4dEP6PcMEwi8IYUVIWvT77eO5EjY58F63z5T4qMABxSBM0+L4kqMxypdL1Fzf6LZw==}
 
   '@atcute/client@4.0.3':
     resolution: {integrity: sha512-RIOZWFVLca/HiPAAUDqQPOdOreCxTbL5cb+WUf5yqQOKIu5yEAP3eksinmlLmgIrlr5qVOE7brazUUzaskFCfw==}
+
+  '@atcute/crypto@2.2.3':
+    resolution: {integrity: sha512-jJI/8WDK6rKvpoUKi0C9Q7pjRRrHGGAagRxnFvpBM5ycZT9eABz7p309LmRKBCWLasmCs/qee8WK4dqOA2e7Dw==}
 
   '@atcute/identity-resolver@1.1.3':
     resolution: {integrity: sha512-KZgGgg99CWaV7Df3+h3X/WMrDzTPQVfsaoIVbTNLx2B56BvCL2EmaxPSVw/7BFUJMZHlVU4rtoEB4lyvNyMswA==}
@@ -229,9 +238,6 @@ packages:
 
   '@atcute/identity@1.1.0':
     resolution: {integrity: sha512-6vRvRqJatDB+JUQsb+UswYmtBGQnSZcqC3a2y6H5DB/v5KcIh+6nFFtc17G0+3W9rxdk7k9M4KkgkdKf/YDNoQ==}
-
-  '@atcute/lexicons@1.1.0':
-    resolution: {integrity: sha512-LFqwnria78xLYb62Ri/+WwQpUTgZp2DuyolNGIIOV1dpiKhFFFh//nscHMA6IExFLQRqWDs3tTjy7zv0h3sf1Q==}
 
   '@atcute/lexicons@1.1.1':
     resolution: {integrity: sha512-k6qy5p3j9fJJ6ekaMPfEfp3ni4TW/XNuH9ZmsuwC0fi0tOjp+Fa8ZQakHwnqOzFt/cVBfGcmYE/lKNAbeTjgUg==}
@@ -250,6 +256,9 @@ packages:
 
   '@atcute/util-fetch@1.0.1':
     resolution: {integrity: sha512-Clc0E/5ufyGBVfYBUwWNlHONlZCoblSr4Ho50l1LhmRPGB1Wu/AQ9Sz+rsBg7fdaW/auve8ulmwhRhnX2cGRow==}
+
+  '@atcute/xrpc-server@0.1.1':
+    resolution: {integrity: sha512-pkr1yGtcCoApqELLjTIU7DO6SnVly5bAPbVswLHEM2xQfk6X4F/dKFDdPEsXwbRrSSr6leKgPwQPVcUpPQnQ4A==}
 
   '@atlaskit/pragmatic-drag-and-drop-hitbox@1.0.3':
     resolution: {integrity: sha512-/Sbu/HqN2VGLYBhnsG7SbRNg98XKkbF6L7XDdBi+izRybfaK1FeMfodPpm/xnBHPJzwYMdkE0qtLyv6afhgMUA==}
@@ -1290,6 +1299,9 @@ packages:
 
   '@mjackson/node-fetch-server@0.6.1':
     resolution: {integrity: sha512-9ZJnk/DJjt805uv5PPv11haJIW+HHf3YEEyVXv+8iLQxLD/iXA68FH220XoiTPBC4gCg5q+IMadDw8qPqlA5wg==}
+
+  '@noble/secp256k1@2.3.0':
+    resolution: {integrity: sha512-0TQed2gcBbIrh7Ccyw+y/uZQvbJwm7Ao4scBUxqpBCcsOlZG0O4KGfjtNAy/li4W8n1xt3dxrwJ0beZ2h2G6Kw==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2791,31 +2803,31 @@ snapshots:
       jsonpointer: 5.0.1
       leven: 3.1.0
 
-  '@atcute/atproto@3.1.0':
+  '@atcute/atproto@3.1.2':
     dependencies:
-      '@atcute/lexicons': 1.1.0
+      '@atcute/lexicons': 1.1.1
 
   '@atcute/bluemoji@3.1.0':
     dependencies:
-      '@atcute/atproto': 3.1.0
-      '@atcute/bluesky': 3.1.3
-      '@atcute/lexicons': 1.1.0
+      '@atcute/atproto': 3.1.2
+      '@atcute/bluesky': 3.2.1
+      '@atcute/lexicons': 1.1.1
 
   '@atcute/bluesky-richtext-parser@1.0.7': {}
 
   '@atcute/bluesky-richtext-segmenter@2.0.3':
     dependencies:
-      '@atcute/bluesky': 3.1.3
-      '@atcute/lexicons': 1.1.0
+      '@atcute/bluesky': 3.2.1
+      '@atcute/lexicons': 1.1.1
 
   '@atcute/bluesky-search-parser@0.1.0': {}
 
-  '@atcute/bluesky@3.1.3':
+  '@atcute/bluesky@3.2.1':
     dependencies:
-      '@atcute/atproto': 3.1.0
-      '@atcute/lexicons': 1.1.0
+      '@atcute/atproto': 3.1.2
+      '@atcute/lexicons': 1.1.1
 
-  '@atcute/cbor@2.2.4':
+  '@atcute/cbor@2.2.5':
     dependencies:
       '@atcute/cid': 2.2.3
       '@atcute/multibase': 1.1.4
@@ -2829,7 +2841,13 @@ snapshots:
   '@atcute/client@4.0.3':
     dependencies:
       '@atcute/identity': 1.1.0
-      '@atcute/lexicons': 1.1.0
+      '@atcute/lexicons': 1.1.1
+
+  '@atcute/crypto@2.2.3':
+    dependencies:
+      '@atcute/multibase': 1.1.4
+      '@atcute/uint8array': 1.0.3
+      '@noble/secp256k1': 2.3.0
 
   '@atcute/identity-resolver@1.1.3(@atcute/identity@1.1.0)':
     dependencies:
@@ -2842,10 +2860,6 @@ snapshots:
     dependencies:
       '@atcute/lexicons': 1.1.1
       '@badrap/valita': 0.4.5
-
-  '@atcute/lexicons@1.1.0':
-    dependencies:
-      esm-env: 1.2.2
 
   '@atcute/lexicons@1.1.1':
     dependencies:
@@ -2872,6 +2886,17 @@ snapshots:
   '@atcute/util-fetch@1.0.1':
     dependencies:
       '@badrap/valita': 0.4.5
+
+  '@atcute/xrpc-server@0.1.1':
+    dependencies:
+      '@atcute/crypto': 2.2.3
+      '@atcute/identity': 1.1.0
+      '@atcute/identity-resolver': 1.1.3(@atcute/identity@1.1.0)
+      '@atcute/lexicons': 1.1.1
+      '@atcute/multibase': 1.1.4
+      '@atcute/uint8array': 1.0.3
+      '@badrap/valita': 0.4.5
+      nanoid: 5.1.5
 
   '@atlaskit/pragmatic-drag-and-drop-hitbox@1.0.3':
     dependencies:
@@ -3882,9 +3907,11 @@ snapshots:
 
   '@kelinci/basa-lexicons@1.0.0':
     dependencies:
-      '@atcute/lexicons': 1.1.0
+      '@atcute/lexicons': 1.1.1
 
   '@mjackson/node-fetch-server@0.6.1': {}
+
+  '@noble/secp256k1@2.3.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:

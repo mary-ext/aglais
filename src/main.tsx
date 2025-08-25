@@ -36,7 +36,7 @@ configureRouter({
 // Configure OAuth
 {
 	const resolver = new Client({
-		handler: simpleFetchHandler({ service: 'https://identitas.kelinci.deno.net' }),
+		handler: simpleFetchHandler({ service: location.origin }),
 	});
 
 	configureOAuth({
