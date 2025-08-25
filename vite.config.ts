@@ -1,5 +1,6 @@
 import * as path from 'node:path';
 
+import { cloudflare } from '@cloudflare/vite-plugin';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import solid from 'vite-plugin-solid';
@@ -72,6 +73,9 @@ export default defineConfig({
 				plugins: [['babel-plugin-transform-typescript-const-enums']],
 			},
 		}),
+
+		cloudflare(),
+
 		VitePWA({
 			registerType: 'prompt',
 			injectRegister: null,

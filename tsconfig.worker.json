@@ -1,0 +1,27 @@
+{
+	"compilerOptions": {
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+
+		"target": "ESNext",
+		"lib": ["ESNext"],
+		"types": ["./worker-configuration.d.ts", "vite/client"],
+		"skipLibCheck": true,
+
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"moduleDetection": "force",
+		"allowImportingTsExtensions": true,
+		"noEmit": true,
+
+		"incremental": true,
+		"strict": true,
+		"verbatimModuleSyntax": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedSideEffectImports": true,
+
+		"useDefineForClassFields": false
+	},
+	"include": ["server"]
+}
