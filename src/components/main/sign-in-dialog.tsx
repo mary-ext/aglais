@@ -59,7 +59,7 @@ const SignInDialog = (props: SignInDialogProps) => {
 			setPending(`Redirecting to authorization page`);
 
 			// Wait for a moment to let the browser persist the local storage
-			await new Promise((resolve) => setTimeout(resolve, 200));
+			await new Promise((resolve) => setTimeout(resolve, 1_000));
 
 			window.location.assign(authUrl);
 
