@@ -36,7 +36,7 @@ router.add(ComAtprotoIdentityResolveHandle.mainSchema, {
 		try {
 			const did = await handleResolver.resolve(handle);
 
-			return json({ did });
+			return json({ did }, { headers: { 'cache-control': 'public, max-age=600' } });
 		} catch (err) {
 			console.error(`resolveHandleToDid`, handle, err);
 
@@ -62,7 +62,10 @@ router.add(ComAtprotoIdentityResolveDid.mainSchema, {
 		try {
 			const doc = await didDocResolver.resolve(did);
 
-			return json({ didDoc: doc as unknown as Record<string, unknown> });
+			return json(
+				{ didDoc: doc as unknown as Record<string, unknown> },
+				{ headers: { 'cache-control': 'public, max-age=3600' } },
+			);
 		} catch (err) {
 			console.error(`resolveDidToDoc`, did, err);
 
