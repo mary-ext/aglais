@@ -61,6 +61,13 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 						node.volume = currentAccount.preferences.ui.mediaVolume;
 					}
 
+					hls.on(Hls.Events.LEVEL_LOADED, (_event, data) => {
+						const hasAudio = data.levelInfo.audioCodec !== undefined;
+						const duration = data.details.totalduration;
+
+						node.loop = !hasAudio || duration <= 6;
+					});
+
 					createEffect(() => {
 						if (!playing()) {
 							return;
@@ -97,19 +104,6 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 					if (!isMobile && currentAccount) {
 						currentAccount.preferences.ui.mediaVolume = ev.currentTarget.volume;
 					}
-				}}
-				onLoadedMetadata={(ev) => {
-					const video = ev.currentTarget;
-
-					const hasAudio =
-						// @ts-expect-error: Mozilla-specific
-						video.mozHasAudio ||
-						// @ts-expect-error: WebKit/Blink-specific
-						!!video.webkitAudioDecodedByteCount ||
-						// @ts-expect-error: WebKit-specific
-						!!(video.audioTracks && video.audioTracks.length);
-
-					video.loop = !hasAudio || video.duration <= 6;
 				}}
 				class="h-full w-full"
 			/>
