@@ -29,7 +29,30 @@ const didDocResolver = new CompositeDidDocumentResolver<string>({
 	},
 });
 
-const router = new XRPCRouter();
+const cache = caches.default;
+const contexts = new WeakMap<Request, ExecutionContext>();
+
+const router = new XRPCRouter({
+	middlewares: [
+		async (request, next) => {
+			let response = await cache.match(request);
+			if (response === undefined) {
+				response = await next(request);
+
+				if (response.status === 200 && response.headers.has('cache-control')) {
+					const ctx = contexts.get(request);
+					if (ctx) {
+						ctx.waitUntil(cache.put(request, response.clone()));
+					} else {
+						await cache.put(request, response.clone());
+					}
+				}
+			}
+
+			return response;
+		},
+	],
+});
 
 router.add(ComAtprotoIdentityResolveHandle.mainSchema, {
 	async handler({ params: { handle } }) {
@@ -86,4 +109,9 @@ router.add(ComAtprotoIdentityResolveDid.mainSchema, {
 	},
 });
 
-export default { fetch: router.fetch } satisfies ExportedHandler<Env>;
+export default {
+	fetch(request, _env, ctx) {
+		contexts.set(request, ctx);
+		return router.fetch(request);
+	},
+} satisfies ExportedHandler<Env>;
