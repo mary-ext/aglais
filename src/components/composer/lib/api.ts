@@ -460,7 +460,8 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 							}
 
 							if (!json.jobId) {
-								throw new PublishError(`Failed to upload video` + (json.error ? `: ${json.error}` : ''));
+								reject(new PublishError(`Failed to upload video` + (json.error ? `: ${json.error}` : '')));
+								return;
 							}
 
 							resolve(json.jobId);
