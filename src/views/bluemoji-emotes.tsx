@@ -27,7 +27,7 @@ const BluemojiEmotesPage = () => {
 	const handleBlob = async (blob: Blob) => {
 		const exifRemoved = removeExif(new Uint8Array(await blob.arrayBuffer()));
 		if (exifRemoved !== null) {
-			blob = new Blob([exifRemoved], { type: blob.type });
+			blob = new Blob([exifRemoved as Uint8Array<ArrayBuffer>], { type: blob.type });
 		}
 
 		if (blob.size > MAX_ORIGINAL_SIZE) {

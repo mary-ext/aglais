@@ -2,9 +2,7 @@
 import { type JSX, createSignal, onMount } from 'solid-js';
 import { render } from 'solid-js/web';
 
-import { Client, ok, simpleFetchHandler } from '@atcute/client';
-import type { DidDocument } from '@atcute/identity';
-import type { Did } from '@atcute/lexicons';
+import type { Did, Handle } from '@atcute/lexicons';
 import { configureOAuth } from '@atcute/oauth-browser-client';
 
 import * as navigation from '~/globals/navigation';
@@ -35,40 +33,34 @@ configureRouter({
 
 // Configure OAuth
 {
-	const resolver = new Client({
-		handler: simpleFetchHandler({ service: location.origin }),
-	});
-
 	configureOAuth({
 		metadata: {
 			client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
 			redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URL,
 		},
 
-		didDocumentResolver: {
-			async resolve(did) {
-				const data = await ok(
-					resolver.get('com.atproto.identity.resolveDid', {
-						params: {
-							did: did,
-						},
-					}),
-				);
+		identityResolver: {
+			async resolve(actor) {
+				const url = new URL('https://slingshot.microcosm.blue/xrpc/com.bad-example.identity.resolveMiniDoc');
+				url.searchParams.set('identifier', actor);
 
-				return data.didDoc as unknown as DidDocument;
-			},
-		},
-		handleResolver: {
-			async resolve(handle) {
-				const data = await ok(
-					resolver.get('com.atproto.identity.resolveHandle', {
-						params: {
-							handle: handle,
-						},
-					}),
-				);
+				const response = await fetch(url);
+				if (!response.ok) {
+					throw new Error(`resolver responded with status ${response.status}`);
+				}
 
-				return data.did as Did<'plc' | 'web'>;
+				const json = (await response.json()) as {
+					did: Did;
+					handle: Handle;
+					pds: string;
+					signing_key: string;
+				};
+
+				return {
+					did: json.did,
+					handle: json.handle,
+					pds: json.pds,
+				};
 			},
 		},
 	});

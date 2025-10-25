@@ -23,7 +23,7 @@ const OAuthCallbackPage = () => {
 		// Do this on global history instance so it doesn't affect this page rendering.
 		history.replaceState(null, '', '/');
 
-		const session = await finalizeAuthorization(params);
+		const { session } = await finalizeAuthorization(params);
 		const did = session.info.sub;
 
 		const agent = new OAuthUserAgent(session);

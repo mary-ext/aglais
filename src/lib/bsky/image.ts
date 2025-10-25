@@ -16,7 +16,7 @@ export const compressPostImage = async (blob: Blob): Promise<CompressResult> => 
 	{
 		const exifRemoved = removeExif(new Uint8Array(await blob.arrayBuffer()));
 		if (exifRemoved !== null) {
-			blob = new Blob([exifRemoved], { type: blob.type });
+			blob = new Blob([exifRemoved as Uint8Array<ArrayBuffer>], { type: blob.type });
 		}
 	}
 
@@ -80,7 +80,7 @@ export const compressProfileImage = async (
 		const exifRemoved = removeExif(new Uint8Array(await blob.arrayBuffer()));
 
 		if (exifRemoved !== null) {
-			blob = new Blob([exifRemoved], { type: blob.type });
+			blob = new Blob([exifRemoved as Uint8Array<ArrayBuffer>], { type: blob.type });
 		}
 	}
 
