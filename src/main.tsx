@@ -2,7 +2,8 @@
 import { type JSX, createSignal, onMount } from 'solid-js';
 import { render } from 'solid-js/web';
 
-import type { Did, Handle } from '@atcute/lexicons';
+import { Client, ok, simpleFetchHandler } from '@atcute/client';
+import type { Did } from '@atcute/lexicons';
 import { configureOAuth } from '@atcute/oauth-browser-client';
 
 import * as navigation from '~/globals/navigation';
@@ -17,6 +18,8 @@ import { on } from '~/lib/utils/misc';
 
 import CircularProgress from '~/components/circular-progress';
 import ModalRenderer from '~/components/main/modal-renderer';
+
+import type {} from '../server/lexicons';
 
 import routes from './routes';
 import './service-worker';
@@ -33,35 +36,48 @@ configureRouter({
 
 // Configure OAuth
 {
+	const host = new Client({
+		handler: simpleFetchHandler({ service: location.origin }),
+	});
+
 	configureOAuth({
 		metadata: {
-			client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
-			redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URL,
+			client_id: `${location.origin}/oauth-client-metadata.json`,
+			redirect_uri: `${location.origin}/oauth/callback`,
 		},
 
 		identityResolver: {
 			async resolve(actor) {
-				const url = new URL('https://slingshot.microcosm.blue/xrpc/com.bad-example.identity.resolveMiniDoc');
-				url.searchParams.set('identifier', actor);
+				const data = await ok(
+					host.get('x.aglais.resolveIdentity', {
+						params: {
+							identifier: actor,
+						},
+					}),
+				);
 
-				const response = await fetch(url);
-				if (!response.ok) {
-					throw new Error(`resolver responded with status ${response.status}`);
-				}
-
-				const json = (await response.json()) as {
-					did: Did;
-					handle: Handle;
-					pds: string;
-					signing_key: string;
-				};
-
-				return {
-					did: json.did,
-					handle: json.handle,
-					pds: json.pds,
-				};
+				return data;
 			},
+		},
+		async fetchClientAssertion({ aud, jkt, createDpopProof }) {
+			const dpop = await createDpopProof(`${location.origin}/xrpc/x.aglais.requestAssertion`);
+
+			const data = await ok(
+				host.post('x.aglais.requestAssertion', {
+					input: {
+						aud: aud,
+						jkt: jkt,
+					},
+					headers: {
+						dpop: dpop,
+					},
+				}),
+			);
+
+			return {
+				client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+				client_assertion: data.assertion,
+			};
 		},
 	});
 }

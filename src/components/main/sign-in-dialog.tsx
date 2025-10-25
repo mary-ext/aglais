@@ -53,7 +53,7 @@ const SignInDialog = (props: SignInDialogProps) => {
 
 			const authUrl = await createAuthorizationUrl({
 				target: target,
-				scope: import.meta.env.VITE_OAUTH_SCOPE,
+				scope: 'atproto transition:generic transition:chat.bsky',
 			});
 
 			setPending(`Redirecting to authorization page`);

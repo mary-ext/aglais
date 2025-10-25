@@ -66,12 +66,18 @@ importers:
       '@atcute/lexicons':
         specifier: ^1.2.2
         version: 1.2.2
+      '@atcute/multibase':
+        specifier: ^1.1.6
+        version: 1.1.6
       '@atcute/oauth-browser-client':
-        specifier: 2.0.0
-        version: 2.0.0
+        specifier: 2.0.1
+        version: 2.0.1
       '@atcute/tid':
         specifier: ^1.0.3
         version: 1.0.3
+      '@atcute/uint8array':
+        specifier: ^1.0.5
+        version: 1.0.5
       '@atcute/xrpc-server':
         specifier: ^0.1.3
         version: 0.1.3
@@ -136,6 +142,9 @@ importers:
         specifier: ^5.1.4
         version: 5.1.4
     devDependencies:
+      '@badrap/valita':
+        specifier: ^0.4.6
+        version: 0.4.6
       '@cloudflare/vite-plugin':
         specifier: ^1.13.15
         version: 1.13.15(vite@7.1.12(@types/node@24.9.1)(jiti@1.21.7)(terser@5.44.0))(workerd@1.20251011.0)(wrangler@4.45.0)
@@ -176,8 +185,8 @@ importers:
         specifier: ^7.1.12
         version: 7.1.12(@types/node@24.9.1)(jiti@1.21.7)(terser@5.44.0)
       vite-plugin-pwa:
-        specifier: 0.21.0
-        version: 0.21.0(patch_hash=003379ded749ad87080f87b428b17f04c4c88b6b64544df4d928aab76fbf6325)(@types/babel__core@7.20.5)(vite@7.1.12(@types/node@24.9.1)(jiti@1.21.7)(terser@5.44.0))
+        specifier: 1.1.0
+        version: 1.1.0(patch_hash=003379ded749ad87080f87b428b17f04c4c88b6b64544df4d928aab76fbf6325)(@types/babel__core@7.20.5)(vite@7.1.12(@types/node@24.9.1)(jiti@1.21.7)(terser@5.44.0))
       vite-plugin-solid:
         specifier: ^2.11.10
         version: 2.11.10(solid-js@1.9.9(patch_hash=9cf3f9930aa2f8d4e60502a75153adf9468eb53b42f69e86cac05dfaea3f82e7))(vite@7.1.12(@types/node@24.9.1)(jiti@1.21.7)(terser@5.44.0))
@@ -241,8 +250,8 @@ packages:
   '@atcute/multibase@1.1.6':
     resolution: {integrity: sha512-HBxuCgYLKPPxETV0Rot4VP9e24vKl8JdzGCZOVsDaOXJgbRZoRIF67Lp0H/OgnJeH/Xpva8Z5ReoTNJE5dn3kg==}
 
-  '@atcute/oauth-browser-client@2.0.0':
-    resolution: {integrity: sha512-zK4wcQ79g9EqU7NJk/Wxx9ImOH6UwhpEcazDA8bimUJhl9pwXxMC0u0x/tgzFjJZYgwnOHoBMwLmhl0900hcCQ==}
+  '@atcute/oauth-browser-client@2.0.1':
+    resolution: {integrity: sha512-lG021GkeORG06zfFf4bH85egObjBEKHNgAWHvbtY/E2dX4wxo88hf370pJDx8acdnuUJLJ2VKPikJtZwo4Heeg==}
 
   '@atcute/tid@1.0.3':
     resolution: {integrity: sha512-wfMJx1IMdnu0CZgWl0uR4JO2s6PGT1YPhpytD4ZHzEYKKQVuqV6Eb/7vieaVo1eYNMp2FrY67FZObeR7utRl2w==}
@@ -2604,12 +2613,12 @@ packages:
   validate-html-nesting@1.2.3:
     resolution: {integrity: sha512-kdkWdCl6eCeLlRShJKbjVOU2kFKxMF8Ghu50n+crEoyx+VKm3FxAxF9z4DCy6+bbTOqNW0+jcIYRnjoIRzigRw==}
 
-  vite-plugin-pwa@0.21.0:
-    resolution: {integrity: sha512-gnDE5sN2hdxA4vTl0pe6PCTPXqChk175jH8dZVVTBjFhWarZZoXaAdoTIKCIa8Zbx94sC0CnCOyERBWpxvry+g==}
+  vite-plugin-pwa@1.1.0:
+    resolution: {integrity: sha512-VsSpdubPzXhHWVINcSx6uHRMpOHVHQcHsef1QgkOlEoaIDAlssFEW88LBq1a59BuokAhsh2kUDJbaX1bZv4Bjw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
-      '@vite-pwa/assets-generator': ^0.2.6
-      vite: ^3.1.0 || ^4.0.0 || ^5.0.0
+      '@vite-pwa/assets-generator': ^1.0.0
+      vite: ^3.1.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
     peerDependenciesMeta:
       '@vite-pwa/assets-generator':
         optional: true
@@ -2864,7 +2873,7 @@ snapshots:
     dependencies:
       '@atcute/uint8array': 1.0.5
 
-  '@atcute/oauth-browser-client@2.0.0':
+  '@atcute/oauth-browser-client@2.0.1':
     dependencies:
       '@atcute/client': 4.0.5
       '@atcute/identity': 1.1.1
@@ -5109,7 +5118,7 @@ snapshots:
 
   validate-html-nesting@1.2.3: {}
 
-  vite-plugin-pwa@0.21.0(patch_hash=003379ded749ad87080f87b428b17f04c4c88b6b64544df4d928aab76fbf6325)(@types/babel__core@7.20.5)(vite@7.1.12(@types/node@24.9.1)(jiti@1.21.7)(terser@5.44.0)):
+  vite-plugin-pwa@1.1.0(patch_hash=003379ded749ad87080f87b428b17f04c4c88b6b64544df4d928aab76fbf6325)(@types/babel__core@7.20.5)(vite@7.1.12(@types/node@24.9.1)(jiti@1.21.7)(terser@5.44.0)):
     dependencies:
       debug: 4.4.3
       pretty-bytes: 6.1.1
