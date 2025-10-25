@@ -22,6 +22,10 @@ export const formatReltime = (time: number): string => {
 	const delta = now - time;
 
 	if (delta < 0 || delta > WEEK) {
+		if (delta < 0 && delta > -NOW) {
+			return `now`;
+		}
+
 		if (now > endOfYear) {
 			const date = new Date();
 
