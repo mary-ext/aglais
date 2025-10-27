@@ -75,10 +75,7 @@ const router = new XRPCRouter({
 
 router.addProcedure(requestAssertionSchema, {
 	async handler({ input: { jkt, aud }, request }) {
-		const url = new URL(request.url);
-
-		const origin = request.headers.get('origin');
-		if (origin !== url.origin) {
+		if (request.headers.get('sec-fetch-site') !== 'same-origin') {
 			throw new AuthRequiredError({ description: 'invalid origin' });
 		}
 
@@ -93,6 +90,7 @@ router.addProcedure(requestAssertionSchema, {
 			throw err;
 		}
 
+		const url = new URL(request.url);
 		const assertion = await createClientAssertion({
 			privateKey: privateKey,
 
