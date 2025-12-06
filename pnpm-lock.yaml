@@ -37,8 +37,8 @@ importers:
         specifier: ^3.1.3
         version: 3.1.3
       '@atcute/bluesky':
-        specifier: ^3.2.11
-        version: 3.2.11
+        specifier: ^3.2.12
+        version: 3.2.12
       '@atcute/bluesky-richtext-parser':
         specifier: ^1.0.7
         version: 1.0.7
@@ -61,8 +61,8 @@ importers:
         specifier: ^1.1.3
         version: 1.1.3
       '@atcute/identity-resolver':
-        specifier: ^1.1.4
-        version: 1.1.4(@atcute/identity@1.1.3)
+        specifier: ^1.2.0
+        version: 1.2.0(@atcute/identity@1.1.3)
       '@atcute/lexicons':
         specifier: ^1.2.5
         version: 1.2.5
@@ -76,8 +76,8 @@ importers:
         specifier: ^1.0.3
         version: 1.0.3
       '@atcute/uint8array':
-        specifier: ^1.0.5
-        version: 1.0.5
+        specifier: ^1.0.6
+        version: 1.0.6
       '@atcute/xrpc-server':
         specifier: ^0.1.3
         version: 0.1.3
@@ -146,8 +146,8 @@ importers:
         specifier: ^0.4.6
         version: 0.4.6
       '@cloudflare/vite-plugin':
-        specifier: ^1.16.1
-        version: 1.16.1(vite@7.2.6(@types/node@24.10.1)(jiti@1.21.7)(terser@5.44.1))(workerd@1.20251202.0)(wrangler@4.52.1)
+        specifier: ^1.17.0
+        version: 1.17.0(vite@7.2.6(@types/node@24.10.1)(jiti@1.21.7)(terser@5.44.1))(workerd@1.20251202.0)(wrangler@4.53.0)
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^5.2.2
         version: 5.2.2(prettier@3.7.4)
@@ -191,8 +191,8 @@ importers:
         specifier: ^2.11.10
         version: 2.11.10(solid-js@1.9.10(patch_hash=9cf3f9930aa2f8d4e60502a75153adf9468eb53b42f69e86cac05dfaea3f82e7))(vite@7.2.6(@types/node@24.10.1)(jiti@1.21.7)(terser@5.44.1))
       wrangler:
-        specifier: ^4.52.1
-        version: 4.52.1
+        specifier: ^4.53.0
+        version: 4.53.0
 
 packages:
 
@@ -221,8 +221,8 @@ packages:
   '@atcute/bluesky-search-parser@0.1.1':
     resolution: {integrity: sha512-jX01yzA4CWXfnpAmOL5P9kjpWEhVvIq2xEyYLZdFVpYe1v6xclUem1ir+Q8+aWoAcYwqQq6pM16XxkGw0yi5nA==}
 
-  '@atcute/bluesky@3.2.11':
-    resolution: {integrity: sha512-AboS6y4t+zaxIq7E4noue10csSpIuk/Uwo30/l6GgGBDPXrd7STw8Yb5nGZQP+TdG/uC8/c2mm7UnY65SDOh6A==}
+  '@atcute/bluesky@3.2.12':
+    resolution: {integrity: sha512-hVhAO7b4bxu9iwl/UdqugWDvUtSrf0VDN+dTalKxpJrJ3RrZb+jL1CB1AmdWOCZgHrOxXsgAJF4mpnzqd2D3oA==}
 
   '@atcute/cbor@2.2.8':
     resolution: {integrity: sha512-UzOAN9BuN6JCXgn0ryV8qZuRJUDrNqrbLd6EFM8jc6RYssjRyGRxNy6RZ1NU/07Hd8Tq/0pz8+nQiMu5Zai5uw==}
@@ -236,8 +236,8 @@ packages:
   '@atcute/crypto@2.2.6':
     resolution: {integrity: sha512-vkuexF+kmrKE1/Uqzub99Qi4QpnxA2jbu60E6PTgL4XypELQ6rb59MB/J1VbY2gs0kd3ET7+L3+NWpKD5nXyfA==}
 
-  '@atcute/identity-resolver@1.1.4':
-    resolution: {integrity: sha512-/SVh8vf2cXFJenmBnGeYF2aY3WGQm3cJeew5NWTlkqoy3LvJ5wkvKq9PWu4Tv653VF40rPOp6LOdVr9Fa+q5rA==}
+  '@atcute/identity-resolver@1.2.0':
+    resolution: {integrity: sha512-5UbSJfdV3JIkF8ksXz7g4nKBWasf2wROvzM66cfvTIWydWFO6/oS1KZd+zo9Eokje5Scf5+jsY9ZfgVARLepXg==}
     peerDependencies:
       '@atcute/identity': ^1.0.0
 
@@ -256,8 +256,8 @@ packages:
   '@atcute/tid@1.0.3':
     resolution: {integrity: sha512-wfMJx1IMdnu0CZgWl0uR4JO2s6PGT1YPhpytD4ZHzEYKKQVuqV6Eb/7vieaVo1eYNMp2FrY67FZObeR7utRl2w==}
 
-  '@atcute/uint8array@1.0.5':
-    resolution: {integrity: sha512-XLWWxoR2HNl2qU+FCr0rp1APwJXci7HnzbOQLxK55OaMNBXZ19+xNC5ii4QCsThsDxa4JS/JTzuiQLziITWf2Q==}
+  '@atcute/uint8array@1.0.6':
+    resolution: {integrity: sha512-ucfRBQc7BFT8n9eCyGOzDHEMKF/nZwhS2pPao4Xtab1ML3HdFYcX2DM1tadCzas85QTGxHe5urnUAAcNKGRi9A==}
 
   '@atcute/util-fetch@1.0.4':
     resolution: {integrity: sha512-sIU9Qk0dE8PLEXSfhy+gIJV+HpiiknMytCI2SqLlqd0vgZUtEKI/EQfP+23LHWvP+CLCzVDOa6cpH045OlmNBg==}
@@ -784,20 +784,20 @@ packages:
     resolution: {integrity: sha512-Nu8ahitGFFJztxUml9oD/DLb7Z28C8cd8F46IVQ7y5Btz575pvMY8AqZsXkX7Gds29eCKdMgIHjIvzskHgPSFg==}
     engines: {node: '>=18.0.0'}
 
-  '@cloudflare/unenv-preset@2.7.12':
-    resolution: {integrity: sha512-SIBo+k58R9OyBsxF1jL6GdL7XHbzatT86c0be+UY5v5tg6TAuJ1/2QsRuC3pHgKVHile1HcJqEEORoS9hv8hNw==}
+  '@cloudflare/unenv-preset@2.7.13':
+    resolution: {integrity: sha512-NulO1H8R/DzsJguLC0ndMuk4Ufv0KSlN+E54ay9rn9ZCQo0kpAPwwh3LhgpZ96a3Dr6L9LqW57M4CqC34iLOvw==}
     peerDependencies:
       unenv: 2.0.0-rc.24
-      workerd: ^1.20251125.0
+      workerd: ^1.20251202.0
     peerDependenciesMeta:
       workerd:
         optional: true
 
-  '@cloudflare/vite-plugin@1.16.1':
-    resolution: {integrity: sha512-8C4OUJfwX7jz7FBka5PkZRs6EMPg47YL00SgSG8R/N0MymhfkJREnCMBCSyEYdQNFfhGPLefgPKbPKnZqylxoA==}
+  '@cloudflare/vite-plugin@1.17.0':
+    resolution: {integrity: sha512-daPcsaPs1DN7T9KsddcyozXed8dqdOj1tglsWb/O+dg2fM4CO7wxns0JEzZtbUPo/6TEY82Z3TAfoHelgaqLJQ==}
     peerDependencies:
       vite: ^6.1.0 || ^7.0.0
-      wrangler: ^4.52.1
+      wrangler: ^4.53.0
 
   '@cloudflare/workerd-darwin-64@1.20251202.0':
     resolution: {integrity: sha512-/uvEAWEukTWb1geHhbjGUeZqcSSSyYzp0mvoPUBl+l0ont4NVGao3fgwM0q8wtKvgoKCHSG6zcG23wj9Opj3Nw==}
@@ -1690,8 +1690,8 @@ packages:
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
-  baseline-browser-mapping@2.9.0:
-    resolution: {integrity: sha512-Mh++g+2LPfzZToywfE1BUzvZbfOY52Nil0rn9H1CPC5DJ7fX+Vir7nToBeoiSbB1zTNeGYbELEvJESujgGrzXw==}
+  baseline-browser-mapping@2.9.3:
+    resolution: {integrity: sha512-8QdH6czo+G7uBsNo0GiUfouPN1lRzKdJTGnKXwe12gkFbnnOUaUKGN55dMkfy+mnxmvjwl9zcI4VncczcVXDhA==}
     hasBin: true
 
   binary-extensions@2.3.0:
@@ -1818,8 +1818,8 @@ packages:
     engines: {node: '>=0.10.0'}
     hasBin: true
 
-  electron-to-chromium@1.5.264:
-    resolution: {integrity: sha512-1tEf0nLgltC3iy9wtlYDlQDc5Rg9lEKVjEmIHJ21rI9OcqkvD45K1oyNIRA4rR1z3LgJ7KeGzEBojVcV6m4qjA==}
+  electron-to-chromium@1.5.266:
+    resolution: {integrity: sha512-kgWEglXvkEfMH7rxP5OSZZwnaDWT7J9EoZCujhnpLbfi0bbNtRkgdX2E3gt0Uer11c61qCYktB3hwkAS325sJg==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -2093,8 +2093,8 @@ packages:
     engines: {node: '>=10.0.0'}
     hasBin: true
 
-  miniflare@4.20251202.0:
-    resolution: {integrity: sha512-Pa5iBAVzzVT/yr7rcyr75ETm5IGCpdT61foGx+6jDj+vzISNfWZgEcSxWk1nlJboJumUJ10kC498hQudpdbDWg==}
+  miniflare@4.20251202.1:
+    resolution: {integrity: sha512-cRp2QNgnt9wpLMoNs4MOzzomyfe9UTS9sPRxIpUvxMl+mweCZ0FHpWWQvCnU7wWlfAP8VGZrHwqSsV5ERA6ahQ==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -2721,8 +2721,8 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  wrangler@4.52.1:
-    resolution: {integrity: sha512-rIzDxzPnLAaqBF+SdHGd9Az0ELEWtIBwPp5diCR58p2F4C+KgNGGpPMFswMntuViQ2RKRgGbk4jIzStJoUUfjQ==}
+  wrangler@4.53.0:
+    resolution: {integrity: sha512-/wvnHlRnlHsqaeIgGbmcEJE5NFYdTUWHCKow+U5Tv2XwQXI9vXUqBwCLAGy/BwqyS5nnycRt2kppqCzgHgyb7Q==}
     engines: {node: '>=20.0.0'}
     hasBin: true
     peerDependencies:
@@ -2781,19 +2781,19 @@ snapshots:
   '@atcute/bluemoji@3.1.3':
     dependencies:
       '@atcute/atproto': 3.1.9
-      '@atcute/bluesky': 3.2.11
+      '@atcute/bluesky': 3.2.12
       '@atcute/lexicons': 1.2.5
 
   '@atcute/bluesky-richtext-parser@1.0.7': {}
 
   '@atcute/bluesky-richtext-segmenter@2.0.4':
     dependencies:
-      '@atcute/bluesky': 3.2.11
+      '@atcute/bluesky': 3.2.12
       '@atcute/lexicons': 1.2.5
 
   '@atcute/bluesky-search-parser@0.1.1': {}
 
-  '@atcute/bluesky@3.2.11':
+  '@atcute/bluesky@3.2.12':
     dependencies:
       '@atcute/atproto': 3.1.9
       '@atcute/lexicons': 1.2.5
@@ -2802,12 +2802,12 @@ snapshots:
     dependencies:
       '@atcute/cid': 2.2.6
       '@atcute/multibase': 1.1.6
-      '@atcute/uint8array': 1.0.5
+      '@atcute/uint8array': 1.0.6
 
   '@atcute/cid@2.2.6':
     dependencies:
       '@atcute/multibase': 1.1.6
-      '@atcute/uint8array': 1.0.5
+      '@atcute/uint8array': 1.0.6
 
   '@atcute/client@4.1.0':
     dependencies:
@@ -2817,10 +2817,10 @@ snapshots:
   '@atcute/crypto@2.2.6':
     dependencies:
       '@atcute/multibase': 1.1.6
-      '@atcute/uint8array': 1.0.5
+      '@atcute/uint8array': 1.0.6
       '@noble/secp256k1': 3.0.0
 
-  '@atcute/identity-resolver@1.1.4(@atcute/identity@1.1.3)':
+  '@atcute/identity-resolver@1.2.0(@atcute/identity@1.1.3)':
     dependencies:
       '@atcute/identity': 1.1.3
       '@atcute/lexicons': 1.2.5
@@ -2839,21 +2839,21 @@ snapshots:
 
   '@atcute/multibase@1.1.6':
     dependencies:
-      '@atcute/uint8array': 1.0.5
+      '@atcute/uint8array': 1.0.6
 
   '@atcute/oauth-browser-client@2.0.1':
     dependencies:
       '@atcute/client': 4.1.0
       '@atcute/identity': 1.1.3
-      '@atcute/identity-resolver': 1.1.4(@atcute/identity@1.1.3)
+      '@atcute/identity-resolver': 1.2.0(@atcute/identity@1.1.3)
       '@atcute/lexicons': 1.2.5
       '@atcute/multibase': 1.1.6
-      '@atcute/uint8array': 1.0.5
+      '@atcute/uint8array': 1.0.6
       nanoid: 5.1.6
 
   '@atcute/tid@1.0.3': {}
 
-  '@atcute/uint8array@1.0.5': {}
+  '@atcute/uint8array@1.0.6': {}
 
   '@atcute/util-fetch@1.0.4':
     dependencies:
@@ -2864,10 +2864,10 @@ snapshots:
       '@atcute/cbor': 2.2.8
       '@atcute/crypto': 2.2.6
       '@atcute/identity': 1.1.3
-      '@atcute/identity-resolver': 1.1.4(@atcute/identity@1.1.3)
+      '@atcute/identity-resolver': 1.2.0(@atcute/identity@1.1.3)
       '@atcute/lexicons': 1.2.5
       '@atcute/multibase': 1.1.6
-      '@atcute/uint8array': 1.0.5
+      '@atcute/uint8array': 1.0.6
       '@badrap/valita': 0.4.6
       nanoid: 5.1.6
 
@@ -3551,24 +3551,24 @@ snapshots:
     dependencies:
       mime: 3.0.0
 
-  '@cloudflare/unenv-preset@2.7.12(unenv@2.0.0-rc.24)(workerd@1.20251202.0)':
+  '@cloudflare/unenv-preset@2.7.13(unenv@2.0.0-rc.24)(workerd@1.20251202.0)':
     dependencies:
       unenv: 2.0.0-rc.24
     optionalDependencies:
       workerd: 1.20251202.0
 
-  '@cloudflare/vite-plugin@1.16.1(vite@7.2.6(@types/node@24.10.1)(jiti@1.21.7)(terser@5.44.1))(workerd@1.20251202.0)(wrangler@4.52.1)':
+  '@cloudflare/vite-plugin@1.17.0(vite@7.2.6(@types/node@24.10.1)(jiti@1.21.7)(terser@5.44.1))(workerd@1.20251202.0)(wrangler@4.53.0)':
     dependencies:
-      '@cloudflare/unenv-preset': 2.7.12(unenv@2.0.0-rc.24)(workerd@1.20251202.0)
+      '@cloudflare/unenv-preset': 2.7.13(unenv@2.0.0-rc.24)(workerd@1.20251202.0)
       '@remix-run/node-fetch-server': 0.8.1
       defu: 6.1.4
       get-port: 7.1.0
-      miniflare: 4.20251202.0
+      miniflare: 4.20251202.1
       picocolors: 1.1.1
       tinyglobby: 0.2.15
       unenv: 2.0.0-rc.24
       vite: 7.2.6(@types/node@24.10.1)(jiti@1.21.7)(terser@5.44.1)
-      wrangler: 4.52.1
+      wrangler: 4.53.0
       ws: 8.18.0
     transitivePeerDependencies:
       - bufferutil
@@ -4224,7 +4224,7 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
-  baseline-browser-mapping@2.9.0: {}
+  baseline-browser-mapping@2.9.3: {}
 
   binary-extensions@2.3.0: {}
 
@@ -4242,9 +4242,9 @@ snapshots:
 
   browserslist@4.28.1:
     dependencies:
-      baseline-browser-mapping: 2.9.0
+      baseline-browser-mapping: 2.9.3
       caniuse-lite: 1.0.30001759
-      electron-to-chromium: 1.5.264
+      electron-to-chromium: 1.5.266
       node-releases: 2.0.27
       update-browserslist-db: 1.2.2(browserslist@4.28.1)
 
@@ -4330,7 +4330,7 @@ snapshots:
     dependencies:
       jake: 10.9.4
 
-  electron-to-chromium@1.5.264: {}
+  electron-to-chromium@1.5.266: {}
 
   emoji-regex@8.0.0: {}
 
@@ -4589,7 +4589,7 @@ snapshots:
 
   mime@3.0.0: {}
 
-  miniflare@4.20251202.0:
+  miniflare@4.20251202.1:
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       acorn: 8.14.0
@@ -5225,13 +5225,13 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20251202.0
       '@cloudflare/workerd-windows-64': 1.20251202.0
 
-  wrangler@4.52.1:
+  wrangler@4.53.0:
     dependencies:
       '@cloudflare/kv-asset-handler': 0.4.1
-      '@cloudflare/unenv-preset': 2.7.12(unenv@2.0.0-rc.24)(workerd@1.20251202.0)
+      '@cloudflare/unenv-preset': 2.7.13(unenv@2.0.0-rc.24)(workerd@1.20251202.0)
       blake3-wasm: 2.1.5
       esbuild: 0.27.0
-      miniflare: 4.20251202.0
+      miniflare: 4.20251202.1
       path-to-regexp: 6.3.0
       unenv: 2.0.0-rc.24
       workerd: 1.20251202.0
