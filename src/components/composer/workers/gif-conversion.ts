@@ -13,6 +13,14 @@ const api = {
 			throw new Error(`GIF has no frames`);
 		}
 
+		if (frameCount === 1) {
+			const { image } = await decoder.decode({ frameIndex: 0 });
+			const canvas = new OffscreenCanvas(image.displayWidth, image.displayHeight);
+			const ctx = canvas.getContext('2d')!;
+			ctx.drawImage(image, 0, 0);
+			return await canvas.convertToBlob({ type: 'image/png' });
+		}
+
 		let output: Output<WebMOutputFormat, BufferTarget>;
 		let videoSource: VideoSampleSource;
 
@@ -22,7 +30,10 @@ const api = {
 
 			// Scale bitrate based on resolution (~5 Mbps at 1080p, sqrt curve for smaller sizes)
 			const pixels = displayWidth * displayHeight;
-			const bitrate = Math.max(500_000, Math.min(8_000_000, Math.round(Math.sqrt(pixels / (1920 * 1080)) * 5_000_000)));
+			const bitrate = Math.max(
+				500_000,
+				Math.min(8_000_000, Math.round(Math.sqrt(pixels / (1920 * 1080)) * 5_000_000)),
+			);
 
 			output = new Output({
 				format: new WebMOutputFormat(),
