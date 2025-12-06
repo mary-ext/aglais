@@ -5,6 +5,11 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import solid from 'vite-plugin-solid';
 
+const SERVER_HOST = '127.0.0.1';
+const SERVER_PORT = 52222;
+
+const OAUTH_SCOPE = 'atproto transition:generic transition:chat.bsky';
+
 export default defineConfig({
 	build: {
 		target: 'esnext',
@@ -54,7 +59,8 @@ export default defineConfig({
 		},
 	},
 	server: {
-		allowedHosts: ['.trycloudflare.com'],
+		host: SERVER_HOST,
+		port: SERVER_PORT,
 	},
 	optimizeDeps: {
 		esbuildOptions: {
@@ -110,6 +116,31 @@ export default defineConfig({
 				);
 
 				return { code: transformed, map: null };
+			},
+		},
+
+		// Injects OAuth-related variables for development mode
+		{
+			name: 'aglais-oauth-inject',
+			config(_conf, { command }) {
+				if (command === 'build') {
+					// Production uses confidential client
+					process.env.VITE_OAUTH_CLIENT_ID = '';
+					process.env.VITE_OAUTH_REDIRECT_URL = '';
+				} else {
+					// Development uses public client with http://localhost format
+					const redirectUri = `http://${SERVER_HOST}:${SERVER_PORT}/oauth/callback`;
+
+					const clientId =
+						`http://localhost` +
+						`?redirect_uri=${encodeURIComponent(redirectUri)}` +
+						`&scope=${encodeURIComponent(OAUTH_SCOPE)}`;
+
+					process.env.VITE_OAUTH_CLIENT_ID = clientId;
+					process.env.VITE_OAUTH_REDIRECT_URL = redirectUri;
+				}
+
+				process.env.VITE_OAUTH_SCOPE = OAUTH_SCOPE;
 			},
 		},
 	],

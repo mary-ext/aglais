@@ -6,6 +6,9 @@
 
 interface ImportMetaEnv {
 	readonly VITE_APP_NAME: string;
+	readonly VITE_OAUTH_CLIENT_ID: string;
+	readonly VITE_OAUTH_REDIRECT_URL: string;
+	readonly VITE_OAUTH_SCOPE: string;
 }
 
 interface ImportMeta {

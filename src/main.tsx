@@ -4,7 +4,7 @@ import { render } from 'solid-js/web';
 
 import { Client, ok, simpleFetchHandler } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
-import { configureOAuth } from '@atcute/oauth-browser-client';
+import { type ClientAssertionFetcher, configureOAuth } from '@atcute/oauth-browser-client';
 
 import * as navigation from '~/globals/navigation';
 import * as preferences from '~/globals/preferences';
@@ -36,14 +36,43 @@ configureRouter({
 
 // Configure OAuth
 {
+	// Development mode uses public client with http://localhost client ID
+	// Production mode uses confidential client with server-side JWT assertions
+	const isPublicClient = !!import.meta.env.VITE_OAUTH_CLIENT_ID;
+
 	const host = new Client({
 		handler: simpleFetchHandler({ service: location.origin }),
 	});
 
+	const fetchClientAssertion: ClientAssertionFetcher = async ({ aud, jkt, createDpopProof }) => {
+		const dpop = await createDpopProof(`${location.origin}/xrpc/x.aglais.requestAssertion`);
+
+		const data = await ok(
+			host.post('x.aglais.requestAssertion', {
+				input: {
+					aud: aud,
+					jkt: jkt,
+				},
+				headers: {
+					dpop: dpop,
+				},
+			}),
+		);
+
+		return {
+			client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+			client_assertion: data.assertion,
+		};
+	};
+
 	configureOAuth({
 		metadata: {
-			client_id: `${location.origin}/oauth-client-metadata.json`,
-			redirect_uri: `${location.origin}/oauth/callback`,
+			client_id: isPublicClient
+				? import.meta.env.VITE_OAUTH_CLIENT_ID
+				: `${location.origin}/oauth-client-metadata.json`,
+			redirect_uri: isPublicClient
+				? import.meta.env.VITE_OAUTH_REDIRECT_URL
+				: `${location.origin}/oauth/callback`,
 		},
 
 		identityResolver: {
@@ -59,26 +88,8 @@ configureRouter({
 				return data;
 			},
 		},
-		async fetchClientAssertion({ aud, jkt, createDpopProof }) {
-			const dpop = await createDpopProof(`${location.origin}/xrpc/x.aglais.requestAssertion`);
 
-			const data = await ok(
-				host.post('x.aglais.requestAssertion', {
-					input: {
-						aud: aud,
-						jkt: jkt,
-					},
-					headers: {
-						dpop: dpop,
-					},
-				}),
-			);
-
-			return {
-				client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-				client_assertion: data.assertion,
-			};
-		},
+		fetchClientAssertion: isPublicClient ? undefined : fetchClientAssertion,
 	});
 }
 
