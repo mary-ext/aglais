@@ -1,5 +1,5 @@
 import { expose } from 'comlink';
-import { ArrayBufferTarget, Muxer } from 'webm-muxer';
+import { BufferTarget, Output, VideoSample, VideoSampleSource, WebMOutputFormat } from 'mediabunny';
 
 export type GifWorkerApi = typeof api;
 const api = {
@@ -9,42 +9,36 @@ const api = {
 
 		const frameCount = decoder.tracks.selectedTrack!.frameCount;
 
-		let muxer: Muxer<ArrayBufferTarget>;
-		let encoder: VideoEncoder | undefined;
-
 		if (frameCount === 0) {
 			throw new Error(`GIF has no frames`);
 		}
 
-		for (let idx = 0, configured = false; idx < frameCount; idx++) {
-			const { image } = await decoder.decode({ frameIndex: idx });
+		let output: Output<WebMOutputFormat, BufferTarget>;
+		let videoSource: VideoSampleSource;
 
-			if (!configured) {
-				const width = image.displayWidth;
-				const height = image.displayHeight;
+		{
+			const { image } = await decoder.decode({ frameIndex: 0 });
 
-				configured = true;
+			output = new Output({
+				format: new WebMOutputFormat(),
+				target: new BufferTarget(),
+			});
 
-				muxer = new Muxer({
-					target: new ArrayBufferTarget(),
-					video: { codec: 'V_VP9', width, height },
-				});
+			videoSource = new VideoSampleSource({ codec: 'vp9', bitrate: 1e6 });
+			output.addVideoTrack(videoSource);
 
-				encoder = new VideoEncoder({
-					output: (chunk) => muxer.addVideoChunk(chunk),
-					error: (err) => console.error(err),
-				});
-
-				encoder.configure({ codec: 'vp09.00.10.08', width, height });
-			}
-
-			encoder!.encode(image);
+			await output.start();
+			await videoSource.add(new VideoSample(image));
 		}
 
-		await encoder!.flush();
-		muxer!.finalize();
+		for (let idx = 1; idx < frameCount; idx++) {
+			const { image } = await decoder.decode({ frameIndex: idx });
+			await videoSource.add(new VideoSample(image));
+		}
 
-		const buffer = muxer!.target.buffer;
+		await output.finalize();
+
+		const buffer = output.target.buffer!;
 		return new Blob([buffer], { type: 'video/webm' });
 	},
 };

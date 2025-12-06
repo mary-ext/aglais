@@ -44,7 +44,7 @@
 		"nanoid": "^5.1.6",
 		"solid-floating-ui": "~0.2.1",
 		"solid-js": "^1.9.10",
-		"webm-muxer": "^5.1.4"
+		"mediabunny": "^1.25.7"
 	},
 	"devDependencies": {
 		"@badrap/valita": "^0.4.6",
