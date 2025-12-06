@@ -18,13 +18,18 @@ const api = {
 
 		{
 			const { image } = await decoder.decode({ frameIndex: 0 });
+			const { displayWidth, displayHeight } = image;
+
+			// Scale bitrate based on resolution (~5 Mbps at 1080p, sqrt curve for smaller sizes)
+			const pixels = displayWidth * displayHeight;
+			const bitrate = Math.max(500_000, Math.min(8_000_000, Math.round(Math.sqrt(pixels / (1920 * 1080)) * 5_000_000)));
 
 			output = new Output({
 				format: new WebMOutputFormat(),
 				target: new BufferTarget(),
 			});
 
-			videoSource = new VideoSampleSource({ codec: 'vp9', bitrate: 1e6 });
+			videoSource = new VideoSampleSource({ codec: 'vp9', bitrate });
 			output.addVideoTrack(videoSource);
 
 			await output.start();
