@@ -1,4 +1,5 @@
 /.wrangler/
+/.research/
 
 node_modules/
 dist/
