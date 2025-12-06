@@ -305,9 +305,12 @@ export const onRouteEnter = (cb: () => void) => {
 };
 
 export const useIsFocused = (): Accessor<boolean> => {
-	const { isActive } = useViewContext();
+	const context = useViewContext();
+	if (context === undefined) {
+		return () => true;
+	}
 
-	return isActive;
+	return context.isActive;
 };
 
 export const createFocusEffect = (cb: () => void) => {
