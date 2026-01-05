@@ -21,9 +21,14 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 
 	const [playing, setPlaying] = createSignal(false);
 
+	const bwEstimate = currentAccount?.preferences.ui.videoBwEstimate;
 	const hls = new Hls({
 		capLevelToPlayerSize: true,
-		startLevel: 1,
+
+		// the '-1' value makes a test request to estimate bandwidth and quality level
+		// before showing the first fragment
+		startLevel: bwEstimate === undefined ? -1 : Hls.DefaultConfig.startLevel,
+
 		xhrSetup(xhr, urlString) {
 			// We want to replace the URL here so it points directly to the CDN,
 			// and not the middleware service.
@@ -46,6 +51,10 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 		},
 	});
 
+	if (bwEstimate !== undefined) {
+		hls.bandwidthEstimate = bwEstimate;
+	}
+
 	onCleanup(() => hls.destroy());
 
 	hls.loadSource(embed.playlist);
@@ -60,6 +69,12 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 					if (!isMobile && currentAccount) {
 						node.volume = currentAccount.preferences.ui.mediaVolume;
 					}
+
+					hls.on(Hls.Events.FRAG_LOADED, () => {
+						if (currentAccount) {
+							currentAccount.preferences.ui.videoBwEstimate = hls.bandwidthEstimate;
+						}
+					});
 
 					hls.on(Hls.Events.LEVEL_LOADED, (_event, data) => {
 						const hasAudio = data.levelInfo.audioCodec !== undefined;

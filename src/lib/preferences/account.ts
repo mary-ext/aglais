@@ -14,6 +14,8 @@ export interface PerAccountPreferenceSchema {
 }
 
 export interface UIPreferences {
+	/** Media bandwidth estimate */
+	videoBwEstimate: number | undefined;
 	/** Media player volume */
 	mediaVolume: number;
 }

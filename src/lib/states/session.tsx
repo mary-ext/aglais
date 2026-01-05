@@ -288,6 +288,7 @@ const createAccountPreferences = (did: Did) => {
 					},
 				],
 				ui: {
+					videoBwEstimate: undefined,
 					mediaVolume: 0.25,
 				},
 				composer: {
