@@ -22,7 +22,8 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 
 	const [playing, setPlaying] = createSignal(false);
 
-	const bwEstimate = currentAccount?.preferences.ui.videoBwEstimate;
+	// const bwEstimate = currentAccount?.preferences.ui.videoBwEstimate;
+	const bwEstimate = undefined;
 	const hls = new Hls({
 		capLevelToPlayerSize: true,
 
