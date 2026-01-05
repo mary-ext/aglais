@@ -75,7 +75,8 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 						Hls.Events.FRAG_LOADED,
 						throttleTrailing(() => {
 							if (currentAccount && !Number.isNaN(hls.bandwidthEstimate)) {
-								currentAccount.preferences.ui.videoBwEstimate = Math.round(hls.bandwidthEstimate);
+								currentAccount.preferences.ui.videoBwEstimate =
+									Math.round(hls.bandwidthEstimate / 1_000_000) * 1_000_000;
 							}
 						}, 5_000),
 					);
