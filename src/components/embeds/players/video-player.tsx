@@ -8,6 +8,7 @@ import { globalEvents } from '~/globals/events';
 
 import { replaceVideoCdnUrl } from '~/lib/bsky/video';
 import { useSession } from '~/lib/states/session';
+import { throttleTrailing } from '~/lib/utils/misc';
 
 const isMobile = /Android|iPhone|iPad|iPod/.test(navigator.userAgent);
 
@@ -70,11 +71,14 @@ const VideoPlayer = ({ embed }: VideoPlayerProps) => {
 						node.volume = currentAccount.preferences.ui.mediaVolume;
 					}
 
-					hls.on(Hls.Events.FRAG_LOADED, () => {
-						if (currentAccount) {
-							currentAccount.preferences.ui.videoBwEstimate = hls.bandwidthEstimate;
-						}
-					});
+					hls.on(
+						Hls.Events.FRAG_LOADED,
+						throttleTrailing(() => {
+							if (currentAccount && !Number.isNaN(hls.bandwidthEstimate)) {
+								currentAccount.preferences.ui.videoBwEstimate = Math.round(hls.bandwidthEstimate);
+							}
+						}, 5_000),
+					);
 
 					hls.on(Hls.Events.LEVEL_LOADED, (_event, data) => {
 						const hasAudio = data.levelInfo.audioCodec !== undefined;

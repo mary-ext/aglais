@@ -88,3 +88,72 @@ export const omit = <T extends Record<string, any>, K extends keyof T>(
 
 	return result as Omit<T, K>;
 };
+
+export const throttleLeading = <T extends (...args: any[]) => void>(
+	fn: T,
+	wait: number,
+): ((...args: Parameters<T>) => void) => {
+	let lastCallTime: number | undefined;
+
+	return (...args: Parameters<T>) => {
+		const now = performance.now();
+
+		if (lastCallTime === undefined || now - lastCallTime >= wait) {
+			lastCallTime = now;
+			fn(...args);
+		}
+	};
+};
+
+export const throttleTrailing = <T extends (...args: any[]) => void>(
+	fn: T,
+	wait: number,
+): ((...args: Parameters<T>) => void) => {
+	let timeoutId: ReturnType<typeof setTimeout> | undefined;
+	let lastArgs: Parameters<T> | undefined;
+
+	return (...args: Parameters<T>) => {
+		lastArgs = args;
+
+		if (timeoutId === undefined) {
+			timeoutId = setTimeout(() => {
+				timeoutId = undefined;
+				fn(...lastArgs!);
+			}, wait);
+		}
+	};
+};
+
+export const throttle = <T extends (...args: any[]) => void>(
+	fn: T,
+	wait: number,
+): ((...args: Parameters<T>) => void) => {
+	let timeoutId: ReturnType<typeof setTimeout> | undefined;
+	let lastArgs: Parameters<T> | undefined;
+	let lastCallTime: number | undefined;
+
+	return (...args: Parameters<T>) => {
+		const now = performance.now();
+		const elapsed = lastCallTime !== undefined ? now - lastCallTime : wait;
+
+		if (elapsed >= wait) {
+			if (timeoutId !== undefined) {
+				clearTimeout(timeoutId);
+				timeoutId = undefined;
+			}
+
+			lastCallTime = now;
+			fn(...args);
+		} else {
+			lastArgs = args;
+
+			if (timeoutId === undefined) {
+				timeoutId = setTimeout(() => {
+					timeoutId = undefined;
+					lastCallTime = performance.now();
+					fn(...lastArgs!);
+				}, wait - elapsed);
+			}
+		}
+	};
+};
