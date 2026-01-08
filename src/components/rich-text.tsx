@@ -4,7 +4,7 @@ import type { BlueMojiRichtextFacet } from '@atcute/bluemoji';
 import type { AppBskyRichtextFacet } from '@atcute/bluesky';
 import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 
-import { isLinkValid } from '~/api/utils/strings';
+import { isLinkValid, safeUrlParse } from '~/api/utils/strings';
 
 import { getCdnUrl } from '~/lib/bluemoji/render';
 import { redirectBskyUrl } from '~/lib/redirector';
@@ -46,6 +46,10 @@ const RichText = (props: RichTextProps) => {
 
 						if (type === 'app.bsky.richtext.facet#link') {
 							const uri = feature.uri;
+							if (safeUrlParse(uri) === null) {
+								break;
+							}
+
 							const redirect = redirectBskyUrl(uri);
 
 							if (redirect == null) {
