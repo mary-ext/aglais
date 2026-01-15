@@ -6,7 +6,6 @@ aglais is a web client for the Bluesky social network, built with Solid.js and V
 
 - Node and pnpm is managed by mise, to run commands, use `mise exec -- pnpm ...`
 - install dependencies with `pnpm install`
-- start dev server with `pnpm dev` (runs on http://127.0.0.1:52222)
 - build for production with `pnpm build`
 - format via `pnpm fmt` (prettier, in root directory)
 - check `pnpm view <package>` before adding a new dependency
