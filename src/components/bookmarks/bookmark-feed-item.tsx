@@ -1,6 +1,6 @@
 import { createMemo } from 'solid-js';
 
-import type { AppBskyFeedPost } from '@atcute/bluesky';
+import type { AppBskyBookmarkDefs, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 
 import { usePostShadow } from '~/api/cache/post-shadow';
 import { getModerationUI } from '~/api/moderation';
@@ -10,7 +10,6 @@ import { assertCanonicalResourceUri } from '~/api/types/at-uri';
 
 import { history } from '~/globals/navigation';
 
-import type { HydratedBookmarkItem } from '~/lib/aglais-bookmarks/db';
 import { isElementAltClicked, isElementClicked } from '~/lib/interaction';
 import { inject } from '~/lib/states/singleton';
 import ModerationService from '~/lib/states/singletons/moderation';
@@ -25,14 +24,14 @@ import PostMeta from '../timeline/post-meta';
 import PostReplyContext from '../timeline/post-reply-context';
 
 export interface BookmarkFeedItemProps {
-	/** Expected to be static */
-	item: HydratedBookmarkItem;
+	/** Expected to be static, with item being a PostView */
+	item: AppBskyBookmarkDefs.BookmarkView & { item: AppBskyFeedDefs.PostView };
 }
 
 const BookmarkFeedItem = ({ item }: BookmarkFeedItemProps) => {
 	const moderationOptions = inject(ModerationService);
 
-	const { post, stale } = item;
+	const post = item.item;
 
 	const author = post.author;
 	const record = post.record as AppBskyFeedPost.Main;
@@ -91,7 +90,7 @@ const BookmarkFeedItem = ({ item }: BookmarkFeedItemProps) => {
 					{embed && <Embed embed={embed} moderation={moderation()} gutterTop />}
 				</ContentHider>
 
-				<PostActions post={post} shadow={shadow()} disabled={stale} />
+				<PostActions post={post} shadow={shadow()} />
 			</div>
 		</div>
 	);

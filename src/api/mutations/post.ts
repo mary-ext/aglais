@@ -1,4 +1,5 @@
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { useQueryClient } from '@mary/solid-query';
 
 import { useAgent } from '~/lib/states/agent';
@@ -123,6 +124,65 @@ export const createPostRepostMutation = (
 	const mutate = (next: boolean) => {
 		toggle(next);
 		updatePostShadow(queryClient, postUri, { repostUri: next ? 'pending' : undefined });
+	};
+
+	return mutate;
+};
+
+export const createPostBookmarkMutation = (
+	post: () => AppBskyFeedDefs.PostView,
+	shadow: () => PostShadowView,
+) => {
+	const queryClient = useQueryClient();
+	const { appview } = useAgent();
+
+	const postUri = post().uri;
+
+	const toggle = createToggleMutationQueue<boolean>({
+		initialState() {
+			return shadow().bookmarked;
+		},
+		async mutate(wasBookmarked, shouldBookmark) {
+			if (shouldBookmark) {
+				if (wasBookmarked) {
+					return true;
+				}
+
+				await ok(
+					appview.post('app.bsky.bookmark.createBookmark', {
+						as: null,
+						input: {
+							uri: postUri,
+							cid: post().cid,
+						},
+					}),
+				);
+
+				return true;
+			} else if (wasBookmarked) {
+				await ok(
+					appview.post('app.bsky.bookmark.deleteBookmark', {
+						as: null,
+						input: {
+							uri: postUri,
+						},
+					}),
+				);
+
+				return false;
+			}
+
+			return false;
+		},
+		finalize(finalBookmarked) {
+			updatePostShadow(queryClient, postUri, { bookmarked: finalBookmarked });
+			queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
+		},
+	});
+
+	const mutate = (next: boolean) => {
+		toggle(next);
+		updatePostShadow(queryClient, postUri, { bookmarked: next });
 	};
 
 	return mutate;

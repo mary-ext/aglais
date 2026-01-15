@@ -126,9 +126,6 @@ importers:
       hls.js:
         specifier: ^1.6.15
         version: 1.6.15
-      idb:
-        specifier: ^8.0.3
-        version: 8.0.3
       mediabunny:
         specifier: ^1.28.0
         version: 1.28.0
@@ -2003,9 +2000,6 @@ packages:
 
   idb@7.1.1:
     resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
-
-  idb@8.0.3:
-    resolution: {integrity: sha512-LtwtVyVYO5BqRvcsKuB2iUMnHwPVByPCXFXOpuU96IZPPoPN6xjOGxZQ74pgSVVLQWtUOYgyeL4GE98BY5D3wg==}
 
   is-binary-path@2.1.0:
     resolution: {integrity: sha512-ZMERYes6pDydyuGidse7OsHxtbI7WVeUEozgR/g7rd0xUimYNlvZRE/K2MgZTjWy725IfelLeVcEM97mmtRGXw==}
@@ -4578,8 +4572,6 @@ snapshots:
   html-entities@2.3.3: {}
 
   idb@7.1.1: {}
-
-  idb@8.0.3: {}
 
   is-binary-path@2.1.0:
     dependencies:

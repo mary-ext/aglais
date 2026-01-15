@@ -1,24 +1,18 @@
-import { For, Match, Switch } from 'solid-js';
+import type { AppBskyBookmarkDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 
-import { createBookmarkMetaQuery } from '~/api/queries/bookmark';
+import { createBookmarksQuery } from '~/api/queries/bookmark';
 
-import { openModal } from '~/globals/modals';
-
-import { formatCompact } from '~/lib/intl/number';
 import { useTitle } from '~/lib/navigation/router';
 
-import BookmarkFolderAvatar from '~/components/bookmarks/bookmark-folder-avatar';
-import BookmarkFolderFormDialogLazy from '~/components/bookmarks/bookmark-folder-form-dialog-lazy';
-import BookmarkFolderMenu from '~/components/bookmarks/bookmark-folder-menu';
-import Divider from '~/components/divider';
-import IconButton from '~/components/icon-button';
-import ChevronRightOutlinedIcon from '~/components/icons-central/chevron-right-outline';
-import FolderAddOutlinedIcon from '~/components/icons-central/folder-add-outline';
-import MoreHorizOutlinedIcon from '~/components/icons-central/more-horiz-outline';
+import BookmarkFeedItem from '~/components/bookmarks/bookmark-feed-item';
 import * as Page from '~/components/page';
+import PagedList from '~/components/paged-list';
+import VirtualItem from '~/components/virtual-item';
+
+type PostBookmarkView = AppBskyBookmarkDefs.BookmarkView & { item: AppBskyFeedDefs.PostView };
 
 const BookmarksPage = () => {
-	const query = createBookmarkMetaQuery();
+	const query = createBookmarksQuery();
 
 	useTitle(() => `Bookmarks — ${import.meta.env.VITE_APP_NAME}`);
 
@@ -30,82 +24,27 @@ const BookmarksPage = () => {
 				</Page.HeaderAccessory>
 
 				<Page.Heading title="Bookmarks" />
-
-				<Page.HeaderAccessory>
-					<IconButton
-						icon={FolderAddOutlinedIcon}
-						title="Create folder"
-						disabled={query.isLoading}
-						onClick={() => {
-							openModal(() => <BookmarkFolderFormDialogLazy onSave={() => query.refetch()} />);
-						}}
-					/>
-				</Page.HeaderAccessory>
 			</Page.Header>
 
-			<Switch>
-				<Match when={query.data}>
-					{(data) => (
-						<>
-							<a
-								href="/bookmarks/all"
-								class="flex items-center gap-4 px-4 py-3 hover:bg-contrast/sm active:bg-contrast/sm-pressed"
-							>
-								<BookmarkFolderAvatar />
+			<PagedList
+				data={query.data?.pages.map((page) => page.bookmarks)}
+				error={query.error}
+				render={(item) => {
+					// skip blocked or not found posts
+					if (item.item.$type !== 'app.bsky.feed.defs#postView') {
+						return null;
+					}
 
-								<div class="min-w-0 grow">
-									<p class="overflow-hidden text-ellipsis whitespace-nowrap break-words text-sm font-bold">
-										All Bookmarks
-									</p>
-
-									<p class="overflow-hidden text-ellipsis whitespace-nowrap break-words text-de text-contrast-muted">
-										{formatCompact(data().totalCount)} posts
-									</p>
-								</div>
-
-								<ChevronRightOutlinedIcon class="shrink-0 text-xl text-contrast-muted" />
-							</a>
-
-							<Divider class="mx-4" gutter="md" />
-
-							<For each={data().tags}>
-								{(entry) => (
-									<a
-										href={/* @once */ `/bookmarks/${entry.id}`}
-										class="flex items-center gap-4 px-4 py-3 hover:bg-contrast/sm"
-									>
-										<BookmarkFolderAvatar color={/* @once */ entry.color} icon={/* @once */ entry.icon} />
-
-										<div class="min-w-0 grow">
-											<p class="overflow-hidden text-ellipsis whitespace-nowrap break-words text-sm font-bold">
-												{/* @once */ entry.name}
-											</p>
-
-											<p class="overflow-hidden text-ellipsis whitespace-nowrap break-words text-de text-contrast-muted">
-												{/* @once */ formatCompact(entry.count)} posts
-											</p>
-										</div>
-
-										<div class="-mr-2 flex shrink-0 items-center gap-4">
-											<IconButton
-												icon={MoreHorizOutlinedIcon}
-												title="Actions"
-												onClick={(ev) => {
-													const anchor = ev.currentTarget;
-
-													ev.preventDefault();
-
-													openModal(() => <BookmarkFolderMenu anchor={anchor} folder={entry} />);
-												}}
-											/>
-										</div>
-									</a>
-								)}
-							</For>
-						</>
-					)}
-				</Match>
-			</Switch>
+					return (
+						<VirtualItem estimateHeight={99}>
+							<BookmarkFeedItem item={item as PostBookmarkView} />
+						</VirtualItem>
+					);
+				}}
+				hasNextPage={query.hasNextPage}
+				isFetchingNextPage={query.isFetchingNextPage || query.isLoading}
+				onEndReached={() => query.fetchNextPage()}
+			/>
 		</>
 	);
 };

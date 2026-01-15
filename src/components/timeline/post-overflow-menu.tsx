@@ -1,21 +1,14 @@
-import { createMemo } from 'solid-js';
-
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { useQueryClient } from '@mary/solid-query';
 
 import { usePostShadow } from '~/api/cache/post-shadow';
-import { createBookmarkEntryQuery } from '~/api/queries/bookmark-entry';
+import { createPostBookmarkMutation } from '~/api/mutations/post';
 
 import { openModal, useModalContext } from '~/globals/modals';
 
 import { useSession } from '~/lib/states/session';
-import { inject } from '~/lib/states/singleton';
-import BookmarksService from '~/lib/states/singletons/bookmarks';
 
-import AddPostToFolderDialogLazy from '~/components/bookmarks/add-post-to-folder-dialog-lazy';
 import BookmarkCheckOutlinedIcon from '~/components/icons-central/bookmark-check-outline';
 import BookmarkOutlinedIcon from '~/components/icons-central/bookmark-outline';
-import FolderAddOutlinedIcon from '~/components/icons-central/folder-add-outline';
 import PinOutlinedIcon from '~/components/icons-central/pin-outline';
 import StepBackOutlinedIcon from '~/components/icons-central/step-back-outline';
 import TrashOutlinedIcon from '~/components/icons-central/trash-outline';
@@ -37,16 +30,12 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 	const { close } = useModalContext();
 	const { currentAccount } = useSession();
 
-	const bookmarks = inject(BookmarksService);
-	const queryClient = useQueryClient();
-
 	const post = props.post;
 	const shadow = usePostShadow(post);
 
 	const isOurPost = currentAccount && currentAccount.did === post.author.did;
 
-	const bookmarkQuery = createBookmarkEntryQuery(() => post.uri);
-	const isBookmarked = createMemo(() => bookmarkQuery.data.item !== undefined);
+	const mutateBookmark = createPostBookmarkMutation(() => post, shadow);
 
 	return (
 		<Menu.Container anchor={props.anchor} placement="bottom-end" cover>
@@ -83,34 +72,11 @@ const PostOverflowMenu = (props: PostOverflowMenuProps) => {
 			)}
 
 			<Menu.Item
-				icon={!isBookmarked() ? BookmarkOutlinedIcon : BookmarkCheckOutlinedIcon}
-				label={!isBookmarked() ? `Bookmark` : `Remove bookmark`}
-				disabled={bookmarkQuery.isLoading}
-				onClick={async () => {
-					close();
-
-					const db = await bookmarks.open();
-
-					if (isBookmarked()) {
-						await db.delete('bookmarks', post.uri);
-					} else {
-						await db.add('bookmarks', {
-							view: post,
-							bookmarked_at: Date.now(),
-							tags: [],
-						});
-					}
-
-					queryClient.invalidateQueries({ queryKey: ['bookmark-entry', post.uri], exact: true });
-				}}
-			/>
-
-			<Menu.Item
-				icon={FolderAddOutlinedIcon}
-				label="Add to Bookmark Folder"
+				icon={!shadow().bookmarked ? BookmarkOutlinedIcon : BookmarkCheckOutlinedIcon}
+				label={!shadow().bookmarked ? `Bookmark` : `Remove bookmark`}
 				onClick={() => {
 					close();
-					openModal(() => <AddPostToFolderDialogLazy post={post} />);
+					mutateBookmark(!shadow().bookmarked);
 				}}
 			/>
 		</Menu.Container>

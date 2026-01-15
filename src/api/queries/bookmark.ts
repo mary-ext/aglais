@@ -1,49 +1,38 @@
-import { createQuery } from '@mary/solid-query';
+import type { AppBskyBookmarkDefs } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/solid-query';
 
-import type { TagItem } from '~/lib/aglais-bookmarks/db';
-import { inject } from '~/lib/states/singleton';
-import BookmarksService from '~/lib/states/singletons/bookmarks';
+import { useAgent } from '~/lib/states/agent';
 
-export interface HydratedTagItem extends TagItem {
-	count: number;
+export interface BookmarksPage {
+	cursor: string | undefined;
+	bookmarks: AppBskyBookmarkDefs.BookmarkView[];
 }
 
-export const createBookmarkMetaQuery = () => {
-	const bookmarks = inject(BookmarksService);
+export const createBookmarksQuery = () => {
+	const { appview } = useAgent();
 
-	const query = createQuery(() => {
+	return createInfiniteQuery(() => {
 		return {
-			queryKey: ['bookmark-meta'],
-			async queryFn() {
-				const db = await bookmarks.open();
-				const tx = db.transaction(['tags', 'bookmarks'], 'readonly');
-
-				const tags = await tx.objectStore('tags').getAll();
-				const bookmarksStore = tx.objectStore('bookmarks');
-
-				const [totalCount, ...counts] = await Promise.all([
-					bookmarksStore.count(),
-					...tags.map((tag) => {
-						return bookmarksStore.index('tags').count(tag.id);
+			queryKey: ['bookmarks'],
+			async queryFn(ctx: QC<never, string | undefined>): Promise<BookmarksPage> {
+				const data = await ok(
+					appview.get('app.bsky.bookmark.getBookmarks', {
+						signal: ctx.signal,
+						params: {
+							cursor: ctx.pageParam,
+						},
 					}),
-				]);
+				);
 
-				const hydrated = tags.map((tag, idx): HydratedTagItem => {
-					return {
-						...tag,
-						count: counts[idx],
-					};
-				});
-
-				{
-					const collator = new Intl.Collator('en-US');
-					hydrated.sort((a, b) => collator.compare(a.name, b.name));
-				}
-
-				return { totalCount, tags: hydrated };
+				return {
+					cursor: data.bookmarks.length !== 0 ? data.cursor : undefined,
+					bookmarks: data.bookmarks,
+				};
 			},
+			structuralSharing: false,
+			initialPageParam: undefined,
+			getNextPageParam: (last) => last.cursor,
 		};
 	});
-
-	return query;
 };

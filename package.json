@@ -40,7 +40,6 @@
 		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.5",
 		"comlink": "^4.4.2",
 		"hls.js": "^1.6.15",
-		"idb": "^8.0.3",
 		"mediabunny": "^1.28.0",
 		"nanoid": "^5.1.6",
 		"solid-floating-ui": "~0.2.1",

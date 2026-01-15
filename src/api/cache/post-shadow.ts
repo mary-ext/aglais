@@ -20,6 +20,7 @@ export interface PostShadow {
 	repostUri?: string;
 	pinned?: boolean;
 	threadMuted?: boolean;
+	bookmarked?: boolean;
 }
 
 export interface PostShadowView {
@@ -30,6 +31,7 @@ export interface PostShadowView {
 	repostUri: string | undefined;
 	pinned: boolean;
 	threadMuted: boolean;
+	bookmarked: boolean;
 }
 
 const emitter = new EventEmitter<{ [uri: string]: [] }>();
@@ -95,6 +97,7 @@ export const getPostShadow = (post: AppBskyFeedDefs.PostView): PostShadowView =>
 		repostUri: 'repostUri' in shadow ? shadow.repostUri : post.viewer?.repost,
 		pinned: ('pinned' in shadow ? shadow.pinned : post.viewer?.pinned) ?? false,
 		threadMuted: ('threadMuted' in shadow ? shadow.threadMuted : post.viewer?.threadMuted) ?? false,
+		bookmarked: ('bookmarked' in shadow ? shadow.bookmarked : post.viewer?.bookmarked) ?? false,
 	};
 };
 

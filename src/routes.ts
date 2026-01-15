@@ -17,10 +17,6 @@ const isValidDidOrHandle = (str: string | undefined): boolean => {
 const isValidTid = (str: string | undefined): boolean => {
 	return str !== undefined && str.length === 13 && TID_RE.test(str);
 };
-const isValidBookmarkTagId = (str: string | undefined) => {
-	return str === 'all' || isValidTid(str);
-};
-
 const routes: RouteDefinition[] = [
 	{
 		path: '/oauth/callback',
@@ -118,13 +114,6 @@ const routes: RouteDefinition[] = [
 	{
 		path: '/bookmarks',
 		component: lazy(() => import('./views/bookmarks')),
-	},
-	{
-		path: '/bookmarks/:tagId',
-		component: lazy(() => import('./views/bookmarks-listing')),
-		validate(params) {
-			return isValidBookmarkTagId(params.tagId);
-		},
 	},
 
 	{
