@@ -5,7 +5,7 @@ import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/soli
 import { useAgent } from '~/lib/states/agent';
 
 export const createProfileFeedsQuery = (didOrHandle: () => ActorIdentifier) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	return createInfiniteQuery(() => {
 		const $didOrHandle = didOrHandle();
@@ -14,7 +14,7 @@ export const createProfileFeedsQuery = (didOrHandle: () => ActorIdentifier) => {
 			queryKey: ['profile-feeds', $didOrHandle],
 			async queryFn(ctx: QC<never, string | undefined>) {
 				const data = await ok(
-					client.get('app.bsky.feed.getActorFeeds', {
+					appview.get('app.bsky.feed.getActorFeeds', {
 						signal: ctx.signal,
 						params: {
 							actor: $didOrHandle,

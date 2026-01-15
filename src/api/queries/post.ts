@@ -11,7 +11,7 @@ import { assertCanonicalResourceUri, makeAtUri } from '../types/at-uri';
 import { resolveHandle } from './handle';
 
 export const createPostQuery = (postUri: () => string) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	return createQuery((queryClient) => {
 		const $postUri = postUri();
@@ -25,11 +25,11 @@ export const createPostQuery = (postUri: () => string) => {
 				if (isDid(uri.repo)) {
 					did = uri.repo;
 				} else {
-					did = await resolveHandle(client, uri.repo, ctx.signal);
+					did = await resolveHandle(appview, uri.repo, ctx.signal);
 				}
 
 				const data = await ok(
-					client.get('app.bsky.feed.getPosts', {
+					appview.get('app.bsky.feed.getPosts', {
 						signal: ctx.signal,
 						params: {
 							uris: [makeAtUri(did, uri.collection, uri.rkey)],

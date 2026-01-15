@@ -19,14 +19,14 @@ export interface DeletePostPromptProps {
 
 const DeletePostPrompt = ({ post, onPostDelete }: DeletePostPromptProps) => {
 	const { currentAccount } = useSession();
-	const { client } = useAgent();
+	const { pds } = useAgent();
 
 	const queryClient = useQueryClient();
 
 	const onDelete = async () => {
 		const { rkey } = assertCanonicalResourceUri(post.uri);
 
-		const write = await client.post('com.atproto.repo.applyWrites', {
+		const write = await pds!.post('com.atproto.repo.applyWrites', {
 			input: {
 				repo: currentAccount!.did,
 				writes: [
@@ -50,7 +50,7 @@ const DeletePostPrompt = ({ post, onPostDelete }: DeletePostPromptProps) => {
 		}
 
 		await ok(
-			client.post('com.atproto.repo.putRecord', {
+			pds!.post('com.atproto.repo.putRecord', {
 				input: {
 					repo: currentAccount!.did,
 					collection: 'app.bsky.feed.post',
@@ -66,7 +66,7 @@ const DeletePostPrompt = ({ post, onPostDelete }: DeletePostPromptProps) => {
 		);
 
 		await ok(
-			client.post('com.atproto.repo.deleteRecord', {
+			pds!.post('com.atproto.repo.deleteRecord', {
 				input: {
 					repo: currentAccount!.did,
 					collection: 'app.bsky.feed.post',

@@ -42,7 +42,7 @@ const altTextValidations: Validation<string>[] = [
 const AddEmotePrompt = ({ blob, onAdd }: AddEmotePromptProps) => {
 	const { close } = useModalContext();
 
-	const { client } = useAgent();
+	const { pds } = useAgent();
 	const { currentAccount } = useSession();
 
 	const blobUrl = URL.createObjectURL(blob);
@@ -71,13 +71,13 @@ const AddEmotePrompt = ({ blob, onAdd }: AddEmotePromptProps) => {
 
 			const { png_128, webp_128 } = await getCompressedEmotes(blob, cover() ? 'cover' : 'contain');
 
-			const orig_prom = uploadBlob(client, blob);
-			const png_prom = png_128 !== blob ? uploadBlob(client, png_128) : orig_prom;
-			const webp_prom = webp_128 !== blob ? uploadBlob(client, webp_128) : orig_prom;
+			const orig_prom = uploadBlob(pds!, blob);
+			const png_prom = png_128 !== blob ? uploadBlob(pds!, png_128) : orig_prom;
+			const webp_prom = webp_128 !== blob ? uploadBlob(pds!, webp_128) : orig_prom;
 
 			const [orig_blob, png_blob, webp_blob] = await Promise.all([orig_prom, png_prom, webp_prom]);
 
-			await createRecord(client, {
+			await createRecord(pds!, {
 				repo: currentAccount!.did,
 				collection: 'blue.moji.collection.item',
 				rkey: $name,

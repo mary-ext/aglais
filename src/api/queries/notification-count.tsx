@@ -6,14 +6,14 @@ import { useSession } from '~/lib/states/session';
 
 export const createNotificationCountQuery = (options?: { readonly disabled?: boolean }) => {
 	const { currentAccount } = useSession();
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	const query = createQuery(() => ({
 		queryKey: ['notification', 'count'],
 		enabled: currentAccount !== undefined && !options?.disabled,
 		async queryFn() {
 			const data = await ok(
-				client.get('app.bsky.notification.getUnreadCount', {
+				appview.get('app.bsky.notification.getUnreadCount', {
 					params: {},
 				}),
 			);

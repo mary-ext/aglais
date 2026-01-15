@@ -23,13 +23,13 @@ import * as Prompt from '~/components/prompt';
 import AddAppPasswordPrompt from '~/components/settings/app-passwords/add-app-password-prompt';
 
 const AppPasswordsSettingsPage = () => {
-	const { client } = useAgent();
+	const { pds } = useAgent();
 
 	const passwords = createQuery(() => {
 		return {
 			queryKey: ['app-passwords'],
 			async queryFn() {
-				const data = await ok(client.get('com.atproto.server.listAppPasswords'));
+				const data = await ok(pds!.get('com.atproto.server.listAppPasswords'));
 
 				return data.passwords;
 			},
@@ -106,7 +106,7 @@ interface PasswordEntryProps {
 }
 
 const PasswordEntry = ({ item }: PasswordEntryProps) => {
-	const { client } = useAgent();
+	const { pds } = useAgent();
 
 	const isPrivileged = item.privileged;
 
@@ -114,7 +114,7 @@ const PasswordEntry = ({ item }: PasswordEntryProps) => {
 		return {
 			async mutationFn() {
 				await ok(
-					client.post('com.atproto.server.revokeAppPassword', {
+					pds!.post('com.atproto.server.revokeAppPassword', {
 						as: null,
 						input: { name: item.name },
 					}),

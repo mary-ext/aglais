@@ -6,7 +6,7 @@ import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/soli
 import { useAgent } from '~/lib/states/agent';
 
 export const createPostQuotesQuery = (uri: () => ResourceUri) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	return createInfiniteQuery(() => {
 		const $uri = uri();
@@ -16,7 +16,7 @@ export const createPostQuotesQuery = (uri: () => ResourceUri) => {
 			structuralSharing: false,
 			async queryFn(ctx: QC<never, string | undefined>): Promise<AppBskyFeedGetQuotes.$output> {
 				const data = await ok(
-					client.get('app.bsky.feed.getQuotes', {
+					appview.get('app.bsky.feed.getQuotes', {
 						signal: ctx.signal,
 						params: {
 							uri: $uri,

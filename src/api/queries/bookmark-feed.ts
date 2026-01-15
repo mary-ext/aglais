@@ -42,7 +42,7 @@ export interface BookmarkFeedReturn {
 
 export const createBookmarkFeedQuery = (tagId: () => string, search: () => string) => {
 	const bookmarks = inject(BookmarksService);
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	const listing = createInfiniteQuery(() => {
 		const $tagId = tagId();
@@ -97,7 +97,7 @@ export const createBookmarkFeedQuery = (tagId: () => string, search: () => strin
 
 					try {
 						const data = await ok(
-							client.get('app.bsky.feed.getPosts', {
+							appview.get('app.bsky.feed.getPosts', {
 								signal: ctx.signal,
 								params: {
 									uris: raws.map((item) => item.view.uri),

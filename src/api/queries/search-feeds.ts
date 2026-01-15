@@ -5,7 +5,7 @@ import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/soli
 import { useAgent } from '~/lib/states/agent';
 
 export const createSearchFeedsQuery = (query: () => string) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	return createInfiniteQuery(() => {
 		const q = query();
@@ -16,7 +16,7 @@ export const createSearchFeedsQuery = (query: () => string) => {
 				ctx: QC<never, string | undefined>,
 			): Promise<AppBskyUnspeccedGetPopularFeedGenerators.$output> {
 				const data = await ok(
-					client.get('app.bsky.unspecced.getPopularFeedGenerators', {
+					appview.get('app.bsky.unspecced.getPopularFeedGenerators', {
 						signal: ctx.signal,
 						params: {
 							query: q,

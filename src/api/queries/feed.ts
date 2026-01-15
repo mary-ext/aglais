@@ -16,7 +16,7 @@ import { assertCanonicalResourceUri, makeAtUri } from '../types/at-uri';
 import { resolveHandle } from './handle';
 
 export const createFeedMetaQuery = (feedUri: () => string) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 	const { currentAccount } = useSession();
 
 	return createQuery((queryClient) => {
@@ -31,11 +31,11 @@ export const createFeedMetaQuery = (feedUri: () => string) => {
 				if (isDid(uri.repo)) {
 					did = uri.repo;
 				} else {
-					did = await resolveHandle(client, uri.repo, ctx.signal);
+					did = await resolveHandle(appview, uri.repo, ctx.signal);
 				}
 
 				const data = await ok(
-					client.get('app.bsky.feed.getFeedGenerator', {
+					appview.get('app.bsky.feed.getFeedGenerator', {
 						signal: ctx.signal,
 						params: {
 							feed: makeAtUri(did, uri.collection, uri.rkey),

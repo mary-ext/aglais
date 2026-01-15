@@ -11,7 +11,7 @@ export const createProfileAutocompleteQuery = (
 	query: () => string,
 	opts?: ProfileAutocompleteQueryOptions,
 ) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	return createQuery(() => {
 		const $query = query();
@@ -28,7 +28,7 @@ export const createProfileAutocompleteQuery = (
 			placeholderData: isEnabled ? keepPreviousData : undefined,
 			async queryFn({ signal }) {
 				const data = await ok(
-					client.get('app.bsky.actor.searchActorsTypeahead', {
+					appview.get('app.bsky.actor.searchActorsTypeahead', {
 						signal,
 						params: {
 							q: trimmed,

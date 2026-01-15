@@ -23,7 +23,7 @@ export interface PinPostPromptProps {
 
 const PinPostPrompt = ({ post }: PinPostPromptProps) => {
 	const { currentAccount } = useSession();
-	const { client } = useAgent();
+	const { appview, pds } = useAgent();
 
 	const { close } = useModalContext();
 
@@ -40,7 +40,7 @@ const PinPostPrompt = ({ post }: PinPostPromptProps) => {
 				updatePostShadow(queryClient, post.uri, { pinned: next });
 
 				while (true) {
-					const existing = await getRecord(client, {
+					const existing = await getRecord(appview, {
 						repo,
 						collection: 'app.bsky.actor.profile',
 						rkey: 'self',
@@ -63,7 +63,7 @@ const PinPostPrompt = ({ post }: PinPostPromptProps) => {
 					record.pinnedPost = next ? { uri: post.uri, cid: post.cid } : undefined;
 
 					try {
-						await putRecord(client, {
+						await putRecord(pds!, {
 							repo,
 							collection: 'app.bsky.actor.profile',
 							rkey: 'self',

@@ -5,6 +5,8 @@ import type { ModerationLabeler, ModerationPreferences } from '~/api/moderation'
 
 export interface PerAccountPreferenceSchema {
 	$version: 1;
+	/** appview service proxy audience (e.g., did:web:api.bsky.app#bsky_appview) */
+	appviewAudience?: string;
 	ui: UIPreferences;
 	feeds: SavedFeed[];
 	composer: ComposerPreferences;

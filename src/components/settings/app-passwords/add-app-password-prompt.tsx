@@ -14,7 +14,7 @@ import TextInput from '../../text-input';
 export interface AddAppPasswordPromptProps {}
 
 const AddAppPasswordPrompt = ({}: AddAppPasswordPromptProps) => {
-	const { client } = useAgent();
+	const { pds } = useAgent();
 
 	const [name, setName] = createSignal('');
 	const [privileged, setPrivileged] = createSignal(false);
@@ -24,7 +24,7 @@ const AddAppPasswordPrompt = ({}: AddAppPasswordPromptProps) => {
 		return {
 			async mutationFn() {
 				const data = await ok(
-					client.post('com.atproto.server.createAppPassword', {
+					pds!.post('com.atproto.server.createAppPassword', {
 						input: {
 							name: name().replace(/^\s+|\s+$|(?<=\s)\s+/g, ''),
 							privileged: privileged(),

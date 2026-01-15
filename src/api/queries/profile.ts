@@ -20,14 +20,14 @@ export interface ProfileQueryOptions {
 }
 
 const BatchedProfileService = define('batched-profile', () => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	const fetch = createBatchedFetch<Did, AppBskyActorDefs.ProfileViewDetailed>({
 		limit: 25,
 		idFromResource: (profile) => profile.did,
 		async fetch(queries, signal) {
 			const data = await ok(
-				client.get('app.bsky.actor.getProfiles', {
+				appview.get('app.bsky.actor.getProfiles', {
 					signal,
 					params: {
 						actors: queries,
@@ -43,7 +43,7 @@ const BatchedProfileService = define('batched-profile', () => {
 });
 
 export const createProfileQuery = (didOrHandle: () => ActorIdentifier, opts: ProfileQueryOptions = {}) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 	const { currentAccount } = useSession();
 
 	const batched = inject(BatchedProfileService);
@@ -62,7 +62,7 @@ export const createProfileQuery = (didOrHandle: () => ActorIdentifier, opts: Pro
 					data = await batched.fetch($didOrHandle, signal);
 				} else {
 					data = await ok(
-						client.get('app.bsky.actor.getProfile', {
+						appview.get('app.bsky.actor.getProfile', {
 							signal,
 							params: {
 								actor: $didOrHandle!,

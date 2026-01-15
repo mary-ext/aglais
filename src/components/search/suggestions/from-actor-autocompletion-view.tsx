@@ -18,7 +18,7 @@ const FromActorAutocompletionView = (props: {
 }) => {
 	const { currentAccount } = useSession();
 
-	const { client } = useAgent();
+	const { appview } = useAgent();
 	const isFocused = useIsFocused();
 
 	const match = createMemo(() => {
@@ -34,7 +34,7 @@ const FromActorAutocompletionView = (props: {
 			placeholderData: keepPreviousData,
 			async queryFn({ signal }) {
 				const data = await ok(
-					client.get('app.bsky.actor.searchActorsTypeahead', {
+					appview.get('app.bsky.actor.searchActorsTypeahead', {
 						signal,
 						params: {
 							q: $match,

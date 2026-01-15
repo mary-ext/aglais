@@ -6,7 +6,7 @@ import { useAgent } from '~/lib/states/agent';
 import { type ProfilesListPage, toProfilesListPage } from '../types/profile-response';
 
 export const createSearchProfilesQuery = (query: () => string) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	return createInfiniteQuery(() => {
 		const q = query();
@@ -15,7 +15,7 @@ export const createSearchProfilesQuery = (query: () => string) => {
 			queryKey: ['search-profiles', q],
 			async queryFn(ctx: QC<never, string | undefined>): Promise<ProfilesListPage> {
 				const data = await ok(
-					client.get('app.bsky.actor.searchActors', {
+					appview.get('app.bsky.actor.searchActors', {
 						signal: ctx.signal,
 						params: {
 							q: q,

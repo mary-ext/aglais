@@ -15,7 +15,8 @@ import { useSession } from './session';
 
 export interface AgentContext {
 	did: Did | null;
-	client: Client;
+	appview: Client;
+	pds: Client | null;
 	handler: OAuthUserAgent | null;
 	persister: ReturnType<typeof createQueryPersister>;
 }
@@ -32,7 +33,8 @@ export const AgentProvider = (props: ParentProps) => {
 			return {
 				did: currentAccount.did,
 				handler: currentAccount.agent ?? null,
-				client: currentAccount.client,
+				appview: currentAccount.appview,
+				pds: currentAccount.pds,
 				persister: createQueryPersister({ name: `queryCache-${currentAccount.did}` }),
 			};
 		}
@@ -40,7 +42,8 @@ export const AgentProvider = (props: ParentProps) => {
 		return {
 			did: null,
 			handler: null,
-			client: new Client({ handler: simpleFetchHandler({ service: DEFAULT_APPVIEW_URL }) }),
+			appview: new Client({ handler: simpleFetchHandler({ service: DEFAULT_APPVIEW_URL }) }),
+			pds: null,
 			persister: createQueryPersister({ name: `queryCache-public` }),
 		};
 	});

@@ -5,7 +5,7 @@ import { type QueryFunctionContext as QC, createInfiniteQuery } from '@mary/soli
 import { useAgent } from '~/lib/states/agent';
 
 export const createProfileListsQuery = (didOrHandle: () => ActorIdentifier) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	const collator = new Intl.Collator('en-US');
 
@@ -16,7 +16,7 @@ export const createProfileListsQuery = (didOrHandle: () => ActorIdentifier) => {
 			queryKey: ['profile-lists', $didOrHandle],
 			async queryFn(ctx: QC<never, string | undefined>) {
 				const data = await ok(
-					client.get('app.bsky.graph.getLists', {
+					appview.get('app.bsky.graph.getLists', {
 						signal: ctx.signal,
 						params: {
 							actor: $didOrHandle,

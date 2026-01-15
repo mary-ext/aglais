@@ -8,7 +8,7 @@ import { useAgent } from '~/lib/states/agent';
 import { interpretLabelerDefinition } from '../moderation/labeler';
 
 export const createLabelerMetaQuery = (did: () => Did) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	const query = createQuery(() => {
 		const $did = did();
@@ -17,7 +17,7 @@ export const createLabelerMetaQuery = (did: () => Did) => {
 			queryKey: ['labeler-definition', $did],
 			async queryFn(ctx) {
 				const data = await ok(
-					client.get('app.bsky.labeler.getServices', {
+					appview.get('app.bsky.labeler.getServices', {
 						signal: ctx.signal,
 						params: {
 							dids: [$did],

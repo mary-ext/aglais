@@ -85,7 +85,7 @@ const MAX_MERGE_TIME = 6 * 60 * 60 * 1_000;
 export type NotificationsFilter = 'all' | 'mentions';
 
 export const createNotificationFeedQuery = (filter: () => NotificationsFilter) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 	const queryClient = useQueryClient();
 
 	const [firstFetchedAt, setFirstFetchedAt] = createSignal(0);
@@ -106,7 +106,7 @@ export const createNotificationFeedQuery = (filter: () => NotificationsFilter) =
 				}
 
 				const data = await ok(
-					client.get('app.bsky.notification.listNotifications', {
+					appview.get('app.bsky.notification.listNotifications', {
 						signal: signal,
 						params: {
 							limit: 40,
@@ -149,7 +149,7 @@ export const createNotificationFeedQuery = (filter: () => NotificationsFilter) =
 					const chunkedPosts = await Promise.all(
 						chunked(Array.from(postUris), 25).map(async (uris) => {
 							const data = await ok(
-								client.get('app.bsky.feed.getPosts', {
+								appview.get('app.bsky.feed.getPosts', {
 									params: {
 										uris: uris,
 									},
@@ -247,7 +247,7 @@ export const createNotificationFeedQuery = (filter: () => NotificationsFilter) =
 						const seenAt = Math.max(now, indexedAt);
 
 						const promise = ok(
-							client.post('app.bsky.notification.updateSeen', {
+							appview.post('app.bsky.notification.updateSeen', {
 								as: null,
 								input: {
 									seenAt: new Date(seenAt).toISOString(),

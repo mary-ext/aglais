@@ -13,7 +13,7 @@ const MAX_DEPTH = 4;
 type ThreadReturn = $type.enforce<AppBskyFeedDefs.ThreadViewPost | AppBskyFeedDefs.BlockedPost>;
 
 export const usePostThreadQuery = (uri: () => ResourceUri) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	return createQuery((queryClient) => {
 		const $uri = uri();
@@ -23,7 +23,7 @@ export const usePostThreadQuery = (uri: () => ResourceUri) => {
 			structuralSharing: false,
 			async queryFn(ctx): Promise<ThreadReturn> {
 				const data = await ok(
-					client.get('app.bsky.feed.getPostThread', {
+					appview.get('app.bsky.feed.getPostThread', {
 						signal: ctx.signal,
 						params: {
 							uri: $uri,

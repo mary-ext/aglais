@@ -8,7 +8,7 @@ import { useAgent } from '~/lib/states/agent';
 import { type ProfilesListWithSubjectPage, toProfilesListWithSubjectPage } from '../types/profile-response';
 
 export const createProfileKnownFollowersQuery = (didOrHandle: () => ActorIdentifier) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	return createInfiniteQuery((queryClient) => {
 		const $didOrHandle = didOrHandle();
@@ -17,7 +17,7 @@ export const createProfileKnownFollowersQuery = (didOrHandle: () => ActorIdentif
 			queryKey: ['profile-known-followers', $didOrHandle],
 			async queryFn(ctx: QC<never, string | undefined>): Promise<ProfilesListWithSubjectPage> {
 				const data = await ok(
-					client.get('app.bsky.graph.getKnownFollowers', {
+					appview.get('app.bsky.graph.getKnownFollowers', {
 						signal: ctx.signal,
 						params: {
 							actor: $didOrHandle,

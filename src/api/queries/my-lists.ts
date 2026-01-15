@@ -8,7 +8,7 @@ import { useSession } from '~/lib/states/session';
 export type MyListsFilter = 'all' | 'curation' | 'moderation' | 'all-including-subscribed';
 
 export const createMyListsQuery = (filter: MyListsFilter) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 	const { currentAccount } = useSession();
 
 	return createQuery(() => ({
@@ -17,7 +17,7 @@ export const createMyListsQuery = (filter: MyListsFilter) => {
 			const promises = [
 				accumulate(async (cursor) => {
 					const data = await ok(
-						client.get('app.bsky.graph.getLists', {
+						appview.get('app.bsky.graph.getLists', {
 							signal,
 							params: {
 								actor: currentAccount!.did,
@@ -38,7 +38,7 @@ export const createMyListsQuery = (filter: MyListsFilter) => {
 				promises.push(
 					accumulate(async (cursor) => {
 						const data = await ok(
-							client.get('app.bsky.graph.getListMutes', {
+							appview.get('app.bsky.graph.getListMutes', {
 								signal,
 								params: {
 									cursor,
@@ -57,7 +57,7 @@ export const createMyListsQuery = (filter: MyListsFilter) => {
 				promises.push(
 					accumulate(async (cursor) => {
 						const data = await ok(
-							client.get('app.bsky.graph.getListBlocks', {
+							appview.get('app.bsky.graph.getListBlocks', {
 								signal,
 								params: {
 									cursor,

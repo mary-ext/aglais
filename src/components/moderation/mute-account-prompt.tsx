@@ -50,12 +50,12 @@ export default MuteAccountPrompt;
 const MutePrompt = ({ profile }: MuteAccountPromptProps) => {
 	const { close } = useModalContext();
 
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	const mutation = createMutation((queryClient) => ({
 		async mutationFn() {
 			await ok(
-				client.post('app.bsky.graph.muteActor', {
+				appview.post('app.bsky.graph.muteActor', {
 					as: null,
 					input: {
 						actor: profile.did,
@@ -119,12 +119,12 @@ const MutePrompt = ({ profile }: MuteAccountPromptProps) => {
 const UnmutePrompt = ({ profile }: MuteAccountPromptProps) => {
 	const { close } = useModalContext();
 
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	const mutation = createMutation((queryClient) => ({
 		async mutationFn() {
 			await ok(
-				client.post('app.bsky.graph.unmuteActor', {
+				appview.post('app.bsky.graph.unmuteActor', {
 					as: null,
 					input: {
 						actor: profile.did,

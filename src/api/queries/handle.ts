@@ -5,7 +5,7 @@ import { createQuery } from '@mary/solid-query';
 import { useAgent } from '~/lib/states/agent';
 
 export const useResolveHandleQuery = (handle: () => Handle) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	return createQuery(() => {
 		const $handle = handle();
@@ -13,7 +13,7 @@ export const useResolveHandleQuery = (handle: () => Handle) => {
 		return {
 			queryKey: ['resolve-handle', $handle],
 			async queryFn(ctx) {
-				return resolveHandle(client, $handle, ctx.signal);
+				return resolveHandle(appview, $handle, ctx.signal);
 			},
 		};
 	});

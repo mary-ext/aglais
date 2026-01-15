@@ -35,7 +35,7 @@ export interface EditProfileDialogProps {
 const EditProfileDialog = ({ profile }: EditProfileDialogProps) => {
 	const { close } = useModalContext();
 
-	const { client } = useAgent();
+	const { appview, pds } = useAgent();
 	const { currentAccount } = useSession();
 
 	const snapshot = {
@@ -79,15 +79,15 @@ const EditProfileDialog = ({ profile }: EditProfileDialogProps) => {
 			let bannerPromise: Promise<AtpBlob<any>> | undefined;
 
 			if ($avatar instanceof Blob) {
-				avatarPromise = compressProfileImage($avatar, 1000, 1000).then((res) => uploadBlob(client, res.blob));
+				avatarPromise = compressProfileImage($avatar, 1000, 1000).then((res) => uploadBlob(pds!, res.blob));
 			}
 			if ($banner instanceof Blob) {
-				bannerPromise = compressProfileImage($banner, 3000, 1000).then((res) => uploadBlob(client, res.blob));
+				bannerPromise = compressProfileImage($banner, 3000, 1000).then((res) => uploadBlob(pds!, res.blob));
 			}
 
 			let retriesRemaining = 3;
 			while (true) {
-				const existing = await getRecord(client, {
+				const existing = await getRecord(appview, {
 					repo,
 					collection: 'app.bsky.actor.profile',
 					rkey: 'self',
@@ -115,7 +115,7 @@ const EditProfileDialog = ({ profile }: EditProfileDialogProps) => {
 				}
 
 				try {
-					await putRecord(client, {
+					await putRecord(pds!, {
 						repo,
 						collection: 'app.bsky.actor.profile',
 						rkey: 'self',

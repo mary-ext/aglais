@@ -58,7 +58,8 @@ export interface PublishOptions {
 let cidPromise: Promise<typeof import('./cid')>;
 
 export const publish = async ({ agent, queryClient, state, onLog: log }: PublishOptions) => {
-	const client = agent.client;
+	const appview = agent.appview;
+	const pds = agent.pds!;
 	const did = agent.did!;
 
 	const now = new Date();
@@ -81,11 +82,11 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				if (isDid(uri.repo)) {
 					did = uri.repo;
 				} else {
-					did = await resolveHandle(client, uri.repo, ctx.signal);
+					did = await resolveHandle(appview, uri.repo, ctx.signal);
 				}
 
 				const data = await ok(
-					client.get('app.bsky.feed.getPosts', {
+					appview.get('app.bsky.feed.getPosts', {
 						signal: ctx.signal,
 						params: {
 							uris: [makeAtUri(did, uri.collection, uri.rkey)],
@@ -230,7 +231,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 	log?.(`Posting`);
 
 	await ok(
-		client.post('com.atproto.repo.applyWrites', {
+		pds.post('com.atproto.repo.applyWrites', {
 			input: {
 				repo: did,
 				writes: writes,
@@ -303,7 +304,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 						switch (source.type) {
 							case 'local': {
-								const uploaded = await uploadBlob(client, source.blob);
+								const uploaded = await uploadBlob(pds, source.blob);
 
 								return {
 									image: uploaded,
@@ -344,7 +345,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 				const blob = source.blob;
 
-				const videoClient = new Client({
+				const ingester = new Client({
 					handler: simpleFetchHandler({ service: 'https://video.bsky.app' }),
 				});
 
@@ -368,7 +369,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 					// atproto-proxy: did:web:api.bsky.chat#bsky_chat
 					//
 					const tokenData = await ok(
-						client.get('com.atproto.server.getServiceAuth', {
+						pds.get('com.atproto.server.getServiceAuth', {
 							params: {
 								aud: 'did:web:video.bsky.app',
 								lxm: 'app.bsky.video.getUploadLimits',
@@ -377,7 +378,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 					);
 
 					const data = await ok(
-						videoClient.get('app.bsky.video.getUploadLimits', {
+						ingester.get('app.bsky.video.getUploadLimits', {
 							headers: {
 								authorization: `Bearer ${tokenData.token}`,
 							},
@@ -420,7 +421,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 					// Create an access token *to the PDS*, allowing the video service to
 					// upload the final blobs to our repository on our behalf.
 					const tokenData = await ok(
-						client.get('com.atproto.server.getServiceAuth', {
+						pds.get('com.atproto.server.getServiceAuth', {
 							params: {
 								// `did:web:porcini.us-east.host.bsky.network`
 								aud: `did:web:${new URL(session.info.aud).host}`,
@@ -490,7 +491,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 						try {
 							const data = await ok(
-								videoClient.get('app.bsky.video.getJobStatus', {
+								ingester.get('app.bsky.video.getJobStatus', {
 									params: {
 										jobId: jobId,
 									},
@@ -562,7 +563,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 					log?.(`Uploading GIF thumbnail`);
 					const compressed = await compressPostImage(gifBlob);
-					const blob = await uploadBlob(client, compressed.blob);
+					const blob = await uploadBlob(pds, compressed.blob);
 
 					thumbBlob = blob;
 				}
@@ -600,7 +601,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 				log?.(`Uploading link thumbnail`);
 
 				const compressed = await compressPostImage(thumb);
-				const blob = await uploadBlob(client, compressed.blob);
+				const blob = await uploadBlob(pds, compressed.blob);
 
 				thumbBlob = blob;
 			}
@@ -696,7 +697,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 
 				try {
 					const data = await ok(
-						client.get('com.atproto.identity.resolveHandle', {
+						appview.get('com.atproto.identity.resolveHandle', {
 							params: {
 								handle: handle,
 							},
@@ -729,7 +730,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 					features: [{ $type: 'app.bsky.richtext.facet#tag', tag: token.name }],
 				});
 			} else if (type === 'emote') {
-				const { value } = await getRecord(client, {
+				const { value } = await getRecord(appview, {
 					repo: did,
 					collection: 'blue.moji.collection.item',
 					rkey: token.name,

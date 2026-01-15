@@ -57,11 +57,11 @@ const BlockPrompt = (props: BlockAccountPromptInnerProps) => {
 	const { close } = useModalContext();
 
 	const { currentAccount } = useSession();
-	const { client } = useAgent();
+	const { pds } = useAgent();
 
 	const mutation = createMutation((queryClient) => ({
 		async mutationFn() {
-			return await createRecord(client, {
+			return await createRecord(pds!, {
 				repo: currentAccount!.did,
 				collection: 'app.bsky.graph.block',
 				record: {
@@ -129,13 +129,13 @@ const BlockPrompt = (props: BlockAccountPromptInnerProps) => {
 const UnblockPrompt = (props: BlockAccountPromptInnerProps) => {
 	const { close } = useModalContext();
 
-	const { client } = useAgent();
+	const { pds } = useAgent();
 
 	const mutation = createMutation((queryClient) => ({
 		async mutationFn() {
 			const uri = assertCanonicalResourceUri(props.shadow.blockUri!);
 
-			return await deleteRecord(client, {
+			return await deleteRecord(pds!, {
 				repo: uri.repo,
 				collection: 'app.bsky.graph.block',
 				rkey: uri.rkey,

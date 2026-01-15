@@ -8,7 +8,7 @@ import { useAgent } from '~/lib/states/agent';
 import { type ProfilesListPage, toProfilesListPage } from '../types/profile-response';
 
 export const createSubjectRepostersQuery = (uri: () => ResourceUri) => {
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	return createInfiniteQuery(() => {
 		const $uri = uri();
@@ -18,7 +18,7 @@ export const createSubjectRepostersQuery = (uri: () => ResourceUri) => {
 			structuralSharing: false,
 			async queryFn(ctx: QC<never, string | undefined>): Promise<ProfilesListPage> {
 				const data = await ok(
-					client.get('app.bsky.feed.getRepostedBy', {
+					appview.get('app.bsky.feed.getRepostedBy', {
 						signal: ctx.signal,
 						params: {
 							uri: $uri,

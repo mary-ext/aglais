@@ -11,11 +11,12 @@ import {
 } from 'solid-js';
 
 import { Client, ClientResponseError, type FetchHandler, type FetchHandlerObject } from '@atcute/client';
+import { isAtprotoAudience } from '@atcute/identity';
 import type { Did, GenericUri } from '@atcute/lexicons';
 import { OAuthUserAgent, deleteStoredSession, getSession } from '@atcute/oauth-browser-client';
 import { mapDefined } from '@mary/array-fns';
 
-import { BLUESKY_MODERATION_DID } from '~/api/defaults';
+import { BLUESKY_MODERATION_DID, DEFAULT_APPVIEW_AUDIENCE } from '~/api/defaults';
 
 import { sessions } from '~/globals/preferences';
 
@@ -31,7 +32,8 @@ export interface CurrentAccountState {
 	readonly data: AccountData;
 	readonly preferences: PerAccountPreferenceSchema;
 
-	readonly client: Client;
+	readonly appview: Client;
+	readonly pds: Client;
 	readonly agent: OAuthUserAgent | undefined;
 	readonly _cleanup: () => void;
 }
@@ -62,7 +64,7 @@ export const SessionProvider = (props: ParentProps) => {
 	const createAccountState = (
 		did: Did,
 		session: OAuthUserAgent | undefined,
-		client: Client,
+		handler: FetchHandler | FetchHandlerObject,
 	): CurrentAccountState => {
 		return createRoot((cleanup): CurrentAccountState => {
 			const preferences = createAccountPreferences(did);
@@ -79,8 +81,24 @@ export const SessionProvider = (props: ParentProps) => {
 				});
 			});
 
-			// A bit of a hack, but works right now.
-			client.handler = attachLabelerHeaders(client.handler, labelers);
+			// attach labeler headers to the handler
+			const wrappedHandler = attachLabelerHeaders(handler, labelers);
+
+			// parse the appview audience and create both clients
+			const audience = preferences.appviewAudience ?? DEFAULT_APPVIEW_AUDIENCE;
+			const hashIndex = audience.indexOf('#');
+
+			const appview = new Client({
+				handler: wrappedHandler,
+				proxy: isAtprotoAudience(audience)
+					? {
+							did: audience.slice(0, hashIndex) as Did,
+							serviceId: audience.slice(hashIndex) as `#${string}`,
+						}
+					: null,
+			});
+
+			const pds = new Client({ handler: wrappedHandler });
 
 			createEffect(() => {
 				const signal = abortable();
@@ -129,7 +147,8 @@ export const SessionProvider = (props: ParentProps) => {
 					return $data;
 				},
 
-				client: client,
+				appview: appview,
+				pds: pds,
 				agent: session,
 				_cleanup: cleanup,
 			};
@@ -185,15 +204,13 @@ export const SessionProvider = (props: ParentProps) => {
 				};
 			}
 
-			const rpc = new Client({ handler });
-
 			signal.throwIfAborted();
 
 			batch(() => {
 				sessions.active = did;
 				sessions.accounts = [account, ...sessions.accounts.filter((acc) => acc.did !== did)];
 
-				replaceState(createAccountState(did, agent, rpc));
+				replaceState(createAccountState(did, agent, handler));
 			});
 		},
 

@@ -63,7 +63,7 @@ const ComposerInput = (props: ComposerInputProps) => {
 	const onChange = props.onChange;
 	const onSubmit = props.onSubmit;
 
-	const { client } = useAgent();
+	const { appview } = useAgent();
 
 	const [inputCursor, setInputCursor] = createSignal<number>();
 	const [menuSelection, setMenuSelection] = createSignal<number>();
@@ -137,7 +137,7 @@ const ComposerInput = (props: ComposerInputProps) => {
 
 			if (type === Suggestion.MENTION) {
 				const data = await ok(
-					client.get('app.bsky.actor.searchActorsTypeahead', {
+					appview.get('app.bsky.actor.searchActorsTypeahead', {
 						params: {
 							q: match.query,
 							limit: MATCH_LIMIT,

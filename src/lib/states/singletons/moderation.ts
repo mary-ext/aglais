@@ -16,7 +16,7 @@ import { useSession } from '../session';
 import { define } from '../singleton';
 
 const ModerationService = define('moderation', () => {
-	const { client, persister } = useAgent();
+	const { appview, persister } = useAgent();
 	const { currentAccount } = useSession();
 
 	const modPreferences = createMemo((): ModerationPreferences => {
@@ -44,7 +44,7 @@ const ModerationService = define('moderation', () => {
 		idFromResource: (labeler) => labeler.did,
 		async fetch(dids, signal) {
 			const data = await ok(
-				client.get('app.bsky.labeler.getServices', {
+				appview.get('app.bsky.labeler.getServices', {
 					signal,
 					params: {
 						dids: dids,

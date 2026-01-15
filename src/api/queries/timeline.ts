@@ -131,7 +131,7 @@ const getTimelineHash = (views: AppBskyFeedDefs.FeedViewPost[]): number | undefi
 export const useTimelineQuery = (_params: () => TimelineParams) => {
 	const getParams = createMemo(() => _params(), EQUALS_DEQUAL);
 
-	const { client } = useAgent();
+	const { appview } = useAgent();
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 
@@ -200,7 +200,7 @@ export const useTimelineQuery = (_params: () => TimelineParams) => {
 					postFilter = createLabelPostFilter(moderation);
 				}
 
-				const timeline = await fetchPage(client, params, limit, cursor, ctx.signal);
+				const timeline = await fetchPage(appview, params, limit, cursor, ctx.signal);
 
 				const feed = timeline.feed;
 				const newCursor = timeline.cursor;
@@ -243,7 +243,7 @@ export const useTimelineQuery = (_params: () => TimelineParams) => {
 				// const offset = params.type !== 'profile' ? timelineData!.pages[0].pinAmount : 0;
 				const offset = timelineData!.pages[0].pinAmount;
 
-				const timeline = await fetchPage(client, params, offset + 1, undefined, ctx.signal);
+				const timeline = await fetchPage(appview, params, offset + 1, undefined, ctx.signal);
 				const feed = timeline.feed;
 
 				return { hash: getTimelineHash(feed) };
