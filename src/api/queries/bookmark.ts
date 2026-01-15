@@ -26,13 +26,24 @@ export const createBookmarksQuery = () => {
 				);
 
 				return {
-					cursor: data.bookmarks.length !== 0 ? data.cursor : undefined,
+					cursor: data.cursor,
 					bookmarks: data.bookmarks,
 				};
 			},
 			structuralSharing: false,
 			initialPageParam: undefined,
-			getNextPageParam: (last) => last.cursor,
+			getNextPageParam: (last, all) => {
+				// stop pagination if the last 4 pages have no bookmarks
+				if (all.length >= 4) {
+					const recentPages = all.slice(-4);
+					const allEmpty = recentPages.every((page) => page.bookmarks.length === 0);
+					if (allEmpty) {
+						return undefined;
+					}
+				}
+
+				return last.cursor;
+			},
 		};
 	});
 };
