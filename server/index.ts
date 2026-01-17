@@ -97,6 +97,7 @@ router.addProcedure(requestAssertionSchema, {
 			client_id: `https://${url.host}/oauth-client-metadata.json`,
 			kid: privateKeyId,
 			aud: aud,
+			jkt: jkt,
 		});
 
 		return json({

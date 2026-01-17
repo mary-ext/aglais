@@ -164,9 +164,10 @@ export const createClientAssertion = async (options: {
 	kid: string;
 	client_id: string;
 	aud: string;
+	jkt: string;
 	privateKey: CryptoKey;
 }): Promise<string> => {
-	const { kid, client_id, aud, privateKey } = options;
+	const { kid, client_id, aud, jkt, privateKey } = options;
 
 	const now = Math.floor(Date.now() / 1000);
 
@@ -183,6 +184,7 @@ export const createClientAssertion = async (options: {
 		jti: crypto.randomUUID(),
 		iat: now,
 		exp: now + 60,
+		cnf: { jkt },
 	};
 
 	const message = `${encodeJwtPortion(header)}.${encodeJwtPortion(payload)}`;
