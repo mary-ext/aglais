@@ -1,11 +1,11 @@
 {
-	"type": "module",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc -b && vite build",
 		"preview": "vite preview",
-		"fmt": "PRETTIER_EXPERIMENTAL_CLI=1 prettier --cache --write ."
+		"fmt": "oxfmt"
 	},
 	"dependencies": {
 		"@atcute/atproto": "^3.1.10",
@@ -48,14 +48,13 @@
 	"devDependencies": {
 		"@badrap/valita": "^0.4.6",
 		"@cloudflare/vite-plugin": "^1.21.0",
-		"@trivago/prettier-plugin-sort-imports": "^5.2.2",
 		"@types/dom-close-watcher": "^1.0.0",
 		"@types/dom-webcodecs": "^0.1.18",
 		"@types/node": "^24.10.9",
 		"autoprefixer": "^10.4.23",
 		"babel-plugin-transform-typescript-const-enums": "^0.1.0",
+		"oxfmt": "^0.26.0",
 		"prettier": "^3.8.0",
-		"prettier-plugin-tailwindcss": "^0.7.2",
 		"tailwindcss": "^3.4.19",
 		"terser": "^5.46.0",
 		"typescript": "~5.9.3",

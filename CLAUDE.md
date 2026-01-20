@@ -56,4 +56,3 @@ aglais is a web client for the Bluesky social network, built with Solid.js and V
   be sure
 - Task tool (subagents for exploration, planning, etc.) may not always be accurate; verify subagent
   findings when needed
-

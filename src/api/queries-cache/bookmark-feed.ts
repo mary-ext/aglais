@@ -16,8 +16,6 @@ export const findAllPosts = (uri: string, includeQuote = false): CacheMatcher<Ap
 				for (const bookmark of page.bookmarks) {
 					const item = bookmark.item;
 
-					
-
 					// skip blocked or not found posts
 					if (item.$type !== 'app.bsky.feed.defs#postView') {
 						continue;
