@@ -1,5 +1,6 @@
 {
 	"$schema": "https://unpkg.com/oxfmt/configuration_schema.json",
+
 	"trailingComma": "all",
 	"useTabs": true,
 	"tabWidth": 2,
@@ -7,30 +8,26 @@
 	"semi": true,
 	"singleQuote": true,
 	"bracketSpacing": true,
-	"experimentalTailwindcss": {
-		"functions": ["tw"],
-		"preserveWhitespace": true
-	},
+
 	"experimentalSortImports": {
 		"groups": [
-			["type-builtin", "value-builtin"],
-			["type-external", "value-external"],
-			"atcute-mary",
-			"internal-api",
-			"internal-globals",
-			"internal-lib",
-			"internal-components",
-			"internal-views",
-			"internal-assets",
-			"value-internal",
-			["value-parent", "type-parent"],
-			["value-sibling", "type-sibling", "value-index", "type-index"],
-			"style",
-			"unknown"
+			["builtin"],
+			["external"],
+			["oomfs"],
+			["internal-api"],
+			["internal-globals"],
+			["internal-lib"],
+			["internal-components"],
+			["internal-views"],
+			["internal-assets"],
+			["internal"],
+			["parent"],
+			["sibling", "index"],
+			["style"]
 		],
 		"customGroups": [
 			{
-				"groupName": "atcute-mary",
+				"groupName": "oomfs",
 				"elementNamePattern": ["@atcute/", "@mary/"]
 			},
 			{
@@ -58,14 +55,26 @@
 				"elementNamePattern": ["~/assets/"]
 			}
 		],
-		"internalPattern": ["~/"],
-		"newlinesBetween": true
+		"internalPattern": ["~/"]
 	},
+
+	"experimentalTailwindcss": {
+		"functions": ["tw"],
+		"preserveWhitespace": true
+	},
+
 	"overrides": [
 		{
-			"files": ["tsconfig.json", "jsconfig.json"],
+			"files": ["tsconfig.json", "tsconfig.*.json"],
 			"options": {
 				"parser": "jsonc"
+			}
+		},
+		{
+			"files": ["*.md"],
+			"options": {
+				"printWidth": 100,
+				"proseWrap": "always"
 			}
 		}
 	]
