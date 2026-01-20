@@ -40,29 +40,29 @@
 		"@mary/solid-query": "npm:@externdefs/solid-query@^0.1.5",
 		"comlink": "^4.4.2",
 		"hls.js": "^1.6.15",
-		"mediabunny": "^1.28.0",
+		"mediabunny": "^1.29.0",
 		"nanoid": "^5.1.6",
 		"solid-floating-ui": "~0.2.1",
 		"solid-js": "^1.9.10"
 	},
 	"devDependencies": {
 		"@badrap/valita": "^0.4.6",
-		"@cloudflare/vite-plugin": "^1.20.3",
+		"@cloudflare/vite-plugin": "^1.21.0",
 		"@trivago/prettier-plugin-sort-imports": "^5.2.2",
 		"@types/dom-close-watcher": "^1.0.0",
 		"@types/dom-webcodecs": "^0.1.18",
-		"@types/node": "^24.10.8",
+		"@types/node": "^24.10.9",
 		"autoprefixer": "^10.4.23",
 		"babel-plugin-transform-typescript-const-enums": "^0.1.0",
 		"prettier": "^3.8.0",
 		"prettier-plugin-tailwindcss": "^0.7.2",
 		"tailwindcss": "^3.4.19",
-		"terser": "^5.44.1",
+		"terser": "^5.46.0",
 		"typescript": "~5.9.3",
 		"vite": "^7.3.1",
 		"vite-plugin-pwa": "1.1.0",
 		"vite-plugin-solid": "^2.11.10",
-		"wrangler": "^4.59.1"
+		"wrangler": "^4.59.2"
 	},
 	"pnpm": {
 		"patchedDependencies": {

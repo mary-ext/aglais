@@ -8,6 +8,7 @@ import { on } from '~/lib/utils/misc';
 
 import Button, { type ButtonProps } from './button';
 import { Backdrop } from './dialog';
+import * as Drawer from './drawer';
 import { Fieldset } from './fieldset';
 
 export interface PromptContainerProps {
@@ -43,16 +44,9 @@ const PromptContainer = (props: PromptContainerProps) => {
 		} else {
 			return (
 				<Fieldset standalone disabled={isDisabled()}>
-					<div class="flex grow flex-col items-center self-stretch overflow-y-auto bg-contrast-overlay/75">
-						<div class="h-[40dvh] shrink-0"></div>
-						<div
-							ref={containerRef}
-							role="menu"
-							class="mt-auto flex w-full max-w-120 flex-col rounded-t-xl bg-background p-4"
-						>
-							{props.children}
-						</div>
-					</div>
+					<Drawer.Container maxWidth="480px" maxHeight="70svh">
+						<div class="flex flex-col p-4">{props.children}</div>
+					</Drawer.Container>
 				</Fieldset>
 			);
 		}
