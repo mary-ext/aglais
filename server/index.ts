@@ -28,7 +28,7 @@ import keys from '../oauth-credentials.local.json' with { type: 'json' };
 import { requestAssertionSchema, resolveIdentitySchema } from './lexicons';
 
 const privateKeys = keys as ClientAssertionPrivateJwk[];
-const publicKeys = privateKeys.map((key) => derivePublicJwk(key));
+const publicKeys = privateKeys.map((k) => derivePublicJwk(k, k.kid, k.alg));
 
 const handleResolver = new CompositeHandleResolver({
 	methods: {
