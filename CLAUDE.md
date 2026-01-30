@@ -4,10 +4,13 @@ aglais is a web client for the Bluesky social network, built with Solid.js and V
 
 ### project management
 
-- Node and pnpm is managed by mise, to run commands, use `mise exec -- pnpm ...`
+- pnpm is managed by mise, to run commands, use `mise exec -- pnpm ...`
 - install dependencies with `pnpm install`
-- build for production with `pnpm build`
-- format via `pnpm fmt` (prettier, in root directory)
+- run dev server with `pnpm dev`
+- build with `pnpm build`
+- preview production build with `pnpm preview`
+- format via `pnpm run fmt` (oxfmt)
+- typecheck via `pnpm tsc -b`
 - check `pnpm view <package>` before adding a new dependency
 
 ### code writing
@@ -23,6 +26,13 @@ aglais is a web client for the Bluesky social network, built with Solid.js and V
 - avoid barrel exports (index files that re-export from other modules); import directly from source
 - use `// #region <name>` and `// #endregion` to denote regions when a file needs to contain a lot
   of code
+- prefer required parameters over optional ones; optional parameters are acceptable when:
+  - the default is obvious and used by the vast majority of callers (e.g., `encoding = 'utf-8'`)
+  - it's a configuration value with a sensible default (e.g., `timeout = 5000`)
+- avoid optional parameters that change behavioral modes or make the function do different things
+  based on presence/absence; prefer separate functions instead
+- when adding optional parameters for backwards compatibility, consider whether a new function with
+  a clearer name would be better
 
 ### documentation
 
@@ -49,10 +59,35 @@ aglais is a web client for the Bluesky social network, built with Solid.js and V
   pause and ask for clarification when you're still unsure after looking into it
 - in plan mode, present the plan for review before exiting to allow for feedback or follow-up
   questions
+- when debugging problems, isolate the root cause first before attempting fixes: add logging,
+  reproduce the issue, narrow down the scope, and confirm the exact source of the problem
 
 ### Claude Code-specific
 
-- Bash tool persists directory changes (`cd`) across calls; always specify cd with absolute paths to
-  be sure
-- Task tool (subagents for exploration, planning, etc.) may not always be accurate; verify subagent
-  findings when needed
+- Explore tool (subagents for exploration, planning, etc.) may not always be accurate; verify
+  subagent findings when needed
+
+### cgr
+
+use `@oomfware/cgr` to ask questions about external repositories.
+
+```
+npx @oomfware/cgr ask [options] <repo>[#branch] <question>
+
+options:
+  -m, --model <model>   model to use: opus, sonnet, haiku (default: haiku)
+  -d, --deep            clone full history (enables git log/blame/show)
+  -w, --with <repo>     additional repository to include, supports #branch (repeatable)
+```
+
+useful repositories:
+
+- `github.com/mary-ext/atcute` for atcute AT Protocol client libraries, OAuth, lexicon types
+- `github.com/bluesky-social/atproto` for AT Protocol specs, Bluesky lexicons
+- `github.com/solidjs/solid` for Solid.js core reactivity and components
+- `github.com/vitejs/vite` for Vite dev server, build tooling, plugin API
+
+cgr works best with detailed questions. include file/folder paths when you know them, and reference
+details from previous answers in follow-ups.
+
+run `npx @oomfware/cgr --help` for more options.
