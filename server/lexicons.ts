@@ -6,7 +6,6 @@ export const requestAssertionSchema = v.procedure('x.aglais.requestAssertion', {
 	input: {
 		type: 'lex',
 		schema: v.object({
-			jkt: v.string(),
 			aud: v.string(),
 		}),
 	},

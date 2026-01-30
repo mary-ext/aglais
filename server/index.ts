@@ -14,21 +14,21 @@ import {
 	WellKnownHandleResolver,
 } from '@atcute/identity-resolver';
 import { type Did, type Handle, type ResourceUri, isDid } from '@atcute/lexicons/syntax';
+import {
+	type ClientAssertionPrivateJwk,
+	DpopVerifyError,
+	createClientAssertion,
+	derivePublicJwk,
+	verifyDpopProof,
+} from '@atcute/oauth-crypto';
 import { AuthRequiredError, InvalidRequestError, XRPCRouter, json } from '@atcute/xrpc-server';
 
-import * as jwks from '../oauth-credentials.local.json' with { type: 'json' };
+import keys from '../oauth-credentials.local.json' with { type: 'json' };
 
-import { InvalidDPoPError, createClientAssertion, verifyDPoP } from './jwt';
 import { requestAssertionSchema, resolveIdentitySchema } from './lexicons';
 
-const privateKeyId = jwks.keys[0].privateKey.kid;
-const privateKey = await crypto.subtle.importKey(
-	'jwk',
-	jwks.keys[0].privateKey,
-	{ name: 'ECDSA', namedCurve: 'P-256' },
-	false,
-	['sign'],
-);
+const privateKeys = keys as ClientAssertionPrivateJwk[];
+const publicKeys = privateKeys.map((key) => derivePublicJwk(key));
 
 const handleResolver = new CompositeHandleResolver({
 	methods: {
@@ -74,16 +74,21 @@ const router = new XRPCRouter({
 });
 
 router.addProcedure(requestAssertionSchema, {
-	async handler({ input: { jkt, aud }, request }) {
+	async handler({ input: { aud }, request }) {
 		if (request.headers.get('sec-fetch-site') !== 'same-origin') {
 			throw new AuthRequiredError({ description: 'invalid origin' });
 		}
 
-		const dpop = request.headers.get('dpop');
+		let jkt: string;
 		try {
-			await verifyDPoP(dpop, jkt);
+			const result = await verifyDpopProof(request.headers.get('dpop'), {
+				method: request.method,
+				url: request.url,
+			});
+
+			jkt = result.jkt;
 		} catch (err) {
-			if (err instanceof InvalidDPoPError) {
+			if (err instanceof DpopVerifyError) {
 				throw new AuthRequiredError({ description: err.message });
 			}
 
@@ -92,12 +97,10 @@ router.addProcedure(requestAssertionSchema, {
 
 		const url = new URL(request.url);
 		const assertion = await createClientAssertion({
-			privateKey: privateKey,
-
 			client_id: `https://${url.host}/oauth-client-metadata.json`,
-			kid: privateKeyId,
 			aud: aud,
 			jkt: jkt,
+			key: privateKeys[0],
 		});
 
 		return json({
@@ -203,9 +206,7 @@ export default {
 		}
 
 		if (url.pathname === '/oauth-jwks.json') {
-			return Response.json({
-				keys: jwks.keys.map((key) => key.publicKey),
-			});
+			return Response.json({ keys: publicKeys });
 		}
 
 		contexts.set(request, ctx);

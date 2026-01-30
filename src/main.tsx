@@ -44,14 +44,13 @@ configureRouter({
 		handler: simpleFetchHandler({ service: location.origin }),
 	});
 
-	const fetchClientAssertion: ClientAssertionFetcher = async ({ aud, jkt, createDpopProof }) => {
+	const fetchClientAssertion: ClientAssertionFetcher = async ({ aud, createDpopProof }) => {
 		const dpop = await createDpopProof(`${location.origin}/xrpc/x.aglais.requestAssertion`);
 
 		const data = await ok(
 			host.post('x.aglais.requestAssertion', {
 				input: {
 					aud: aud,
-					jkt: jkt,
 				},
 				headers: {
 					dpop: dpop,
