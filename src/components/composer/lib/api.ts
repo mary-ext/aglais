@@ -33,7 +33,7 @@ import { getRecord } from '~/api/utils/records';
 import { trimRichText } from '~/api/utils/richtext';
 import { getUtf8Length } from '~/api/utils/unicode';
 
-import { compressPostImage } from '~/lib/bsky/image';
+import { compressLinkThumbImage, compressPostImage } from '~/lib/bsky/image';
 import type { AgentContext } from '~/lib/states/agent';
 import { assert, assertUnreachable } from '~/lib/utils/invariant';
 
@@ -562,7 +562,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 					const gifBlob = await response.blob();
 
 					log?.(`Uploading GIF thumbnail`);
-					const compressed = await compressPostImage(gifBlob);
+					const compressed = await compressLinkThumbImage(gifBlob);
 					const blob = await uploadBlob(pds, compressed.blob);
 
 					thumbBlob = blob;
@@ -600,7 +600,7 @@ export const publish = async ({ agent, queryClient, state, onLog: log }: Publish
 			if (thumb !== undefined) {
 				log?.(`Uploading link thumbnail`);
 
-				const compressed = await compressPostImage(thumb);
+				const compressed = await compressLinkThumbImage(thumb);
 				const blob = await uploadBlob(pds, compressed.blob);
 
 				thumbBlob = blob;

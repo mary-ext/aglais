@@ -1,10 +1,14 @@
 import type { AppBskyEmbedDefs } from '@atcute/bluesky';
 import { remove as removeExif } from '@mary/exif-rm';
 
-const MAX_SIZE = 1_000_000; // 1 MB
+const DEFAULT_MAX_SIZE = 1_000_000; // 1 MB
+const POST_MAX_SIZE = 2_000_000; // 2 MB
 
-const POST_MAX_HEIGHT = 2_000;
-const POST_MAX_WIDTH = 2_000;
+const POST_MAX_HEIGHT = 4_000;
+const POST_MAX_WIDTH = 4_000;
+
+const LINK_THUMB_MAX_HEIGHT = 2_000;
+const LINK_THUMB_MAX_WIDTH = 2_000;
 
 export interface CompressResult {
 	blob: Blob;
@@ -23,7 +27,7 @@ export const compressPostImage = async (blob: Blob): Promise<CompressResult> => 
 	// Read the image to get its metadata
 	const image = await getImageFromBlob(blob);
 
-	if (blob.size <= MAX_SIZE) {
+	if (blob.size <= POST_MAX_SIZE) {
 		return {
 			blob: blob,
 			aspectRatio: { width: image.naturalWidth, height: image.naturalHeight },
@@ -51,9 +55,73 @@ export const compressPostImage = async (blob: Blob): Promise<CompressResult> => 
 			aspectRatio: { width: width, height: height },
 		};
 
-		if (blob.size === MAX_SIZE) {
+		if (blob.size === POST_MAX_SIZE) {
 			return result;
-		} else if (blob.size < MAX_SIZE) {
+		} else if (blob.size < POST_MAX_SIZE) {
+			// Try higher quality
+			low = q + 1;
+			last = result;
+		} else {
+			// Try lower quality
+			high = q - 1;
+		}
+	}
+
+	if (last) {
+		return last;
+	}
+
+	throw new Error(`Unable to compress image according to criteria`);
+};
+
+export const compressLinkThumbImage = async (blob: Blob): Promise<CompressResult> => {
+	// Try removing EXIF on supported image formats
+	{
+		const exifRemoved = removeExif(new Uint8Array(await blob.arrayBuffer()));
+		if (exifRemoved !== null) {
+			blob = new Blob([exifRemoved as Uint8Array<ArrayBuffer>], { type: blob.type });
+		}
+	}
+
+	// Read the image to get its metadata
+	const image = await getImageFromBlob(blob);
+
+	if (blob.size <= DEFAULT_MAX_SIZE) {
+		return {
+			blob: blob,
+			aspectRatio: { width: image.naturalWidth, height: image.naturalHeight },
+		};
+	}
+
+	// We went over the maximum size, resize and compress to fit.
+	const [canvas, width, height] = getResizedImage(
+		image,
+		LINK_THUMB_MAX_WIDTH,
+		LINK_THUMB_MAX_HEIGHT,
+		Crop.CONTAIN,
+	);
+
+	let low = 70;
+	let high = 100;
+
+	let last: CompressResult | undefined;
+
+	while (low <= high) {
+		const q = Math.floor((low + high) / 2);
+
+		const blob = await canvas.convertToBlob({
+			type: 'image/webp',
+			quality: q / 100,
+		});
+
+		const result: CompressResult = {
+			blob: blob,
+			aspectRatio: { width: width, height: height },
+		};
+
+		if (blob.size === DEFAULT_MAX_SIZE) {
+			return result;
+		} else if (blob.size < DEFAULT_MAX_SIZE) {
 			// Try higher quality
 			low = q + 1;
 			last = result;
@@ -88,7 +156,7 @@ export const compressProfileImage = async (
 	const type = blob.type;
 
 	// Profile avatars only accepts either JPEG or PNG
-	if ((type === 'image/jpeg' || type === 'image/png') && blob.size <= MAX_SIZE) {
+	if ((type === 'image/jpeg' || type === 'image/png') && blob.size <= DEFAULT_MAX_SIZE) {
 		return { blob: blob, aspectRatio: { width: image.naturalWidth, height: image.naturalHeight } };
 	}
 
@@ -114,9 +182,9 @@ export const compressProfileImage = async (
 			aspectRatio: { width: width, height: height },
 		};
 
-		if (blob.size === MAX_SIZE) {
+		if (blob.size === DEFAULT_MAX_SIZE) {
 			return result;
-		} else if (blob.size < MAX_SIZE) {
+		} else if (blob.size < DEFAULT_MAX_SIZE) {
 			// Try higher quality
 			low = q + 1;
 			last = result;
