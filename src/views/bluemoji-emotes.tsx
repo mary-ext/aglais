@@ -1,7 +1,6 @@
 import { type JSX, createEffect, createSignal } from 'solid-js';
 
 import type { Blob as AtpBlob } from '@atcute/lexicons';
-import { remove as removeExif } from '@mary/exif-rm';
 import { createInfiniteQuery } from '@mary/solid-query';
 
 import { listRecords } from '~/api/utils/records';
@@ -10,6 +9,7 @@ import { hasModals, openModal } from '~/globals/modals';
 
 import { MAX_ORIGINAL_SIZE, SUPPORTED_IMAGE_TYPES } from '~/lib/bluemoji/compress';
 import { getCdnUrl } from '~/lib/bluemoji/render';
+import { stripExif } from '~/lib/bsky/image';
 import { createEventListener } from '~/lib/hooks/event-listener';
 import { useTitle } from '~/lib/navigation/router';
 import { useAgent } from '~/lib/states/agent';
@@ -25,10 +25,7 @@ import AddEmotePrompt from '~/components/settings/bluemoji/add-emote-prompt';
 
 const BluemojiEmotesPage = () => {
 	const handleBlob = async (blob: Blob) => {
-		const exifRemoved = removeExif(new Uint8Array(await blob.arrayBuffer()));
-		if (exifRemoved !== null) {
-			blob = new Blob([exifRemoved as Uint8Array<ArrayBuffer>], { type: blob.type });
-		}
+		blob = await stripExif(blob);
 
 		if (blob.size > MAX_ORIGINAL_SIZE) {
 			openModal(() => (
