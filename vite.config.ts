@@ -16,43 +16,13 @@ export default defineConfig({
 		modulePreload: false,
 		sourcemap: true,
 		assetsInlineLimit: 0,
-		minify: 'terser',
-		rollupOptions: {
+		rolldownOptions: {
 			output: {
 				chunkFileNames: 'assets/[hash].js',
-				manualChunks: {
-					common: [
-						'solid-js',
-						'solid-js/store',
-						'solid-js/web',
-
-						'@atcute/client',
-						'@atcute/oauth-browser-client',
-						'@mary/events',
-						'@mary/solid-query',
-
-						'src/service-worker.tsx',
-
-						'src/globals/events.ts',
-						'src/globals/locales.ts',
-						'src/globals/modals.tsx',
-						'src/globals/navigation.ts',
-						'src/globals/preferences.ts',
-
-						'src/lib/states/agent.tsx',
-						'src/lib/states/session.tsx',
-						'src/lib/states/theme.tsx',
-					],
-					shell: ['src/shell.tsx'],
-				},
-			},
-		},
-		terserOptions: {
-			compress: {
-				passes: 3,
 			},
 		},
 	},
+
 	resolve: {
 		alias: {
 			'~': path.join(__dirname, './src'),
@@ -61,11 +31,6 @@ export default defineConfig({
 	server: {
 		host: SERVER_HOST,
 		port: SERVER_PORT,
-	},
-	optimizeDeps: {
-		esbuildOptions: {
-			target: 'esnext',
-		},
 	},
 	plugins: [
 		solid({

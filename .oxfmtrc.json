@@ -20,7 +20,7 @@
 			["internal-components"],
 			["internal-views"],
 			["internal-assets"],
-			["internal"],
+			["internal-rest"],
 			["parent"],
 			["sibling", "index"],
 			["style"]
@@ -28,34 +28,37 @@
 		"customGroups": [
 			{
 				"groupName": "oomfs",
-				"elementNamePattern": ["@atcute/", "@mary/"]
+				"elementNamePattern": ["@atcute/**", "@mary/**"]
 			},
 			{
 				"groupName": "internal-api",
-				"elementNamePattern": ["~/api/"]
+				"elementNamePattern": ["~/api/**"]
 			},
 			{
 				"groupName": "internal-globals",
-				"elementNamePattern": ["~/globals/"]
+				"elementNamePattern": ["~/globals/**"]
 			},
 			{
 				"groupName": "internal-lib",
-				"elementNamePattern": ["~/lib/"]
+				"elementNamePattern": ["~/lib/**"]
 			},
 			{
 				"groupName": "internal-components",
-				"elementNamePattern": ["~/components/"]
+				"elementNamePattern": ["~/components/**"]
 			},
 			{
 				"groupName": "internal-views",
-				"elementNamePattern": ["~/views/"]
+				"elementNamePattern": ["~/views/**"]
 			},
 			{
 				"groupName": "internal-assets",
-				"elementNamePattern": ["~/assets/"]
+				"elementNamePattern": ["~/assets/**"]
+			},
+			{
+				"groupName": "internal-rest",
+				"elementNamePattern": ["~/**"]
 			}
-		],
-		"internalPattern": ["~/"]
+		]
 	},
 
 	"experimentalTailwindcss": {
